@@ -39,6 +39,7 @@ book:
     - Chapters/Case_study_model_comparison.qmd
     - Chapters/Variable_selection.qmd
     - Chapters/Prior_elicitation.qmd
+    - Chapters/Simulation_based_calibration.qmd
     - Chapters/Presenting_results.qmd
     - Chapters/Bayesian_workflow.qmd
     - Chapters/References.qmd

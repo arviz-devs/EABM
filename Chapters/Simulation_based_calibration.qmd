@@ -1,0 +1,214 @@
+# Simulation-based calibration checking {#sec-sbc}
+
+
+```{python}
+#| echo : false
+#| warning: false
+import arviz.preview as azp
+import matplotlib.pyplot as plt
+azp.style.use("arviz-variat")
+plt.rcParams["figure.dpi"] = 100
+```
+
+
+As we already discussed in @sec-mcmc-diagnostics we need to validate the statistical computation we perform in Bayesian inference. Such validation is necessary to ensure that the statistical computation is done correctly and in a reasonable amount of time [@gelman_2020]. For that we usually rely on a battery of numerical and visuals summaries including, $\hat R$, effective sample size (ESS), divergences and energy (for HMC) [@vehtari_2021, @Betancourt_2016], rank plots, trace plots. However, while convergence diagnostics can indicate issues, they do not indicate the direction or magnitude of the induced bias. Additionally, for very difficult-to-sample models we may want to complement these sampling diagnostics with some extra test, as we will see next. Finally, for some inference methods like SMC, variational inference, or amortized inference, good "inference" diagnostics are not yet available. 
+
+As and old adage says, "The only truth is the reality", or in Bayesian terms, the only way to know for sure if a model is well specified is to compare with some data and evaluate the fit, we already discussed this in @sec-ppc. In that section we saw how to use prior/posterior predictive checks to evaluate the fit of a model to domain-knowledge/data. But real data can be messy so sometimes is preferable to use simulated data. 
+
+The basic idea of using simulated data to validate inference is to generate data with known parameters and then fit the model to that data, then we check if we are able to recover the correct parameter values. This is a common practice when developing new models and can help us to understand the limitations of our models, planning experiments, and evaluating the performance of inference methods. Typically we choose parameter values that seem reasonable a priori and then simulate data often mimicking the structure of the real data we are interested in.
+
+A key aspect of this approach is the selection of the parameters to simulate the data. When planning experiments, i.e. when the data is not yet available, we can use domain knowledge to select the parameters. We may want to test for expected values or maybe interested in testing the model under extreme conditions. Alternatively, if we have the data we can use the posterior distribution so select the parameters 
+
+Instead of manually selecting the parameters to generate the data we can perform a more robust, systematic approach by using and that is the main topic of this chapter.
+
+
+## Simulation-based calibration
+
+Simulation-based calibration (SBC) is a method to validate Bayesian computation [@Cook_2006; @Talts_2020; @Modrak_2025; @Säilynoja_2025b]. SBC can be used to validate sampling algorithms such as MCMC, or any other numerical Bayesian inference method. The central idea in SBC refers to the validation of an inference algorithm and/or model implementation through repeated inference on data simulated from a generative model.
+
+In the literature you are going to find the terms "simulated based calibration" or "simulated based calibration checking", both refer to the same idea. But the "checking" term is sometimes added to emphasize that these methods are not designed to produce calibrated models, but to measure departure from calibration. In other words, these are diagnostic tools.
+
+There are two main variants of SBC:
+
+* Prior SBC [@Modrak_2025], where the generative model uses parameters drawn from the prior. 
+* Posterior SBC [@Säilynoja_2025b], where the generative model uses parameters drawn from the posterior distribution.
+
+
+Prior SBC is well-suited for evaluating whether inference performs correctly across a broad range of possible datasets. If the prior approximatelly represents the information we have about the parameters, then the prior predictive distribution will be a good approximation of the data we expect to observe under very general conditions. However, in practice, it is common to define models using vague priors or weakly informative priors that hence will induce a prior predictive distribution that is too broad, or even unrealistic. In those cases, the simulated data may not be representative of the data that we will observe in practice, or at lest not representative on the conditions we are really interested in. For those cases we should prefer Posterior SBC, which is more appropriate to evaluate the inference algorithm in the neighbourhood of the posterior distribution. And hence closer to the data we expect to observe in practice. 
+
+
+### Prior SBC
+
+The basic steps of prior SBC are:
+
+1. Sample parameters from the prior distribution.
+2. Simulate simulated data using the sampled parameters, i.e sample from the prior predictive distribution.
+3. Fit the model to the simulated data to obtain a posterior distribution.
+4. Compare the posterior distribution to the prior distribution.
+
+If everything is working correctly, we should be able to recover the prior distribution. In practice, there are many ways to compare the posterior distribution to the prior distribution on way is using the PIT-ECDFs similar as we saw in @sec-ppc, for posterior predictive checking, with the difference that now instead of comparing predicted and observed data, we compare samples  generated from the prior $\theta^{\star}$ to samples generated from the posterior distribution $\theta^{\star\star}$, conditioned on the simulated data $y^{\star}$, which is itself generated from the prior distribution $p(\theta)$.
+
+$$
+p(\theta^{\star\star}_i \le \theta^{\star}_i \mid y^{\star}),
+$$
+
+As we saw for the posterior predictive checks we expected the distribution to be uniform.
+
+SBC works because of the self-consistency of Bayesian models. We discuss this idea in the next section. If you already known this result, you can skip it.
+
+
+### Self-consistency of Bayesian models
+
+A mental model when doing Bayesian inference is that there is a data generating process that produces the data we observe. We do not know this process, but we have a prior distribution $p(\theta)$ that represents our information about the parameters of the model and a likelihood function $p(y \mid \theta)$ that describes how the data is generated given the parameters. We then combine these two components to compute a posterior distribution $p(\theta \mid y)$ using Bayes' theorem:
+
+$$
+p(\theta \mid y) = \frac{p(y \mid \theta) p(\theta)}{p(y)}.
+$$
+
+or equivalently,
+
+$$
+p(\theta \mid y) \propto p(y \mid \theta) p(\theta).
+$$
+
+To compute the posterior distribution we need to evaluate the data $y$, but for SBC we don't have any real data. It's all simulated data. So start by sampling from the prior:
+
+$$
+\theta^{\star} \sim p(\theta),
+$$
+
+and then we simulate data
+
+$$
+y^{\star} \sim p(y \mid \theta^{\star}).
+$$
+
+This two step process is equivalent as sampling from the joint distribution of simulated data and parameters $(y^{\star}, \theta^{\star})$
+
+$$
+(y^{\star}, \theta^{\star}) \sim p(y, \theta)
+$$
+
+We also know that the joint distribution of data and parameters is proportional to the posterior distribution.
+
+$$
+(y, \theta) \propto p(\theta \mid y)
+$$
+
+The above is valid for any data $y$, but in this case we are using the simulated data $y^{\star}$, so we can write:
+
+$$
+\theta^{\star} \sim p(\theta \mid y^{\star}).
+$$
+
+Which tell us that the simulated parameter $\theta^{\star}$ is sampled from the posterior distribution.
+
+If this explanation does not resonate with you, we can try another approach. 
+
+We start from a Bayesian model specified using a prior $p(\theta)$ and a likelihood $p(y \mid \theta)$. We know define the following quantities:
+
+* $\theta^{\star} \sim p(\theta)$, the simulated parameter.
+* $y^{\star} \sim p(y \mid \theta^{\star})$, the syntethic data.
+* $\theta^{\star\star} \sim p(\theta \mid y^{\star})$, the posterior parameter conditioned on $y^{\star}$.
+
+It is common in the literature to overload the notation for the densities and use the same symbol, like $p$ (or some other symbol), for all the densities involved in the model. In this case we are going to avoid this notation and write the densities explicitly to avoid confusion.
+$$
+p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{prior}}(\theta^{\star\star}) \: p_{\text{obs}}(y \mid \theta^{\star\star}) \: p_{\text{post}}(\theta^{\star} \mid y^{\star}, \theta^{\star\star}).
+$$  
+
+We can simplify this expression by noticing that 
+
+$$p_{\text{post}}(\theta^{\star} \mid y^{\star}, \theta^{\star\star}) = p_{\text{post}}(\theta^{\star} \mid y^{\star})$$,
+
+because $\theta^{\star\star}$ provides no additional information once $ y^{\star}$ is known. Thus, we have:
+
+$$
+p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{prior}}(\theta^{\star\star}) \: p_{\text{obs}}(y^{\star} \mid \theta^{\star\star}) \: p_{\text{post}}(\theta^{\star} \mid y^{\star}).
+$$   
+
+Now, using Bayes' Theorem:
+
+$$p_{\text{prior}}(\theta^{\star\star}) p_{\text{obs}}(y^{\star} \mid \theta^{\star\star}) = p_{\text{marginal}}(y^{\star}) p_{\text{posterior}}(\theta^{\star\star} \mid y^{\star})$$,
+
+So we can rewrite the expression as:
+
+$$
+p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{marginal}}(y^{\star}) \: p_{\text{posterior}}(\theta^{\star\star} \mid y^{\star}) \: p_{\text{posterior}}(\theta^{\star} \mid y^{\star}).
+$$ 
+
+This expression shows that both $\theta^{\star}$ and $\theta^{\star\star}$ are distributed according to the same posterior distribution. In other words, even though $\theta^{\star}$ was used to generate the simulated data $y^{\star}$, and $\theta^{\star\star}$ was drawn from the posterior given that data, both end up being samples from the same distribution. This is the key idea behind SBC: if we sample from the prior and then use that sample to generate simulated data, the posterior distribution computed from that data should be indistinguishable from the prior distribution.
+
+### Prior SBC in practice
+
+To show how to implement SBC in practice we are going to use the `simuk` package. This package provides a simple interface for performing SBC using different probabilistic programming languages (PPLs). The package is designed to be easy to use and flexible, allowing users to perform SBC with minimal effort. Is still in development, so some features may not be available yet.
+
+::: {.panel-tabset}
+## PyMC
+
+```{python}
+#| eval: false
+import pymc as pm
+import simuk as sim
+
+data = np.array([28.0, 8.0, -3.0, 7.0, -1.0, 1.0, 18.0, 12.0])
+sigma = np.array([15.0, 10.0, 16.0, 11.0, 9.0, 11.0, 10.0, 18.0])
+
+with pm.Model() as centered_eight:
+    mu = pm.Normal('mu', mu=0, sigma=5)
+    tau = pm.HalfCauchy('tau', beta=5)
+    theta = pm.Normal('theta', mu=mu, sigma=tau, shape=8)
+    y_obs = pm.Normal('y', mu=theta, sigma=sigma, observed=data)
+
+sbc = simuk.SBC(centered_eight,
+    num_simulations=1000,
+    sample_kwargs={'draws': 500, 'tune': 500})
+
+sbc.run_simulations();
+
+sbc_results = sbc.simulations
+```
+
+## CmdStanPy
+
+``` {.python}
+## coming soon
+```
+:::
+
+
+```{python}
+#| echo: false
+sbc_results = azp.convert_to_datatree("../models/prerun/sbc_00.nc")
+```
+
+To assess the calibration of the inference, we inspect the uniformity of the PIT values of the posterior samples with respect to the prior samples. To do that we can simply call the  `plot_ecdf_pit` function from the `ArviZ` package. 
+
+
+```{python}
+azp.plot_ecdf_pit(sbc_results,
+              visuals={"xlabel":False},
+);
+```
+
+
+### Posterior SBC
+
+The basic steps of posterior SBC are:
+
+1. Sample parameters from the posterior distribution.
+2. Simulate data using the sampled parameters, i.e sample from the posterior predictive distribution.
+3. Fit the model to the simulated data to obtain a posterior distribution.
+4. Compare the new posterior distribution to the posterior distribution of the original data.
+
+In practice what we do in step 3 is to sample from the augmented posterior distribution, which is the posterior distribution of the original data plus the simulated data. 
+
+
+### Posterior SBC in practice
+Coming soon, we are still working on the implementation of posterior SBC in the `simuk` package.
+
+
+## Quantities to test
+
+The most direct quantities to test are the parameter themselves, but we may want to evaluate other quantities. For instance, we can use of the joint log-likelihood as a test statistic for assessing the calibration [@Modrak_2025]. That is, instead of $\theta^{\star}$ and $\theta^{\star\star}$, we can use  $p(y \mid \theta^{\star})$ and $p(y \mid \theta^{\star\star})$.
+
+Using the log-likelihood as a test quantity helps detect calibration issues that arise when the model partially ignores the data. An extreme case of this is a model that completely ignores the data, always resulting in a posterior that is identical to the prior. The log-likelihood is particularly useful for models with high-dimensional parameter spaces, where we may not be interested in checking each individual parameter. Instead, the log-likelihood provides a simple summary of the model’s parameters. Moreover, relying on the joint log-likelihood avoids the need for multiple comparison corrections that would be necessary if we evaluated each parameter separately.
