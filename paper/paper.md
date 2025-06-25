@@ -10,7 +10,7 @@ authors:
     corresponding: true
     affiliation: 1
   - name: Oriol Abril-Pla 
-    orcid: https://orcid.org/0000-0002-1847-9481
+    orcid: 0000-0002-1847-9481
     affiliation: 2
 affiliations:
  - name: Aalto University. Espoo, Finland
