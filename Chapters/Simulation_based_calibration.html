@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Exploratory Analysis of Bayesian Models - References</title>
+<title>Exploratory Analysis of Bayesian Models - 11&nbsp; Simulation-based calibration checking</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,10 +20,45 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -49,7 +84,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../Chapters/Bayesian_workflow.html" rel="prev">
+<link href="../Chapters/Presenting_results.html" rel="next">
+<link href="../Chapters/Prior_elicitation.html" rel="prev">
 <link href="../favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -90,8 +126,37 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<meta name="citation_title" content="References">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta name="citation_title" content="[[11]{.chapter-number}&nbsp; [Simulation-based calibration checking]{.chapter-title}]{#sec-sbc .quarto-section-identifier}">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Graphical perception: Theory, experimentation, and application to the development of graphical methods;,citation_author=William S. Cleveland;,citation_author=Robert McGill;,citation_publication_date=1984;,citation_cover_date=1984;,citation_year=1984;,citation_fulltext_html_url= https://www.tandfonline.com/doi/abs/10.1080/01621459.1984.10478080;,citation_issue=387;,citation_doi=10.1080/01621459.1984.10478080;,citation_volume=79;,citation_journal_title=Journal of the American Statistical Association;,citation_publisher=Taylor &amp;amp;amp; Francis;">
 <meta name="citation_reference" content="citation_title=Crowdsourcing graphical perception: Using mechanical turk to assess visualization design;,citation_author=Jeffrey Heer;,citation_author=Michael Bostock;,citation_publication_date=2010-04;,citation_cover_date=2010-04;,citation_year=2010;,citation_fulltext_html_url=https://doi.org/10.1145/1753326.1753357;,citation_doi=10.1145/1753326.1753357;,citation_isbn=978-1-60558-929-9;,citation_conference_title=Proceedings of the SIGCHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’10;">
@@ -154,7 +219,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Chapters/References.html">References</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Chapters/Simulation_based_calibration.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Simulation-based calibration checking</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -271,7 +336,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapters/Simulation_based_calibration.html" class="sidebar-item-text sidebar-link">
+  <a href="../Chapters/Simulation_based_calibration.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Simulation-based calibration checking</span></span></a>
   </div>
 </li>
@@ -289,7 +354,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapters/References.html" class="sidebar-item-text sidebar-link active">
+  <a href="../Chapters/References.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
@@ -299,14 +364,28 @@ div.csl-indent {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#simulation-based-calibration" id="toc-simulation-based-calibration" class="nav-link active" data-scroll-target="#simulation-based-calibration"><span class="header-section-number">11.1</span> Simulation-based calibration</a>
+  <ul class="collapse">
+  <li><a href="#prior-sbc" id="toc-prior-sbc" class="nav-link" data-scroll-target="#prior-sbc"><span class="header-section-number">11.1.1</span> Prior SBC</a></li>
+  <li><a href="#self-consistency-of-bayesian-models" id="toc-self-consistency-of-bayesian-models" class="nav-link" data-scroll-target="#self-consistency-of-bayesian-models"><span class="header-section-number">11.1.2</span> Self-consistency of Bayesian models</a></li>
+  <li><a href="#prior-sbc-in-practice" id="toc-prior-sbc-in-practice" class="nav-link" data-scroll-target="#prior-sbc-in-practice"><span class="header-section-number">11.1.3</span> Prior SBC in practice</a></li>
+  <li><a href="#posterior-sbc" id="toc-posterior-sbc" class="nav-link" data-scroll-target="#posterior-sbc"><span class="header-section-number">11.1.4</span> Posterior SBC</a></li>
+  <li><a href="#posterior-sbc-in-practice" id="toc-posterior-sbc-in-practice" class="nav-link" data-scroll-target="#posterior-sbc-in-practice"><span class="header-section-number">11.1.5</span> Posterior SBC in practice</a></li>
+  </ul></li>
+  <li><a href="#quantities-to-test" id="toc-quantities-to-test" class="nav-link" data-scroll-target="#quantities-to-test"><span class="header-section-number">11.2</span> Quantities to test</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">References</h1>
+<h1 class="title"><span id="sec-sbc" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Simulation-based calibration checking</span></span></h1>
 </div>
 
 
@@ -323,261 +402,186 @@ div.csl-indent {
 </header>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-akaike_1974" class="csl-entry" role="listitem">
-Akaike, H. 1974. <span>“A New Look at the Statistical Model
-Identification.”</span> <em>IEEE Transactions on Automatic Control</em>
-19 (6): 716–23. <a href="https://doi.org/10.1109/TAC.1974.1100705">https://doi.org/10.1109/TAC.1974.1100705</a>.
+<p>As we already discussed in <a href="MCMC_diagnostics.html" class="quarto-xref"><span>Chapter 4</span></a> we need to validate the statistical computation we perform in Bayesian inference. Such validation is necessary to ensure that the statistical computation is done correctly and in a reasonable amount of time <span class="citation" data-cites="gelman_2020">(<a href="References.html#ref-gelman_2020" role="doc-biblioref">Gelman et al. 2020</a>)</span>. For that we usually rely on a battery of numerical and visuals summaries including, <span class="math inline">\(\hat R\)</span>, effective sample size (ESS), divergences and energy (for HMC) <span class="citation" data-cites="vehtari_2021">Betancourt (<a href="References.html#ref-Betancourt_2016" role="doc-biblioref">2016</a>)</span>, rank plots, trace plots. However, while convergence diagnostics can indicate issues, they do not indicate the direction or magnitude of the induced bias. Additionally, for very difficult-to-sample models we may want to complement these sampling diagnostics with some extra test, as we will see next. Finally, for some inference methods like SMC, variational inference, or amortized inference, good “inference” diagnostics are not yet available.</p>
+<p>As and old adage says, “The only truth is the reality”, or in Bayesian terms, the only way to know for sure if a model is well specified is to compare with some data and evaluate the fit, we already discussed this in <a href="Prior_posterior_predictive_checks.html" class="quarto-xref"><span>Chapter 5</span></a>. In that section we saw how to use prior/posterior predictive checks to evaluate the fit of a model to domain-knowledge/data. But real data can be messy so sometimes is preferable to use simulated data.</p>
+<p>The basic idea of using simulated data to validate inference is to generate data with known parameters and then fit the model to that data, then we check if we are able to recover the correct parameter values. This is a common practice when developing new models and can help us to understand the limitations of our models, planning experiments, and evaluating the performance of inference methods. Typically we choose parameter values that seem reasonable a priori and then simulate data often mimicking the structure of the real data we are interested in.</p>
+<p>A key aspect of this approach is the selection of the parameters to simulate the data. When planning experiments, i.e.&nbsp;when the data is not yet available, we can use domain knowledge to select the parameters. We may want to test for expected values or maybe interested in testing the model under extreme conditions. Alternatively, if we have the data we can use the posterior distribution so select the parameters</p>
+<p>Instead of manually selecting the parameters to generate the data we can perform a more robust, systematic approach by using and that is the main topic of this chapter.</p>
+<section id="simulation-based-calibration" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="simulation-based-calibration"><span class="header-section-number">11.1</span> Simulation-based calibration</h2>
+<p>Simulation-based calibration (SBC) is a method to validate Bayesian computation <span class="citation" data-cites="Cook_2006 Talts_2020 Modrak_2025 Säilynoja_2025b">(<a href="References.html#ref-Cook_2006" role="doc-biblioref">Cook, Gelman, and and 2006</a>; <a href="References.html#ref-Talts_2020" role="doc-biblioref">Talts et al. 2020</a>; <a href="References.html#ref-Modrak_2025" role="doc-biblioref">Modrák et al. 2025</a>; <a href="References.html#ref-Säilynoja_2025b" role="doc-biblioref">Säilynoja et al. 2025</a>)</span>. SBC can be used to validate sampling algorithms such as MCMC, or any other numerical Bayesian inference method. The central idea in SBC refers to the validation of an inference algorithm and/or model implementation through repeated inference on data simulated from a generative model.</p>
+<p>In the literature you are going to find the terms “simulated based calibration” or “simulated based calibration checking”, both refer to the same idea. But the “checking” term is sometimes added to emphasize that these methods are not designed to produce calibrated models, but to measure departure from calibration. In other words, these are diagnostic tools.</p>
+<p>There are two main variants of SBC:</p>
+<ul>
+<li>Prior SBC <span class="citation" data-cites="Modrak_2025">(<a href="References.html#ref-Modrak_2025" role="doc-biblioref">Modrák et al. 2025</a>)</span>, where the generative model uses parameters drawn from the prior.</li>
+<li>Posterior SBC <span class="citation" data-cites="Säilynoja_2025b">(<a href="References.html#ref-Säilynoja_2025b" role="doc-biblioref">Säilynoja et al. 2025</a>)</span>, where the generative model uses parameters drawn from the posterior distribution.</li>
+</ul>
+<p>Prior SBC is well-suited for evaluating whether inference performs correctly across a broad range of possible datasets. If the prior approximatelly represents the information we have about the parameters, then the prior predictive distribution will be a good approximation of the data we expect to observe under very general conditions. However, in practice, it is common to define models using vague priors or weakly informative priors that hence will induce a prior predictive distribution that is too broad, or even unrealistic. In those cases, the simulated data may not be representative of the data that we will observe in practice, or at lest not representative on the conditions we are really interested in. For those cases we should prefer Posterior SBC, which is more appropriate to evaluate the inference algorithm in the neighbourhood of the posterior distribution. And hence closer to the data we expect to observe in practice.</p>
+<section id="prior-sbc" class="level3" data-number="11.1.1">
+<h3 data-number="11.1.1" class="anchored" data-anchor-id="prior-sbc"><span class="header-section-number">11.1.1</span> Prior SBC</h3>
+<p>The basic steps of prior SBC are:</p>
+<ol type="1">
+<li>Sample parameters from the prior distribution.</li>
+<li>Simulate simulated data using the sampled parameters, i.e sample from the prior predictive distribution.</li>
+<li>Fit the model to the simulated data to obtain a posterior distribution.</li>
+<li>Compare the posterior distribution to the prior distribution.</li>
+</ol>
+<p>If everything is working correctly, we should be able to recover the prior distribution. In practice, there are many ways to compare the posterior distribution to the prior distribution on way is using the PIT-ECDFs similar as we saw in <a href="Prior_posterior_predictive_checks.html" class="quarto-xref"><span>Chapter 5</span></a>, for posterior predictive checking, with the difference that now instead of comparing predicted and observed data, we compare samples generated from the prior <span class="math inline">\(\theta^{\star}\)</span> to samples generated from the posterior distribution <span class="math inline">\(\theta^{\star\star}\)</span>, conditioned on the simulated data <span class="math inline">\(y^{\star}\)</span>, which is itself generated from the prior distribution <span class="math inline">\(p(\theta)\)</span>.</p>
+<p><span class="math display">\[
+p(\theta^{\star\star}_i \le \theta^{\star}_i \mid y^{\star}),
+\]</span></p>
+<p>As we saw for the posterior predictive checks we expected the distribution to be uniform.</p>
+<p>SBC works because of the self-consistency of Bayesian models. We discuss this idea in the next section. If you already known this result, you can skip it.</p>
+</section>
+<section id="self-consistency-of-bayesian-models" class="level3" data-number="11.1.2">
+<h3 data-number="11.1.2" class="anchored" data-anchor-id="self-consistency-of-bayesian-models"><span class="header-section-number">11.1.2</span> Self-consistency of Bayesian models</h3>
+<p>A mental model when doing Bayesian inference is that there is a data generating process that produces the data we observe. We do not know this process, but we have a prior distribution <span class="math inline">\(p(\theta)\)</span> that represents our information about the parameters of the model and a likelihood function <span class="math inline">\(p(y \mid \theta)\)</span> that describes how the data is generated given the parameters. We then combine these two components to compute a posterior distribution <span class="math inline">\(p(\theta \mid y)\)</span> using Bayes’ theorem:</p>
+<p><span class="math display">\[
+p(\theta \mid y) = \frac{p(y \mid \theta) p(\theta)}{p(y)}.
+\]</span></p>
+<p>or equivalently,</p>
+<p><span class="math display">\[
+p(\theta \mid y) \propto p(y \mid \theta) p(\theta).
+\]</span></p>
+<p>To compute the posterior distribution we need to evaluate the data <span class="math inline">\(y\)</span>, but for SBC we don’t have any real data. It’s all simulated data. So start by sampling from the prior:</p>
+<p><span class="math display">\[
+\theta^{\star} \sim p(\theta),
+\]</span></p>
+<p>and then we simulate data</p>
+<p><span class="math display">\[
+y^{\star} \sim p(y \mid \theta^{\star}).
+\]</span></p>
+<p>This two step process is equivalent as sampling from the joint distribution of simulated data and parameters <span class="math inline">\((y^{\star}, \theta^{\star})\)</span></p>
+<p><span class="math display">\[
+(y^{\star}, \theta^{\star}) \sim p(y, \theta)
+\]</span></p>
+<p>We also know that the joint distribution of data and parameters is proportional to the posterior distribution.</p>
+<p><span class="math display">\[
+(y, \theta) \propto p(\theta \mid y)
+\]</span></p>
+<p>The above is valid for any data <span class="math inline">\(y\)</span>, but in this case we are using the simulated data <span class="math inline">\(y^{\star}\)</span>, so we can write:</p>
+<p><span class="math display">\[
+\theta^{\star} \sim p(\theta \mid y^{\star}).
+\]</span></p>
+<p>Which tell us that the simulated parameter <span class="math inline">\(\theta^{\star}\)</span> is sampled from the posterior distribution.</p>
+<p>If this explanation does not resonate with you, we can try another approach.</p>
+<p>We start from a Bayesian model specified using a prior <span class="math inline">\(p(\theta)\)</span> and a likelihood <span class="math inline">\(p(y \mid \theta)\)</span>. We know define the following quantities:</p>
+<ul>
+<li><span class="math inline">\(\theta^{\star} \sim p(\theta)\)</span>, the simulated parameter.</li>
+<li><span class="math inline">\(y^{\star} \sim p(y \mid \theta^{\star})\)</span>, the syntethic data.</li>
+<li><span class="math inline">\(\theta^{\star\star} \sim p(\theta \mid y^{\star})\)</span>, the posterior parameter conditioned on <span class="math inline">\(y^{\star}\)</span>.</li>
+</ul>
+<p>It is common in the literature to overload the notation for the densities and use the same symbol, like <span class="math inline">\(p\)</span> (or some other symbol), for all the densities involved in the model. In this case we are going to avoid this notation and write the densities explicitly to avoid confusion. <span class="math display">\[
+p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{prior}}(\theta^{\star\star}) \: p_{\text{obs}}(y \mid \theta^{\star\star}) \: p_{\text{post}}(\theta^{\star} \mid y^{\star}, \theta^{\star\star}).
+\]</span></p>
+<p>We can simplify this expression by noticing that</p>
+<p><span class="math display">\[p_{\text{post}}(\theta^{\star} \mid y^{\star}, \theta^{\star\star}) = p_{\text{post}}(\theta^{\star} \mid y^{\star})\]</span>,</p>
+<p>because <span class="math inline">\(\theta^{\star\star}\)</span> provides no additional information once $ y^{}$ is known. Thus, we have:</p>
+<p><span class="math display">\[
+p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{prior}}(\theta^{\star\star}) \: p_{\text{obs}}(y^{\star} \mid \theta^{\star\star}) \: p_{\text{post}}(\theta^{\star} \mid y^{\star}).
+\]</span></p>
+<p>Now, using Bayes’ Theorem:</p>
+<p><span class="math display">\[p_{\text{prior}}(\theta^{\star\star}) p_{\text{obs}}(y^{\star} \mid \theta^{\star\star}) = p_{\text{marginal}}(y^{\star}) p_{\text{posterior}}(\theta^{\star\star} \mid y^{\star})\]</span>,</p>
+<p>So we can rewrite the expression as:</p>
+<p><span class="math display">\[
+p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{marginal}}(y^{\star}) \: p_{\text{posterior}}(\theta^{\star\star} \mid y^{\star}) \: p_{\text{posterior}}(\theta^{\star} \mid y^{\star}).
+\]</span></p>
+<p>This expression shows that both <span class="math inline">\(\theta^{\star}\)</span> and <span class="math inline">\(\theta^{\star\star}\)</span> are distributed according to the same posterior distribution. In other words, even though <span class="math inline">\(\theta^{\star}\)</span> was used to generate the simulated data <span class="math inline">\(y^{\star}\)</span>, and <span class="math inline">\(\theta^{\star\star}\)</span> was drawn from the posterior given that data, both end up being samples from the same distribution. This is the key idea behind SBC: if we sample from the prior and then use that sample to generate simulated data, the posterior distribution computed from that data should be indistinguishable from the prior distribution.</p>
+</section>
+<section id="prior-sbc-in-practice" class="level3" data-number="11.1.3">
+<h3 data-number="11.1.3" class="anchored" data-anchor-id="prior-sbc-in-practice"><span class="header-section-number">11.1.3</span> Prior SBC in practice</h3>
+<p>To show how to implement SBC in practice we are going to use the <code>simuk</code> package. This package provides a simple interface for performing SBC using different probabilistic programming languages (PPLs). The package is designed to be easy to use and flexible, allowing users to perform SBC with minimal effort. Is still in development, so some features may not be available yet.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div id="e10a6766" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> simuk <span class="im">as</span> sim</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a>data <span class="op">=</span> np.array([<span class="fl">28.0</span>, <span class="fl">8.0</span>, <span class="op">-</span><span class="fl">3.0</span>, <span class="fl">7.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="fl">18.0</span>, <span class="fl">12.0</span>])</span>
+<span id="cb1-5"><a href="#cb1-5"></a>sigma <span class="op">=</span> np.array([<span class="fl">15.0</span>, <span class="fl">10.0</span>, <span class="fl">16.0</span>, <span class="fl">11.0</span>, <span class="fl">9.0</span>, <span class="fl">11.0</span>, <span class="fl">10.0</span>, <span class="fl">18.0</span>])</span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> centered_eight:</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    mu <span class="op">=</span> pm.Normal(<span class="st">'mu'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb1-9"><a href="#cb1-9"></a>    tau <span class="op">=</span> pm.HalfCauchy(<span class="st">'tau'</span>, beta<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb1-10"><a href="#cb1-10"></a>    theta <span class="op">=</span> pm.Normal(<span class="st">'theta'</span>, mu<span class="op">=</span>mu, sigma<span class="op">=</span>tau, shape<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb1-11"><a href="#cb1-11"></a>    y_obs <span class="op">=</span> pm.Normal(<span class="st">'y'</span>, mu<span class="op">=</span>theta, sigma<span class="op">=</span>sigma, observed<span class="op">=</span>data)</span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a>sbc <span class="op">=</span> simuk.SBC(centered_eight,</span>
+<span id="cb1-14"><a href="#cb1-14"></a>    num_simulations<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb1-15"><a href="#cb1-15"></a>    sample_kwargs<span class="op">=</span>{<span class="st">'draws'</span>: <span class="dv">500</span>, <span class="st">'tune'</span>: <span class="dv">500</span>})</span>
+<span id="cb1-16"><a href="#cb1-16"></a></span>
+<span id="cb1-17"><a href="#cb1-17"></a>sbc.run_simulations()<span class="op">;</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a></span>
+<span id="cb1-19"><a href="#cb1-19"></a>sbc_results <span class="op">=</span> sbc.simulations</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ref-Ayer_1955" class="csl-entry" role="listitem">
-Ayer, Miriam, H. D. Brunk, G. M. Ewing, W. T. Reid, and Edward
-Silverman. 1955. <span>“<span class="nocase">An Empirical Distribution
-Function for Sampling with Incomplete Information</span>.”</span>
-<em>The Annals of Mathematical Statistics</em> 26 (4): 641–47. <a href="https://doi.org/10.1214/aoms/1177728423">https://doi.org/10.1214/aoms/1177728423</a>.
 </div>
-<div id="ref-bessiere2013" class="csl-entry" role="listitem">
-Bessiere, Pierre, Emmanuel Mazer, Juan Manuel Ahuactzin, and Kamel
-Mekhnacha. 2013. <em>Bayesian <span>Programming</span></em>. 1 edition.
-Boca Raton: Chapman; Hall/CRC. <a href="https://www.crcpress.com/Bayesian-Programming/Bessiere-Mazer-Ahuactzin-Mekhnacha/p/book/9781439880326">https://www.crcpress.com/Bayesian-Programming/Bessiere-Mazer-Ahuactzin-Mekhnacha/p/book/9781439880326</a>.
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">## coming soon</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="ref-Brockmann_1996" class="csl-entry" role="listitem">
-Brockmann, H. Jane. 1996. <span>“Satellite Male Groups in Horseshoe
-Crabs, Limulus Polyphemus.”</span> <em>Ethology</em> 102 (1): 1–21. <a href="https://doi.org/10.1111/j.1439-0310.1996.tb01099.x">https://doi.org/10.1111/j.1439-0310.1996.tb01099.x</a>.
 </div>
-<div id="ref-chipman_2010" class="csl-entry" role="listitem">
-Chipman, Hugh A., Edward I. George, and Robert E. McCulloch. 2010.
-<span>“<span>BART</span>: <span>Bayesian</span> Additive Regression
-Trees.”</span> <em>The Annals of Applied Statistics</em> 4 (1): 266–98.
-<a href="https://doi.org/10.1214/09-AOAS285">https://doi.org/10.1214/09-AOAS285</a>.
 </div>
-<div id="ref-William1984" class="csl-entry" role="listitem">
-Cleveland, William S., and Robert McGill. 1984. <span>“Graphical
-Perception: Theory, Experimentation, and Application to the Development
-of Graphical Methods.”</span> <em>Journal of the American Statistical
-Association</em> 79 (387): 531–54. <a href="https://doi.org/10.1080/01621459.1984.10478080">https://doi.org/10.1080/01621459.1984.10478080</a>.
+<p>To assess the calibration of the inference, we inspect the uniformity of the PIT values of the posterior samples with respect to the prior samples. To do that we can simply call the <code>plot_ecdf_pit</code> function from the <code>ArviZ</code> package.</p>
+<div id="66459beb" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>azp.plot_ecdf_pit(sbc_results,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>              visuals<span class="op">=</span>{<span class="st">"xlabel"</span>:<span class="va">False</span>},</span>
+<span id="cb3-3"><a href="#cb3-3"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Simulation_based_calibration_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="posterior-sbc" class="level3" data-number="11.1.4">
+<h3 data-number="11.1.4" class="anchored" data-anchor-id="posterior-sbc"><span class="header-section-number">11.1.4</span> Posterior SBC</h3>
+<p>The basic steps of posterior SBC are:</p>
+<ol type="1">
+<li>Sample parameters from the posterior distribution.</li>
+<li>Simulate data using the sampled parameters, i.e sample from the posterior predictive distribution.</li>
+<li>Fit the model to the simulated data to obtain a posterior distribution.</li>
+<li>Compare the new posterior distribution to the posterior distribution of the original data.</li>
+</ol>
+<p>In practice what we do in step 3 is to sample from the augmented posterior distribution, which is the posterior distribution of the original data plus the simulated data.</p>
+</section>
+<section id="posterior-sbc-in-practice" class="level3" data-number="11.1.5">
+<h3 data-number="11.1.5" class="anchored" data-anchor-id="posterior-sbc-in-practice"><span class="header-section-number">11.1.5</span> Posterior SBC in practice</h3>
+<p>Coming soon, we are still working on the implementation of posterior SBC in the <code>simuk</code> package.</p>
+</section>
+</section>
+<section id="quantities-to-test" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="quantities-to-test"><span class="header-section-number">11.2</span> Quantities to test</h2>
+<p>The most direct quantities to test are the parameter themselves, but we may want to evaluate other quantities. For instance, we can use of the joint log-likelihood as a test statistic for assessing the calibration <span class="citation" data-cites="Modrak_2025">(<a href="References.html#ref-Modrak_2025" role="doc-biblioref">Modrák et al. 2025</a>)</span>. That is, instead of <span class="math inline">\(\theta^{\star}\)</span> and <span class="math inline">\(\theta^{\star\star}\)</span>, we can use <span class="math inline">\(p(y \mid \theta^{\star})\)</span> and <span class="math inline">\(p(y \mid \theta^{\star\star})\)</span>.</p>
+<p>Using the log-likelihood as a test quantity helps detect calibration issues that arise when the model partially ignores the data. An extreme case of this is a model that completely ignores the data, always resulting in a posterior that is identical to the prior. The log-likelihood is particularly useful for models with high-dimensional parameter spaces, where we may not be interested in checking each individual parameter. Instead, the log-likelihood provides a simple summary of the model’s parameters. Moreover, relying on the joint log-likelihood avoids the need for multiple comparison corrections that would be necessary if we evaluated each parameter separately.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Betancourt_2016" class="csl-entry" role="listitem">
+Betancourt, Michael. 2016. <span>“Diagnosing Suboptimal Cotangent Disintegrations in Hamiltonian Monte Carlo.”</span> <a href="https://arxiv.org/abs/1604.00695">https://arxiv.org/abs/1604.00695</a>.
 </div>
 <div id="ref-Cook_2006" class="csl-entry" role="listitem">
-Cook, Samantha R, Andrew Gelman, and Donald B Rubin and. 2006.
-<span>“Validation of Software for Bayesian Models Using Posterior
-Quantiles.”</span> <em>Journal of Computational and Graphical
-Statistics</em> 15 (3): 675–92. <a href="https://doi.org/10.1198/106186006X136976">https://doi.org/10.1198/106186006X136976</a>.
-</div>
-<div id="ref-daniel2015" class="csl-entry" role="listitem">
-Daniel Roy. 2015. <em>Probabilistic <span>Programming</span></em>. <a href="http://probabilistic-programming.org">http://probabilistic-programming.org</a>.
-</div>
-<div id="ref-diaconis2011" class="csl-entry" role="listitem">
-Diaconis, Persi. 2011. <span>“Theories of <span>Data</span>
-<span>Analysis</span>: <span>From</span> <span>Magical</span>
-<span>Thinking</span> <span>Through</span> <span>Classical</span>
-<span>Statistics</span>.”</span> In <em>Exploring <span>Data</span>
-<span>Tables</span>, <span>Trends</span>, and <span>Shapes</span></em>,
-1–36. John Wiley &amp; Sons, Ltd. <a href="https://doi.org/10.1002/9781118150702.ch1">https://doi.org/10.1002/9781118150702.ch1</a>.
-</div>
-<div id="ref-Dimitriadis_2021" class="csl-entry" role="listitem">
-Dimitriadis, Timo, Tilmann Gneiting, and Alexander I. Jordan. 2021.
-<span>“Stable Reliability Diagrams for Probabilistic
-Classifiers.”</span> <em>Proceedings of the National Academy of
-Sciences</em> 118 (8): e2016191118. <a href="https://doi.org/10.1073/pnas.2016191118">https://doi.org/10.1073/pnas.2016191118</a>.
-</div>
-<div id="ref-Gabry_2019" class="csl-entry" role="listitem">
-Gabry, Jonah, Daniel Simpson, Aki Vehtari, Michael Betancourt, and
-Andrew Gelman. 2019. <span>“Visualization in Bayesian Workflow.”</span>
-<em>Journal of the Royal Statistical Society Series A: Statistics in
-Society</em> 182 (2): 389–402. <a href="https://doi.org/10.1111/rssa.12378">https://doi.org/10.1111/rssa.12378</a>.
-</div>
-<div id="ref-Gelman_2013b" class="csl-entry" role="listitem">
-Gelman, Andrew. 2013. <span>“<span class="nocase">Two simple examples
-for understanding posterior p-values whose distributions are far from
-uniform</span>.”</span> <em>Electronic Journal of Statistics</em> 7
-(none): 2595–2602. <a href="https://doi.org/10.1214/13-EJS854">https://doi.org/10.1214/13-EJS854</a>.
-</div>
-<div id="ref-gelman_2017" class="csl-entry" role="listitem">
-Gelman, Andrew, Daniel Simpson, and Michael Betancourt. 2017. <span>“The
-<span>Prior</span> <span>Can</span> <span>Often</span> <span>Only</span>
-<span>Be</span> <span>Understood</span> in the <span>Context</span> of
-the <span>Likelihood</span>.”</span> <em>Entropy</em> 19 (10): 555. <a href="https://doi.org/10.3390/e19100555">https://doi.org/10.3390/e19100555</a>.
+Cook, Samantha R, Andrew Gelman, and Donald B Rubin and. 2006. <span>“Validation of Software for Bayesian Models Using Posterior Quantiles.”</span> <em>Journal of Computational and Graphical Statistics</em> 15 (3): 675–92. <a href="https://doi.org/10.1198/106186006X136976">https://doi.org/10.1198/106186006X136976</a>.
 </div>
 <div id="ref-gelman_2020" class="csl-entry" role="listitem">
-Gelman, Andrew, Aki Vehtari, Daniel Simpson, Charles C. Margossian, Bob
-Carpenter, Yuling Yao, Lauren Kennedy, Jonah Gabry, Paul-Christian
-Bürkner, and Martin Modrák. 2020. <span>“Bayesian Workflow.”</span> <a href="https://arxiv.org/abs/2011.01808">https://arxiv.org/abs/2011.01808</a>.
-</div>
-<div id="ref-ghahramani2015" class="csl-entry" role="listitem">
-Ghahramani, Zoubin. 2015. <span>“Probabilistic <span>Machine</span>
-<span>Learning</span> and <span>Artificial</span>
-<span>Intelligence</span>.”</span> <em>Nature</em> 521 (7553): 452–59.
-<a href="https://doi.org/10.1038/nature14541">https://doi.org/10.1038/nature14541</a>.
-</div>
-<div id="ref-Heer2010" class="csl-entry" role="listitem">
-Heer, Jeffrey, and Michael Bostock. 2010. <span>“Crowdsourcing Graphical
-Perception: Using Mechanical Turk to Assess Visualization
-Design.”</span> In <em>Proceedings of the <span>SIGCHI</span>
-<span>Conference</span> on <span>Human</span> <span>Factors</span> in
-<span>Computing</span> <span>Systems</span></em>, 203–12.
-<span>CHI</span> ’10. New York, NY, USA: Association for Computing
-Machinery. <a href="https://doi.org/10.1145/1753326.1753357">https://doi.org/10.1145/1753326.1753357</a>.
-</div>
-<div id="ref-xarray_2017" class="csl-entry" role="listitem">
-Hoyer, Stephan, and Joe Hamman. 2017. <span>“Xarray:
-<span>N</span>-<span>D</span> <span>Labeled</span> <span>Arrays</span>
-and <span>Datasets</span> in <span>Python</span>.”</span> <em>Journal of
-Open Research Software</em> 5 (1). <a href="https://doi.org/10.5334/jors.148">https://doi.org/10.5334/jors.148</a>.
-</div>
-<div id="ref-icazatti_2023" class="csl-entry" role="listitem">
-Icazatti, Alejandro, Oriol Abril-Pla, Arto Klami, and Osvaldo A Martin.
-2023. <span>“<span class="nocase">PreliZ: A tool-box for prior
-elicitation</span>.”</span> <em>Journal of Open Source Software</em> 8
-(89): 5499. <a href="https://doi.org/10.21105/joss.05499">https://doi.org/10.21105/joss.05499</a>.
-</div>
-<div id="ref-jaynes_2003" class="csl-entry" role="listitem">
-Jaynes, E. T. 2003. <em>Probability <span>Theory</span>:
-<span>The</span> <span>Logic</span> of <span>Science</span></em>. Edited
-by G. Larry Bretthorst. Cambridge, UK ; New York, NY: Cambridge
-University Press. <a href="https://bayes.wustl.edu/etj/prob/book.pdf">https://bayes.wustl.edu/etj/prob/book.pdf</a>.
-</div>
-<div id="ref-johnson_1996" class="csl-entry" role="listitem">
-Johnson, Roger W. 1996. <span>“Fitting Percentage of Body Fat to Simple
-Body Measurements.”</span> <em>Journal of Statistics Education</em> 4
-(1). <a href="https://doi.org/10.1080/10691898.1996.11910505">https://doi.org/10.1080/10691898.1996.11910505</a>.
-</div>
-<div id="ref-kallioinen_2023" class="csl-entry" role="listitem">
-Kallioinen, Noa, Topi Paananen, Paul-Christian Bürkner, and Aki Vehtari.
-2023. <span>“Detecting and Diagnosing Prior and Likelihood Sensitivity
-with Power-Scaling.”</span> <em>Statistics and Computing</em> 34 (1):
-57. <a href="https://doi.org/10.1007/s11222-023-10366-5">https://doi.org/10.1007/s11222-023-10366-5</a>.
-</div>
-<div id="ref-Kleiber_2016" class="csl-entry" role="listitem">
-Kleiber, Christian, and Achim Zeileis. 2016. <span>“Visualizing Count
-Data Regressions Using Rootograms.”</span> <em>The American
-Statistician</em> 70 (3): 296–303. <a href="https://doi.org/10.1080/00031305.2016.1173590">https://doi.org/10.1080/00031305.2016.1173590</a>.
-</div>
-<div id="ref-link_2011" class="csl-entry" role="listitem">
-Link, William A., and Mitchell J. Eaton. 2012. <span>“On Thinning of
-Chains in MCMC.”</span> <em>Methods in Ecology and Evolution</em> 3 (1):
-112–15. <a href="https://doi.org/10.1111/j.2041-210X.2011.00131.x">https://doi.org/10.1111/j.2041-210X.2011.00131.x</a>.
-</div>
-<div id="ref-maceachern_1994" class="csl-entry" role="listitem">
-MacEachern, Steven N., and L. Mark Berliner. 1994. <span>“Subsampling
-the <span>Gibbs</span> <span>Sampler</span>.”</span> <em>The American
-Statistician</em> 48 (3): 188–90. <a href="https://doi.org/10.2307/2684714">https://doi.org/10.2307/2684714</a>.
-</div>
-<div id="ref-martin_2024" class="csl-entry" role="listitem">
-Martin, Osvaldo A. 2024. <em>Bayesian <span>Analysis</span> with
-<span>Python</span>: <span>A</span> <span>Practical</span>
-<span>Guide</span> to Probabilistic Modeling, 3rd
-<span>Edition</span></em>. Packt Publishing. <a href="https://bap.com.ar/">https://bap.com.ar/</a>.
-</div>
-<div id="ref-martin_2021" class="csl-entry" role="listitem">
-Martin, Osvaldo A., Ravin Kumar, and Junpeng Lao. 2021. <em>Bayesian
-<span>Modeling</span> and <span>Computation</span> in
-<span>Python</span></em>. 1st edition. Boca Raton London New York:
-Chapman; Hall/CRC. <a href="https://bayesiancomputationbook.com/">https://bayesiancomputationbook.com/</a>.
-</div>
-<div id="ref-mclatchie_2023" class="csl-entry" role="listitem">
-McLatchie, Yann, Sölvi Rögnvaldsson, Frank Weber, and Aki Vehtari. 2023.
-<span>“Robust and Efficient Projection Predictive Inference.”</span> <a href="https://arxiv.org/abs/2306.15581">https://arxiv.org/abs/2306.15581</a>.
-</div>
-<div id="ref-Meng_1994" class="csl-entry" role="listitem">
-Meng, Xiao-Li. 1994. <span>“<span>Posterior Predictive <span class="math inline"><em>p</em></span>-Values</span>.”</span> <em>The
-Annals of Statistics</em> 22 (3): 1142–60. <a href="https://doi.org/10.1214/aos/1176325622">https://doi.org/10.1214/aos/1176325622</a>.
-</div>
-<div id="ref-mikkola_2024" class="csl-entry" role="listitem">
-Mikkola, Petrus, Osvaldo A. Martin, Suyog Chandramouli, Marcelo
-Hartmann, Oriol Abril Pla, Owen Thomas, Henri Pesonen, et al. 2024.
-<span>“Prior Knowledge Elicitation: The Past, Present, and
-Future.”</span> <em>Bayesian Analysis</em> 19 (4): 1129–61. <a href="https://doi.org/10.1214/23-BA1381">https://doi.org/10.1214/23-BA1381</a>.
+Gelman, Andrew, Aki Vehtari, Daniel Simpson, Charles C. Margossian, Bob Carpenter, Yuling Yao, Lauren Kennedy, Jonah Gabry, Paul-Christian Bürkner, and Martin Modrák. 2020. <span>“Bayesian Workflow.”</span> <a href="https://arxiv.org/abs/2011.01808">https://arxiv.org/abs/2011.01808</a>.
 </div>
 <div id="ref-Modrak_2025" class="csl-entry" role="listitem">
-Modrák, Martin, Angie H. Moon, Shinyoung Kim, Paul Bürkner, Niko Huurre,
-Kateřina Faltejsková, Andrew Gelman, and Aki Vehtari. 2025. <span>“<span class="nocase">Simulation-Based Calibration Checking for Bayesian
-Computation: The Choice of Test Quantities Shapes
-Sensitivity</span>.”</span> <em>Bayesian Analysis</em> 20 (2): 461–88.
-<a href="https://doi.org/10.1214/23-BA1404">https://doi.org/10.1214/23-BA1404</a>.
-</div>
-<div id="ref-morris_2014" class="csl-entry" role="listitem">
-Morris, David E., Jeremy E. Oakley, and John A. Crowe. 2014. <span>“A
-Web-Based Tool for Eliciting Probability Distributions from
-Experts.”</span> <em>Environmental Modelling &amp; Software</em> 52:
-1–4. <a href="https://doi.org/10.1016/j.envsoft.2013.10.010">https://doi.org/10.1016/j.envsoft.2013.10.010</a>.
-</div>
-<div id="ref-nguyen_2015" class="csl-entry" role="listitem">
-Nguyen, Hoang-Vu, and Jilles Vreeken. 2015. <span>“Non-Parametric
-Jensen-Shannon Divergence.”</span> In <em>Machine Learning and Knowledge
-Discovery in Databases</em>, edited by Annalisa Appice, Pedro Pereira
-Rodrigues, Vítor Santos Costa, João Gama, Alípio Jorge, and Carlos
-Soares, 173–89. Cham: Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-23525-7_11">https://doi.org/10.1007/978-3-319-23525-7_11</a>.
-</div>
-<div id="ref-piironen_2020" class="csl-entry" role="listitem">
-Piironen, Juho, Markus Paasiniemi, and Aki Vehtari. 2020. <span>“<span class="nocase">Projective inference in high-dimensional problems:
-Prediction and feature selection</span>.”</span> <em>Electronic Journal
-of Statistics</em> 14 (1): 2155–97. <a href="https://doi.org/10.1214/20-EJS1711">https://doi.org/10.1214/20-EJS1711</a>.
-</div>
-<div id="ref-quiroga_2022" class="csl-entry" role="listitem">
-Quiroga, Miriana, Pablo G Garay, Juan M. Alonso, Juan Martin Loyola, and
-Osvaldo A Martin. 2022. <span>“Bayesian Additive Regression Trees for
-Probabilistic Programming.”</span> arXiv. <a href="https://doi.org/10.48550/ARXIV.2206.03619">https://doi.org/10.48550/ARXIV.2206.03619</a>.
-</div>
-<div id="ref-sailynoja_2022" class="csl-entry" role="listitem">
-Säilynoja, Teemu, Paul-Christian Bürkner, and Aki Vehtari. 2022.
-<span>“Graphical Test for Discrete Uniformity and Its Applications in
-Goodness-of-Fit Evaluation and Multiple Sample Comparison.”</span>
-<em>Statistics and Computing</em> 32 (2): 32. <a href="https://doi.org/10.1007/s11222-022-10090-6">https://doi.org/10.1007/s11222-022-10090-6</a>.
-</div>
-<div id="ref-Säilynoja_2025" class="csl-entry" role="listitem">
-Säilynoja, Teemu, Andrew R. Johnson, Osvaldo A. Martin, and Aki Vehtari.
-2025. <span>“Recommendations for Visual Predictive Checks in Bayesian
-Workflow.”</span> <a href="https://arxiv.org/abs/2503.01509">https://arxiv.org/abs/2503.01509</a>.
+Modrák, Martin, Angie H. Moon, Shinyoung Kim, Paul Bürkner, Niko Huurre, Kateřina Faltejsková, Andrew Gelman, and Aki Vehtari. 2025. <span>“<span class="nocase">Simulation-Based Calibration Checking for Bayesian Computation: The Choice of Test Quantities Shapes Sensitivity</span>.”</span> <em>Bayesian Analysis</em> 20 (2): 461–88. <a href="https://doi.org/10.1214/23-BA1404">https://doi.org/10.1214/23-BA1404</a>.
 </div>
 <div id="ref-Säilynoja_2025b" class="csl-entry" role="listitem">
-Säilynoja, Teemu, Marvin Schmitt, Paul-Christian Bürkner, and Aki
-Vehtari. 2025. <span>“Posterior SBC: Simulation-Based Calibration
-Checking Conditional on Data.”</span> <a href="https://arxiv.org/abs/2502.03279">https://arxiv.org/abs/2502.03279</a>.
-</div>
-<div id="ref-talts_2020" class="csl-entry" role="listitem">
-Talts, Sean, Michael Betancourt, Daniel Simpson, Aki Vehtari, and Andrew
-Gelman. 2020b. <span>“Validating Bayesian Inference Algorithms with
-Simulation-Based Calibration.”</span> <a href="https://arxiv.org/abs/1804.06788">https://arxiv.org/abs/1804.06788</a>.
+Säilynoja, Teemu, Marvin Schmitt, Paul-Christian Bürkner, and Aki Vehtari. 2025. <span>“Posterior SBC: Simulation-Based Calibration Checking Conditional on Data.”</span> <a href="https://arxiv.org/abs/2502.03279">https://arxiv.org/abs/2502.03279</a>.
 </div>
 <div id="ref-Talts_2020" class="csl-entry" role="listitem">
-———. 2020a. <span>“Validating Bayesian Inference Algorithms with
-Simulation-Based Calibration.”</span> <a href="https://arxiv.org/abs/1804.06788">https://arxiv.org/abs/1804.06788</a>.
-</div>
-<div id="ref-tukey_1977" class="csl-entry" role="listitem">
-Tukey, John W. 1977. <em>Exploratory <span>Data</span>
-<span>Analysis</span></em>. 1 edition. Pearson.
-</div>
-<div id="ref-vehtari_2017" class="csl-entry" role="listitem">
-Vehtari, Aki, Andrew Gelman, and Jonah Gabry. 2017. <span>“Practical
-Bayesian Model Evaluation Using Leave-One-Out Cross-Validation and
-WAIC.”</span> <em>Statistics and Computing</em> 27 (5): 1413–32. <a href="https://doi.org/10.1007/s11222-016-9696-4">https://doi.org/10.1007/s11222-016-9696-4</a>.
+Talts, Sean, Michael Betancourt, Daniel Simpson, Aki Vehtari, and Andrew Gelman. 2020. <span>“Validating Bayesian Inference Algorithms with Simulation-Based Calibration.”</span> <a href="https://arxiv.org/abs/1804.06788">https://arxiv.org/abs/1804.06788</a>.
 </div>
 <div id="ref-vehtari_2021" class="csl-entry" role="listitem">
-Vehtari, Aki, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
-Paul-Christian Bürkner. 2021. <span>“<span class="nocase">Rank-Normalization, Folding, and Localization: An
-Improved <span class="math inline"><em>R̂</em></span> for Assessing
-Convergence of MCMC (with Discussion)</span>.”</span> <em>Bayesian
-Analysis</em> 16 (2): 667–718. <a href="https://doi.org/10.1214/20-BA1221">https://doi.org/10.1214/20-BA1221</a>.
-</div>
-<div id="ref-venables_2002" class="csl-entry" role="listitem">
-Venables, W. N., and B. D. Ripley. 2002. <em>Modern <span>Applied</span>
-<span>Statistics</span> with <span>S</span></em>. 4th edition. New York:
-Springer. <a href="https://doi.org/10.1007/978-0-387-21706-2">https://doi.org/10.1007/978-0-387-21706-2</a>.
-</div>
-<div id="ref-watanabe_2013" class="csl-entry" role="listitem">
-Watanabe, Sumio. 2013. <span>“A <span>Widely</span>
-<span>Applicable</span> <span>Bayesian</span> <span>Information</span>
-<span>Criterion</span>.”</span> <em>Journal of Machine Learning
-Research</em> 14 (March): 867–97. <a href="https://dl.acm.org/doi/10.5555/2567709.2502609">https://dl.acm.org/doi/10.5555/2567709.2502609</a>.
-</div>
-<div id="ref-yao_2018" class="csl-entry" role="listitem">
-Yao, Yuling, Aki Vehtari, Daniel Simpson, and Andrew Gelman. 2018.
-<span>“<span class="nocase">Using Stacking to Average Bayesian
-Predictive Distributions (with Discussion)</span>.”</span> <em>Bayesian
-Analysis</em> 13 (3): 917–1007. <a href="https://doi.org/10.1214/17-BA1091">https://doi.org/10.1214/17-BA1091</a>.
+Vehtari, Aki, Andrew Gelman, Daniel Simpson, Bob Carpenter, and Paul-Christian Bürkner. 2021. <span>“<span class="nocase">Rank-Normalization, Folding, and Localization: An Improved <span class="math inline">\(\widehat{R}\)</span> for Assessing Convergence of MCMC (with Discussion)</span>.”</span> <em>Bayesian Analysis</em> 16 (2): 667–718. <a href="https://doi.org/10.1214/20-BA1221">https://doi.org/10.1214/20-BA1221</a>.
 </div>
 </div>
-
-
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1135,11 +1139,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../Chapters/Bayesian_workflow.html" class="pagination-link" aria-label="Bayesian Workflow">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Bayesian Workflow</span></span>
+      <a href="../Chapters/Prior_elicitation.html" class="pagination-link" aria-label="Prior Elicitation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Prior Elicitation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../Chapters/Presenting_results.html" class="pagination-link" aria-label="Presentation of Results">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Presentation of Results</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
