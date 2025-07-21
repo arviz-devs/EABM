@@ -24,7 +24,7 @@ Instead of manually selecting the parameters to generate the data we can perform
 
 ## Simulation-based calibration
 
-Simulation-based calibration (SBC) is a method to validate Bayesian computation [@Cook_2006; @Talts_2020; @Modrak_2025; @Säilynoja_2025b]. SBC can be used to validate sampling algorithms such as MCMC, or any other numerical Bayesian inference method. The central idea in SBC refers to the validation of an inference algorithm and/or model implementation through repeated inference on data simulated from a generative model.
+Simulation-based calibration (SBC) is a method to validate Bayesian computation [@Cook_2006; @talts_2020; @Modrak_2025; @Säilynoja_2025b]. SBC can be used to validate sampling algorithms such as MCMC, or any other numerical Bayesian inference method. The central idea in SBC refers to the validation of an inference algorithm and/or model implementation through repeated inference on data simulated from a generative model.
 
 In the literature you are going to find the terms "simulated based calibration" or "simulated based calibration checking", both refer to the same idea. But the "checking" term is sometimes added to emphasize that these methods are not designed to produce calibrated models, but to measure departure from calibration. In other words, these are diagnostic tools.
 
