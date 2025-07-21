@@ -204,7 +204,6 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=An Empirical Distribution Function for Sampling with Incomplete Information;,citation_author=Miriam Ayer;,citation_author=H. D. Brunk;,citation_author=G. M. Ewing;,citation_author=W. T. Reid;,citation_author=Edward Silverman;,citation_publication_date=1955;,citation_cover_date=1955;,citation_year=1955;,citation_fulltext_html_url=https://doi.org/10.1214/aoms/1177728423;,citation_issue=4;,citation_doi=10.1214/aoms/1177728423;,citation_volume=26;,citation_journal_title=The Annals of Mathematical Statistics;,citation_publisher=Institute of Mathematical Statistics;">
 <meta name="citation_reference" content="citation_title=Prior knowledge elicitation: The past, present, and future;,citation_author=Petrus Mikkola;,citation_author=Osvaldo A. Martin;,citation_author=Suyog Chandramouli;,citation_author=Marcelo Hartmann;,citation_author=Oriol Abril Pla;,citation_author=Owen Thomas;,citation_author=Henri Pesonen;,citation_author=Jukka Corander;,citation_author=Aki Vehtari;,citation_author=Samuel Kaski;,citation_author=Paul-Christian Bürkner;,citation_author=Arto Klami;,citation_publication_date=2024-12;,citation_cover_date=2024-12;,citation_year=2024;,citation_issue=4;,citation_doi=10.1214/23-BA1381;,citation_volume=19;,citation_journal_title=Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=Validation of software for bayesian models using posterior quantiles;,citation_author=Samantha R Cook;,citation_author=Andrew Gelman;,citation_author=Donald B Rubin and;,citation_publication_date=2006;,citation_cover_date=2006;,citation_year=2006;,citation_fulltext_html_url=https://doi.org/10.1198/106186006X136976;,citation_issue=3;,citation_doi=10.1198/106186006X136976;,citation_volume=15;,citation_journal_title=Journal of Computational and Graphical Statistics;,citation_publisher=ASA Website;">
-<meta name="citation_reference" content="citation_title=Validating bayesian inference algorithms with simulation-based calibration;,citation_author=Sean Talts;,citation_author=Michael Betancourt;,citation_author=Daniel Simpson;,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://arxiv.org/abs/1804.06788;">
 <meta name="citation_reference" content="citation_title=Simulation-Based Calibration Checking for Bayesian Computation: The Choice of Test Quantities Shapes Sensitivity;,citation_author=Martin Modrák;,citation_author=Angie H. Moon;,citation_author=Shinyoung Kim;,citation_author=Paul Bürkner;,citation_author=Niko Huurre;,citation_author=Kateřina Faltejsková;,citation_author=Andrew Gelman;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://doi.org/10.1214/23-BA1404;,citation_issue=2;,citation_doi=10.1214/23-BA1404;,citation_volume=20;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=Diagnosing suboptimal cotangent disintegrations in hamiltonian monte carlo;,citation_author=Michael Betancourt;,citation_publication_date=2016;,citation_cover_date=2016;,citation_year=2016;,citation_fulltext_html_url=https://arxiv.org/abs/1604.00695;">
 <meta name="citation_reference" content="citation_title=Posterior SBC: Simulation-based calibration checking conditional on data;,citation_author=Teemu Säilynoja;,citation_author=Marvin Schmitt;,citation_author=Paul-Christian Bürkner;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2502.03279;">
@@ -552,7 +551,7 @@ Figure&nbsp;10.9: Beta distributions with a 90% of it mass between 0.1 and 0.7, 
 <h2 data-number="10.6" class="anchored" data-anchor-id="maximum-entropy-distributions-with-maxent"><span class="header-section-number">10.6</span> Maximum entropy distributions with maxent</h2>
 <p>In PreliZ we can compute maximum entropy priors using the function <code>maxent</code>. It works for unidimensional distributions. The first argument is a PreliZ distribution. Then we specify an upper and lower bound and the probability between them.</p>
 <p>As an example, we want to elicit a scale parameter. From domain knowledge we know the parameter has a relatively high probability of being less than 3. Hence, we could use a HalfNormal distribution and do:</p>
-<div id="f58d09ce" class="cell" data-execution_count="2">
+<div id="4fe14a6b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>pz.maxent(pz.HalfNormal(), <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -563,7 +562,7 @@ Figure&nbsp;10.9: Beta distributions with a 90% of it mass between 0.1 and 0.7, 
 </div>
 </div>
 <p>When we want to avoid values too close to zero, other distributions like Gamma or InverseGamma may be a better choice.</p>
-<div id="4cbf7f13" class="cell" data-execution_count="3">
+<div id="44416a1c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>pz.maxent(pz.Gamma(), <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -574,7 +573,7 @@ Figure&nbsp;10.9: Beta distributions with a 90% of it mass between 0.1 and 0.7, 
 </div>
 </div>
 <p>We could also have extra restrictions like knowledge about the mean or mode. Let’s say we think a mean of 2 is very likely. The Gamma distribution can be parametrized in terms of the mean as <code>pz.Gamma(mu=2)</code>. If we instead believe the mode is likely to be 2, then <code>maxent</code> takes a <code>mode</code> argument.</p>
-<div id="19a424dc" class="cell" data-execution_count="4">
+<div id="0fcddd60" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>dist_mean <span class="op">=</span> pz.Gamma(mu<span class="op">=</span><span class="dv">2</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a>pz.maxent(dist_mean, <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>)</span>
 <span id="cb3-3"><a href="#cb3-3"></a></span>
@@ -594,7 +593,7 @@ Figure&nbsp;10.9: Beta distributions with a 90% of it mass between 0.1 and 0.7, 
 </div>
 <p>Notice that if you call <code>maxent</code> several times in the same cell, as we just did, we will get all the distributions in the same figure. This can be very useful to visually compare several alternatives.</p>
 <p>The function <code>maxent</code> as others in PreliZ modify distribution in place, so a common workflow is to instantiate a distribution first, perform the elicitation, and then inspect its properties, plot it, or use it in some other way. For instance, we may want to check a summary of some of its properties:</p>
-<div id="e68f02ff" class="cell" data-execution_count="5">
+<div id="5352dfdc" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>dist_mean.summary(), dist_mode.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/numba/np/ufunc/dufunc.py:288: RuntimeWarning: invalid value encountered in nb_logpdf
@@ -613,7 +612,7 @@ Figure&nbsp;10.9: Beta distributions with a 90% of it mass between 0.1 and 0.7, 
 <p>There are many other method for direct elicitation of parameters. For instance the <a href="https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.quartile">quartile</a> functions identifies a distribution that matches specified quartiles, and <a href="https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.QuartileInt">Quartine_int</a> provides an interactive approach to achieve the same, offering a more hands-on experience for refining distributions.</p>
 <p>One method worth of special mention is the <a href="https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.Roulette">Roulette</a> method allows which allows users to find a prior distribution by drawing it interactively <span class="citation" data-cites="morris_2014">(<a href="References.html#ref-morris_2014" role="doc-biblioref">Morris, Oakley, and Crowe 2014</a>)</span>. The name “roulette” comes from the analogy of placing a limited set of chips where one believes the mass of a distribution should be concentrated. In this method, a grid of <code>m</code> equally sized bins is provided, covering the range of <code>x</code>, and users allocate a total of <code>n</code> chips across the bins. Effectively, this creates a histogram,representing the user’s information about the distribution. The method then identifies the best-fitting distribution from a predefined pool of options, translating the drawn histogram into a suitable probabilistic model.</p>
 <p>As this is an interactive method we can’t show it here, but you can run the following cell to see how it works.</p>
-<div id="06c6b829" class="cell" data-execution_count="6">
+<div id="ba888d36" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="op">%</span>matplotlib widget</span>
 <span id="cb8-2"><a href="#cb8-2"></a>result <span class="op">=</span> pz.Roulette()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -630,7 +629,7 @@ Figure&nbsp;10.10: To elicit a distribution, we can interactively <em>draw</em> 
 </div>
 <p>Once we have elicited the distribution we can call <code>.dist</code> attribute to get the selected distribution. In this example, it will be <code>result.dist</code>.</p>
 <p>If needed, we can combine results for many independent “roulette sessions” with the <a href="https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.combine_roulette">combine_roulette</a> function. Combining information from different elicitation sessions can be useful to aggregate information from different domain experts. Or even from a single person unable to pick a single option. For instance if we run <code>Roulette</code> twice, and for the first one we get <code>result0</code> and for the second <code>result1</code>. Then, we can combine both solutions into a single one using:</p>
-<div id="0eef297e" class="cell" data-execution_count="7">
+<div id="3257fa0c" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>pz.combine_roulette([result0.inputs, result1.inputs], weights<span class="op">=</span>[<span class="fl">0.3</span>, <span class="fl">0.7</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In this example, we assign a larger weight to the results from the second elicitation session, we can do this to reflect uneven degrees of trust. By default, all sessions are weighted equally.</p>
@@ -643,7 +642,7 @@ Figure&nbsp;10.10: To elicit a distribution, we can interactively <em>draw</em> 
 <h3 data-number="10.8.1" class="anchored" data-anchor-id="predator-vs-prey-example"><span class="header-section-number">10.8.1</span> Predator vs prey example</h3>
 <p>We are interested in modelling the relationship between the masses of organisms that are prey and organisms that are predators, and since masses vary in orders of magnitude from a 1e-9 grams for a typical cell to a 1.3e8 grams for the blue whale, it is convenient to work on a logarithmic scale.</p>
 <p>Let’s load the data and define the reference values.</p>
-<div id="1a37fc17" class="cell" data-execution_count="8">
+<div id="ad3fa1cd" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>pp_mass <span class="op">=</span> pd.read_csv(<span class="st">"../data/pp_mass.csv"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2"></a>pp_mass[<span class="st">"predator_log"</span>] <span class="op">=</span> np.log(pp_mass[<span class="st">"predator"</span>])</span>
 <span id="cb10-3"><a href="#cb10-3"></a>pp_mass[<span class="st">"prey_log"</span>] <span class="op">=</span> np.log(pp_mass[<span class="st">"prey"</span>])</span>
@@ -660,7 +659,7 @@ Figure&nbsp;10.10: To elicit a distribution, we can interactively <em>draw</em> 
     log(mass) =&amp; Normal(\mu, \sigma)
 \end{align}\]</span></p>
 <p>Let’s now define a model with some priors and see what these priors imply on the scale of the data. To sample from the predictive prior we use <code>pm.sample_prior_predictive()</code> instead of <code>sample</code> and we need to define dummy observations. This is necessary to indicate to PyMC which term is the likelihood and to control the size of each predicted distribution, but the actual values do not affect the prior predictive distributions.</p>
-<div id="2dcb23f9" class="cell" data-execution_count="9">
+<div id="fe2e64e8" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb11-2"><a href="#cb11-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
 <span id="cb11-3"><a href="#cb11-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
@@ -672,7 +671,7 @@ Figure&nbsp;10.10: To elicit a distribution, we can interactively <em>draw</em> 
 </div>
 </div>
 <p>Now we can plot the prior predictive distribution and compare it with the reference values.</p>
-<div id="14de8ffc" class="cell" data-execution_count="10">
+<div id="e5042448" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>pc <span class="op">=</span> azp.plot_ppc_dist(idata, group<span class="op">=</span><span class="st">"prior_predictive"</span>, kind<span class="op">=</span><span class="st">"ecdf"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2"></a>azp.add_lines(pc, refs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -684,7 +683,7 @@ Figure&nbsp;10.10: To elicit a distribution, we can interactively <em>draw</em> 
 </div>
 </div>
 <p>Priors are so vague that we can not even distinguish the reference values from each other. Let’s try refining our priors.</p>
-<div id="50805309" class="cell" data-execution_count="11">
+<div id="43768f23" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb14-2"><a href="#cb14-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
 <span id="cb14-3"><a href="#cb14-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
@@ -696,7 +695,7 @@ Figure&nbsp;10.10: To elicit a distribution, we can interactively <em>draw</em> 
 </div>
 </div>
 <p>We can plot the prior predictive distribution and compare it with the reference values.</p>
-<div id="f3ef3a5c" class="cell" data-execution_count="12">
+<div id="f5540bb7" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>pc <span class="op">=</span> azp.plot_ppc_dist(idata, group<span class="op">=</span><span class="st">"prior_predictive"</span>, kind<span class="op">=</span><span class="st">"ecdf"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2"></a>azp.add_lines(pc, refs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -713,7 +712,7 @@ Figure&nbsp;10.10: To elicit a distribution, we can interactively <em>draw</em> 
 <h3 data-number="10.8.2" class="anchored" data-anchor-id="interactive-predictive-elicitation"><span class="header-section-number">10.8.2</span> Interactive predictive elicitation</h3>
 <p>The process described in the previous section is straightforward: sample from the prior predictive –&gt; plot –&gt; refine –&gt; repeat. On the good side, this is a very flexible approach and can be a good way to understand the effect of individual parameters in the predictions of a model. But it can be time-consuming and it requires some understanding of the model so you know which parameters to tweak and in which direction.</p>
 <p>One way to improve this workflow is by adding interactivity. We can do this with PreliZ’s function, <code>predictive_explorer</code>. Which we can not show here, in a full glory but you can see an static image in <a href="#fig-predictive-explorer" class="quarto-xref">Figure&nbsp;<span>10.11</span></a>, and you can try it for yourself by running the following block of code.</p>
-<div id="877e6177" class="cell" data-execution_count="13">
+<div id="fcc9da49" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">def</span> pp_model(α_μ<span class="op">=</span><span class="dv">0</span>, α_σ<span class="op">=</span><span class="dv">100</span>, β_μ<span class="op">=</span><span class="dv">0</span>, β_σ<span class="op">=</span><span class="dv">100</span>, σ_σ<span class="op">=</span><span class="dv">5</span>):</span>
 <span id="cb17-2"><a href="#cb17-2"></a>    α <span class="op">=</span> pz.Normal(α_μ, α_σ).rvs()</span>
 <span id="cb17-3"><a href="#cb17-3"></a>    β <span class="op">=</span> pz.Normal(β_μ, β_σ).rvs()</span>
@@ -739,7 +738,7 @@ Figure&nbsp;10.11: We can use the boxes to specify different prior values and se
 <h2 data-number="10.9" class="anchored" data-anchor-id="projective-predictive-elicitation"><span class="header-section-number">10.9</span> Projective predictive elicitation</h2>
 <p>Projective predictive elicitation is an experimental method to elicit priors by specifying an initial model and a prior predictive distribution. Then instead of elicitate the prior themselves, we elicit the prior predictive distribution, which we call the target distribution. Then we use a procedure that automatically find the parameters of the prior that induce a prior predictive distribution that is as close as possible to the target distribution. This method is particularly useful when we have a good idea of how the data should look like, but we are not sure how to translate this into a prior distribution.</p>
 <p>This method has been implemented in PreliZ, let see one example first and then discuss some details. To keep things concrete and familiar let’s assume we are still interested in the predator-prey example. And let assume that on a log-scale we think that the the prior predictive distribution is well described as a Normal distribution with most of its mass between the weight of a typical cell and the weight of a blue whale. The Normal is easy to work with and with this information we could derive its parameter. But let do something even easier. Let use <code>pz.maxent</code> and translate “most of it mass” to <span class="math inline">\(0.94\)</span>.</p>
-<div id="5a948472" class="cell" data-execution_count="14">
+<div id="027200ba" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>target <span class="op">=</span> pz.Normal()</span>
 <span id="cb18-2"><a href="#cb18-2"></a>pz.maxent(target, refs[<span class="st">"Typical cell"</span>], refs[<span class="st">"Blue whale"</span>], <span class="fl">0.94</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -752,7 +751,7 @@ Figure&nbsp;10.11: We can use the boxes to specify different prior values and se
 </div>
 <p>This will be our target distribution. If for a particular problem you are unsure about what distribution to choose as a target, think that this should be the distribution that you expect to match in a prior predictive check as discussed in previous sections. And also think that usually the goal is to find a weakly informative prior. So, the target will usually be a very approximate distribution.</p>
 <p>Now that we have the target, we write a model as you would do before a prior predictive check, we can reuse the model from previous section. The we pass the model and target to <code>ppe</code></p>
-<div id="5af7513e" class="cell" data-execution_count="15">
+<div id="36f8c6ea" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb19-2"><a href="#cb19-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
 <span id="cb19-3"><a href="#cb19-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
@@ -776,7 +775,7 @@ Figure&nbsp;10.11: We can use the boxes to specify different prior values and se
 </div>
 </div>
 <p>OK, <code>ppe</code> function returns a solution, because this is an experimental method, and because good data analysis always keep a good dose of scepticism of their tools, let’s check that the suggested prior is reasonable given the provided information. To do this we write the model with the new prior and sample from the prior predictive. Notice that we could have copied the priors verbatim, but instead we are rounding them. We do not care of the exact solution, a rounded number is easier to read. Feel free to not follow suggestion from machine blindly or be prepared <a href="https://www.youtube.com/watch?v=DOW_kPzY_JY">to end inside a lake</a>.</p>
-<div id="f79e6683" class="cell" data-execution_count="16">
+<div id="1375859a" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb22-2"><a href="#cb22-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, mu<span class="op">=-</span><span class="dv">1</span>, sigma<span class="op">=</span><span class="fl">1.1</span>)</span>
 <span id="cb22-3"><a href="#cb22-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, mu<span class="op">=</span><span class="fl">0.015</span>, sigma<span class="op">=</span><span class="fl">0.2</span>)</span>
@@ -788,7 +787,7 @@ Figure&nbsp;10.11: We can use the boxes to specify different prior values and se
 </div>
 </div>
 <p>Now we can plot the prior predictive distribution, the target distribution and compare it with the reference values.</p>
-<div id="6f1a4d2a" class="cell" data-execution_count="17">
+<div id="75c1374c" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>pc <span class="op">=</span> azp.plot_ppc_dist(idata, group<span class="op">=</span><span class="st">"prior_predictive"</span>, kind<span class="op">=</span><span class="st">"ecdf"</span>)</span>
 <span id="cb24-2"><a href="#cb24-2"></a>azp.add_lines(pc, refs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
