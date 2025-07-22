@@ -329,7 +329,7 @@ Now we can plot the prior predictive distribution, the target distribution and c
 
 ```{python}
 pc = azp.plot_ppc_dist(idata, group="prior_predictive", kind="ecdf")
-azp.add_lines(pc, refs)
+azp.add_lines(pc, list(refs.values()))
 ```
 
 ### OK, but what's under the hood?
