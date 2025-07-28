@@ -15,7 +15,7 @@ SEED = 3592
 np.random.seed(SEED)
 ```
 
-# Prior and likelihood sensitivity checks
+# Prior and likelihood sensitivity checks {#sec-sensitivity-checks}
 
 Determining the sensitivity of the posterior to perturbations of the prior is an important part of building Bayesian models. The traditional way to assess the prior sensitivity is to compare the posterior obtained using a reference prior against the posterior obtained using one or more alternative priors. The reference prior can be the default prior in packages like [Bambi](https://bambinos.github.io/bambi/) or some other "template" prior from literature or previous analysis of a similar dataset/problem. But it can also be the prior obtained after a more careful elicitation process. The "alternative" priors can be prior that for some reason we also consider relevant, or deviations from the reference prior that we consider important to evaluate.
 
