@@ -271,18 +271,34 @@ pz.predictive_explorer(pp_model, references=refs)
 
 ## Projective predictive elicitation
 
-Projective predictive elicitation is an experimental method to elicit priors by specifying an initial model and a prior predictive distribution. Then instead of elicitate the prior themselves, we elicit the prior predictive distribution, which we call the target distribution. Then we use a procedure that automatically find the parameters of the prior that induce a prior predictive distribution that is as close as possible to the target distribution. This method is particularly useful when we have a good idea of how the data should look like, but we are not sure how to translate this into a prior distribution. 
+In the previous section we saw that a general route to find good priors is to tweak them until we get a prior predictive distribution that match our previous knowledge. This is fine, but it could be cumbersome.
 
-This method has been implemented in PreliZ, let see one example first and then discuss some details. To keep things concrete and familiar let's assume we are still interested in the predator-prey example. And let assume that on a log-scale we think that the the prior predictive distribution is well described as a Normal distribution with most of its mass between the weight of a typical cell and the weight of a blue whale. The Normal is easy to work with and with this information we could derive its parameter. But let do something even easier. Let use `pz.maxent` and translate "most of it mass" to $0.94$.
+In this section we discuss a procedure to automatize the _tweaking_.  We first think what a _reasonable_ prior predictive distribution could be and then apply and automatic procedure to find the parameters of the priors that indice a prior predictive distribution that is as close as possible to the target distribution. This method is particularly useful when we have a good idea of how the data should look like, but we are not sure how to translate this into a prior distribution. 
+
+In principle, there are many ways to achieve this. We are going to discuss a method called projective predictive elicitation, as it is inspired in the projective inference method discussed in @sec-variable-selection. The method is experimental and it is implemented in PreliZ.
+
+To keep things concrete and familiar let's assume we are still interested in the predator-prey example. As in the previous examples, our initial model could be something like this. We know the priors are very wide, and we want to refine them.  
 
 ```{python}
-target = pz.Normal()
-pz.maxent(target, refs["Typical cell"], refs["Blue whale"], 0.94) 
+#| eval: false
+with pm.Model() as model:
+    α = pm.Normal("α", 0, 100)
+    β = pm.Normal("β", 0, 100)
+    σ = pm.HalfNormal("σ", 5)
+    prey = pm.Normal("prey", α + β * pp_mass["prey_log"], σ, observed=pp_mass["predator_log"])
 ```
 
-This will be our target distribution. If for a particular problem you are unsure about what distribution to choose as a target, think that this should be the distribution that you expect to match in a prior predictive check as discussed in previous sections. And also think that usually the goal is to find a weakly informative prior. So, the target will usually be a very approximate distribution. 
+The first thing to do is to define our target distribution. We may be tempted to describe it a Gaussian with most of its mass between the weight of a typical cell and the weight of a blue whale.  While this is a resonable assumption, is not enough. We are modeling $p(Y \mid X)$, so it's not enough to just describe $p(Y)$. What we can do is to think what values of $Y$ (mass of the predator) we should expect for $X$ the mass of preys. This of course rellies of expert knowledge (as priors should). For this example we are going to use some information from the data and some prior knowledge. We can argue that we are only weakly informing the prior from the data. We are going to take a few quantiles from our $X$, the mass of the preys. And then we are going to assume that usually predator are larger that prey.
 
-Now that we have the target, we write a model as you would do before a prior predictive check, we can reuse the model from previous section. The we pass the model and target to `ppe` 
+```{python}
+q = [0.1, 0.25, 0.5, 0.75, 0.9]
+x_prior = np.quantile(pp_mass["prey_log"], q)
+target = pz.Normal(x_prior+np.log(10), pp_mass["predator_log"].std()/2)
+```
+
+To be sure we are on the same page, the target distribution should be the distribution that you expect to match in a prior predictive check as discussed in previous sections. Additionally, if the goal is to define weakly informative prior, as it's usually the case in most analysis, the target will usually be a very approximate distribution. 
+
+Now that we have the target, we write a model using the `x_prior`, for the observations we just pass a dummy values. The actual values are ignored, only the shape must be correct. Finally we pass the model and target distributions to the `ppe` function. 
 
 
 ```{python}
@@ -290,44 +306,49 @@ with pm.Model() as model:
     α = pm.Normal("α", 0, 100)
     β = pm.Normal("β", 0, 100)
     σ = pm.HalfNormal("σ", 5)
-    prey = pm.Normal("prey", α + β * pp_mass["prey_log"][:100], σ, observed=pp_mass["predator_log"][:100])
+    prey = pm.Normal("prey", α + β * x_prior, σ, observed=[0]*len(x_prior))
 
 print(pz.ppe(model, target)) 
 ```
 
-OK, `ppe` function returns a solution, because this is an experimental method, and because good data analysis always keep a good dose of scepticism of their tools, let's check that the suggested prior is reasonable given the provided information. To do this we write the model with the new prior and sample from the prior predictive. Notice that we could have copied the priors verbatim, but instead we are rounding them. We do not care of the exact solution, a rounded number is easier to read. Feel free to not follow suggestion from machine blindly or be prepared [to end inside a lake](https://www.youtube.com/watch?v=DOW_kPzY_JY). 
+Now we can check that the suggested prior is reasonable given the provided information. To do this we write the model with the new prior and sample from the prior predictive. Notice that we could have copied the priors as-is, but we’ve rounded them instead. Rounded numbers are easier to read and we don't care about the exact solution provided by `ppe`. Feel free to question answer from algorithms, blind obedience is how you end up in a [lake](https://www.youtube.com/watch?v=DOW_kPzY_JY). 
+
+
 
 ```{python}
 with pm.Model() as model:
-    α = pm.Normal("α", mu=-1, sigma=1.1)
-    β = pm.Normal("β", mu=0.015, sigma=0.2)
-    σ = pm.HalfNormal("σ", sigma=10)
+    α = pm.Normal("α", mu=2, sigma=3.5)
+    β = pm.Normal("β", mu=1, sigma=0.5)
+    σ = pm.HalfNormal("σ", sigma=1.7)
     prey = pm.Normal("prey", α + β * pp_mass["prey_log"], σ, observed=pp_mass["predator_log"])
     idata = pm.sample_prior_predictive()
 ```
+
 Now we can plot the prior predictive distribution, the target distribution and compare it with the reference values.
 
 
 ```{python}
 pc = azp.plot_ppc_dist(idata, group="prior_predictive", kind="ecdf")
-azp.add_lines(pc, refs)
+azp.add_lines(pc, list(refs.values()))
 ```
-
-
 
 ### OK, but what's under the hood?
 
-The main idea is that once we have a target distribution we can define the prior elicitation problem as finding the parameters of the model that induce a prior predictive distribution as close as possible to the target distribution. Stated this way, this is a typical inference problem that could be solved using standard (Bayesian) inference methods that instead of conditioning on observed data we condition on synthetic data, our target distribution. Conceptually that's what `ppe` is doing, but we still have two plot twist ahead of us. 
+The main idea is that once we have a target distribution we can define the prior elicitation problem as finding the parameters of the model that induce a prior predictive distribution as close as possible to the target distribution. Put like this, it’s just a standard inference task—except instead of conditioning on real data, we’re conditioning on synthetic data, a.k.a. our target distribution. Conceptually that's what `ppe` is doing, but we still have two plot twist ahead of us. 
 
 The procedure is as follows:
 
 1. Generate a sample from the target distribution.
 2. Maximize the model's likelihood wrt that sample (i.e. we find the parameters for a fixed "observation").
-3. Generate a new sample from the target distribution and find a new set of parameters.
-4. Collect the parameters, one per prior parameter in the original model.
+3. Repeat 1 and 2 a few hundred times.
+4. Collect the optimization results, one per prior parameter in the original model.
 5. Use MLE to fit the optimized values to their corresponding families in the original model. 
 
-Instead of using standard inference methods like MCMC in step 1-3 we are using projection inference. See @sec-variable-selection for details. Essentially we are approximating a posterior using an optimization method. Yes, we say posterior, because from the inference point we are computing a posterior, once that we then will use as prior.
-On the last step, we use a second approximation, we fit the projected posterior into standard distributions used by PPLs as building blocks. We need to do this so we can write the resulting priors in terms a PPLs like PyMC, CmdStanPy could understand. 
+Instead of using standard inference methods like MCMC in step 1-2 we are using projection inference, see @sec-variable-selection for details. Essentially we are approximating a posterior using an optimization method. We say posterior, because from the inference point we are computing a posterior, from the prior elicitation perspective this is a prior. 
+On the last step, we use a second approximation, we fit the marginals of the projected posterior into standard distributions used by PPLs, i.e. Gaussian, exponential, Poisson, etc. We need this step so we can write the resulting priors in a way that we could feed into PPLs like PyMC or CmdStanPy. 
 
-This procedure ignores the prior information in the model passed to `ppe`, because the optimized function is just the likelihood. In the last step we use the information about each prior families. But in principle, we could even ignore this information and fit the optimized values to many families and pick the best fit. This allows the procedure to suggest alternative families. For instance, it could be that we use a Normal for a given parameters but the optimization only found positive values so a Gamma or HalfNormal could be a better choice. Having said that, the prior can have an effect because they are used to initialize the optimization routine. But for that to happen the prior has to be very off with respect to the target. Internally `ppe` performs many optimizations each time for a different sample from the target, the result of one optimization is stored as one projected posterior "sample" and also used as the initial guess for the next one. For the very first optimization, the one initialized from the prior, the result is discarded and only used as the initial guess for the next step.Another piece of information that is ignored is the observed data, the procedure only takes into account the sample size, but not the actual values. So you can pass dummy values, changing the sample size can we used to obtain more narrow (larger sample size) or more vague (smaller sample size) priors. Whether we should always use the same sample size of the data we are going to actually use or not is something that needs further research and evaluation.
+This procedure partially ignores the prior information in the model. For example, we would have obtained the same result with the prior `α = pm.Normal("α", 0, 0.001)` or  `α = pm.Normal("α", 0, 100)`. The reason is for this behaviour is that the function we use for the optimization procedure is just the likelihood. In step 5 (the last step) we use the information about each prior families i.e. `α = pm.Normal("α", 20, 1)` will not produce the same result as `α = pm.Gamma("α", mu=20, sigma=1)`. Because the MLE is done for a given family. In principle, we could even ignore this information and fit the optimized values to many families and pick the best fit. This allows the procedure to suggest alternative families. For instance, it could be that we use a Normal for a given parameters but the optimization only found positive values so a Gamma or HalfNormal could be a better choice. 
+
+Information from the prior it's also used to initialize the optimization routine. So it can have an effect of the results, but for that to happen the prior has to be very off with respect to the target. Internally, `ppe` performs many optimizations (step 3), each time with respect to a different sample from the target. The result of one optimization is stored as one projected posterior "sample" and also used as the initial guess for the next one. For the very first optimization, the one initialized from the prior, the result is discarded and only used as the initial guess for the next step.
+
+Another piece of information that is ignored is the observed data, the procedure only takes into account the sample size, but not the actual values. So you can pass dummy values, changing the sample size can we used to obtain more narrow (larger sample size) or more vague (smaller sample size) priors. This effect needs further evaluations.

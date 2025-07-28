@@ -404,6 +404,17 @@ for ax, idata, name in zip(axes.ravel(), (idata_cm, idata_ncm), ("centered", "no
     ax.set_title(name)
 ```
 
+Another plot that can be useful to diagnose divergences is `azp.plot_parallel()`, which shows the samples in parallel coordinates. A parallel coordinates plot is a way to visualize high-dimensional data by plotting each dimension as a vertical line and connecting the points across dimensions with lines. 
+
+From @fig-parallel_plot we can see that the `centered` model has divergences in the region where `tau` takes small values.
+
+```{python}
+#| label: fig-parallel_plot
+#| fig-cap: "Parallel coordinates plot for `centereed` model."
+azp.plot_parallel(idata_cm, var_names=['theta', 'tau'])
+```
+
+
 
 ## What to do when the diagnoses are wrong?
 

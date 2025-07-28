@@ -97,7 +97,7 @@ $$
 * Arbitrary index. For theoretical concepts, we use $i$ to indicate an arbitrary index.
 
 ```{python}
-# load data
+#| echo : false
 base_idata = azp.convert_to_datatree("../models/laliga/base_model.nc")
 budget_idata = azp.convert_to_datatree("../models/laliga/budget_model.nc")
 nofield_idata = azp.convert_to_datatree("../models/laliga/nofield_model.nc")
