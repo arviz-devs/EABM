@@ -190,6 +190,8 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Simulation-Based Calibration Checking for Bayesian Computation: The Choice of Test Quantities Shapes Sensitivity;,citation_author=Martin Modrák;,citation_author=Angie H. Moon;,citation_author=Shinyoung Kim;,citation_author=Paul Bürkner;,citation_author=Niko Huurre;,citation_author=Kateřina Faltejsková;,citation_author=Andrew Gelman;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://doi.org/10.1214/23-BA1404;,citation_issue=2;,citation_doi=10.1214/23-BA1404;,citation_volume=20;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=Diagnosing suboptimal cotangent disintegrations in hamiltonian monte carlo;,citation_author=Michael Betancourt;,citation_publication_date=2016;,citation_cover_date=2016;,citation_year=2016;,citation_fulltext_html_url=https://arxiv.org/abs/1604.00695;">
 <meta name="citation_reference" content="citation_title=Posterior SBC: Simulation-based calibration checking conditional on data;,citation_author=Teemu Säilynoja;,citation_author=Marvin Schmitt;,citation_author=Paul-Christian Bürkner;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2502.03279;">
+<meta name="citation_reference" content="citation_title=Bayesian Analysis Reporting Guidelines;,citation_author=John K. Kruschke;,citation_publication_date=2021-10;,citation_cover_date=2021-10;,citation_year=2021;,citation_fulltext_html_url=https://www.nature.com/articles/s41562-021-01177-7;,citation_issue=10;,citation_doi=10.1038/s41562-021-01177-7;,citation_issn=2397-3374;,citation_volume=5;,citation_journal_title=Nature Human Behaviour;">
+<meta name="citation_reference" content="citation_title=A call for changing data analysis practices: From philosophy and comprehensive reporting to modeling approaches and back;,citation_author=Osvaldo A. Martin;,citation_author=François P. Teste;,citation_publication_date=2022-07;,citation_cover_date=2022-07;,citation_year=2022;,citation_fulltext_html_url=https://doi.org/10.1007/s11104-022-05329-0;,citation_issue=1;,citation_doi=10.1007/s11104-022-05329-0;,citation_issn=1573-5036;,citation_volume=476;,citation_journal_title=Plant and Soil;">
 </head>
 
 <body class="nav-sidebar docked">
@@ -471,7 +473,7 @@ defs &amp;= defs_* - \text{mean}(defs_*) + budget_{def} \log{\mathbf{b}} \qquad 
 </ul>
 <p>There are even more examples of predictive tasks where this particular model can be of use. However, it is important to keep in mind that this model predicts the number of goals scored. Its results can be used to estimate probabilities of victory and other derived quantities, but calculating the likelihood of these derived quantities may not be straightforward. And as you can see above, there isn’t <em>one</em> unique predictive task: it all depends on the specific question you’re interested in. As often in statistics, the answer to these questions lies <em>outside</em> the model, <em>you</em> must tell the model what to do, not the other way around.</p>
 <p>Even though we know that the predictive task is ambiguous, we will start trying to calculate <code>az.loo</code> with <code>idata_base</code> and then work on the examples above and a couple more to show how would this kind of tasks be performed with ArviZ. But before that, let’s see what ArviZ says when you naively ask it for the LOO of a multi-likelihood model:</p>
-<div id="3e067773" class="cell" data-execution_count="3">
+<div id="2ad105c1" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>azp.loo(base_idata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>TypeError: Found several log likelihood arrays ['away_goals', 'home_goals'], var_name cannot be None</code></pre>
@@ -486,7 +488,7 @@ defs &amp;= defs_* - \text{mean}(defs_*) + budget_{def} \log{\mathbf{b}} \qquad 
 <p><span class="math display">\[ p(y_i|\theta) = p(y_{i,h}|\theta_{i,h}) = \text{Poiss}(y_{i,h}; \theta_{i,h}) \]</span></p>
 <p>with <span class="math inline">\(i\)</span> being both the match indicator (<span class="math inline">\(m\)</span>, which varies with <span class="math inline">\(i\)</span>) and the field indicator (<span class="math inline">\(f\)</span>, here always fixed at <span class="math inline">\(h\)</span>). These are precisely the values stored in the <code>home_goals</code> of the <code>log_likelihood</code> group of <code>idata_base</code>.</p>
 <p>We can tell ArviZ to use these values using the argument <code>var_name</code>.</p>
-<div id="99dc41a4" class="cell" data-execution_count="4">
+<div id="dcd58281" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"home_goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>Computed from 8000 posterior samples and 380 observations log-likelihood matrix.
@@ -503,7 +505,7 @@ Pareto k diagnostic values:
     (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-<div id="dcb62b5e" class="cell" data-execution_count="5">
+<div id="8b780a76" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"home_goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
@@ -565,7 +567,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-<div id="99d238d9" class="cell" data-execution_count="6">
+<div id="913c6631" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"away_goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
@@ -639,7 +641,7 @@ p(y_i|\theta) = p(y_{i,h}|\theta_{i,h})p(y_{i,a}|\theta_{i,a}) =
 \]</span></p>
 <p>with <span class="math inline">\(i\)</span> being equal to the match indicator <span class="math inline">\(m\)</span>. Therefore, we have <span class="math inline">\(M\)</span> observations like in the previous example, but each observation has two components.</p>
 <p>We can calculate the product as a sum of logarithms and store the result in a new variable inside the <code>log_likelihood</code> group.</p>
-<div id="cd51f9a0" class="cell" data-execution_count="7">
+<div id="cac3e101" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">def</span> match_lik(idata):</span>
 <span id="cb7-2"><a href="#cb7-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood</span>
 <span id="cb7-3"><a href="#cb7-3"></a>    log_lik[<span class="st">"matches"</span>] <span class="op">=</span> log_lik.home_goals <span class="op">+</span> log_lik.away_goals</span>
@@ -665,7 +667,7 @@ Pareto k diagnostic values:
     (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-<div id="670cfcd8" class="cell" data-execution_count="8">
+<div id="d850c5df" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"matches"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
@@ -741,7 +743,7 @@ p(y_i|\theta) = p(y_{i}|\theta_{i}) =
 <p><span class="math display">\[\big\{(1,h), (2,h), \dots, (M-1,h), (M,h), (1,a), (2,a) \dots (M-1,a), (M,a)\big\}\]</span></p>
 <p>Therefore, unlike in previous cases, we have <span class="math inline">\(2M\)</span> observations.</p>
 <p>We can obtain the pointwise log likelihood corresponding to this case by concatenating the pointwise log likelihoods of <code>home_goals</code> and <code>away_goals</code>. Then, like in the previous case, store the result in a new variable inside the <code>log_likelihood</code> group.</p>
-<div id="da88c1b3" class="cell" data-execution_count="9">
+<div id="7c5d3bb9" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">def</span> goals_lik(idata):</span>
 <span id="cb10-2"><a href="#cb10-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood</span>
 <span id="cb10-3"><a href="#cb10-3"></a>    log_lik[<span class="st">"goals"</span>] <span class="op">=</span> xr.concat((log_lik.home_goals, log_lik.away_goals), <span class="st">"match"</span>).rename({<span class="st">"match"</span>: <span class="st">"goal"</span>})</span>
@@ -767,7 +769,7 @@ Pareto k diagnostic values:
     (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-<div id="681fe9ec" class="cell" data-execution_count="10">
+<div id="b2d6c7e0" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
@@ -837,7 +839,7 @@ Pareto k diagnostic values:
 <p>In this situation, we could describe the cross validation as excluding a team. When we exclude a team, we will exclude all the matches played by the team, not only the goals scored by the team but the whole match. Here is the illustration:</p>
 <p><img src="../img/cv_team.png" class="img-fluid"></p>
 <p>In the first column, we are excluding “Levante U.D.” which in the rows shown only appears once. In the second one, we are excluding “Athletic Club” which appears two times. This goes on following the order of appearance in the away team column.</p>
-<div id="b9e68629" class="cell" data-execution_count="11">
+<div id="bc966b4a" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">def</span> team_lik(idata):</span>
 <span id="cb13-2"><a href="#cb13-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood.to_dataset()</span>
 <span id="cb13-3"><a href="#cb13-3"></a>    const <span class="op">=</span> idata.constant_data.to_dataset()</span>
@@ -854,7 +856,7 @@ Pareto k diagnostic values:
 <span id="cb13-14"><a href="#cb13-14"></a>budget_idata <span class="op">=</span> team_lik(budget_idata)</span>
 <span id="cb13-15"><a href="#cb13-15"></a>nofield_idata <span class="op">=</span> team_lik(nofield_idata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="76dba84c" class="cell" data-execution_count="12">
+<div id="94e090ff" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"teams_match"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:881: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
@@ -878,7 +880,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>TODO: it would probably be best to run reloo for the three models for this case and include that on figshare too.</p>
-<div id="02c98375" class="cell" data-execution_count="13">
+<div id="e08423ed" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"teams_match"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:881: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.

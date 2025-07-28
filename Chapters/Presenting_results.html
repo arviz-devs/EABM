@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -124,6 +144,8 @@ ul.task-list li input[type="checkbox"] {
 <meta name="citation_reference" content="citation_title=Simulation-Based Calibration Checking for Bayesian Computation: The Choice of Test Quantities Shapes Sensitivity;,citation_author=Martin Modrák;,citation_author=Angie H. Moon;,citation_author=Shinyoung Kim;,citation_author=Paul Bürkner;,citation_author=Niko Huurre;,citation_author=Kateřina Faltejsková;,citation_author=Andrew Gelman;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://doi.org/10.1214/23-BA1404;,citation_issue=2;,citation_doi=10.1214/23-BA1404;,citation_volume=20;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=Diagnosing suboptimal cotangent disintegrations in hamiltonian monte carlo;,citation_author=Michael Betancourt;,citation_publication_date=2016;,citation_cover_date=2016;,citation_year=2016;,citation_fulltext_html_url=https://arxiv.org/abs/1604.00695;">
 <meta name="citation_reference" content="citation_title=Posterior SBC: Simulation-based calibration checking conditional on data;,citation_author=Teemu Säilynoja;,citation_author=Marvin Schmitt;,citation_author=Paul-Christian Bürkner;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2502.03279;">
+<meta name="citation_reference" content="citation_title=Bayesian Analysis Reporting Guidelines;,citation_author=John K. Kruschke;,citation_publication_date=2021-10;,citation_cover_date=2021-10;,citation_year=2021;,citation_fulltext_html_url=https://www.nature.com/articles/s41562-021-01177-7;,citation_issue=10;,citation_doi=10.1038/s41562-021-01177-7;,citation_issn=2397-3374;,citation_volume=5;,citation_journal_title=Nature Human Behaviour;">
+<meta name="citation_reference" content="citation_title=A call for changing data analysis practices: From philosophy and comprehensive reporting to modeling approaches and back;,citation_author=Osvaldo A. Martin;,citation_author=François P. Teste;,citation_publication_date=2022-07;,citation_cover_date=2022-07;,citation_year=2022;,citation_fulltext_html_url=https://doi.org/10.1007/s11104-022-05329-0;,citation_issue=1;,citation_doi=10.1007/s11104-022-05329-0;,citation_issn=1573-5036;,citation_volume=476;,citation_journal_title=Plant and Soil;">
 </head>
 
 <body class="nav-sidebar docked">
@@ -280,7 +302,14 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#what-to-report" id="toc-what-to-report" class="nav-link active" data-scroll-target="#what-to-report"><span class="header-section-number">12.1</span> What to report?</a></li>
+  <li><a href="#monte-carlo-standard-error-and-accuracy" id="toc-monte-carlo-standard-error-and-accuracy" class="nav-link" data-scroll-target="#monte-carlo-standard-error-and-accuracy"><span class="header-section-number">12.2</span> Monte Carlo Standard error and accuracy</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -304,12 +333,65 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>For Bayesian analysis, we consider that adopting a Bayesian workflow, rather than just Bayesian inference, is central to reducing most of the typical problems found in Bayesian data analysis <span class="citation" data-cites="gelman_2020 martin_2022">(<a href="References.html#ref-gelman_2020" role="doc-biblioref">Gelman et al. 2020</a>; <a href="References.html#ref-martin_2022" role="doc-biblioref">Martin and Teste 2022</a>)</span>. Such workflow is discussed in detail by <span class="citation" data-cites="gelman_2020">(<a href="References.html#ref-gelman_2020" role="doc-biblioref">Gelman et al. 2020</a>)</span> and we provide a brief summary of it in <a href="Bayesian_workflow.html" class="quarto-xref"><span>Chapter 13</span></a>. A report of the results of a Bayesian analysis should help reflect such workflow.</p>
+<p>The presentation of the results will depend on the audience, the context, and the goals of the analysis. For example, a presentation for a scientific paper will be different from a presentation for a business meeting. However, there are some general principles that can be applied to any presentation of results. Additionally, modern Bayesian analysis can be a complex process, and it is important to present the results in a way that is clear and understandable for the audience. This can be achieved by using visualizations, summaries, and explanations that are tailored to the audience’s level of expertise and familiarity with Bayesian analysis. Usually, the results will be split into two parts, one that provides the most important results and a second part that provides more details for those who are interested in the technical aspects of the analysis. For example, for a scientific paper, the first part should be included in the main text, while the second part can be included in the supplementary material. For a business meeting, the first part can be presented in a slide deck, while the second part can be included in a report or a technical document. Additionally, many of the details could be included in the code itself, that is stored in a repository, so that interested readers can access it and reproduce the analysis. For scientific results public repositories like <a href="https://zenodo.org/">Zenodo</a>, <a href="https://github.com/">GitHub</a> or <a href="https://gitlab.com/">GitLab</a> can be used to store the code and data.</p>
+<section id="what-to-report" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="what-to-report"><span class="header-section-number">12.1</span> What to report?</h2>
+<p>Kruschke <span class="citation" data-cites="kruschke_2021">(<a href="References.html#ref-kruschke_2021" role="doc-biblioref">Kruschke 2021</a>)</span> provides guidelines on what to report in a Bayesian analysis. These guidelines are based on his experience but also insights from previous recommendations. Here we reproduce a summary of his recommendations with some modifications and additions. Some of the differences reflect our own experience and preferences, for example we usually don’t recommend using Bayes factors, and instead we recommend using PSIS-LOO-CV for model comparison as discussed in <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a>.</p>
 <ul>
-<li>Summarizing results</li>
-<li>Monte Carlo Standard error and accuracy</li>
+<li>Explain the model.
+<ul>
+<li>Explain the variables in your model, for regression models make it clear which are the dependent (predicted) variables and which are the independent (predictor) variables. Clearly distinguish between the parameters that are of direct interest for your analysis and those are solely required for the model to fit the data but not of direct interest. If the model is hierarchical/multilevel, be sure that the hierarchical structure is clearly explained.</li>
+<li>Explain and justify the prior distribution of the parameters in the model.</li>
+<li>Include a formal specification (mathematical or computer code) of the models. A graphical representations like plate-notation, like the ones generated by <a href="https://www.pymc.io/projects/docs/en/stable/api/model/generated/pymc.model_graph.model_to_graphviz.html">PyMC</a> or <a href="https://bambinos.github.io/bambi/api/Model.html#bambi.Model.graph">Bambi</a> can also help, especially for nonstandard models and/or more applied audiences.</li>
+<li>Report prior predictive checks (<a href="Prior_posterior_predictive_checks.html" class="quarto-xref"><span>Chapter 5</span></a>) to demonstrate that the prior generates simulated data consistent with the assumed prior knowledge.</li>
+</ul></li>
+<li>Report details of the computation
+<ul>
+<li>Report the software used. This helps to ensure that the analysis can be reproduced. But it’s also a way to support the software developers, in particular if the software is open source.</li>
+<li>Report MCMC diagnostics as discussed in Chapter <a href="MCMC_diagnostics.html" class="quarto-xref"><span>Chapter 4</span></a>. For non-MCMC methods, Simulation-Based Calibration can be used to assess the quality of the inference (<a href="Simulation_based_calibration.html" class="quarto-xref"><span>Chapter 11</span></a>).</li>
+</ul></li>
+<li>Describe the posterior distribution
+<ul>
+<li>Provide a posterior predictive check to show that the model usefully mimics the data (<a href="Prior_posterior_predictive_checks.html" class="quarto-xref"><span>Chapter 5</span></a>). Discuss mismatches between the model and the data, if any.</li>
+<li>Summarize posterior of variables. For continuous parameters, derived variables and predicted values, report the central tendency (usually mean or median) and credible intervals. Be clear if you are using HDI or ETI, and make it clear the mass of the credible interval (for example, 94%).</li>
+</ul></li>
+<li>Report decisions (if any) and their criteria
+<ul>
+<li>Why decisions? Explain why the decisions are theoretically meaningful and which decision procedure is being used. Regardless of which decision procedure is used, if it addresses null values, it should be able to accept the null value not only reject it.</li>
+<li>Loss function. If utilities and a loss function for a decision rule are defined, these should be explained and reported.</li>
+<li>ROPE limits. If using a continuous-parameter posterior distribution as the basis for decision, state and justify the limits of the ROPE and the required probability mass.</li>
+<li>Decision threshold and model probabilities. If using model comparison or hypothesis testing as the basis for a decision, state and justify the decision threshold for the posterior model probability, and the minimum prior model probability that would make the posterior model probability exceed the decision threshold.</li>
+<li>Estimated values too. If deciding about null values, always also report the estimate of the parameter value (central tendency and credible interval).</li>
+</ul></li>
+<li>Report sensitivity analysis
+<ul>
+<li>Use prior predictive checks and sensitivity analysis like the ones discussed in <a href="Sensitivity_checks.html" class="quarto-xref"><span>Chapter 6</span></a> to assess the robustness of the results to the choice of priors.</li>
+<li>If making decisions, report whether decisions change under different priors.</li>
+</ul></li>
+<li>Report alternative models
+<ul>
+<li>Report the results of models that were discarded. This is important to assess the robustness of the results to the choice of model. Explain why these models were discarded and why the final model was chosen.</li>
+<li>If using PSIS-LOO-CV <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a> for model comparison, report the expected log predictive density (ELPD) and the standard error of the ELPD. This is important to assess the robustness of the results to the choice of model. If the model comparison is not relevant, explain why it is not relevant.</li>
+</ul></li>
 </ul>
+</section>
+<section id="monte-carlo-standard-error-and-accuracy" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="monte-carlo-standard-error-and-accuracy"><span class="header-section-number">12.2</span> Monte Carlo Standard error and accuracy</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-gelman_2020" class="csl-entry" role="listitem">
+Gelman, Andrew, Aki Vehtari, Daniel Simpson, Charles C. Margossian, Bob Carpenter, Yuling Yao, Lauren Kennedy, Jonah Gabry, Paul-Christian Bürkner, and Martin Modrák. 2020. <span>“Bayesian Workflow.”</span> <a href="https://arxiv.org/abs/2011.01808">https://arxiv.org/abs/2011.01808</a>.
+</div>
+<div id="ref-kruschke_2021" class="csl-entry" role="listitem">
+Kruschke, John K. 2021. <span>“Bayesian <span>Analysis</span> <span>Reporting</span> <span>Guidelines</span>.”</span> <em>Nature Human Behaviour</em> 5 (10): 1282–91. <a href="https://doi.org/10.1038/s41562-021-01177-7">https://doi.org/10.1038/s41562-021-01177-7</a>.
+</div>
+<div id="ref-martin_2022" class="csl-entry" role="listitem">
+Martin, Osvaldo A., and François P. Teste. 2022. <span>“A Call for Changing Data Analysis Practices: From Philosophy and Comprehensive Reporting to Modeling Approaches and Back.”</span> <em>Plant and Soil</em> 476 (1): 743–53. <a href="https://doi.org/10.1007/s11104-022-05329-0">https://doi.org/10.1007/s11104-022-05329-0</a>.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
