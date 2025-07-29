@@ -209,6 +209,12 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Posterior SBC: Simulation-based calibration checking conditional on data;,citation_author=Teemu Säilynoja;,citation_author=Marvin Schmitt;,citation_author=Paul-Christian Bürkner;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2502.03279;">
 <meta name="citation_reference" content="citation_title=Bayesian Analysis Reporting Guidelines;,citation_author=John K. Kruschke;,citation_publication_date=2021-10;,citation_cover_date=2021-10;,citation_year=2021;,citation_fulltext_html_url=https://www.nature.com/articles/s41562-021-01177-7;,citation_issue=10;,citation_doi=10.1038/s41562-021-01177-7;,citation_issn=2397-3374;,citation_volume=5;,citation_journal_title=Nature Human Behaviour;">
 <meta name="citation_reference" content="citation_title=A call for changing data analysis practices: From philosophy and comprehensive reporting to modeling approaches and back;,citation_author=Osvaldo A. Martin;,citation_author=François P. Teste;,citation_publication_date=2022-07;,citation_cover_date=2022-07;,citation_year=2022;,citation_fulltext_html_url=https://doi.org/10.1007/s11104-022-05329-0;,citation_issue=1;,citation_doi=10.1007/s11104-022-05329-0;,citation_issn=1573-5036;,citation_volume=476;,citation_journal_title=Plant and Soil;">
+<meta name="citation_reference" content="citation_title=Handbook of Markov Chain Monte Carlo;,citation_editor=Steve Brooks;,citation_editor=Andrew Gelman;,citation_editor=Galin Jones;,citation_editor=Xiao-Li Meng;,citation_publication_date=2011-05;,citation_cover_date=2011-05;,citation_year=2011;,citation_isbn=978-1-4200-7941-8;">
+<meta name="citation_reference" content="citation_title=Handbook of Bayesian Variable Selection;,citation_editor=Mahlet G. Tadesse;,citation_editor=Marina Vannucci;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;,citation_isbn=978-0-367-54376-1;">
+<meta name="citation_reference" content="citation_title=Think Stats: Exploratory Data Analysis;,citation_author=Allen B. Downey;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_isbn=978-1-09-819025-5;">
+<meta name="citation_reference" content="citation_title=Fundamentals of Data Visualization: A Primer on Making Informative and Compelling Figures;,citation_author=Claus O. Wilke;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_isbn=978-1-4920-3108-6;">
+<meta name="citation_reference" content="citation_title=Data Visualization: A Practical Introduction;,citation_author=Kieran Healy;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_isbn=978-0-691-18162-2;">
+<meta name="citation_reference" content="citation_title=Getting (more out of) Graphics: Practice and Principles of Data Visualisation;,citation_author=Antony Unwin;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_isbn=978-1-04-003556-6;">
 </head>
 
 <body class="nav-sidebar docked">
@@ -447,7 +453,7 @@ p(y^\ast) = \int_{\Theta} p(y^\ast \mid \theta) \; p(\theta) \; d\theta
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="25cb9f70" class="cell" data-execution_count="2">
+<div id="bfb822ad" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model: </span>
 <span id="cb1-2"><a href="#cb1-2"></a>    <span class="co"># Priors for unknown model parameters</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>    mu <span class="op">=</span> pm.Normal(<span class="st">'mu'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
@@ -539,7 +545,7 @@ Figure&nbsp;5.1: The prior predictive check for the model of heights. We can see
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="578d7169" class="cell" data-execution_count="5">
+<div id="6a9fce45" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model: </span>
 <span id="cb4-2"><a href="#cb4-2"></a>    <span class="co"># Priors for unknown model parameters</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a>    mu <span class="op">=</span> pm.Normal(<span class="st">'mu'</span>, mu<span class="op">=</span><span class="dv">160</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
@@ -651,7 +657,7 @@ Figure&nbsp;5.3: The prior predictive check for the model of heights. Same as <a
 </section>
 <section id="posterior-predictive-checks" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="posterior-predictive-checks"><span class="header-section-number">5.2</span> Posterior predictive checks</h2>
-<p>The idea behind posterior predictive checks is very general and simple: if a model is good it should be able generate data resembling the observed data. We call these checks, <em>posterior predictive</em> because we are generating synthetic data after seeing the data.</p>
+<p>The idea behind posterior predictive checks is very general and simple: if a model is good it should be able generate data resembling the observed data <span class="citation" data-cites="Gelman_2013">(<a href="References.html#ref-Gelman_2013" role="doc-biblioref">Gelman et al. 2013</a>)</span>. We call these checks, <em>posterior predictive</em> because we are generating synthetic data after seeing the data.</p>
 <p>The general algorithm for posterior predictive checks is:</p>
 <ol type="1">
 <li>Draw <span class="math inline">\(N\)</span> realizations from the posterior distribution.</li>
@@ -672,7 +678,7 @@ p(\tilde y) = \int_{\Theta} p(\tilde y \mid \theta) \; p(\theta \mid y) \; d\the
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="489d71ba" class="cell" data-execution_count="9">
+<div id="65b8181e" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> model: </span>
 <span id="cb8-2"><a href="#cb8-2"></a>    dt <span class="op">=</span> pm.sample(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>}, random_seed<span class="op">=</span>SEED)</span>
 <span id="cb8-3"><a href="#cb8-3"></a>    pm.sample_posterior_predictive(dt, random_seed<span class="op">=</span>SEED, extend_inferencedata<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -799,7 +805,7 @@ Figure&nbsp;5.5: Posterior predictive check for the model of heights using summa
 p(T_{\text{sim}} \le T_{\text{obs}} \mid \tilde y)
 \]</span></p>
 <p>Where <span class="math inline">\(T\)</span> is the summary statistic of our choice, computed for both the observed data <span class="math inline">\(T_{\text{obs}}\)</span> and the simulated data <span class="math inline">\(T_{\text{sim}}\)</span>.</p>
-<p>This is known as a posterior predictive p-value (or Bayesian p-value). This is similar to the frequentist p-value, but computed with respect to the posterior predictive distribution, instead of the sample distribution under the null hypothesis.</p>
+<p>This is known as a posterior predictive p-value (or Bayesian p-value) <span class="citation" data-cites="Gelman_2013">(<a href="References.html#ref-Gelman_2013" role="doc-biblioref">Gelman et al. 2013</a>)</span>. This is similar to the frequentist p-value, but computed with respect to the posterior predictive distribution, instead of the sample distribution under the null hypothesis.</p>
 <p>A posterior predictive p-value of 0.5 indicates that half of the predictions are below the observed values and half above. Posterior predictive p-values do not in general have uniform distributions under the null hypothesis but instead tend to have distributions more concentrated near 0.5 <span class="citation" data-cites="Gelman_2013b">(<a href="References.html#ref-Gelman_2013b" role="doc-biblioref">Gelman 2013</a>)</span>. For instance, we already mentioned that the mean is easy to recover for many models and thus the posterior predictive p-value for the mean is often concentrated around 0.5.</p>
 <p>The term “Bayesian p-values” may sound like an oxymoron or paradoxical <span class="citation" data-cites="Meng_1994">(<a href="References.html#ref-Meng_1994" role="doc-biblioref">Meng 1994</a>)</span>. The Bayesian p-values are defined similar to their frequentist cousins and hence the name. But they are used in a very different way. We use posterior predictive p-values as a diagnostic tool to asses potential mismatches between model and data rather than as a measure of “statistical significance” or as a dichotomy decision tool. The null hypothesis is that the predictions from the model and the observed data are drawn from the same data-generating process, but in practice we are not interested in rejecting this hypothesis. We already know is not true! Instead, we are interested in understanding how well the model is doing at predicting the data, detecting potential problems, an if possible or desirable improving the model.</p>
 </section>
@@ -970,7 +976,7 @@ Figure&nbsp;5.11: Coverage check showing four alternative scenarios.
 </section>
 <section id="sec-avoid-double-dipping" class="level3" data-number="5.2.4">
 <h3 data-number="5.2.4" class="anchored" data-anchor-id="sec-avoid-double-dipping"><span class="header-section-number">5.2.4</span> Avoiding double-dipping</h3>
-<p>So far we have being using the data twice, first to fit the model and then to evaluate it. This is a common practice in Bayesian data analysis and it is not a problem as long as we are aware of it. The main goal is to understand how well the model is doing at predicting the data, detecting potential problems, and if possible or desirable improving the model.</p>
+<p>So far we have being using the data twice, first to fit the model and then to evaluate it. This is a common practice in Bayesian data analysis and it is not a problem as long as we are aware of it. The main goal is to understand how well the model is doing at predicting the data, detecting potential problems, and if possible or desirable improving the model <span class="citation" data-cites="Gelman_2013">(<a href="References.html#ref-Gelman_2013" role="doc-biblioref">Gelman et al. 2013</a>)</span>.</p>
 <p>Still, we may want to avoid double-dipping. So instead of computing:</p>
 <p><span class="math display">\[
 p(\tilde y_i \leq y_i \mid y)
@@ -1013,7 +1019,7 @@ Figure&nbsp;5.12: Posterior predictive check with LOO-PIT-ECDF.
 <p>Here we are going to discuss the rootograms presented by <span class="citation" data-cites="Säilynoja_2025">Säilynoja et al. (<a href="References.html#ref-Säilynoja_2025" role="doc-biblioref">2025</a>)</span>. These rootograms emphasises the discreteness of the data and and predictions by using points. The uncertainty in the predictions is encoded using intervals. Instead of square-rooting the data, it set the y-axis on the square root scale, this makes easier to interpret the data, because we can directly read the frecuencies from the y-axis (instead of reading the square roots) while keeping the advantage of being able to discriminate details at lower frecuencies.</p>
 <p>To illustrate rootograms we are going to use the Horseshoe crabs dataset <span class="citation" data-cites="Brockmann_1996">(<a href="References.html#ref-Brockmann_1996" role="doc-biblioref">Brockmann 1996</a>)</span>. Very briefly, horseshoe crabs arrive at the beach in pairs for their spawning ritual. Solitary males gather around the nesting couples and vying to fertilize the eggs. These individuals, known as satellite males, often congregate near certain nesting pairs while disregarding others. We used Bambi to create two models a poisson model and a hurdle-negative binomial model for the number of male satellites as a function of the carapace width and color of the female.</p>
 <p>We are going to omit the modelling details, and just upload prefitted models.</p>
-<div id="1bba4154" class="cell" data-execution_count="20">
+<div id="6209c745" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>crabs_poisson <span class="op">=</span> azp.load_arviz_data(<span class="st">'crabs_poisson'</span>)</span>
 <span id="cb19-2"><a href="#cb19-2"></a>crabs_hurdle_nb <span class="op">=</span> azp.load_arviz_data(<span class="st">'crabs_hurdle_nb'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1093,6 +1099,9 @@ Gabry, Jonah, Daniel Simpson, Aki Vehtari, Michael Betancourt, and Andrew Gelman
 </div>
 <div id="ref-Gelman_2013b" class="csl-entry" role="listitem">
 Gelman, Andrew. 2013. <span>“<span class="nocase">Two simple examples for understanding posterior p-values whose distributions are far from uniform</span>.”</span> <em>Electronic Journal of Statistics</em> 7 (none): 2595–2602. <a href="https://doi.org/10.1214/13-EJS854">https://doi.org/10.1214/13-EJS854</a>.
+</div>
+<div id="ref-Gelman_2013" class="csl-entry" role="listitem">
+Gelman, Andrew, John B. Carlin, Hal S. Stern, David B. Dunson, Aki Vehtari, and Donald B. Rubin. 2013. <em>Bayesian <span>Data</span> <span>Analysis</span></em>. Boca Raton.
 </div>
 <div id="ref-Kleiber_2016" class="csl-entry" role="listitem">
 Kleiber, Christian, and Achim Zeileis. 2016. <span>“Visualizing Count Data Regressions Using Rootograms.”</span> <em>The American Statistician</em> 70 (3): 296–303. <a href="https://doi.org/10.1080/00031305.2016.1173590">https://doi.org/10.1080/00031305.2016.1173590</a>.
