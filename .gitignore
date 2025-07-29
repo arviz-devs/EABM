@@ -1,5 +1,6 @@
-# checkpoint folder from jupyter notebook
 .ipynb_checkpoints
 extras
-
+.vscode/
 /.quarto/
+Chapters/*.html
+Chapters/*.quarto_ipynb

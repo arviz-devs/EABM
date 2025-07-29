@@ -300,7 +300,7 @@ Overall, the power-scaling sensitivity analysis on the adjusted prior shows that
 
 ## Non-interpretable parameters and derived quantities
 
-In many cases, instead of looking at the posterior distribution of the model parameters, we will be interested in derived quantities. Some examples of derived quantities include, predictive performance measures, such as the Bayesian R² or the log-score. Another example are predictions evaluated at specific values of the predictors, like the median of one or more predictors.
+In many cases, instead of looking at the posterior distribution of the model parameters, we will be interested in derived quantities. Some examples of derived quantities include, predictive performance measures, such as the Bayesian R² or the  joint log-likelihood. Another example are predictions evaluated at specific values of the predictors, like the median of one or more predictors.
 
 Evaluating the sensitivity of derived quantities can be useful in at least two scenarios:
 
@@ -313,7 +313,7 @@ Evaluating the sensitivity of derived quantities can be useful in at least two s
 Let's illustrate this with an example. We will use the same model we used in the previous section, but instead of looking at the posterior distribution of the parameters, we will focus on the following derived quantities:
 
 * The Bayesian R².
-* The log-score. This is the sum of the log-likelihood over all observations.
+* The  joint log-likelihood. This is the sum of the log-likelihood over all observations.
 
 We are going to start by computing predictions at `new_data`, as you may already know how to do this from other examples. To do that we need to create a new DataFrame with the values of the predictors we want to use for prediction. In this case, we will use the median, min, and max values of each covariate. For your particular use case, you may want to use different values, like quantiles of any other specific values of interest.
 
@@ -324,7 +324,7 @@ r2_da = azp.ndarray_to_dataarray(azp.r2_score(dt_bf_01, summary=False).reshape(4
 dt_bf_01.posterior["r2_score"] = r2_da
 ```
 
-To compute the log-score we just sum the poin-twise log-likelihood evaluations along the observations. In other words we compute one log-likelihood value per MCMC step.
+To compute the  joint log-likelihood we just sum the poin-twise log-likelihood evaluations along the observations. In other words we compute one log-likelihood value per MCMC step.
 
 ```{python}
 dt_bf_01.posterior["log_score"] = dt_bf_01.log_likelihood.sum("y_dim_0")["y"]
