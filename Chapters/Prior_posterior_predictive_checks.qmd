@@ -274,7 +274,7 @@ Finally, one benefit that’s often underappreciated is that running prior predi
 
 ## Posterior predictive checks
 
-The idea behind posterior predictive checks is very general and simple: if a model is good it should be able generate data resembling the observed data. We call these checks, *posterior predictive* because we are generating synthetic data after seeing the data.
+The idea behind posterior predictive checks is very general and simple: if a model is good it should be able generate data resembling the observed data [@Gelman_2013]. We call these checks, *posterior predictive* because we are generating synthetic data after seeing the data.
 
 The general algorithm for posterior predictive checks is:
 
@@ -432,7 +432,7 @@ $$
 
 Where $T$ is the summary statistic of our choice, computed for both the observed data $T_{\text{obs}}$ and the simulated data $T_{\text{sim}}$. 
 
-This is known as a posterior predictive p-value (or Bayesian p-value). This is similar to the frequentist p-value, but computed with respect to the posterior predictive distribution, instead of the sample distribution under the null hypothesis. 
+This is known as a posterior predictive p-value (or Bayesian p-value) [@Gelman_2013]. This is similar to the frequentist p-value, but computed with respect to the posterior predictive distribution, instead of the sample distribution under the null hypothesis. 
 
 A posterior predictive p-value of 0.5 indicates that half of the predictions are below the observed values and half above. Posterior predictive p-values do not in general have uniform distributions under the null hypothesis but instead tend to have distributions more concentrated near 0.5 [@Gelman_2013b]. For instance, we already mentioned that the mean is easy to recover for many models and thus the posterior predictive p-value for the mean is often concentrated around 0.5.
 
@@ -573,7 +573,7 @@ azp.plot_ppc_pit(dt_i,
 
 ### Avoiding double-dipping {#sec-avoid-double-dipping}
 
-So far we have being using the data twice, first to fit the model and then to evaluate it. This is a common practice in Bayesian data analysis and it is not a problem as long as we are aware of it. The main goal is to understand how well the model is doing at predicting the data, detecting potential problems, and if possible or desirable improving the model. 
+So far we have being using the data twice, first to fit the model and then to evaluate it. This is a common practice in Bayesian data analysis and it is not a problem as long as we are aware of it. The main goal is to understand how well the model is doing at predicting the data, detecting potential problems, and if possible or desirable improving the model [@Gelman_2013]. 
 
 Still, we may want to avoid double-dipping. So instead of computing:
 

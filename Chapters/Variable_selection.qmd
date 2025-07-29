@@ -16,7 +16,7 @@ seed = 793
 azp.style.use("arviz-variat")
 ```
 
-Variable selection refers to the process of identifying the most relevant variables in a model from a larger set of predictors. When performing this process we usually assume that variables contribute unevenly to the outcome and we want to identify the most important ones. Sometimes we also care about the order in which variables are included in the model [@martin_2024; @piironen_2020].
+Variable selection refers to the process of identifying the most relevant variables in a model from a larger set of predictors. When performing this process we usually assume that variables contribute unevenly to the outcome and we want to identify the most important ones. Sometimes we also care about the order in which variables are included in the model [@piironen_2020; @tadesse_2022].
 
 One might argue that "the most Bayesian thing to do" is to always include all conceivable variables in a model and then use the posterior distribution to make predictions or understand variable relationships. This approach is considered "most Bayesian" because it leverages the maximum amount of data and incorporates uncertainty about variable importance into the posterior distribution. However, being *more Bayesian than Bayes* is not always the best idea.
 
