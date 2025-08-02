@@ -453,7 +453,7 @@ p(y^\ast) = \int_{\Theta} p(y^\ast \mid \theta) \; p(\theta) \; d\theta
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="bfb822ad" class="cell" data-execution_count="2">
+<div id="4839b51b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model: </span>
 <span id="cb1-2"><a href="#cb1-2"></a>    <span class="co"># Priors for unknown model parameters</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>    mu <span class="op">=</span> pm.Normal(<span class="st">'mu'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
@@ -545,7 +545,7 @@ Figure&nbsp;5.1: The prior predictive check for the model of heights. We can see
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="6a9fce45" class="cell" data-execution_count="5">
+<div id="ab0f4c0c" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model: </span>
 <span id="cb4-2"><a href="#cb4-2"></a>    <span class="co"># Priors for unknown model parameters</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a>    mu <span class="op">=</span> pm.Normal(<span class="st">'mu'</span>, mu<span class="op">=</span><span class="dv">160</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
@@ -678,7 +678,7 @@ p(\tilde y) = \int_{\Theta} p(\tilde y \mid \theta) \; p(\theta \mid y) \; d\the
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="65b8181e" class="cell" data-execution_count="9">
+<div id="49430ccb" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> model: </span>
 <span id="cb8-2"><a href="#cb8-2"></a>    dt <span class="op">=</span> pm.sample(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>}, random_seed<span class="op">=</span>SEED)</span>
 <span id="cb8-3"><a href="#cb8-3"></a>    pm.sample_posterior_predictive(dt, random_seed<span class="op">=</span>SEED, extend_inferencedata<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1019,7 +1019,7 @@ Figure&nbsp;5.12: Posterior predictive check with LOO-PIT-ECDF.
 <p>Here we are going to discuss the rootograms presented by <span class="citation" data-cites="Säilynoja_2025">Säilynoja et al. (<a href="References.html#ref-Säilynoja_2025" role="doc-biblioref">2025</a>)</span>. These rootograms emphasises the discreteness of the data and and predictions by using points. The uncertainty in the predictions is encoded using intervals. Instead of square-rooting the data, it set the y-axis on the square root scale, this makes easier to interpret the data, because we can directly read the frecuencies from the y-axis (instead of reading the square roots) while keeping the advantage of being able to discriminate details at lower frecuencies.</p>
 <p>To illustrate rootograms we are going to use the Horseshoe crabs dataset <span class="citation" data-cites="Brockmann_1996">(<a href="References.html#ref-Brockmann_1996" role="doc-biblioref">Brockmann 1996</a>)</span>. Very briefly, horseshoe crabs arrive at the beach in pairs for their spawning ritual. Solitary males gather around the nesting couples and vying to fertilize the eggs. These individuals, known as satellite males, often congregate near certain nesting pairs while disregarding others. We used Bambi to create two models a poisson model and a hurdle-negative binomial model for the number of male satellites as a function of the carapace width and color of the female.</p>
 <p>We are going to omit the modelling details, and just upload prefitted models.</p>
-<div id="6209c745" class="cell" data-execution_count="20">
+<div id="5b0c9019" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>crabs_poisson <span class="op">=</span> azp.load_arviz_data(<span class="st">'crabs_poisson'</span>)</span>
 <span id="cb19-2"><a href="#cb19-2"></a>crabs_hurdle_nb <span class="op">=</span> azp.load_arviz_data(<span class="st">'crabs_hurdle_nb'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>

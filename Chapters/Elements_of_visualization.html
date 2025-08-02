@@ -558,7 +558,7 @@ Figure&nbsp;1.9: arviz-cetrino style use a color-blind friendly palette
 <span id="cb3-3"><a href="#cb3-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
 <span id="cb3-4"><a href="#cb3-4"></a></span>
 <span id="cb3-5"><a href="#cb3-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="fl">4.5</span>, <span class="fl">2.5</span>))</span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
 <span id="cb3-7"><a href="#cb3-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb3-8"><a href="#cb3-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
 <span id="cb3-9"><a href="#cb3-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -579,8 +579,8 @@ Figure&nbsp;1.10: arviz-vibrant style use a color-blind friendly palette
 </div>
 </div>
 </div>
-<p>The color palettes in ArviZ were designed with the help of <a href="https://colorcyclepicker.mpetroff.net">colorcyclepicker</a>. Other palettes distributed with ArviZ are <code>'arviz-cetrino'</code>, and <code>'arviz-vibrant'</code>. To list all available styles use <code>azp.style.available()</code>.</p>
-<p>If you need to do plots in grey-scale we recommend restricting yourself to the first 3 colours of the ArviZ palettes, or the last 3 of <code>arviz-variat</code> otherwise, you may need to use different <a href="https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D.set_linestyle">line styles</a> or <a href="https://matplotlib.org/api/markers_api.html#module-matplotlib.markers">different markers</a>.</p>
+<p>The color palettes in ArviZ were designed with the help of <a href="https://colorcyclepicker.mpetroff.net">colorcyclepicker</a> to minimize the risk of confusion for people with color vision deficiencies. We also follow the recomendation from <span class="citation" data-cites="wilke_2019">Wilke (<a href="References.html#ref-wilke_2019" role="doc-biblioref">2019</a>)</span> and restrict the color palette to a maximum of 8 colors. If you need to use many colors it’s recomended to explore alternatives like using different line styles, different markers, facetting or direct labelling.</p>
+<p>If you need to create figures in grey-scale you can use the first 3 colours of the <code>arviz-vibrant</code> pallete and then convert to grayscale. But remeber to check that the result looks goods after the conversion.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
