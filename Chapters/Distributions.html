@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -197,6 +217,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Fundamentals of Data Visualization: A Primer on Making Informative and Compelling Figures;,citation_author=Claus O. Wilke;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_isbn=978-1-4920-3108-6;">
 <meta name="citation_reference" content="citation_title=Data Visualization: A Practical Introduction;,citation_author=Kieran Healy;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_isbn=978-0-691-18162-2;">
 <meta name="citation_reference" content="citation_title=Getting (more out of) Graphics: Practice and Principles of Data Visualisation;,citation_author=Antony Unwin;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_isbn=978-1-04-003556-6;">
+<meta name="citation_reference" content="citation_title=When (ish) is My Bus? User-centered Visualizations of Uncertainty in Everyday, Mobile Predictive Systems;,citation_author=Matthew Kay;,citation_author=Tara Kola;,citation_author=Jessica R. Hullman;,citation_author=Sean A. Munson;,citation_publication_date=2016-05;,citation_cover_date=2016-05;,citation_year=2016;,citation_fulltext_html_url=https://doi.org/10.1145/2858036.2858558;,citation_doi=10.1145/2858036.2858558;,citation_isbn=978-1-4503-3362-7;,citation_conference_title=Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’16;">
 </head>
 
 <body class="nav-sidebar docked">
@@ -545,14 +566,14 @@ Figure&nbsp;3.7: CDF of a normal distribution
 </div>
 </div>
 <p>The CDF is usually easier to read than the PDF, as we already saw y-axis for a PDF is a density that has no intrinsic meaning, and to get probability from a PDF we need to evaluate areas. Instead for a CDF the y-axis is a probability. For the PMF/PDF it is easier to get the mode (the highest value for the point/curve), and for the CDF it is easier to get the median (the value of <span class="math inline">\(x\)</span> for which <span class="math inline">\(y=0.5\)</span>), or other quantiles. From the CDF it is also easier to quickly get quantities like <em>the probability of getting a temperature equal or lower than 35 degrees</em>. It is the value of the CDF at 35. From <a href="#fig-normal_cdf" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> we can see that it is roughly 0.9 or 90%, if you want more accuracy you could use a matplotlib/ArviZ style with a grid (like <code>arviz-darkgrid</code>) or use the <code>cdf()</code> function.</p>
-<div id="b8d73789" class="cell" data-execution_count="9">
+<div id="946a5564" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>pz.Normal(<span class="dv">30</span>, <span class="dv">4</span>).cdf(<span class="dv">35</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>0.894350157794624</code></pre>
 </div>
 </div>
 <p>From the CDF we can also easily get the probability of a range of values. For example, the probability of the temperature being between 25 and 35 degrees is the difference between the CDF at 35 and the CDF at 25. From <a href="#fig-normal_cdf" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> we can get that it is roughly 0.9 or 90%. Again even when you can get a good estimate just by looking at the graph you can use the <code>cdf()</code> function to get a more accurate estimate. But the fact that you can get a good estimate by looking at the graph is a good feature.</p>
-<div id="c647cff2" class="cell" data-execution_count="10">
+<div id="6664f34e" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>np.diff(pz.Normal(<span class="dv">30</span>, <span class="dv">4</span>).cdf([<span class="dv">25</span>, <span class="dv">35</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>array([0.78870032])</code></pre>
@@ -664,7 +685,7 @@ Figure&nbsp;3.12: Histogram from a sample of integers, with bins automatically c
 <p><a href="https://en.wikipedia.org/wiki/Kernel_density_estimation">Kernel density estimation</a> (KDE) is a non-parametric way to estimate the probability density function from a sample. Intuitively you can think of it as the smooth version of a histogram. Conceptually you place a <em>kernel function</em> like a Gaussian <em>on top</em> of a data point, then you sum all the Gaussians, generally evaluated over a grid and not over the data points. Results are normalized so the total area under the curve is one. The following video shows a step-by-step animation of a KDE being built. You can see a version with border corrections and without them. Border corrections avoid adding a positive density outside the range of the data.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../videos/kde.mp4"></video></div>
 <p>The following block of code shows a very simple example of a KDE.</p>
-<div id="927c2a3b" class="cell" data-execution_count="16">
+<div id="a938274e" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># synthetic data, 7 points</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>data <span class="op">=</span> np.array([<span class="fl">7.9</span>, <span class="fl">6.5</span>, <span class="fl">7.4</span>, <span class="fl">8.3</span>, <span class="fl">5.1</span>, <span class="fl">5.4</span>, <span class="fl">7.2</span>])</span>
 <span id="cb17-3"><a href="#cb17-3"></a>n_obs <span class="op">=</span> <span class="bu">len</span>(data)</span>
@@ -731,7 +752,7 @@ Figure&nbsp;3.14: empirical cumulative distribution function
 </section>
 <section id="quantile-dot-plots" class="level3" data-number="3.5.4">
 <h3 data-number="3.5.4" class="anchored" data-anchor-id="quantile-dot-plots"><span class="header-section-number">3.5.4</span> Quantile dot plots</h3>
-<p>A quantile dot plot displays the distribution of a sample in terms of its quantiles. Reading the median or other quantiles from quantile dot plots is generally easy, we just need to count the number of dots.</p>
+<p>A quantile dot plot <span class="citation" data-cites="kay_2016">(<a href="References.html#ref-kay_2016" role="doc-biblioref">Kay et al. 2016</a>)</span> displays the distribution of a sample in terms of its quantiles. Reading the median or other quantiles from quantile dot plots is generally easy, we just need to count the number of dots.</p>
 <p>The following video shows a step-by-step animation of a quantile dot plot being built.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video4" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../videos/dotplot.mp4"></video></div>
 <p>From <a href="#fig-dist_qdot" class="quarto-xref">Figure&nbsp;<span>3.15</span></a> we can easily see that 30% of the data is below 2. We do this by noticing that we have a total of 10 dots and 3 of them are below 2.</p>
@@ -757,6 +778,11 @@ Figure&nbsp;3.15: Quantile dot plot
 <p>The number of quantiles (<code>nquantiles</code>) is something you will need to choose by yourself, usually, it is a good idea to keep this number relatively small and “round”, as the main feature of a quantile dot plot is that finding probability intervals reduces to counting dots. It is easier to count and compute proportion if you have 10, or 20 dots than if you have 11 or 57. But sometimes a larger number could be a good idea too, for instance, if you or your audience wants to focus on the tails of the distribution a larger number of dots will give you more resolution and you still will be counting only a rather small number dots so it will be easy to compute proportions.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-kay_2016" class="csl-entry" role="listitem">
+Kay, Matthew, Tara Kola, Jessica R. Hullman, and Sean A. Munson. 2016. <span>“When (Ish) Is <span>My</span> <span>Bus</span>? <span>User</span>-Centered <span>Visualizations</span> of <span>Uncertainty</span> in <span>Everyday</span>, <span>Mobile</span> <span>Predictive</span> <span>Systems</span>.”</span> In <em>Proceedings of the 2016 <span>CHI</span> <span>Conference</span> on <span>Human</span> <span>Factors</span> in <span>Computing</span> <span>Systems</span></em>, 5092–5103. <span>CHI</span> ’16. New York, NY, USA: Association for Computing Machinery. <a href="https://doi.org/10.1145/2858036.2858558">https://doi.org/10.1145/2858036.2858558</a>.
+</div>
+</div>
 </section>
 </section>
 
