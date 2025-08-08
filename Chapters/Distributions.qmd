@@ -237,7 +237,7 @@ azp.plot_dist(c_values, kind="ecdf");
 
 ### Quantile dot plots
 
-A quantile dot plot displays the distribution of a sample in terms of its quantiles. Reading the median or other quantiles from quantile dot plots is generally easy, we just need to count the number of dots. 
+A quantile dot plot [@kay_2016] displays the distribution of a sample in terms of its quantiles. Reading the median or other quantiles from quantile dot plots is generally easy, we just need to count the number of dots.
 
 The following video shows a step-by-step animation of a quantile dot plot being built.
 
