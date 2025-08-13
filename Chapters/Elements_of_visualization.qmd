@@ -96,7 +96,7 @@ Matplotlib allows users to easily switch between plotting styles by defining sty
 
 
 ::: {.panel-tabset}
-## variant
+## variat
 ```{python}
 #| code-fold: true
 #| label: fig-style_variat
@@ -128,6 +128,38 @@ plt.xlabel('x')
 plt.ylabel('f(x)', rotation=0, labelpad=15);
 ```
 
+## tenui
+```{python}
+#| code-fold: true
+#| label: fig-style_tenui
+#| fig-cap: "arviz-tenui style use a color-blind friendly palette"
+azp.style.use('arviz-tenui')
+x = np.linspace(0, 1, 100)
+dist = pz.Beta(2, 5).pdf(x)
+
+fig = plt.figure(figsize=(4.5, 2.5))
+for i in range(8):
+    plt.plot(x, dist - i, f'C{i}', label=f'C{i}', lw=3)
+plt.xlabel('x')
+plt.ylabel('f(x)', rotation=0, labelpad=15);
+```
+
+## tumma
+```{python}
+#| code-fold: true
+#| label: fig-style_tumma
+#| fig-cap: "arviz-tumma style use a color-blind friendly palette"
+azp.style.use('arviz-tumma')
+x = np.linspace(0, 1, 100)
+dist = pz.Beta(2, 5).pdf(x)
+
+fig = plt.figure(figsize=(4.5, 2.5))
+for i in range(8):
+    plt.plot(x, dist - i, f'C{i}', label=f'C{i}', lw=3)
+plt.xlabel('x')
+plt.ylabel('f(x)', rotation=0, labelpad=15);
+```
+
 ## vibrant
 ```{python}
 #| code-fold: true
@@ -146,6 +178,6 @@ plt.ylabel('f(x)', rotation=0, labelpad=15);
 :::
 
 
-The color palettes in ArviZ were designed with the help of [colorcyclepicker](https://colorcyclepicker.mpetroff.net) to minimize the risk of confusion for people with color vision deficiencies. We also follow the recomendation from @wilke_2019 and restrict the color palette to a maximum of 8 colors. If you need to use many colors it's recomended to explore alternatives like using different line styles, different markers, facetting or direct labelling.
+The color palettes in ArviZ were designed with the help of [colorcyclepicker](https://colorcyclepicker.mpetroff.net) to minimize the risk of confusion for people with color vision deficiencies. We also follow the recommendation from @wilke_2019 and restrict the color palette to a maximum of 8 colors. If you need to use many colors it's recommended to explore alternatives like using different line styles, different markers, faceting or direct labelling.
 
-If you need to create figures in grey-scale you can use the first 3 colours of the `arviz-vibrant` pallete and then convert to grayscale. But remeber to check that the result looks goods after the conversion.
+If you need to create figures in grayscale you can use the first 3 colours of the `arviz-vibrant` pallete and then convert to grayscale. But remember to check that the result looks goods after the conversion.
