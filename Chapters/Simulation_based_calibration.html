@@ -505,7 +505,7 @@ p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{margin
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="e1e865b4" class="cell" data-execution_count="2">
+<div id="81ede621" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> simuk <span class="im">as</span> sim</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -533,7 +533,7 @@ p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{margin
 </div>
 </div>
 <p>To assess the calibration of the inference, we inspect the uniformity of the PIT values of the posterior samples with respect to the prior samples. To do that we can simply call the <code>plot_ecdf_pit</code> function from the <code>ArviZ</code> package.</p>
-<div id="909576eb" class="cell" data-execution_count="4">
+<div id="18cd9ac2" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>azp.plot_ecdf_pit(sbc_results,</span>
 <span id="cb3-2"><a href="#cb3-2"></a>              visuals<span class="op">=</span>{<span class="st">"xlabel"</span>:<span class="va">False</span>},</span>
 <span id="cb3-3"><a href="#cb3-3"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

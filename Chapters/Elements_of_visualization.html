@@ -494,7 +494,7 @@ Figure&nbsp;1.7: non-uniformly perceptual maps like jet can be very misleading
 <h2 data-number="1.5" class="anchored" data-anchor-id="style-sheets"><span class="header-section-number">1.5</span> Style sheets</h2>
 <p>Matplotlib allows users to easily switch between plotting styles by defining style sheets. ArviZ is delivered with a few additional styles that can be applied globally by writing <code>az.style.use(name_of_style)</code> or inside a <code>with</code> statement.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">variant</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">cetrino</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">vibrant</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">variat</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">cetrino</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">tenui</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">tumma</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">vibrant</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div id="cell-fig-style_variat" class="cell" data-execution_count="2">
@@ -553,10 +553,10 @@ Figure&nbsp;1.9: arviz-cetrino style use a color-blind friendly palette
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<div id="cell-fig-style_vibrant" class="cell" data-execution_count="4">
+<div id="cell-fig-style_tenui" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>azp.style.use(<span class="st">'arviz-vibrant'</span>)</span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>azp.style.use(<span class="st">'arviz-tenui'</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
 <span id="cb3-3"><a href="#cb3-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
 <span id="cb3-4"><a href="#cb3-4"></a></span>
@@ -567,13 +567,69 @@ Figure&nbsp;1.9: arviz-cetrino style use a color-blind friendly palette
 <span id="cb3-9"><a href="#cb3-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
+<div id="fig-style_tenui" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-style_tenui-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Elements_of_visualization_files/figure-html/fig-style_tenui-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-style_tenui-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.10: arviz-tenui style use a color-blind friendly palette
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div id="cell-fig-style_tumma" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>azp.style.use(<span class="st">'arviz-tumma'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="fl">4.5</span>, <span class="fl">2.5</span>))</span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb4-7"><a href="#cb4-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb4-9"><a href="#cb4-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-style_tumma" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-style_tumma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Elements_of_visualization_files/figure-html/fig-style_tumma-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-style_tumma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.11: arviz-tumma style use a color-blind friendly palette
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div id="cell-fig-style_vibrant" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>azp.style.use(<span class="st">'arviz-vibrant'</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="fl">4.5</span>, <span class="fl">2.5</span>))</span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb5-8"><a href="#cb5-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb5-9"><a href="#cb5-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
 <div id="fig-style_vibrant" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-style_vibrant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="Elements_of_visualization_files/figure-html/fig-style_vibrant-output-1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-style_vibrant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1.10: arviz-vibrant style use a color-blind friendly palette
+Figure&nbsp;1.12: arviz-vibrant style use a color-blind friendly palette
 </figcaption>
 </figure>
 </div>
@@ -582,8 +638,8 @@ Figure&nbsp;1.10: arviz-vibrant style use a color-blind friendly palette
 </div>
 </div>
 </div>
-<p>The color palettes in ArviZ were designed with the help of <a href="https://colorcyclepicker.mpetroff.net">colorcyclepicker</a> to minimize the risk of confusion for people with color vision deficiencies. We also follow the recomendation from <span class="citation" data-cites="wilke_2019">Wilke (<a href="References.html#ref-wilke_2019" role="doc-biblioref">2019</a>)</span> and restrict the color palette to a maximum of 8 colors. If you need to use many colors it’s recomended to explore alternatives like using different line styles, different markers, facetting or direct labelling.</p>
-<p>If you need to create figures in grey-scale you can use the first 3 colours of the <code>arviz-vibrant</code> pallete and then convert to grayscale. But remeber to check that the result looks goods after the conversion.</p>
+<p>The color palettes in ArviZ were designed with the help of <a href="https://colorcyclepicker.mpetroff.net">colorcyclepicker</a> to minimize the risk of confusion for people with color vision deficiencies. We also follow the recommendation from <span class="citation" data-cites="wilke_2019">Wilke (<a href="References.html#ref-wilke_2019" role="doc-biblioref">2019</a>)</span> and restrict the color palette to a maximum of 8 colors. If you need to use many colors it’s recommended to explore alternatives like using different line styles, different markers, faceting or direct labelling.</p>
+<p>If you need to create figures in grayscale you can use the first 3 colours of the <code>arviz-vibrant</code> pallete and then convert to grayscale. But remember to check that the result looks goods after the conversion.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
