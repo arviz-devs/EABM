@@ -503,7 +503,7 @@ w_{\alpha} = p(\theta)^{\alpha-1}
 <h2 data-number="6.2" class="anchored" data-anchor-id="body-fat-example"><span class="header-section-number">6.2</span> Body fat example</h2>
 <p>Let’s see an example of prior-data conflict in a linear regression model. We will use the bodyfat data set <span class="citation" data-cites="johnson_1996">(<a href="References.html#ref-johnson_1996" role="doc-biblioref">Johnson 1996</a>)</span>. The aim of the analysis is to predict an expensive and cumbersome water immersion measurement of body fat percentage (observed variable named <code>siri</code>) from a set of thirteen easier to measure characteristics, including age, height, weight, and circumferences of various body parts.</p>
 <p>Let’s start by loading the data and creating a <code>siri</code> variable for the response and a <code>body_fat</code> variable for the predictors. We center the predictors.</p>
-<div id="6e05cc61" class="cell" data-execution_count="4">
+<div id="a871120d" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>body_fat <span class="op">=</span> pd.read_csv(<span class="st">"../data/body_fat.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2"></a>siri <span class="op">=</span> body_fat.pop(<span class="st">"siri"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3"></a>body_fat <span class="op">=</span> body_fat <span class="op">-</span> body_fat.mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -523,7 +523,7 @@ w_{\alpha} = p(\theta)^{\alpha-1}
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="ac9c00c9" class="cell" data-execution_count="5">
+<div id="1eb9c606" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="cf">with</span> pm.Model(coords<span class="op">=</span>{<span class="st">"covariates"</span>: body_fat.columns}) <span class="im">as</span> model_bf_00:</span>
 <span id="cb2-2"><a href="#cb2-2"></a>    β_0 <span class="op">=</span> pm.StudentT(<span class="st">"β_0"</span>, nu<span class="op">=</span><span class="dv">3</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
 <span id="cb2-3"><a href="#cb2-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">1</span>, dims<span class="op">=</span><span class="st">"covariates"</span>)</span>
@@ -541,7 +541,7 @@ w_{\alpha} = p(\theta)^{\alpha-1}
 </div>
 <p>We can now use the <code>psense_summary</code> function from ArviZ to perform a numerical sensitivity analysis. This function returns a four-column DataFrame. The first column is the name of the variables, the second is the value of CJS when power-scaling the prior, then the value of CJS when power-scaling the likelihood and the last one is a textual description of the results.</p>
 <p>For the <span class="math inline">\(\beta\)</span> coefficient <code>wrist</code> we can see that we may have prior-sensitivity (CJS&gt;0.05) and likelihood-sensitivity (CJS&gt;0.05). Thus, we may have a case of prior-data conflict for the <code>wrist</code> variable.</p>
-<div id="58573c84" class="cell" data-execution_count="7">
+<div id="52b5e9c5" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>azp.psense_summary(dt_bf_00, var_names<span class="op">=</span>[<span class="st">"~μ"</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>We detected potential issues. For more information on how to interpret the results, please check
@@ -706,7 +706,7 @@ Figure&nbsp;6.4: Posterior quantities of βwrist as a function of power-scaling 
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="ed7138ae" class="cell" data-execution_count="10">
+<div id="603c90bd" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> pm.Model(coords<span class="op">=</span>{<span class="st">"covariates"</span>: body_fat.columns}) <span class="im">as</span> model_bf_01:</span>
 <span id="cb8-2"><a href="#cb8-2"></a>    β_0 <span class="op">=</span> pm.StudentT(<span class="st">"β_0"</span>, nu<span class="op">=</span><span class="dv">3</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
 <span id="cb8-3"><a href="#cb8-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="fl">2.5</span> <span class="op">*</span> siri.std() <span class="op">/</span> body_fat.std(), dims<span class="op">=</span><span class="st">"covariates"</span>)</span>
@@ -725,7 +725,7 @@ Figure&nbsp;6.4: Posterior quantities of βwrist as a function of power-scaling 
 </div>
 </div>
 <p>Now we can perform the sensitivity analysis again. We can see that we managed to remove the warning!</p>
-<div id="a9e56bea" class="cell" data-execution_count="12">
+<div id="f8885e84" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>azp.psense_summary(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"~μ"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
@@ -896,16 +896,16 @@ Figure&nbsp;6.6: Posterior quantities of βwrist as a function of power-scaling 
 </ul>
 <p>We are going to start by computing predictions at <code>new_data</code>, as you may already know how to do this from other examples. To do that we need to create a new DataFrame with the values of the predictors we want to use for prediction. In this case, we will use the median, min, and max values of each covariate. For your particular use case, you may want to use different values, like quantiles of any other specific values of interest.</p>
 <p>We can ask ArviZ, to compute the Bayesian R² for us, as long as we provide a DataTree with both observed and predicted data.</p>
-<div id="7f8ad3bf" class="cell" data-execution_count="15">
+<div id="c9906887" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>r2_da <span class="op">=</span> azp.ndarray_to_dataarray(azp.r2_score(dt_bf_01, summary<span class="op">=</span><span class="va">False</span>).reshape(<span class="dv">4</span>, <span class="dv">2000</span>), var_name<span class="op">=</span><span class="st">"r2"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2"></a>dt_bf_01.posterior[<span class="st">"r2_score"</span>] <span class="op">=</span> r2_da</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To compute the joint log-likelihood we just sum the poin-twise log-likelihood evaluations along the observations. In other words we compute one log-likelihood value per MCMC step.</p>
-<div id="0d1123c8" class="cell" data-execution_count="16">
+<div id="3953eab0" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>dt_bf_01.posterior[<span class="st">"log_score"</span>] <span class="op">=</span> dt_bf_01.log_likelihood.<span class="bu">sum</span>(<span class="st">"y_dim_0"</span>)[<span class="st">"y"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Once we have added the derived quantities we just need to call <code>psense_summary</code> (or the others <code>psense_*</code> functions) as usual:</p>
-<div id="7b6bf322" class="cell" data-execution_count="17">
+<div id="a4d3683f" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>azp.psense_summary(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"r2_score"</span>, <span class="st">"log_score"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <div>
@@ -948,7 +948,7 @@ Figure&nbsp;6.6: Posterior quantities of βwrist as a function of power-scaling 
 <h2 data-number="6.4" class="anchored" data-anchor-id="bacteria-treatment"><span class="header-section-number">6.4</span> Bacteria treatment</h2>
 <p>Now we discuss and example of power-scaling sensitivity analysis for hierarchical models. The main motivation for this example is to show that for certain models we should selectively power-scaled the priors. To illustrate this, consider two forms of prior, a non-hierarchical prior with two independent parameters <span class="math inline">\(p(\theta)\)</span> and <span class="math inline">\(p(\phi)\)</span> and a hierarchical prior of the form <span class="math inline">\(p(\theta \mid \psi) p(\psi)\)</span>. In the first case, the appropriate power-scaling for the prior is <span class="math inline">\(p(\theta)^{\alpha} p(\phi)^{\alpha}\)</span>. This is what we did in the previous example. In the second case, for the hierarchical model, we only want to power-scale the top level prior, that is, <span class="math inline">\(p(\theta) p(\phi)^{\alpha}\)</span>.</p>
 <p>For this example we are going to use the bacteria data set <span class="citation" data-cites="venables_2002">(<a href="References.html#ref-venables_2002" role="doc-biblioref">Venables and Ripley 2002</a>)</span>.</p>
-<div id="aefc762c" class="cell" data-execution_count="18">
+<div id="4e054d0f" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>bacteria <span class="op">=</span> pd.read_csv(<span class="st">"../data/bacteria.csv"</span>)</span>
 <span id="cb16-2"><a href="#cb16-2"></a>bacteria[<span class="st">"y"</span>] <span class="op">=</span> bacteria[<span class="st">"y"</span>].astype(<span class="st">"category"</span>).cat.codes</span>
 <span id="cb16-3"><a href="#cb16-3"></a>bacteria[<span class="st">"ID"</span>] <span class="op">=</span> bacteria[<span class="st">"ID"</span>].astype(<span class="st">"category"</span>).cat.codes</span>
@@ -961,7 +961,7 @@ Figure&nbsp;6.6: Posterior quantities of βwrist as a function of power-scaling 
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="4359485e" class="cell" data-execution_count="19">
+<div id="11cc294c" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_bt:</span>
 <span id="cb17-2"><a href="#cb17-2"></a>    μ <span class="op">=</span> pm.Normal(<span class="st">'μ'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb17-3"><a href="#cb17-3"></a>    β_week <span class="op">=</span> pm.Normal(<span class="st">'β_week'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
@@ -987,7 +987,7 @@ Figure&nbsp;6.6: Posterior quantities of βwrist as a function of power-scaling 
 </div>
 <p>From the power-scaling sensitivity analysis perspective the key element in the previous code-block is that we are specifying the variables we want to use for the prior-powerscaling <code>var_names=["μ", "β_week", "β_trtDrug", "β_trtDrugP", "σ"]</code> i.e.&nbsp;we are omitting the <code>b_Intercept</code> variable. This is because we are only interested in power-scaling the top level prior. There are two way to specify the variables for power-scaling, the first is to use the <code>var_names</code> argument when computing the log_prior and/or log_likelihood, as we just did. The second is to use the <code>prior_varnames</code> and <code>likelihood_varnames</code> arguments in the <code>psense</code>-related functions.</p>
 <p>Let’s compute sensitivity diagnostics for all variables except <code>~b_Intercept</code>, if we want to check the sensitivity of all of them we can do it. The key point with hierarchical models is to not power-scale the lower level priors.</p>
-<div id="573f5bb9" class="cell" data-execution_count="21">
+<div id="c0b14769" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>azp.psense_summary(dt_bt, var_names<span class="op">=</span>[<span class="st">"~b_Intercept"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <div>
