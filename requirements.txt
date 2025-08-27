@@ -6,4 +6,4 @@ bambi @ git+https://github.com/bambinos/bambi
 kulprit @ git+https://github.com/bambinos/kulprit
 preliz==0.17.0
 pymc>=5.22.0
-pymc-bart==0.10
+pymc-bart @ git+https://github.com/pymc-devs/pymc-bart
