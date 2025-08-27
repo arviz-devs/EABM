@@ -66,14 +66,14 @@ with pm.Model() as model:
     μ_ = pmb.BART("μ_", X, np.log(Y))
     μ = pm.Deterministic("μ", np.exp(μ_))
     y = pm.NegativeBinomial("y", mu=μ, alpha=α, observed=Y)
-    idata = pm.sample(random_seed=seed,
+    idata_bart = pm.sample(random_seed=seed,
                       compute_convergence_checks=False)
 ```
 
 We can now compute the variable importance and plot the results. The dashed lines represent the mean R² for the predictions from the reference model against themselves, the band captures the uncertainty. Then from left to right, we add covariates in decreasing order of VI. The first submodel is the one with only `hour`, the second is `hour + temperature`, the third is `hour + temperature + month` and so on.
 
 ```{python}
-vi_results = pmb.compute_variable_importance(idata, μ_, X);
+vi_results = pmb.compute_variable_importance(idata_bart, μ_, X);
 ax = pmb.plot_variable_importance(vi_results, plot_kwargs={"rotation": 45}, figsize=(10, 4))
 ax.set_ylim(0.5, 1)
 ```
@@ -148,10 +148,10 @@ ppi.project()
 Once this is finished we can inspect the `ppi` object manually, but a figure is usually a better idea. By default, the `compare` function plots all the models, including the intercept-only model, i.e. a model without any covariate. In the following block of code, we are asking to omit this model. 
 
 ```{python}
-ppi.compare(min_model_size=1);
+kpt.plot_compare(ppi.compare(min_model_size=1));
 ```
 
-We can see that this figure is very similar to the one generated with `pmb.plot_variable_importance` and its interpretation is also similar. One important difference is that `compare` uses the ELPD to compare the models.
+We can see that this figure is very similar to the one generated with `pmb.plot_variable_importance` and its interpretation is also similar. One important difference is that `plot_compare` uses the ELPD to compare the models.
 
 We can see that for Kulprit the most relevant variable is `hour`, followed by `temperature` and then `humidity`, after that adding more variables does not improve the model. The order agrees with PyMC-BART but Kulprit considers 3 variables as relevant instead of 2. This is most likely because the effect of `hour` is non-linear and thus difficult to capture with a simple linear model. Let's put this idea to the test.
 
@@ -191,7 +191,7 @@ and then we use Kulprit to perform variable selection.
 ```{python}
 ppi = kpt.ProjectionPredictive(model, idata)
 ppi.project()
-ppi.compare(min_model_size=1);
+kpt.plot_compare(ppi.compare(min_model_size=1));
 ```
 
 And voilà! If we consider `hour_cos` and `hour_sin` as a single variable, then the two most relevant variables are `hour` and `temperature`, in agreement with PyMC-BART.
@@ -199,17 +199,23 @@ And voilà! If we consider `hour_cos` and `hour_sin` as a single variable, then 
 
 ## Combining PyMC-BART and Kulprit
 
-Both methods are not necessarily competitors and there is room for collaboration. When this is useful is still open to research but we can think of some scenarios where this could be useful. For instance, we could use PyMC-BART to find the most relevant variables, according to the variable inclusion metric, and then use Kulprit to perform the projection. We could also use the posterior predictive samples from PyMC-BART instead of a GLM. The second option requires some changes in Kulprit, but the first one is straightforward as the method project supports a `path` argument that allows to specify the submodels that we want to project. Notice that if we provide the `path` there is no search done, Kulprit will project and evaluate just the submodels we specify.
+Both methods are not necessarily competitors and there is room for collaboration. When this is useful is still open to research but we can think of some scenarios where this could be useful. For instance, we could use PyMC-BART to find the most relevant variables, according to the variable inclusion metric, and then use Kulprit to perform the projection and evaluation of those selected submodels. We could also use the posterior predictive samples from PyMC-BART instead of a GLM. The second option is not currently supported in Kulprit, but the first one is straightforward as the method project has a `user_terms` argument that allows us to specify the submodels that we want to project. Notice that if we provide the `user_terms` there is no search done, Kulprit will project and evaluate just the submodels we specify.
 
 ```{python}
 #| eval: false
-path = [["hour_cos", "hour_sin"],
-        ["hour_cos", "hour_sin", "temperature"],
-        ["hour_cos", "hour_sin", "temperature", "humidity"],
-        ["hour_cos", "hour_sin", "temperature", "humidity", "month"],
-        ["hour_cos", "hour_sin", "temperature", "humidity", "month", "weekday"],
-        ["hour_cos", "hour_sin", "temperature", "humidity", "month", "weekday", "windspeed"],
+terms = [["hour_cos", "hour_sin"],
+         ["hour_cos", "hour_sin", "temperature"],
+         ["hour_cos", "hour_sin", "temperature", "humidity"],
+         ["hour_cos", "hour_sin", "temperature", "humidity", "month"],
+         ["hour_cos", "hour_sin", "temperature", "humidity", "month", "weekday"],
+         ["hour_cos", "hour_sin", "temperature", "humidity", "month", "weekday", "windspeed"],
         ]
-ppi.project(path=path)
+ppi.project(user_terms=terms)
+```
+
+In the previous code block we have manually specfified the terms, but we can also ask PyMC-BART to return a list for us. 
+
+```{python}
+pmb.vi_to_kulprit(vi_results)
 ```
 
