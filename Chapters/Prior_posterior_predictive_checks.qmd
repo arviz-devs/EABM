@@ -701,3 +701,22 @@ dt_ord = azp.convert_to_datatree("../models/prerun/dt_ord.nc")
 #| fig-cap: "PAV-adjusted calibration plot for an ordinal regression model."
 azp.plot_ppc_pava(dt_ord, data_type="ordinal")
 ```
+
+### Posterior predictive checks for censored data 
+
+[Survival models](https://en.wikipedia.org/wiki/Survival_analysis), also known as time-to-event models, are statistical methods used to study the time until a specific event occurs. A key challenge in survival analysis is properly accounting for the fact that only some events of interest are observed, while others occur outside the observation period. 
+
+To illustrate, imagine analyzing a group of recent graduates who all start searching for jobs at the same time. After three months, half of them have found employment. Using that data, we want to estimate the average time it takes to find a job. If we compute the estimate using only those who have already found jobs and discard those still searching, our estimate will be biased, as we would incorrectly conclude that everyone finds a job within three months or less. Instead, we need to account for the graduates who haven’t yet found jobs (but eventually will), as this correctly reflects that some people take longer than three months to get hired.
+
+For a full example of how to work with this type of data, you can check [Bambi's documentation](https://bambinos.github.io/bambi/notebooks/survival_model.html). Even after correctly modeling this data, we still have a challenge when doing posterior predictive checks with censored data. Comparing predictions directly to the raw observed data can be misleading. Instead, we replace the raw observations with Kaplan–Meier estimates; a simple, non-parametric method for estimating the probability of survival (in this case, still searching for a job) over time. 
+
+The following example is from a model of cat adoption. We record how many months pass until each cat is adopted, but at the time of data collection, some cats have not yet been adopted.
+
+```{python}
+#| label: fig-ppc_censored
+#| fig-cap: "Posterior predictive check for survival/censored data using Kaplan-Meier curves."
+dt_cens = azp.load_arviz_data('censored_cats')
+azp.plot_ppc_censored(dt_cens)
+```
+
+To keep predictions within a meaningful range ArviZ truncates the predictive data relative to the maximum observed duration, preventing the survival curves from extending too far beyond the observed data. You can change this with the argument `truncation_factor`, which defaults to 1.2, meaning up to a 20% larger that the maximum observation.
