@@ -4,3 +4,5 @@ extras
 /.quarto/
 Chapters/*.html
 Chapters/*.quarto_ipynb
+.venv*/
+docs/
