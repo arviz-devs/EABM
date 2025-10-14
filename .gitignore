@@ -6,3 +6,4 @@ Chapters/*.html
 Chapters/*.quarto_ipynb
 .venv*/
 docs/
+*.nc
