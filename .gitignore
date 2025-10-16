@@ -6,4 +6,5 @@ Chapters/*.html
 Chapters/*.quarto_ipynb
 .venv*/
 docs/
-*.nc
+models/prerun/model_comparison_large_data_00.nc
+models/prerun/model_comparison_large_data_03.nc

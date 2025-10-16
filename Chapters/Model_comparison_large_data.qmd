@@ -5,20 +5,32 @@
 #| warning: false
 import numpy as np
 import matplotlib.pyplot as plt
+import lzma
+from pathlib import Path
 
-import arviz as az
 import arviz.preview as azp
 azp.style.use("arviz-variat")
 
 plt.rcParams["figure.dpi"] = 100
 SEED = 4711
+
+def decompress(nc_path):
+    nc_file = Path(nc_path)
+    xz_file = Path(str(nc_path) + ".xz")
+    if not nc_file.exists() and xz_file.exists():
+        with lzma.open(xz_file, 'rb') as f_in:
+            with open(nc_file, 'wb') as f_out:
+                f_out.write(f_in.read())
+
+decompress("../models/prerun/model_comparison_large_data_00.nc")
+decompress("../models/prerun/model_comparison_large_data_03.nc")
 ```
 
 ## Introduction
 
 Comparing Bayesian models on large datasets presents a computational challenge. Full leave-one-out cross-validation (LOO) requires computing $n$ posteriors and brute force K-fold cross-validation methods become prohibitively expensive as data size grows. 
 
-To overcome these challenges, we will use the approach described in @magnusson_2020 to combine fast approximations with targeted, exact computations. The key idea is to use cheap approximations, called *surrogates*, for all $n$ observations, and then correct these approximations using exact Pareto smoothed importance sampling (PSIS) LOO on just a small random subsample with a *difference estimator* that corrects for the approximation error across the full dataset.
+To overcome these challenges, we will use the approach described in @magnusson_2020 to combine fast approximations with targeted, exact computations. The key idea is to use cheap approximations, called *surrogates*, for all $n$ observations, and then correct these approximations using exact Pareto smoothed importance sampling (PSIS) LOO-CV on just a small random subsample with a *difference estimator* that corrects for the approximation error across the full dataset.
 
 Predictive performance is summarized by the expected log predictive density estimated via LOO as
 
@@ -28,20 +40,20 @@ $$
 
 where $\pi_i = \log p(y_i\mid y_{-i})$ is the LOO predictive density for observation $i$ and $y_{-i}$ is the dataset with observation $i$ removed.
 
-In the example for this chapter using the `wells` data, we demonstrate the complete workflow for model comparison with subsampled PSIS-LOO. We fit a logistic regression model using both exact MCMC and Laplace approximations to show how posterior approximations can further reduce computational costs. We implement a lightweight log-likelihood helper that enables efficient evaluation on arbitrary observation subsets, demonstrate subsampled PSIS-LOO using different surrogates (PLPD and LPD), and compare multiple models with subsampled LOO.
+In the example for this chapter using the `wells` data, we demonstrate the complete workflow for model comparison with subsampled PSIS-LOO-CV. We fit a logistic regression model using both MCMC sampling and Laplace approximations to show how posterior approximations can further reduce computational costs. We implement a lightweight log-likelihood helper that enables efficient evaluation on arbitrary observation subsets, demonstrate subsampled PSIS-LOO-CV using different surrogates (PLPD and LPD), and compare multiple models with subsampled LOO.
 
 ## Background
 
-The content contained in this chapter builds on foundational concepts covered in @sec-model-comparison. For detailed explanations of expected log predictive density (ELPD), leave-one-out cross-validation (LOO-CV), Pareto smoothed importance sampling (PSIS), the Watanabe-Akaike information criterion (WAIC), and model comparison principles, please refer to that chapter. Here we focus specifically on the subsampling techniques and difference estimator needed for large datasets.
+The content in this chapter builds on foundational concepts covered in @sec-model-comparison. For detailed explanations of expected log predictive density (ELPD), leave-one-out cross-validation (LOO-CV), Pareto smoothed importance sampling (PSIS), and model comparison principles, please refer to that chapter. Here we focus specifically on the subsampling techniques and difference estimator needed for large datasets.
 
 ### From LOO to subsampled LOO
 
-Recall from @sec-model-comparison that PSIS-LOO uses importance sampling to approximate LOO-CV without refitting the model $n$ times. The Pareto-$k$ diagnostic flags unreliable importance sampling approximations when $k > 0.7$. For large $n$, even this efficient computation becomes expensive.
+Recall from @sec-model-comparison that PSIS-LOO-CV uses importance sampling to approximate LOO-CV without refitting the model $n$ times. The Pareto-$k$ diagnostic flags unreliable importance sampling approximations when $k > 0.7$. For large $n$, even this efficient computation becomes expensive.
 
 The key insight for large data is to combine three elements:
 
 1. **Fast surrogates** $\tilde\pi_i$ computed for all $n$ observations (e.g., point predictions)
-2. **Exact PSIS-LOO** computed only on a small random subsample $\mathcal{S}$ of size $m \ll n$
+2. **Exact PSIS-LOO-CV** computed only on a small random subsample $\mathcal{S}$ of size $m \ll n$
 3. **The difference estimator** to correct the surrogates using the subsample
 
 These elements dramatically reduce computational cost while maintaining statistical accuracy. We can also extend the importance ratios with the correction term $p(\theta_s \mid y)/q(\theta_s \mid y)$ when using approximate posteriors from variational inference or Laplace approximations to further reduce computational cost.
@@ -168,12 +180,12 @@ The required assumptions are standard regularity conditions satisfied by most co
 
 ### Workflow for model comparison
 
-The workflow for applying subsampled PSIS-LOO to model comparison is straightforward. We compute cheap surrogates for all observations, then refine our estimates using PSIS-LOO on a small subsample, balancing computational efficiency with statistical accuracy:
+The workflow for applying subsampled PSIS-LOO-CV to model comparison is straightforward. We compute cheap surrogates for all observations, then refine our estimates using PSIS-LOO-CV on a small subsample, balancing computational efficiency with statistical accuracy:
 
 1. Compute posteriors $p_A(\theta \mid y)$ and $p_B(\theta \mid y)$ for models $A$ and $B$
 2. Calculate $\tilde\pi_i$ for all $n$ observations using an appropriate approximation
 3. Use simple random sampling to select $m$ observations (start with $m \approx 100$)
-4. Calculate $\pi_j$ for the subsample using PSIS-LOO, checking Pareto-$k$ diagnostics for unreliable importance sampling approximations
+4. Calculate $\pi_j$ for the subsample using PSIS-LOO-CV, checking Pareto-$k$ diagnostics for unreliable importance sampling approximations
 5. Estimate $\operatorname{elpd}_A$, $\operatorname{elpd}_B$, and their difference
 6. If subsampling SE is too large relative to the estimated difference, increase $m$ using `update_subsample`
 
@@ -183,7 +195,7 @@ This reuse is what makes the difference estimator superior to the Hansen-Hurwitz
 
 ## Wells data and logistic model
 
-To demonstrate the PSIS-LOO subsampling method, we use data from a household survey in a region of Bangladesh where drinking water was contaminated with arsenic. Households with unsafe arsenic levels in their wells were asked whether they would switch to using a neighbor's safe well. The goal is to predict this binary switching decision using household characteristics.
+To demonstrate the PSIS-LOO-CV subsampling method, we use data from a household survey in a region of Bangladesh where drinking water was contaminated with arsenic. Households with unsafe arsenic levels in their wells were asked whether they would switch to using a neighbor's safe well. The goal is to predict this binary switching decision using household characteristics.
 
 We focus on a simple logistic regression with two key predictors: the arsenic concentration in the household's well and the distance to the nearest safe well. The dataset contains $n = 3020$ observations. While this is not massive by modern standards, it is large enough that efficient computational methods become valuable. The advantage of this sample size is that individual observations have limited influence on the overall model fit, which helps ensure stable importance sampling computations. The data is available from the R package `loo`.
 
@@ -278,9 +290,9 @@ def log_lik_fn(obs, data):
 
 This log-likelihood helper evaluates the Bernoulli log-pmf for the selected subset and returns log probabilities for each posterior draw. No log-likelihood values are stored permanently, which keeps memory usage modest even when $N$ is large.
 
-## Subsampled PSIS-LOO with the PLPD surrogate
+## Subsampled PSIS-LOO-CV with the PLPD surrogate
 
-As we've discussed previously, a key component of the PSIS-LOO subsampling method is the notion of a fast surrogate for the leave-one-out term $\pi_i$. One such surrogate is the point log predictive density (PLPD) which @magnusson_2020 motivate by replacing the leave-one-out term $\pi_i$ with
+As we've discussed previously, a key component of the PSIS-LOO-CV subsampling method is the notion of a fast surrogate for the leave-one-out term $\pi_i$. One such surrogate is the point log predictive density (PLPD) which @magnusson_2020 motivate by replacing the leave-one-out term $\pi_i$ with
 
 $$
 \tilde\pi_i^{\text{plpd}} = \log p(y_i \mid X_i, \hat{\beta}), \quad \hat{\beta} = \mathbb{E}[\beta \mid y].
@@ -307,7 +319,7 @@ loo_plpd
 
 The output inherits from the `ELPDData` interface with an additional column `subsampling_se` isolating the extra Monte Carlo error introduced by drawing only $100$ of the $3020$ observations. In our wells run with $m=100$ we obtained $\widehat{\operatorname{elpd}}_{\text{loo}}\approx-1968.4$ with $\text{SE}\approx15.6$ and $\text{subsampling SE} \approx0.3$. All Pareto‑$k$ values on the subsample were $\le 0.7$.
 
-## Subsampled PSIS-LOO with the LPD surrogate
+## Subsampled PSIS-LOO-CV with the LPD surrogate
 
 When the posterior mass is diffuse or strongly correlated, evaluating the full posterior predictive density can improve the approximation. We can use the log predictive density (LPD) surrogate given by
 
@@ -410,9 +422,6 @@ idata_laplace = azp.convert_to_datatree("../models/prerun/model_comparison_large
 
 The `fit_laplace` function stores the posterior mode in the `fit` group as `mean_vector` and the covariance in `covariance_matrix`. Posterior draws are stored in the `posterior` group as usual. We convert the result to a `DataTree` and attach the observed data and design matrix for use with `loo_approximate_posterior()`.
 
-::: {.panel-tabset}
-## PyMC
-
 ```{python}
 #| eval: false
 data_laplace = azp.convert_to_datatree(idata_laplace)
@@ -422,13 +431,6 @@ data_laplace["observed_data"] = xr.Dataset({
 })
 data_laplace["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
 ```
-
-## CmdStanPy
-
-``` {.python}
-# CmdStanPy implementation will be added in future
-```
-:::
 
 ```{python}
 #| echo: false
@@ -500,7 +502,7 @@ loo_ap = azp.loo_approximate_posterior(
 loo_ap
 ```
 
-The output shows how the approximate posterior performs relative to exact MCMC. The Pareto-$k$ diagnostics remain available and indicate whether the importance sampling correction is reliable. You can also see in the output the line *"Posterior approximation correction used"*, which indicates that the approximate posterior correction was used.
+The output shows how the approximate posterior performs relative to MCMC. The Pareto-$k$ diagnostics remain available and indicate whether the importance sampling correction is reliable. You can also see in the output the line *"Posterior approximation correction used"*, which indicates that the approximate posterior correction was used.
 
 ## Combining approximate posterior with subsampling
 
@@ -649,7 +651,7 @@ In this example, the second model (with log-transformed arsenic) has higher ELPD
 
 We can also compare a subsampled LOO object to a full LOO object that was computed on all $N = 3020$ observations.
 
-The following computes full PSIS-LOO for the first model using the `loo()` function.
+The following computes full PSIS-LOO-CV for the first model using the `loo()` function.
 
 ```{python}
 loo_full = azp.loo(data, var_name="y", pointwise=True)
