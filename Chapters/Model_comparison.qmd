@@ -16,7 +16,7 @@ SEED = 3592
 
 ## Overview
 
-Models are designed as approximations to help us understand a specific problem or a related class of problems. They are not intended to be exact replicas of the real world. In this sense, all models are "wrong". However, not all models are equally wrong, some are better suited to describing a particular problem. Even more some models could be better to explain some of the observations and other better for some other, for example a model that is good high temperature observations may not be so good for low temperature observations.
+Models are designed as approximations to help us understand a specific problem or a related class of problems. They are not intended to be exact replicas of the real world. In this sense, all models are "wrong". However, not all models are equally wrong, some are better suited to describing a particular problem. Even more some models could be better to explain some of the observations and other better for some other, for example a model that is good for high temperature observations may not be so good for low temperature observations.
 
 During a typical data analysis, it’s common to develop multiple models to fit the same data. These models may differ in aspects such as priors, likelihoods, the inclusion of only linear terms versus adding smooth or interaction terms, and so on. When faced with multiple models, a natural question arises: how should we choose between them? 
 
@@ -82,7 +82,7 @@ $$
 H(p) = - \mathbb{E}[\log{p}] = -\sum_i^N p_i \log{p_i}
 $$
 
-Entropy is a measure of the uncertainty of a distribution. In this sense we can say that the uncertainty contained in a distribution is the logarithm of the average probability of an event. If only one event is possible the entropy will be 0, if all events have the same probability the entropy will be maximum. The concept of entropy can be extended to continuous distributions, but we will not go into those details. @fig-entropy_bernoulli shows the entropy of a Bernoulli distribution for four different values of the probability of success. We can see that the entropy is maximum when the probability of success is 0.5 and minimum when the probability of success is 0.
+Entropy is a measure of the uncertainty of a distribution. In this sense we can say that the uncertainty contained in a distribution is the logarithm of the average probability of an event. If only one event is possible the entropy will be 0, if all events have the same probability the entropy will be maximum. The concept of entropy can be extended to continuous distributions, but we will not go into those details. @fig-entropy_bernoulli shows the entropy of a Bernoulli distribution for four different values of the probability of success. We can see that the entropy is maximum when the probability of success is 0.5, and minimum when the probability of success is 0.
 
 
 ```{python}
