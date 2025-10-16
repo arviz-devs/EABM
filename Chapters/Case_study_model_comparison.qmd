@@ -198,7 +198,7 @@ $$
 
 with $i$ being both the match indicator $m$ and the field indicator $f$, both varying with $i$. Now, we will consider $i$ as an index iterating over the values in 
 
-$$\big\{(1,h), (2,h), \dots, (M-1,h), (M,h), (1,a), (2,a) \dots (M-1,a), (M,a)\big\}$$
+$$\big\{(1,h), (2,h), \dots, (M-1,h), (M,h), (1,a), (2,a), \dots, (M-1,a), (M,a)\big\}$$
 
 Therefore, unlike in previous cases, we have $2M$ observations. 
 
