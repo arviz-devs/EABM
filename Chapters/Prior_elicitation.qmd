@@ -83,7 +83,7 @@ Finally, we want to highlight that prior elicitation isn't just about choosing t
 
 
 Nevertheless, usually, the selling point when discussing in favour of priors is that they allow the inclusion of domain information.
- But there are potentially other advantages of :
+ But there are potentially other advantages of:
 
 * Sampling efficiency. Often a more informed priors results in better sampling. This does not mean we should tweak the prior distribution to solve sampling problems, instead incorporating some domain-knowledge information can help to avoid them.
 * Regularization. More informed priors can help to regularize the model, reducing the risk of overfitting. We make a distinction between regularization and "conveying domain-knowledge information" because motivations and justifications can be different in each case.
