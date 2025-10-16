@@ -98,7 +98,7 @@ for p, ax in zip([0.5, 0.1, 0.9, 0.0001], axes.ravel()):
     ax.set_ylim(-0.05, 1.05)
 ```
 
-The concept of entropy appears many times in statistics. It can be useful, for example when defining priors. In general we want to use a prior that has maximum entropy given our knowledge (see for example [PreliZ](https://preliz.readthedocs.io/en/latest/)'s `maxent` function). And also when comparing models as we will see in the next section.
+The concept of entropy appears many times in statistics. It can be useful, for example when defining priors. In general we want to use a prior that has maximum entropy given our knowledge (see for example [PreliZ](https://preliz.readthedocs.io/en/latest/)'s [`maxent`](https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.maxent) function). And also when comparing models as we will see in the next section.
 
 ## KL divergence {#sec-kl-divergence}
 
