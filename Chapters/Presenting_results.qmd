@@ -7,7 +7,7 @@ The presentation of the results will depend on the audience, the context, and th
 
 ## What to report? 
 
-Kruschke [@kruschke_2021] provides guidelines on what to report in a Bayesian analysis. These guidelines are based on his experience but also insights from previous recommendations. Here we reproduce a summary of his recommendations with some modifications and additions. Some of the differences reflect our own experience and preferences, for example we usually don't recommend using Bayes factors, and instead we recommend using PSIS-LOO-CV for model comparison as discussed in  @sec-model-comparison.
+[@kruschke_2021] provides guidelines on what to report in a Bayesian analysis. These guidelines are based on his experience but also insights from previous recommendations. Here we reproduce a summary of his recommendations with some modifications and additions. Some of the differences reflect our own experience and preferences, for example we usually don't recommend using Bayes factors, and instead we recommend using PSIS-LOO-CV for model comparison as discussed in  @sec-model-comparison.
 
 * Explain the model.
     * Explain the variables in your model, for regression models make it clear which are the dependent (predicted) variables and which are the independent (predictor) variables. Clearly distinguish between the parameters that are of direct interest for your analysis and those are solely required for the model to fit the data but not of direct interest. If the model is hierarchical/multilevel, be sure that the hierarchical structure is clearly explained.
@@ -17,7 +17,7 @@ Kruschke [@kruschke_2021] provides guidelines on what to report in a Bayesian an
 
 * Report details of the computation
     * Report the software used. This helps to ensure that the analysis can be reproduced. But it's also a way to support the software developers, in particular if the software is open source.
-    * Report MCMC diagnostics as discussed in Chapter @sec-mcmc-diagnostics. For non-MCMC methods, Simulation-Based Calibration can be used to assess the quality of the inference (@sec-sbc).
+    * Report MCMC diagnostics as discussed in @sec-mcmc-diagnostics. For non-MCMC methods, Simulation-Based Calibration can be used to assess the quality of the inference (@sec-sbc).
 
 * Describe the posterior distribution
     * Provide a posterior predictive check to show that the model usefully mimics the data (@sec-ppc). Discuss mismatches between the model and the data, if any.
@@ -28,7 +28,7 @@ Kruschke [@kruschke_2021] provides guidelines on what to report in a Bayesian an
     * Loss function. If utilities and a loss function for a decision rule are defined, these should be explained and reported.
     * ROPE limits. If using a continuous-parameter posterior distribution as the basis for decision, state and justify the limits of the ROPE and the required probability mass.
     * Decision threshold and model probabilities. If using model comparison or hypothesis testing as the basis for a decision, state and justify the decision threshold for the posterior model probability, and the minimum prior model probability that would make the posterior model probability exceed the decision threshold.
-    * Estimated values too. If deciding about null values, always also report the estimate of the parameter value (central tendency and credible interval).
+    * Estimated values. If deciding about null values, always also report the estimate of the parameter value (central tendency and credible interval).
 
 * Report sensitivity analysis
     * Use prior predictive checks and sensitivity analysis like the ones discussed in @sec-sensitivity-checks to assess the robustness of the results to the choice of priors.
