@@ -140,7 +140,7 @@ This expression shows that both $\theta^{\star}$ and $\theta^{\star\star}$ are d
 
 ### Prior SBC in practice
 
-To show how to implement SBC in practice we are going to use the `simuk` package. This package provides a simple interface for performing SBC using different probabilistic programming languages (PPLs). The package is designed to be easy to use and flexible, allowing users to perform SBC with minimal effort. Is still in development, so some features may not be available yet.
+To show how to implement SBC in practice we are going to use the `simuk` package. This package provides a simple interface for performing SBC using different probabilistic programming languages (PPLs). The package is designed to be easy to use and flexible, allowing users to perform SBC with minimal effort. This is still in development, so some features may not be available yet.
 
 ::: {.panel-tabset}
 ## PyMC
