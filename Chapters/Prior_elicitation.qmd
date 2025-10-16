@@ -334,7 +334,7 @@ azp.add_lines(pc, list(refs.values()))
 
 ### OK, but what's under the hood?
 
-The main idea is that once we have a target distribution we can define the prior elicitation problem as finding the parameters of the model that induce a prior predictive distribution as close as possible to the target distribution. Put like this, it’s just a standard inference task—except instead of conditioning on real data, we’re conditioning on synthetic data, a.k.a. our target distribution. Conceptually that's what `ppe` is doing, but we still have two plot twist ahead of us. 
+The main idea is that once we have a target distribution we can define the prior elicitation problem as finding the parameters of the model that induce a prior predictive distribution as close as possible to the target distribution. Put like this, it’s just a standard inference task—except instead of conditioning on real data, we’re conditioning on synthetic data, a.k.a. our target distribution. Conceptually that's what `ppe` is doing, but we still have two plot twists ahead of us. 
 
 The procedure is as follows:
 
@@ -344,7 +344,7 @@ The procedure is as follows:
 4. Collect the optimization results, one per prior parameter in the original model.
 5. Use MLE to fit the optimized values to their corresponding families in the original model. 
 
-Instead of using standard inference methods like MCMC in step 1-2 we are using projection inference, see @sec-variable-selection for details. Essentially we are approximating a posterior using an optimization method. We say posterior, because from the inference point we are computing a posterior, from the prior elicitation perspective this is a prior. 
+Instead of using standard inference methods like MCMC in steps 1-2 we are using projection inference, see @sec-variable-selection for details. Essentially we are approximating a posterior using an optimization method. We say posterior, because from the inference point we are computing a posterior, from the prior elicitation perspective this is a prior. 
 On the last step, we use a second approximation, we fit the marginals of the projected posterior into standard distributions used by PPLs, i.e. Gaussian, exponential, Poisson, etc. We need this step so we can write the resulting priors in a way that we could feed into PPLs like PyMC or CmdStanPy. 
 
 This procedure partially ignores the prior information in the model. For example, we would have obtained the same result with the prior `α = pm.Normal("α", 0, 0.001)` or  `α = pm.Normal("α", 0, 100)`. The reason is for this behaviour is that the function we use for the optimization procedure is just the likelihood. In step 5 (the last step) we use the information about each prior families i.e. `α = pm.Normal("α", 20, 1)` will not produce the same result as `α = pm.Gamma("α", mu=20, sigma=1)`. Because the MLE is done for a given family. In principle, we could even ignore this information and fit the optimized values to many families and pick the best fit. This allows the procedure to suggest alternative families. For instance, it could be that we use a Normal for a given parameters but the optimization only found positive values so a Gamma or HalfNormal could be a better choice. 
