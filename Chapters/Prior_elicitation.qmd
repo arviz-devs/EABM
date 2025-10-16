@@ -54,7 +54,7 @@ Non-informative priors can be detrimental and difficult to implement or use. Inf
 
 ![Priors are often defined in terms of how much information they convey](../img/priors_int_meme.jpg){#fig-prior_type_meme width=35%}
 
-It is important to recognize that the amount of information a priors carry can vary continuously and that the categories we use to discuss priors are a matter of convenience and not a matter of principle. These categories are qualitative and not well-defined. Still, they can be helpful when talking about priors more intuitively. 
+It is important to recognize that the amount of information a prior carry can vary continuously and that the categories we use to discuss priors are a matter of convenience and not a matter of principle. These categories are qualitative and not well-defined. Still, they can be helpful when talking about priors more intuitively. 
 
 So far we have discussed the amount of information. There are at least two issues that seem fishy about this discussion. First, the amount of information is a relative concept, against what are we evaluating if a prior is informative or not? Second, the amount of information does not necessarily mean the information is _good_ or _correct_. For instance, it's possible to have a very informative prior based on wrong assumptions. Thus when we say _informative_ we don't necessarily mean reliable or that the prior will bias the inference in the correct direction and amount. 
 
