@@ -454,7 +454,7 @@ $$
 U = F_Y(Y)
 $$
 
-follows a standard Uniform distribution. A proof of this result can be found in the [The Book of Statistical Proofs](https://statproofbook.github.io/P/cdf-pit.html). 
+follows a standard Uniform distribution. A proof of this result can be found in [The Book of Statistical Proofs](https://statproofbook.github.io/P/cdf-pit.html) [@soch_2024]. 
 
 In other words if we apply the CDF of any continuous distribution to a random variable with that distribution, the result will be a random variable with a standard uniform distribution. This is a very powerful result, as it allows us to use the standard uniform distribution as a reference distribution for many statistical tests, including posterior predictive checks.
 

@@ -98,7 +98,7 @@ for p, ax in zip([0.5, 0.1, 0.9, 0.0001], axes.ravel()):
     ax.set_ylim(-0.05, 1.05)
 ```
 
-The concept of entropy appears many times in statistics. It can be useful, for example when defining priors. In general we want to use a prior that has maximum entropy given our knowledge (see for example [PreliZ](https://preliz.readthedocs.io/en/latest/)'s `maxent` function). And also when comparing models as we will see in the next section.
+The concept of entropy appears many times in statistics. It can be useful, for example when defining priors. In general we want to use a prior that has maximum entropy given our knowledge (see for example [PreliZ](https://preliz.readthedocs.io/en/latest/)'s [`maxent`](https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.maxent) function). And also when comparing models as we will see in the next section.
 
 ## KL divergence {#sec-kl-divergence}
 
@@ -118,7 +118,7 @@ $$
 $$
 
 
-If $p$ represents the **data generating process** or the **population** or the **true** distribution, and $q$ represents our model. It may seems that this expressions are all useless because we don't know $p$. That the reason we are trying to fit a model in the first place. But, if our goal is to compare $m$ models represented with $q_0, q_1 \cdots q_m$, we can can still use the KL divergence to compare them! The reason is that even when we do not know $p$, its entropy is a constant term for all comparisons.
+If $p$ represents the **data generating process** or the **population** or the **true** distribution, and $q$ represents our model. It may seems that this expressions are all useless because we don't know $p$. That the reason we are trying to fit a model in the first place. But, if our goal is to compare $m$ models represented with $q_0, q_1, \cdots, q_m$, we can can still use the KL divergence to compare them! The reason is that even when we do not know $p$, its entropy is a constant term for all comparisons.
 
 $$
 \begin{split}
@@ -493,7 +493,7 @@ $$
 BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p(\theta=0.5 \mid H_1)}
 $$
 
-This is true only when $H_0$ is a particular case of $H_1$, [see](https://statproofbook.github.io/P/bf-sddr). 
+This is true only when $H_0$ is a particular case of $H_1$, see [The Book of Statistical Proofs](https://statproofbook.github.io/P/bf-sddr) [@soch_2024]. 
 
 Let's do it. We only need to sample the prior and posterior for a model. Let's try the BetaBinomial model with a Uniform prior:
 

@@ -107,7 +107,7 @@ For some priors in a model, we may know or assume that most of the mass is withi
 
 ## Maximum entropy distributions with maxent
 
-In PreliZ we can compute maximum entropy priors using the function `maxent`. It works for unidimensional distributions. The first argument is a PreliZ distribution. Then we specify an upper and lower bound and the probability between them.
+In PreliZ we can compute maximum entropy priors using the function [`maxent`](https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.maxent). It works for unidimensional distributions. The first argument is a PreliZ distribution. Then we specify an upper and lower bound and the probability between them.
 
 As an example, we want to elicit a scale parameter. From domain knowledge we know the parameter has a relatively high probability of being less than 3. Hence, we could use a HalfNormal distribution and do:
 
@@ -140,10 +140,10 @@ dist_mean.summary(), dist_mode.summary()
 
 ## Other direct elicitation methods from PreliZ
 
-There are many other method for direct elicitation of parameters. For instance the [quartile](https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.quartile) functions identifies a distribution that matches specified
-quartiles, and [Quartine_int](https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.QuartileInt) provides an interactive approach to achieve the same, offering a more hands-on experience for refining distributions.
+There are many other method for direct elicitation of parameters. For instance the [`quartile`](https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.quartile) function identifies a distribution that matches specified
+quartiles, and [`Quartine_int`](https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.QuartileInt) provides an interactive approach to achieve the same, offering a more hands-on experience for refining distributions.
 
-One method worth of special mention is the [Roulette](https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.Roulette) method allows which allows users to find a prior distribution by drawing it interactively [@morris_2014]. The name "roulette" comes from the analogy of placing a limited set of chips where one believes the mass of a distribution should be concentrated. In this method, a grid of `m` equally sized bins is provided, covering the range of `x`, and users allocate a total of `n` chips across the bins. Effectively, this creates a histogram,representing the user's information about the distribution. The method then identifies the best-fitting distribution from a predefined pool of options, translating the drawn histogram into a suitable probabilistic model. 
+One method worth of special mention is the [`Roulette`](https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.Roulette) method allows which allows users to find a prior distribution by drawing it interactively [@morris_2014]. The name "roulette" comes from the analogy of placing a limited set of chips where one believes the mass of a distribution should be concentrated. In this method, a grid of `m` equally sized bins is provided, covering the range of `x`, and users allocate a total of `n` chips across the bins. Effectively, this creates a histogram,representing the user's information about the distribution. The method then identifies the best-fitting distribution from a predefined pool of options, translating the drawn histogram into a suitable probabilistic model. 
 
 As this is an interactive method we can't show it here, but you can run the following cell to see how it works.
 
@@ -253,7 +253,7 @@ The new priors still generate some values that are too wide, but at least the bu
 
 The process described in the previous section is straightforward: sample from the prior predictive --> plot --> refine --> repeat. On the good side, this is a very flexible approach and can be a good way to understand the effect of individual parameters in the predictions of a model. But it can be time-consuming and it requires some understanding of the model so you know which parameters to tweak and in which direction.
 
-One way to improve this workflow is by adding interactivity. We can do this with PreliZ's function, `predictive_explorer`. Which we can not show here, in a full glory but you can see an static image in @fig-predictive-explorer, and you can try it for yourself by running the following block of code.
+One way to improve this workflow is by adding interactivity. We can do this with PreliZ's function, [`predictive_explorer`](https://preliz.readthedocs.io/en/latest/predictive.html#preliz.predictive.predictive_explorer). Which we can not show here, in a full glory but you can see a static image in @fig-predictive-explorer, and you can try it for yourself by running the following block of code.
 
 ```{python}
 #| eval : false
