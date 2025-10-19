@@ -22,6 +22,14 @@ book:
       orcid: https://orcid.org/0000-0002-1847-9481
       city: Barcelona
       country: Spain
+    - name: Jordan Deklerk
+      url: https://www.jordan-deklerk.com/
+      affiliations:
+        - name: DICK's Sporting Goods
+          affiliation-url: https://www.dickssportinggoods.com/
+          city: Coraopolis
+          country: United States of America
+          postal-code: 15108
     - name: ArviZ-devs
       url: https://github.com/arviz-devs
   date: today
