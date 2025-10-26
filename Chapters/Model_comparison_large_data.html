@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Exploratory Analysis of Bayesian Models - 8&nbsp; Model Comparison for Large Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Chapters/Case_study_model_comparison.html" rel="next">
+<link href="../Chapters/Model_comparison.html" rel="prev">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta name="citation_title" content="[[8]{.chapter-number}&nbsp; [Model Comparison for Large Data]{.chapter-title}]{#sec-model-comparison-large-data .quarto-section-identifier}">
+<meta name="citation_language" content="en">
+<meta name="citation_reference" content="citation_title=Graphical perception: Theory, experimentation, and application to the development of graphical methods;,citation_author=William S. Cleveland;,citation_author=Robert McGill;,citation_publication_date=1984;,citation_cover_date=1984;,citation_year=1984;,citation_fulltext_html_url= https://www.tandfonline.com/doi/abs/10.1080/01621459.1984.10478080;,citation_issue=387;,citation_doi=10.1080/01621459.1984.10478080;,citation_volume=79;,citation_journal_title=Journal of the American Statistical Association;,citation_publisher=Taylor &amp;amp;amp; Francis;">
+<meta name="citation_reference" content="citation_title=Crowdsourcing graphical perception: Using mechanical turk to assess visualization design;,citation_author=Jeffrey Heer;,citation_author=Michael Bostock;,citation_publication_date=2010-04;,citation_cover_date=2010-04;,citation_year=2010;,citation_fulltext_html_url=https://doi.org/10.1145/1753326.1753357;,citation_doi=10.1145/1753326.1753357;,citation_isbn=978-1-60558-929-9;,citation_conference_title=Proceedings of the SIGCHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’10;">
+<meta name="citation_reference" content="citation_title=Theories of Data Analysis: From Magical Thinking Through Classical Statistics;,citation_abstract=This chapter contains sections titled: Intuitive Statistics— Some Inferential Problems Multiplicity— A Pervasive Problem Some Remedies Theories for Data Analysis Uses for Mathematics In Defense of Controlled Magical Thinking;,citation_author=Persi Diaconis;,citation_publication_date=2011;,citation_cover_date=2011;,citation_year=2011;,citation_doi=10.1002/9781118150702.ch1;,citation_isbn=978-1-118-15070-2;,citation_inbook_title=Exploring Data Tables, Trends, and Shapes;">
+<meta name="citation_reference" content="citation_title=Probabilistic Machine Learning and Artificial Intelligence;,citation_abstract=How can a machine learn from experience? Probabilistic modelling provides a framework for understanding what learning is, and has therefore emerged as one of the principal theoretical and practical approaches for designing machines that learn from data acquired through experience. The probabilistic framework, which describes how to represent and manipulate uncertainty about models and predictions, has a central role in scientific data analysis, machine learning, robotics, cognitive science and artificial intelligence. This Review provides an introduction to this framework, and discusses some of the state-of-the-art advances in the field, namely, probabilistic programming, Bayesian optimization, data compression and automatic model discovery.;,citation_author=Zoubin Ghahramani;,citation_publication_date=2015-05;,citation_cover_date=2015-05;,citation_year=2015;,citation_issue=7553;,citation_doi=10.1038/nature14541;,citation_issn=0028-0836;,citation_volume=521;,citation_journal_title=Nature;">
+<meta name="citation_reference" content="citation_title=Bayesian Programming;,citation_author=Pierre Bessiere;,citation_author=Emmanuel Mazer;,citation_author=Juan Manuel Ahuactzin;,citation_author=Kamel Mekhnacha;,citation_publication_date=2013-12;,citation_cover_date=2013-12;,citation_year=2013;,citation_fulltext_html_url=https://www.crcpress.com/Bayesian-Programming/Bessiere-Mazer-Ahuactzin-Mekhnacha/p/book/9781439880326;,citation_isbn=978-1-4398-8032-6;">
+<meta name="citation_reference" content="citation_title=Probabilistic Programming;,citation_author=Daniel Roy;,citation_publication_date=2015;,citation_cover_date=2015;,citation_year=2015;,citation_fulltext_html_url=http://probabilistic-programming.org;">
+<meta name="citation_reference" content="citation_title=Xarray: N-D Labeled Arrays and Datasets in Python;,citation_author=Stephan Hoyer;,citation_author=Joe Hamman;,citation_publication_date=2017-04;,citation_cover_date=2017-04;,citation_year=2017;,citation_issue=1;,citation_doi=10.5334/jors.148;,citation_issn=2049-9647;,citation_volume=5;,citation_journal_title=Journal of Open Research Software;">
+<meta name="citation_reference" content="citation_title=Visualizing count data regressions using rootograms;,citation_author=Christian Kleiber;,citation_author=Achim Zeileis;,citation_publication_date=2016-07;,citation_cover_date=2016-07;,citation_year=2016;,citation_fulltext_html_url=http://dx.doi.org/10.1080/00031305.2016.1173590;,citation_issue=3;,citation_doi=10.1080/00031305.2016.1173590;,citation_issn=1537-2731;,citation_volume=70;,citation_journal_title=The American Statistician;,citation_publisher=Informa UK Limited;">
+<meta name="citation_reference" content="citation_title=Satellite male groups in horseshoe crabs, limulus polyphemus;,citation_author=H. Jane Brockmann;,citation_publication_date=1996;,citation_cover_date=1996;,citation_year=1996;,citation_fulltext_html_url=https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1439-0310.1996.tb01099.x;,citation_issue=1;,citation_doi=10.1111/j.1439-0310.1996.tb01099.x;,citation_volume=102;,citation_journal_title=Ethology;">
+<meta name="citation_reference" content="citation_title=Exploratory Data Analysis;,citation_author=John W. Tukey;,citation_publication_date=1977;,citation_cover_date=1977;,citation_year=1977;,citation_isbn=978-0-201-07616-5;">
+<meta name="citation_reference" content="citation_title=The separation plot: A new visual method for evaluating the fit of binary models;,citation_author=Brian Greenhill;,citation_author=Michael D. Ward;,citation_author=Audrey Sacks;,citation_publication_date=2011;,citation_cover_date=2011;,citation_year=2011;,citation_fulltext_html_url=https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1540-5907.2011.00525.x;,citation_issue=4;,citation_doi=10.1111/j.1540-5907.2011.00525.x;,citation_volume=55;,citation_journal_title=American Journal of Political Science;">
+<meta name="citation_reference" content="citation_title=Detecting and diagnosing prior and likelihood sensitivity with power-scaling;,citation_author=Noa Kallioinen;,citation_author=Topi Paananen;,citation_author=Paul-Christian Bürkner;,citation_author=Aki Vehtari;,citation_publication_date=2023-12;,citation_cover_date=2023-12;,citation_year=2023;,citation_fulltext_html_url=https://doi.org/10.1007/s11222-023-10366-5;,citation_issue=1;,citation_doi=10.1007/s11222-023-10366-5;,citation_issn=1573-1375;,citation_volume=34;,citation_journal_title=Statistics and Computing;">
+<meta name="citation_reference" content="citation_title=Graphical test for discrete uniformity and its applications in goodness-of-fit evaluation and multiple sample comparison;,citation_author=Teemu Säilynoja;,citation_author=Paul-Christian Bürkner;,citation_author=Aki Vehtari;,citation_publication_date=2022-03;,citation_cover_date=2022-03;,citation_year=2022;,citation_fulltext_html_url=https://doi.org/10.1007/s11222-022-10090-6;,citation_issue=2;,citation_doi=10.1007/s11222-022-10090-6;,citation_issn=1573-1375;,citation_volume=32;,citation_journal_title=Statistics and Computing;">
+<meta name="citation_reference" content="citation_title=Validating bayesian inference algorithms with simulation-based calibration;,citation_author=Sean Talts;,citation_author=Michael Betancourt;,citation_author=Daniel Simpson;,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://arxiv.org/abs/1804.06788;">
+<meta name="citation_reference" content="citation_title=On thinning of chains in MCMC;,citation_author=William A. Link;,citation_author=Mitchell J. Eaton;,citation_publication_date=2012;,citation_cover_date=2012;,citation_year=2012;,citation_fulltext_html_url=https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/j.2041-210X.2011.00131.x;,citation_issue=1;,citation_doi=10.1111/j.2041-210X.2011.00131.x;,citation_volume=3;,citation_journal_title=Methods in Ecology and Evolution;">
+<meta name="citation_reference" content="citation_title=Subsampling the Gibbs Sampler;,citation_author=Steven N. MacEachern;,citation_author=L. Mark Berliner;,citation_publication_date=1994;,citation_cover_date=1994;,citation_year=1994;,citation_fulltext_html_url=https://www.jstor.org/stable/2684714;,citation_issue=3;,citation_doi=10.2307/2684714;,citation_issn=0003-1305;,citation_volume=48;,citation_journal_title=The American Statistician;">
+<meta name="citation_reference" content="citation_title=The Prior Can Often Only Be Understood in the Context of the Likelihood;,citation_author=Andrew Gelman;,citation_author=Daniel Simpson;,citation_author=Michael Betancourt;,citation_publication_date=2017-10;,citation_cover_date=2017-10;,citation_year=2017;,citation_fulltext_html_url=https://www.mdpi.com/1099-4300/19/10/555;,citation_issue=10;,citation_doi=10.3390/e19100555;,citation_issn=1099-4300;,citation_volume=19;,citation_journal_title=Entropy;">
+<meta name="citation_reference" content="citation_title=Prior Knowledge Elicitation: The Past, Present, and Future;,citation_author=Petrus Mikkola;,citation_author=Osvaldo A. Martin;,citation_author=Suyog Chandramouli;,citation_author=Marcelo Hartmann;,citation_author=Oriol Abril Pla;,citation_author=Owen Thomas;,citation_author=Henri Pesonen;,citation_author=Jukka Corander;,citation_author=Aki Vehtari;,citation_author=Samuel Kaski;,citation_author=Paul-Christian Bürkner;,citation_author=Arto Klami;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_fulltext_html_url=https://doi.org/10.1214/23-BA1381;,citation_issue=4;,citation_doi=10.1214/23-BA1381;,citation_volume=19;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
+<meta name="citation_reference" content="citation_title=Probability Theory: The Logic of Science;,citation_abstract=Going beyond the conventional mathematics of probability theory, this study views the subject in a wider context. It discusses new results, along with applications of probability theory to a variety of problems. The book contains many exercises and is suitable for use as a textbook on graduate-level courses involving data analysis. Aimed at readers already familiar with applied mathematics at an advanced undergraduate level or higher, it is of interest to scientists concerned with inference from incomplete information.;,citation_author=E. T. Jaynes;,citation_editor=G. Larry Bretthorst;,citation_publication_date=2003-06;,citation_cover_date=2003-06;,citation_year=2003;,citation_fulltext_html_url=https://bayes.wustl.edu/etj/prob/book.pdf;,citation_isbn=978-0-521-59271-0;">
+<meta name="citation_reference" content="citation_title=PreliZ: A tool-box for prior elicitation;,citation_author=Alejandro Icazatti;,citation_author=Oriol Abril-Pla;,citation_author=Arto Klami;,citation_author=Osvaldo A Martin;,citation_publication_date=2023-09;,citation_cover_date=2023-09;,citation_year=2023;,citation_fulltext_html_url=https://joss.theoj.org/papers/10.21105/joss.05499;,citation_issue=89;,citation_doi=10.21105/joss.05499;,citation_volume=8;,citation_journal_title=Journal of Open Source Software;">
+<meta name="citation_reference" content="citation_title=Bayesian workflow;,citation_author=Andrew Gelman;,citation_author=Aki Vehtari;,citation_author=Daniel Simpson;,citation_author=Charles C. Margossian;,citation_author=Bob Carpenter;,citation_author=Yuling Yao;,citation_author=Lauren Kennedy;,citation_author=Jonah Gabry;,citation_author=Paul-Christian Bürkner;,citation_author=Martin Modrák;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://arxiv.org/abs/2011.01808;">
+<meta name="citation_reference" content="citation_title=A web-based tool for eliciting probability distributions from experts;,citation_author=David E. Morris;,citation_author=Jeremy E. Oakley;,citation_author=John A. Crowe;,citation_publication_date=2014;,citation_cover_date=2014;,citation_year=2014;,citation_fulltext_html_url=https://www.sciencedirect.com/science/article/pii/S1364815213002533;,citation_doi=10.1016/j.envsoft.2013.10.010;,citation_issn=1364-8152;,citation_volume=52;,citation_journal_title=Environmental Modelling &amp;amp;amp; Software;">
+<meta name="citation_reference" content="citation_title=Bayesian Modeling and Computation in Python;,citation_author=Osvaldo A. Martin;,citation_author=Ravin Kumar;,citation_author=Junpeng Lao;,citation_publication_date=2021-12;,citation_cover_date=2021-12;,citation_year=2021;,citation_fulltext_html_url=https://bayesiancomputationbook.com/;,citation_isbn=978-0-367-89436-8;">
+<meta name="citation_reference" content="citation_title=Bayesian Analysis with Python: A Practical Guide to probabilistic modeling, 3rd Edition;,citation_author=Osvaldo A Martin;,citation_publication_date=2024-02;,citation_cover_date=2024-02;,citation_year=2024;,citation_fulltext_html_url=https://bap.com.ar/;,citation_isbn=978-1-80512-716-1;">
+<meta name="citation_reference" content="citation_title=BART: Bayesian additive regression trees;,citation_author=Hugh A. Chipman;,citation_author=Edward I. George;,citation_author=Robert E. McCulloch;,citation_publication_date=2010-03;,citation_cover_date=2010-03;,citation_year=2010;,citation_fulltext_html_url=http://projecteuclid.org/euclid.aoas/1273584455;,citation_issue=1;,citation_doi=10.1214/09-AOAS285;,citation_issn=1932-6157;,citation_volume=4;,citation_journal_title=The Annals of Applied Statistics;">
+<meta name="citation_reference" content="citation_title=Practical bayesian model evaluation using leave-one-out cross-validation and WAIC;,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_author=Jonah Gabry;,citation_publication_date=2017;,citation_cover_date=2017;,citation_year=2017;,citation_fulltext_html_url=https://doi.org/10.1007/s11222-016-9696-4;,citation_issue=5;,citation_doi=10.1007/s11222-016-9696-4;,citation_volume=27;,citation_journal_title=Statistics and Computing;">
+<meta name="citation_reference" content="citation_title=Using Stacking to Average Bayesian Predictive Distributions (with Discussion);,citation_author=Yuling Yao;,citation_author=Aki Vehtari;,citation_author=Daniel Simpson;,citation_author=Andrew Gelman;,citation_publication_date=2018;,citation_cover_date=2018;,citation_year=2018;,citation_fulltext_html_url=https://doi.org/10.1214/17-BA1091;,citation_issue=3;,citation_doi=10.1214/17-BA1091;,citation_volume=13;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
+<meta name="citation_reference" content="citation_title=A Widely Applicable Bayesian Information Criterion;,citation_author=Sumio Watanabe;,citation_publication_date=2013-03;,citation_cover_date=2013-03;,citation_year=2013;,citation_fulltext_html_url=https://dl.acm.org/doi/10.5555/2567709.2502609;,citation_volume=14;,citation_journal_title=Journal of Machine Learning Research;">
+<meta name="citation_reference" content="citation_title=A new look at the statistical model identification;,citation_author=H. Akaike;,citation_publication_date=1974;,citation_cover_date=1974;,citation_year=1974;,citation_issue=6;,citation_doi=10.1109/TAC.1974.1100705;,citation_volume=19;,citation_journal_title=IEEE Transactions on Automatic Control;">
+<meta name="citation_reference" content="citation_title=Rank-Normalization, Folding, and Localization: An Improved \widehat{R} for Assessing Convergence of MCMC (with Discussion);,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_author=Daniel Simpson;,citation_author=Bob Carpenter;,citation_author=Paul-Christian Bürkner;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_fulltext_html_url=https://doi.org/10.1214/20-BA1221;,citation_issue=2;,citation_doi=10.1214/20-BA1221;,citation_volume=16;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
+<meta name="citation_reference" content="citation_title=Truncated importance sampling;,citation_author=Edward L. Ionides;,citation_publication_date=2008;,citation_cover_date=2008;,citation_year=2008;,citation_issue=2;,citation_doi=10.1198/106186008X320465;,citation_volume=17;,citation_journal_title=Journal of Computational and Graphical Statistics;">
+<meta name="citation_reference" content="citation_title=No unbiased estimator of the variance of k-fold cross-validation;,citation_author=Yoshua Bengio;,citation_author=Yves Grandvalet;,citation_publication_date=2004;,citation_cover_date=2004;,citation_year=2004;,citation_fulltext_html_url=https://jmlr.csail.mit.edu/papers/v5/grandvalet04a.html;,citation_volume=5;,citation_journal_title=Journal of Machine Learning Research;">
+<meta name="citation_reference" content="citation_title=On the theory of sampling from finite populations;,citation_author=Morris H. Hansen;,citation_author=William N. Hurwitz;,citation_publication_date=1943;,citation_cover_date=1943;,citation_year=1943;,citation_issue=4;,citation_doi=10.1214/aoms/1177731360;,citation_volume=14;,citation_journal_title=The Annals of Mathematical Statistics;">
+<meta name="citation_reference" content="citation_title=Bayesian leave-one-out cross-validation for large data;,citation_author=Måns Magnusson;,citation_author=Michael Andersen;,citation_author=Johan Jonasson;,citation_author=Aki Vehtari;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_fulltext_html_url=https://proceedings.mlr.press/v97/magnusson19a.html;,citation_volume=97;,citation_conference_title=Proceedings of the 36th international conference on machine learning;,citation_conference=PMLR;,citation_series_title=Proceedings of machine learning research;">
+<meta name="citation_reference" content="citation_title=Leave-one-out cross-validation for model comparison in large data;,citation_author=Måns Magnusson;,citation_author=Michael Riis Andersen;,citation_author=Johan Jonasson;,citation_author=Aki Vehtari;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://arxiv.org/abs/2001.00980;,citation_volume=108;,citation_conference_title=Proceedings of the 23rd international conference on artificial intelligence and statistics;,citation_conference=PMLR;,citation_series_title=Proceedings of machine learning research;">
+<meta name="citation_reference" content="citation_title=Projective inference in high-dimensional problems: Prediction and feature selection;,citation_author=Juho Piironen;,citation_author=Markus Paasiniemi;,citation_author=Aki Vehtari;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://doi.org/10.1214/20-EJS1711;,citation_issue=1;,citation_doi=10.1214/20-EJS1711;,citation_volume=14;,citation_journal_title=Electronic Journal of Statistics;,citation_publisher=Institute of Mathematical Statistics; Bernoulli Society;">
+<meta name="citation_reference" content="citation_title=Bayesian additive regression trees for probabilistic programming;,citation_author=Miriana Quiroga;,citation_author=Pablo G Garay;,citation_author=Juan M. Alonso;,citation_author=Juan Martin Loyola;,citation_author=Osvaldo A Martin;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;,citation_fulltext_html_url=https://arxiv.org/abs/2206.03619;,citation_doi=10.48550/ARXIV.2206.03619;,citation_publisher=arXiv;">
+<meta name="citation_reference" content="citation_title=Robust and efficient projection predictive inference;,citation_author=Yann McLatchie;,citation_author=Sölvi Rögnvaldsson;,citation_author=Frank Weber;,citation_author=Aki Vehtari;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_fulltext_html_url=https://arxiv.org/abs/2306.15581;">
+<meta name="citation_reference" content="citation_title=Fitting percentage of body fat to simple body measurements;,citation_author=Roger W. Johnson;,citation_publication_date=1996;,citation_cover_date=1996;,citation_year=1996;,citation_fulltext_html_url=https://doi.org/10.1080/10691898.1996.11910505;,citation_issue=1;,citation_doi=10.1080/10691898.1996.11910505;,citation_volume=4;,citation_journal_title=Journal of Statistics Education;,citation_publisher=Taylor &amp;amp;amp; Francis;">
+<meta name="citation_reference" content="citation_title=Non-parametric jensen-shannon divergence;,citation_author=Hoang-Vu Nguyen;,citation_author=Jilles Vreeken;,citation_editor=Annalisa Appice;,citation_editor=Pedro Pereira Rodrigues;,citation_editor=Vítor Santos Costa;,citation_editor=João Gama;,citation_editor=Alípio Jorge;,citation_editor=Carlos Soares;,citation_publication_date=2015;,citation_cover_date=2015;,citation_year=2015;,citation_fulltext_html_url=https://doi.org/10.1007/978-3-319-23525-7_11;,citation_doi=10.1007/978-3-319-23525-7_11;,citation_conference_title=Machine learning and knowledge discovery in databases;,citation_conference=Springer International Publishing;">
+<meta name="citation_reference" content="citation_title=Modern Applied Statistics with S;,citation_author=W. N. Venables;,citation_author=B. D. Ripley;,citation_publication_date=2002-08;,citation_cover_date=2002-08;,citation_year=2002;,citation_fulltext_html_url=https://doi.org/10.1007/978-0-387-21706-2;,citation_doi=10.1007/978-0-387-21706-2;,citation_isbn=978-0-387-95457-8;">
+<meta name="citation_reference" content="citation_title=Satellite male groups in horseshoe crabs, limulus polyphemus;,citation_author=H. Jane Brockmann;,citation_publication_date=1996;,citation_cover_date=1996;,citation_year=1996;,citation_fulltext_html_url=https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1439-0310.1996.tb01099.x;,citation_issue=1;,citation_doi=10.1111/j.1439-0310.1996.tb01099.x;,citation_volume=102;,citation_journal_title=Ethology;">
+<meta name="citation_reference" content="citation_title=Recommendations for visual predictive checks in bayesian workflow;,citation_author=Teemu Säilynoja;,citation_author=Andrew R. Johnson;,citation_author=Osvaldo A. Martin;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2503.01509;">
+<meta name="citation_reference" content="citation_title=Visualization in bayesian workflow;,citation_author=Jonah Gabry;,citation_author=Daniel Simpson;,citation_author=Aki Vehtari;,citation_author=Michael Betancourt;,citation_author=Andrew Gelman;,citation_publication_date=2019-01;,citation_cover_date=2019-01;,citation_year=2019;,citation_fulltext_html_url=https://doi.org/10.1111/rssa.12378;,citation_issue=2;,citation_doi=10.1111/rssa.12378;,citation_issn=0964-1998;,citation_volume=182;,citation_journal_title=Journal of the Royal Statistical Society Series A: Statistics in Society;">
+<meta name="citation_reference" content="citation_title=Posterior Predictive p-Values;,citation_author=Xiao-Li Meng;,citation_publication_date=1994;,citation_cover_date=1994;,citation_year=1994;,citation_fulltext_html_url=https://doi.org/10.1214/aos/1176325622;,citation_issue=3;,citation_doi=10.1214/aos/1176325622;,citation_volume=22;,citation_journal_title=The Annals of Statistics;,citation_publisher=Institute of Mathematical Statistics;">
+<meta name="citation_reference" content="citation_title=Bayesian Data Analysis;,citation_author=Andrew Gelman;,citation_author=John B. Carlin;,citation_author=Hal S. Stern;,citation_author=David B. Dunson;,citation_author=Aki Vehtari;,citation_author=Donald B. Rubin;,citation_publication_date=2013-11;,citation_cover_date=2013-11;,citation_year=2013;,citation_fulltext_html_url=https://doi.org/10.1201/b16018;,citation_isbn=978-1-4398-4095-5;">
+<meta name="citation_reference" content="citation_title=Two simple examples for understanding posterior p-values whose distributions are far from uniform;,citation_author=Andrew Gelman;,citation_publication_date=2013;,citation_cover_date=2013;,citation_year=2013;,citation_fulltext_html_url=https://doi.org/10.1214/13-EJS854;,citation_issue=none;,citation_doi=10.1214/13-EJS854;,citation_volume=7;,citation_journal_title=Electronic Journal of Statistics;,citation_publisher=Institute of Mathematical Statistics; Bernoulli Society;">
+<meta name="citation_reference" content="citation_title=Stable reliability diagrams for probabilistic classifiers;,citation_author=Timo Dimitriadis;,citation_author=Tilmann Gneiting;,citation_author=Alexander I. Jordan;,citation_publication_date=2021-02;,citation_cover_date=2021-02;,citation_year=2021;,citation_fulltext_html_url=https://www.pnas.org/doi/abs/10.1073/pnas.2016191118;,citation_issue=8;,citation_doi=10.1073/pnas.2016191118;,citation_volume=118;,citation_journal_title=Proceedings of the National Academy of Sciences;">
+<meta name="citation_reference" content="citation_title=An Empirical Distribution Function for Sampling with Incomplete Information;,citation_author=Miriam Ayer;,citation_author=H. D. Brunk;,citation_author=G. M. Ewing;,citation_author=W. T. Reid;,citation_author=Edward Silverman;,citation_publication_date=1955;,citation_cover_date=1955;,citation_year=1955;,citation_fulltext_html_url=https://doi.org/10.1214/aoms/1177728423;,citation_issue=4;,citation_doi=10.1214/aoms/1177728423;,citation_volume=26;,citation_journal_title=The Annals of Mathematical Statistics;,citation_publisher=Institute of Mathematical Statistics;">
+<meta name="citation_reference" content="citation_title=Prior knowledge elicitation: The past, present, and future;,citation_author=Petrus Mikkola;,citation_author=Osvaldo A. Martin;,citation_author=Suyog Chandramouli;,citation_author=Marcelo Hartmann;,citation_author=Oriol Abril Pla;,citation_author=Owen Thomas;,citation_author=Henri Pesonen;,citation_author=Jukka Corander;,citation_author=Aki Vehtari;,citation_author=Samuel Kaski;,citation_author=Paul-Christian Bürkner;,citation_author=Arto Klami;,citation_publication_date=2024-12;,citation_cover_date=2024-12;,citation_year=2024;,citation_issue=4;,citation_doi=10.1214/23-BA1381;,citation_volume=19;,citation_journal_title=Bayesian Analysis;">
+<meta name="citation_reference" content="citation_title=Validation of software for bayesian models using posterior quantiles;,citation_author=Samantha R Cook;,citation_author=Andrew Gelman;,citation_author=Donald B Rubin and;,citation_publication_date=2006;,citation_cover_date=2006;,citation_year=2006;,citation_fulltext_html_url=https://doi.org/10.1198/106186006X136976;,citation_issue=3;,citation_doi=10.1198/106186006X136976;,citation_volume=15;,citation_journal_title=Journal of Computational and Graphical Statistics;,citation_publisher=ASA Website;">
+<meta name="citation_reference" content="citation_title=Simulation-Based Calibration Checking for Bayesian Computation: The Choice of Test Quantities Shapes Sensitivity;,citation_author=Martin Modrák;,citation_author=Angie H. Moon;,citation_author=Shinyoung Kim;,citation_author=Paul Bürkner;,citation_author=Niko Huurre;,citation_author=Kateřina Faltejsková;,citation_author=Andrew Gelman;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://doi.org/10.1214/23-BA1404;,citation_issue=2;,citation_doi=10.1214/23-BA1404;,citation_volume=20;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
+<meta name="citation_reference" content="citation_title=Diagnosing suboptimal cotangent disintegrations in hamiltonian monte carlo;,citation_author=Michael Betancourt;,citation_publication_date=2016;,citation_cover_date=2016;,citation_year=2016;,citation_fulltext_html_url=https://arxiv.org/abs/1604.00695;">
+<meta name="citation_reference" content="citation_title=Posterior SBC: Simulation-based calibration checking conditional on data;,citation_author=Teemu Säilynoja;,citation_author=Marvin Schmitt;,citation_author=Paul-Christian Bürkner;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2502.03279;">
+<meta name="citation_reference" content="citation_title=Bayesian Analysis Reporting Guidelines;,citation_author=John K. Kruschke;,citation_publication_date=2021-10;,citation_cover_date=2021-10;,citation_year=2021;,citation_fulltext_html_url=https://www.nature.com/articles/s41562-021-01177-7;,citation_issue=10;,citation_doi=10.1038/s41562-021-01177-7;,citation_issn=2397-3374;,citation_volume=5;,citation_journal_title=Nature Human Behaviour;">
+<meta name="citation_reference" content="citation_title=A call for changing data analysis practices: From philosophy and comprehensive reporting to modeling approaches and back;,citation_author=Osvaldo A. Martin;,citation_author=François P. Teste;,citation_publication_date=2022-07;,citation_cover_date=2022-07;,citation_year=2022;,citation_fulltext_html_url=https://doi.org/10.1007/s11104-022-05329-0;,citation_issue=1;,citation_doi=10.1007/s11104-022-05329-0;,citation_issn=1573-5036;,citation_volume=476;,citation_journal_title=Plant and Soil;">
+<meta name="citation_reference" content="citation_title=Handbook of Markov Chain Monte Carlo;,citation_editor=Steve Brooks;,citation_editor=Andrew Gelman;,citation_editor=Galin Jones;,citation_editor=Xiao-Li Meng;,citation_publication_date=2011-05;,citation_cover_date=2011-05;,citation_year=2011;,citation_fulltext_html_url=https://doi.org/10.1201/b10905;,citation_isbn=978-1-4200-7941-8;">
+<meta name="citation_reference" content="citation_title=Handbook of Bayesian Variable Selection;,citation_editor=Mahlet G. Tadesse;,citation_editor=Marina Vannucci;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;,citation_fulltext_html_url=https://doi.org/10.1201/9781003089018;,citation_isbn=978-0-367-54376-1;">
+<meta name="citation_reference" content="citation_title=Think Stats: Exploratory Data Analysis;,citation_author=Allen B. Downey;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://allendowney.github.io/ThinkStats/;,citation_isbn=978-1-09-819025-5;">
+<meta name="citation_reference" content="citation_title=Fundamentals of Data Visualization: A Primer on Making Informative and Compelling Figures;,citation_author=Claus O. Wilke;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_fulltext_html_url=https://clauswilke.com/dataviz/;,citation_isbn=978-1-4920-3108-6;">
+<meta name="citation_reference" content="citation_title=Data Visualization: A Practical Introduction;,citation_author=Kieran Healy;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_fulltext_html_url=https://kieranhealy.org/publications/dataviz/;,citation_isbn=978-0-691-18162-2;">
+<meta name="citation_reference" content="citation_title=Getting (more out of) Graphics: Practice and Principles of Data Visualisation;,citation_author=Antony Unwin;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_fulltext_html_url=https://doi.org/10.1201/9781003131212;,citation_isbn=978-1-04-003556-6;">
+<meta name="citation_reference" content="citation_title=When (ish) is My Bus? User-centered Visualizations of Uncertainty in Everyday, Mobile Predictive Systems;,citation_author=Matthew Kay;,citation_author=Tara Kola;,citation_author=Jessica R. Hullman;,citation_author=Sean A. Munson;,citation_publication_date=2016-05;,citation_cover_date=2016-05;,citation_year=2016;,citation_fulltext_html_url=https://doi.org/10.1145/2858036.2858558;,citation_doi=10.1145/2858036.2858558;,citation_isbn=978-1-4503-3362-7;,citation_conference_title=Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’16;">
+<meta name="citation_reference" content="citation_title=Dot Plots;,citation_author=Leland Wilkinson;,citation_publication_date=1999-08;,citation_cover_date=1999-08;,citation_year=1999;,citation_fulltext_html_url=https://www.tandfonline.com/doi/abs/10.1080/00031305.1999.10474474;,citation_issue=3;,citation_doi=10.1080/00031305.1999.10474474;,citation_issn=0003-1305;,citation_volume=53;,citation_journal_title=The American Statistician;">
+<meta name="citation_reference" content="citation_title=Uncertainty Displays Using Quantile Dotplots or CDFs Improve Transit Decision-Making;,citation_author=Michael Fernandes;,citation_author=Logan Walls;,citation_author=Sean Munson;,citation_author=Jessica Hullman;,citation_author=Matthew Kay;,citation_publication_date=2018-04;,citation_cover_date=2018-04;,citation_year=2018;,citation_fulltext_html_url=https://doi.org/10.1145/3173574.3173718;,citation_doi=10.1145/3173574.3173718;,citation_isbn=978-1-4503-5620-6;,citation_conference_title=Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’18;">
+<meta name="citation_reference" content="citation_title=The book of statistical proofs;,citation_author=Joram Soch;,citation_author=Thomas J Faulkenberry;,citation_author=Kenneth Petrykowski;,citation_author=Carsten Allefeld;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_fulltext_html_url=https://statproofbook.github.io/;,citation_doi=10.5281/ZENODO.4305949;">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Chapters/Model_comparison_large_data.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Model Comparison for Large Data</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Exploratory Analysis of Bayesian Models</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <div class="dropdown">
+      <a href="" title="github" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="github"><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/arviz-devs/Exploratory-Analysis-of-Bayesian-Models">
+            source
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/arviz-devs/Exploratory-Analysis-of-Bayesian-Models/issues/new">
+            issues
+            </a>
+          </li>
+      </ul>
+    </div>
+    <a href="https://numfocus.org/donate-to-arviz" title="donations" class="quarto-navigation-tool px-1" aria-label="donations"><i class="bi bi-coin"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">‎</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Elements_of_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Elements of Visualization</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/DataTree.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Working with DataTree</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Random Variables, Distributions, and Uncertainty</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/MCMC_diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">MCMC Diagnostics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Prior_posterior_predictive_checks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prior and Posterior predictive checks</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Sensitivity_checks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Prior and likelihood sensitivity checks</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Model_comparison.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Model Comparison</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Model_comparison_large_data.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Model Comparison for Large Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Case_study_model_comparison.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Model Comparison (case study)</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Variable_selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Variable Selection</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Prior_elicitation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Prior Elicitation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Simulation_based_calibration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Simulation-based calibration checking</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Presenting_results.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Presentation of Results</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/Bayesian_workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Bayesian Workflow</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Chapters/References.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">8.1</span> Introduction</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">8.2</span> Background</a>
+  <ul class="collapse">
+  <li><a href="#from-loo-to-subsampled-loo" id="toc-from-loo-to-subsampled-loo" class="nav-link" data-scroll-target="#from-loo-to-subsampled-loo"><span class="header-section-number">8.2.1</span> From LOO to subsampled LOO</a></li>
+  <li><a href="#model-comparison-for-large-data" id="toc-model-comparison-for-large-data" class="nav-link" data-scroll-target="#model-comparison-for-large-data"><span class="header-section-number">8.2.2</span> Model comparison for large data</a></li>
+  <li><a href="#difference-estimator-for-large-data" id="toc-difference-estimator-for-large-data" class="nav-link" data-scroll-target="#difference-estimator-for-large-data"><span class="header-section-number">8.2.3</span> Difference estimator for large data</a></li>
+  <li><a href="#fast-loo-surrogates" id="toc-fast-loo-surrogates" class="nav-link" data-scroll-target="#fast-loo-surrogates"><span class="header-section-number">8.2.4</span> Fast LOO surrogates</a></li>
+  <li><a href="#asymptotic-guarantees-and-assumptions" id="toc-asymptotic-guarantees-and-assumptions" class="nav-link" data-scroll-target="#asymptotic-guarantees-and-assumptions"><span class="header-section-number">8.2.5</span> Asymptotic guarantees and assumptions</a></li>
+  <li><a href="#workflow-for-model-comparison" id="toc-workflow-for-model-comparison" class="nav-link" data-scroll-target="#workflow-for-model-comparison"><span class="header-section-number">8.2.6</span> Workflow for model comparison</a></li>
+  </ul></li>
+  <li><a href="#wells-data-and-logistic-model" id="toc-wells-data-and-logistic-model" class="nav-link" data-scroll-target="#wells-data-and-logistic-model"><span class="header-section-number">8.3</span> Wells data and logistic model</a>
+  <ul class="collapse">
+  <li><a href="#constructing-the-log-likelihood-helper" id="toc-constructing-the-log-likelihood-helper" class="nav-link" data-scroll-target="#constructing-the-log-likelihood-helper"><span class="header-section-number">8.3.1</span> Constructing the log-likelihood helper</a></li>
+  </ul></li>
+  <li><a href="#subsampled-psis-loo-cv-with-the-plpd-surrogate" id="toc-subsampled-psis-loo-cv-with-the-plpd-surrogate" class="nav-link" data-scroll-target="#subsampled-psis-loo-cv-with-the-plpd-surrogate"><span class="header-section-number">8.4</span> Subsampled PSIS-LOO-CV with the PLPD surrogate</a></li>
+  <li><a href="#subsampled-psis-loo-cv-with-the-lpd-surrogate" id="toc-subsampled-psis-loo-cv-with-the-lpd-surrogate" class="nav-link" data-scroll-target="#subsampled-psis-loo-cv-with-the-lpd-surrogate"><span class="header-section-number">8.5</span> Subsampled PSIS-LOO-CV with the LPD surrogate</a></li>
+  <li><a href="#incremental-sampling-updates" id="toc-incremental-sampling-updates" class="nav-link" data-scroll-target="#incremental-sampling-updates"><span class="header-section-number">8.6</span> Incremental sampling updates</a></li>
+  <li><a href="#approximate-loo-cv-using-psis-loo-with-posterior-approximations" id="toc-approximate-loo-cv-using-psis-loo-with-posterior-approximations" class="nav-link" data-scroll-target="#approximate-loo-cv-using-psis-loo-with-posterior-approximations"><span class="header-section-number">8.7</span> Approximate LOO-CV using PSIS-LOO with posterior approximations</a>
+  <ul class="collapse">
+  <li><a href="#computing-log-density-corrections" id="toc-computing-log-density-corrections" class="nav-link" data-scroll-target="#computing-log-density-corrections"><span class="header-section-number">8.7.1</span> Computing log density corrections</a></li>
+  <li><a href="#running-loo-cv-with-approximate-posterior" id="toc-running-loo-cv-with-approximate-posterior" class="nav-link" data-scroll-target="#running-loo-cv-with-approximate-posterior"><span class="header-section-number">8.7.2</span> Running LOO-CV with approximate posterior</a></li>
+  </ul></li>
+  <li><a href="#combining-approximate-posterior-with-subsampling" id="toc-combining-approximate-posterior-with-subsampling" class="nav-link" data-scroll-target="#combining-approximate-posterior-with-subsampling"><span class="header-section-number">8.8</span> Combining approximate posterior with subsampling</a></li>
+  <li><a href="#comparing-models-with-subsampled-loo" id="toc-comparing-models-with-subsampled-loo" class="nav-link" data-scroll-target="#comparing-models-with-subsampled-loo"><span class="header-section-number">8.9</span> Comparing models with subsampled LOO</a>
+  <ul class="collapse">
+  <li><a href="#comparison-with-different-subsamples" id="toc-comparison-with-different-subsamples" class="nav-link" data-scroll-target="#comparison-with-different-subsamples"><span class="header-section-number">8.9.1</span> Comparison with different subsamples</a></li>
+  <li><a href="#comparison-with-the-same-subsample" id="toc-comparison-with-the-same-subsample" class="nav-link" data-scroll-target="#comparison-with-the-same-subsample"><span class="header-section-number">8.9.2</span> Comparison with the same subsample</a></li>
+  </ul></li>
+  <li><a href="#comparing-full-loo-to-subsampled-loo" id="toc-comparing-full-loo-to-subsampled-loo" class="nav-link" data-scroll-target="#comparing-full-loo-to-subsampled-loo"><span class="header-section-number">8.10</span> Comparing full LOO to subsampled LOO</a></li>
+  <li><a href="#practical-considerations" id="toc-practical-considerations" class="nav-link" data-scroll-target="#practical-considerations"><span class="header-section-number">8.11</span> Practical considerations</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-model-comparison-large-data" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Model Comparison for Large Data</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">8.1</span> Introduction</h2>
+<p>Comparing Bayesian models on large datasets presents a computational challenge. Full leave-one-out cross-validation (LOO) requires computing <span class="math inline">\(n\)</span> posteriors and brute force K-fold cross-validation methods become prohibitively expensive as data size grows.</p>
+<p>To overcome these challenges, we will use the approach described in <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> to combine fast approximations with targeted, exact computations. The key idea is to use cheap approximations, called <em>surrogates</em>, for all <span class="math inline">\(n\)</span> observations, and then correct these approximations using exact Pareto smoothed importance sampling (PSIS) LOO-CV on just a small random subsample with a <em>difference estimator</em> that corrects for the approximation error across the full dataset.</p>
+<p>Predictive performance is summarized by the expected log predictive density estimated via LOO as</p>
+<p><span class="math display">\[
+\overline{\operatorname{elpd}}_{\text{loo}} = \frac{1}{n} \sum_{i=1}^n \pi_i,
+\]</span></p>
+<p>where <span class="math inline">\(\pi_i = \log p(y_i\mid y_{-i})\)</span> is the LOO predictive density for observation <span class="math inline">\(i\)</span> and <span class="math inline">\(y_{-i}\)</span> is the dataset with observation <span class="math inline">\(i\)</span> removed.</p>
+<p>In the example for this chapter using the <code>wells</code> data, we demonstrate the complete workflow for model comparison with subsampled PSIS-LOO-CV. We fit a logistic regression model using both MCMC sampling and Laplace approximations to show how posterior approximations can further reduce computational costs. We implement a lightweight log-likelihood helper that enables efficient evaluation on arbitrary observation subsets, demonstrate subsampled PSIS-LOO-CV using different surrogates (PLPD and LPD), and compare multiple models with subsampled LOO.</p>
+</section>
+<section id="background" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="background"><span class="header-section-number">8.2</span> Background</h2>
+<p>The content in this chapter builds on foundational concepts covered in <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a>. For detailed explanations of expected log predictive density (ELPD), leave-one-out cross-validation (LOO-CV), Pareto smoothed importance sampling (PSIS), and model comparison principles, please refer to that chapter. Here we focus specifically on the subsampling techniques and difference estimator needed for large datasets.</p>
+<section id="from-loo-to-subsampled-loo" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="from-loo-to-subsampled-loo"><span class="header-section-number">8.2.1</span> From LOO to subsampled LOO</h3>
+<p>Recall from <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a> that PSIS-LOO-CV uses importance sampling to approximate LOO-CV without refitting the model <span class="math inline">\(n\)</span> times. The Pareto-<span class="math inline">\(k\)</span> diagnostic flags unreliable importance sampling approximations when <span class="math inline">\(k &gt; 0.7\)</span>. For large <span class="math inline">\(n\)</span>, even this efficient computation becomes expensive.</p>
+<p>The key insight for large data is to combine three elements:</p>
+<ol type="1">
+<li><strong>Fast surrogates</strong> <span class="math inline">\(\tilde\pi_i\)</span> computed for all <span class="math inline">\(n\)</span> observations (e.g., point predictions)</li>
+<li><strong>Exact PSIS-LOO-CV</strong> computed only on a small random subsample <span class="math inline">\(\mathcal{S}\)</span> of size <span class="math inline">\(m \ll n\)</span></li>
+<li><strong>The difference estimator</strong> to correct the surrogates using the subsample</li>
+</ol>
+<p>These elements dramatically reduce computational cost while maintaining statistical accuracy. We can also extend the importance ratios with the correction term <span class="math inline">\(p(\theta_s \mid y)/q(\theta_s \mid y)\)</span> when using approximate posteriors from variational inference or Laplace approximations to further reduce computational cost.</p>
+<p>A surrogate is simply a computationally inexpensive approximation of each observation’s LOO predictive density, such as evaluating the likelihood at the posterior mean, that doesn’t require refitting the model. The difference estimator then uses the subsample to correct for approximation errors across the full dataset. The result is accurate estimates of predictive performance with a fraction of the computational cost, making model comparison feasible even when <span class="math inline">\(n\)</span> is very large.</p>
+<p>A critical component of the difference estimator is using simple random sampling to select the subsample, rather than model-specific importance sampling schemes. This allows the auxiliary information, e.g., the surrogates <span class="math inline">\(\tilde\pi_i\)</span>, to be used in the estimation stage rather than the sampling stage, meaning the same subsample can be efficiently reused for all models and all quantities of interest. Alternative approaches that incorporate model-specific information during sampling, such as the <strong>Hansen-Hurwitz</strong> estimator, which we will describe later, require drawing separate subsamples for each model and each comparison, multiplying computational costs.</p>
+<p>The quality of surrogate approximations <span class="math inline">\(\tilde\pi_i\)</span> plays a key role in determining the required subsample size. Surrogates that incorporate model complexity through the effective number of parameters <span class="math inline">\(p_{\text{eff}} = V_\theta(\log p(y_i \mid \theta))\)</span> tend to approximate the true LOO contributions better than simple point predictions, especially for hierarchical or weakly identified models. This improvement can reduce the required subsample size by orders of magnitude. However, computing better surrogates requires more computation per observation, which creates a fundamental trade-off between surrogate quality and subsample size that should be carefully considered in practice.</p>
+</section>
+<section id="model-comparison-for-large-data" class="level3" data-number="8.2.2">
+<h3 data-number="8.2.2" class="anchored" data-anchor-id="model-comparison-for-large-data"><span class="header-section-number">8.2.2</span> Model comparison for large data</h3>
+<p>When comparing models <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, we are interested in the difference in predictive performance</p>
+<p><span class="math display">\[
+\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B,
+\]</span></p>
+<p>along with its variance</p>
+<p><span class="math display">\[
+V(\operatorname{elpd}_D) = V(\operatorname{elpd}_A) + V(\operatorname{elpd}_B) - 2\operatorname{Cov}(\operatorname{elpd}_A, \operatorname{elpd}_B).
+\]</span></p>
+<p>The covariance term is crucial and often overlooked in practice. When models make similar predictions for most observations, which is common when comparing related models, the predictions are highly correlated, making <span class="math inline">\(\operatorname{Cov}(\operatorname{elpd}_A, \operatorname{elpd}_B)\)</span> large and positive. This correlation dramatically reduces the variance of the difference compared to naively summing individual variances.</p>
+<p>This is why using a common subsample across models is essential. Different random subsamples lose this correlation and fail to capture the variance reduction, whereas the same subsample preserves the correlation structure and accurately estimates both <span class="math inline">\(\operatorname{elpd}_D\)</span> and its much smaller variance, as we will see in the <code>wells</code> example.</p>
+<section id="previous-approaches-and-practical-limitations" class="level4" data-number="8.2.2.1">
+<h4 data-number="8.2.2.1" class="anchored" data-anchor-id="previous-approaches-and-practical-limitations"><span class="header-section-number">8.2.2.1</span> Previous approaches and practical limitations</h4>
+<p>Before describing the central difference estimator used in LOO-CV for large data, it is important to understand the limitations of previous methods for scaling LOO to large data and model comparison. One previous approach is the <strong>Hansen-Hurwitz (HH) estimator</strong> <span class="citation" data-cites="hansen_hurwitz_1943">(<a href="References.html#ref-hansen_hurwitz_1943" role="doc-biblioref">Hansen and Hurwitz 1943</a>)</span> which uses importance sampling with auxiliary information incorporated at the sampling stage. For estimating <span class="math inline">\(\operatorname{elpd}_{\text{loo}}\)</span>, observations are subsampled with probability proportional to an approximate LOO contribution <span class="math inline">\(\tilde{\pi}_i\)</span> giving</p>
+<p><span class="math display">\[
+\widehat{\operatorname{elpd}}_{\text{HH}} = \frac{1}{m} \sum_{j \in \mathcal{S}} \frac{1}{\tilde{\pi}_j} \pi_j,
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal{S}\)</span> is the subsample of size <span class="math inline">\(m\)</span>. While the HH estimator works well for individual model evaluation, it has two key limitations for model comparison:</p>
+<ol type="1">
+<li><p>Since the auxiliary information <span class="math inline">\(\tilde{\pi}_i\)</span> is model-specific and used in the sampling step, each model requires a different subsample. Comparing models or estimating <span class="math inline">\(V(\operatorname{elpd}_D)\)</span> requires drawing additional subsamples for each quantity of interest, multiplying computational costs.</p></li>
+<li><p>Using point estimates like <span class="math inline">\(\log p(y_i \mid \hat{\theta})\)</span> as auxiliary information ignores the effective number of parameters <span class="math inline">\(p_{\text{eff}}\)</span> and can lead to poor approximations for complex models and requiring larger subsample sizes.</p></li>
+</ol>
+<p>These practical limitations motivate the difference estimator approach described below, which uses the same subsample for all models and incorporates model complexity directly in the surrogate approximation.</p>
+</section>
+</section>
+<section id="difference-estimator-for-large-data" class="level3" data-number="8.2.3">
+<h3 data-number="8.2.3" class="anchored" data-anchor-id="difference-estimator-for-large-data"><span class="header-section-number">8.2.3</span> Difference estimator for large data</h3>
+<p>The key to subsampling LOO for large datasets is the difference estimator, which corrects the bias in fast approximations of the full-data LOO. Let <span class="math inline">\(\pi_i = \log p(y_i\mid y_{-i})\)</span> denote the exact LOO predictive density for observation <span class="math inline">\(i\)</span>, and let <span class="math inline">\(\tilde\pi_i\)</span> be a computationally efficient approximation. For a simple random subsample <span class="math inline">\(\mathcal S\)</span> of size <span class="math inline">\(m\)</span>, the difference estimator is given by</p>
+<p><span class="math display">\[
+\widehat{\operatorname{elpd}}_{\text{diff, loo}}
+= \sum_{i=1}^n \tilde\pi_i
++ \frac{n}{m} \sum_{j\in\mathcal S} (\pi_j - \tilde\pi_j).
+\]</span></p>
+<p>Its subsampling variance is</p>
+<p><span class="math display">\[
+V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
+= n^2\!\left(1-\frac{m}{n}\right) \frac{s_e^2}{m},
+\]</span></p>
+<p>where <span class="math inline">\(s_e^2 = \frac{1}{m-1} \sum_{j\in\mathcal S} (e_j-\bar e)^2\)</span> is the sample variance of the approximation error <span class="math inline">\(e_j=\pi_j-\tilde\pi_j\)</span>, and <span class="math inline">\(\bar e = \frac{1}{m} \sum_{j\in\mathcal S} e_j\)</span>.</p>
+<p>The difference estimator has two key properties that make it ideal for large-data model comparison:</p>
+<ol type="1">
+<li><p>The variance decreases as the surrogate quality improves, e.g., as <span class="math inline">\(\tilde\pi_i \to \pi_i\)</span>, the approximation error <span class="math inline">\(e_j \to 0\)</span> and the subsampling variance vanishes.</p></li>
+<li><p>The term <span class="math inline">\((1-m/n)\)</span> is a <strong>finite population correction factor</strong> that ensures the variance also vanishes as the subsample size approaches the full dataset size. This means we can start with a small subsample and incrementally increase it until we achieve the desired precision, without wasting computational effort.</p></li>
+</ol>
+<p>Crucially, the same subsample can be reused across all models. To estimate model differences <span class="math inline">\(\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B\)</span>, we simply apply the difference estimator with difference surrogates <span class="math inline">\(\tilde\pi_{i,D} = \tilde\pi_{i,A} - \tilde\pi_{i,B}\)</span> and exact differences <span class="math inline">\(\pi_{j,D} = \pi_{j,A} - \pi_{j,B}\)</span> on the common subsample.</p>
+<p>For model comparison, we also need the variability of pointwise ELPD contributions, <span class="math inline">\(\sigma^2_{\text{loo}} = \tfrac{1}{n}\sum_i (\pi_i-\bar\pi)^2\)</span>. Using the same subsample with squared surrogates <span class="math inline">\(\tilde\pi_i^2\)</span> yields the unbiased estimator</p>
+<p><span class="math display">\[
+\begin{align}
+\hat{\sigma}^2_{\text{diff, loo}}
+= \sum_{i=1}^n \tilde\pi_i^2 &amp;+ \frac{n}{m} \sum_{j\in\mathcal S} (\pi_j^2 - \tilde\pi_j^2) \\
+&amp;\quad + \frac{1}{n}\biggl[\Bigl( \frac{n}{m}\sum_{j\in\mathcal S} (\pi_j-\tilde\pi_j) \Bigr)^2 - V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)\biggr] \\
+&amp;\quad + \frac{1}{n}\biggl[ 2\Bigl(\sum_{i=1}^n \tilde\pi_i\Bigr)\widehat{\operatorname{elpd}}_{\text{diff, loo}} - \Bigl(\sum_{i=1}^n \tilde\pi_i\Bigr)^2 \biggr].
+\end{align}
+\]</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Unbiasedness of the difference estimator
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The estimators <span class="math inline">\(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\)</span> and <span class="math inline">\(\hat{\sigma}^2_{\text{diff, loo}}\)</span> are unbiased for <span class="math inline">\(\operatorname{elpd}_{\text{loo}}\)</span> and <span class="math inline">\(\sigma^2_{\text{loo}}\)</span>, respectively <span class="citation" data-cites="magnusson_2020">(<a href="References.html#ref-magnusson_2020" role="doc-biblioref">Magnusson et al. 2020</a>)</span>. In practice, <span class="math inline">\(\hat{\sigma}^2_{\text{diff, loo}}\)</span> tends to be optimistic since no general unbiased estimator of the true variability exists in cross-validation <span class="citation" data-cites="bengio_2004">(<a href="References.html#ref-bengio_2004" role="doc-biblioref">Bengio and Grandvalet 2004</a>)</span>.</p>
+</div>
+</div>
+</section>
+<section id="fast-loo-surrogates" class="level3" data-number="8.2.4">
+<h3 data-number="8.2.4" class="anchored" data-anchor-id="fast-loo-surrogates"><span class="header-section-number">8.2.4</span> Fast LOO surrogates</h3>
+<p>For the difference estimator to be efficient, we need good approximations of the LOO contributions. We want surrogates <span class="math inline">\(\tilde\pi_i\)</span> that</p>
+<ol type="1">
+<li>Approximate <span class="math inline">\(\pi_i\)</span> well in finite samples</li>
+<li>Are computationally cheap</li>
+<li>Converge in mean, <span class="math inline">\(\mathbb{E}|\pi_i - \tilde\pi_i| \to 0\)</span> as <span class="math inline">\(n \to \infty\)</span></li>
+</ol>
+<p>Notably, the third property ensures favorable scaling characteristics as the data size grows.</p>
+<section id="practical-surrogates-plpd-and-lpd" class="level4" data-number="8.2.4.1">
+<h4 data-number="8.2.4.1" class="anchored" data-anchor-id="practical-surrogates-plpd-and-lpd"><span class="header-section-number">8.2.4.1</span> Practical surrogates: PLPD and LPD</h4>
+<p>In practice, the function <code>loo_subsample</code> in ArviZ implements two main surrogates.</p>
+<p>The first is the <strong>point log predictive density (PLPD)</strong> and is given by</p>
+<p><span class="math display">\[
+\tilde\pi_i^{\text{PLPD}} = \log p(y_i \mid \hat\theta),
+\]</span></p>
+<p>where <span class="math inline">\(\hat\theta\)</span> is typically the posterior mean. This is computationally cheapest but ignores posterior uncertainty.</p>
+<p>The second is the <strong>log predictive density (LPD)</strong> and is given by</p>
+<p><span class="math display">\[
+\tilde\pi_i^{\text{LPD}} = \log \left(\frac{1}{S} \sum_{s=1}^S p(y_i \mid \theta_s)\right),
+\]</span></p>
+<p>which averages over posterior draws before taking the logarithm. The approximation error <span class="math inline">\(e_j = \pi_j - \tilde\pi_j\)</span> directly affects the subsampling variance, so better surrogates allow smaller subsamples for the same precision.</p>
+</section>
+</section>
+<section id="asymptotic-guarantees-and-assumptions" class="level3" data-number="8.2.5">
+<h3 data-number="8.2.5" class="anchored" data-anchor-id="asymptotic-guarantees-and-assumptions"><span class="header-section-number">8.2.5</span> Asymptotic guarantees and assumptions</h3>
+<p>The difference estimator has strong theoretical foundations with convergence guarantees under mild regularity conditions. Remarkably, convergence accelerates as data size grows, even with fixed subsample size and fixed number of posterior draws, making the method more efficient precisely when needed most.</p>
+<p>The required assumptions are standard regularity conditions satisfied by most common parametric models including regression, GLMs, and hierarchical models. For detailed theoretical treatment of the asymptotic properties and regularity conditions, see <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span>.</p>
+</section>
+<section id="workflow-for-model-comparison" class="level3" data-number="8.2.6">
+<h3 data-number="8.2.6" class="anchored" data-anchor-id="workflow-for-model-comparison"><span class="header-section-number">8.2.6</span> Workflow for model comparison</h3>
+<p>The workflow for applying subsampled PSIS-LOO-CV to model comparison is straightforward. We compute cheap surrogates for all observations, then refine our estimates using PSIS-LOO-CV on a small subsample, balancing computational efficiency with statistical accuracy:</p>
+<ol type="1">
+<li>Compute posteriors <span class="math inline">\(p_A(\theta \mid y)\)</span> and <span class="math inline">\(p_B(\theta \mid y)\)</span> for models <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span></li>
+<li>Calculate <span class="math inline">\(\tilde\pi_i\)</span> for all <span class="math inline">\(n\)</span> observations using an appropriate approximation</li>
+<li>Use simple random sampling to select <span class="math inline">\(m\)</span> observations (start with <span class="math inline">\(m \approx 100\)</span>)</li>
+<li>Calculate <span class="math inline">\(\pi_j\)</span> for the subsample using PSIS-LOO-CV, checking Pareto-<span class="math inline">\(k\)</span> diagnostics for unreliable importance sampling approximations</li>
+<li>Estimate <span class="math inline">\(\operatorname{elpd}_A\)</span>, <span class="math inline">\(\operatorname{elpd}_B\)</span>, and their difference</li>
+<li>If subsampling SE is too large relative to the estimated difference, increase <span class="math inline">\(m\)</span> using <code>update_subsample</code></li>
+</ol>
+<p>Again, the key advantage is that the same subsample can be reused across all models, making the approach highly efficient for comparing multiple models. The difference <span class="math inline">\(\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B\)</span> and its variance are estimated directly from the common subsample, properly accounting for the correlation between models’ predictions.</p>
+<p>This reuse is what makes the difference estimator superior to the Hansen-Hurwitz approach for model comparison tasks. This is also the reason why we recommend using the same subsample for all models, rather than subsampling each model separately.</p>
+</section>
+</section>
+<section id="wells-data-and-logistic-model" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="wells-data-and-logistic-model"><span class="header-section-number">8.3</span> Wells data and logistic model</h2>
+<p>To demonstrate the PSIS-LOO-CV subsampling method, we use data from a household survey in a region of Bangladesh where drinking water was contaminated with arsenic. Households with unsafe arsenic levels in their wells were asked whether they would switch to using a neighbor’s safe well. The goal is to predict this binary switching decision using household characteristics.</p>
+<p>We focus on a simple logistic regression with two key predictors: the arsenic concentration in the household’s well and the distance to the nearest safe well. The dataset contains <span class="math inline">\(n = 3020\)</span> observations. While this is not massive by modern standards, it is large enough that efficient computational methods become valuable. The advantage of this sample size is that individual observations have limited influence on the overall model fit, which helps ensure stable importance sampling computations. The data is available from the R package <code>loo</code>.</p>
+<p>We model the indicator of switching water wells using a logistic regression with intercept, arsenic concentration, and distance to the nearest safe well in hundreds of metres. The design matrix is <span class="math inline">\(X = [1, \text{dist}/100, \text{arsenic}]\)</span> and the likelihood is given by</p>
+<p><span class="math display">\[
+\Pr(y_i = 1 \mid \beta) = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta), \qquad \beta \sim \mathcal{N}(0, I_3).
+\]</span></p>
+<div id="b016a6ad" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a>wells <span class="op">=</span> pd.read_csv(<span class="st">"../data/wells.csv"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a>wells[<span class="st">"dist100"</span>] <span class="op">=</span> wells[<span class="st">"dist"</span>] <span class="op">/</span> <span class="dv">100</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a>X <span class="op">=</span> np.column_stack([</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    np.ones(<span class="bu">len</span>(wells)),        </span>
+<span id="cb1-9"><a href="#cb1-9"></a>    wells[<span class="st">"dist100"</span>].values,     </span>
+<span id="cb1-10"><a href="#cb1-10"></a>    wells[<span class="st">"arsenic"</span>].values </span>
+<span id="cb1-11"><a href="#cb1-11"></a>])</span>
+<span id="cb1-12"><a href="#cb1-12"></a>y <span class="op">=</span> wells[<span class="st">"switch"</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can fit the model using PyMC or CmdStanPy where posterior draws are stored in a <code>DataTree</code> object.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div id="ba805bdf" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="cf">with</span> pm.Model():</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    beta <span class="op">=</span> pm.Normal(<span class="st">"beta"</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">1</span>, shape<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    logit_p <span class="op">=</span> pm.math.dot(X, beta)</span>
+<span id="cb2-7"><a href="#cb2-7"></a>    pm.Bernoulli(<span class="st">"y"</span>, logit_p<span class="op">=</span>logit_p, observed<span class="op">=</span>y)</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a>    idata <span class="op">=</span> pm.sample(</span>
+<span id="cb2-10"><a href="#cb2-10"></a>        draws<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb2-11"><a href="#cb2-11"></a>        tune<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb2-12"><a href="#cb2-12"></a>        chains<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb2-13"><a href="#cb2-13"></a>        random_seed<span class="op">=</span><span class="dv">4711</span>,</span>
+<span id="cb2-14"><a href="#cb2-14"></a>        progressbar<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb2-15"><a href="#cb2-15"></a>        idata_kwargs<span class="op">=</span>{<span class="st">'log_likelihood'</span>: <span class="va">True</span>}</span>
+<span id="cb2-16"><a href="#cb2-16"></a>    )</span>
+<span id="cb2-17"><a href="#cb2-17"></a></span>
+<span id="cb2-18"><a href="#cb2-18"></a>data <span class="op">=</span> azp.convert_to_datatree(idata)</span>
+<span id="cb2-19"><a href="#cb2-19"></a>data[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X)})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<section id="constructing-the-log-likelihood-helper" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="constructing-the-log-likelihood-helper"><span class="header-section-number">8.3.1</span> Constructing the log-likelihood helper</h3>
+<p>Unlike regular <code>loo()</code>, the routine <code>loo_subsample()</code> expects a callable with signature <code>log_lik_fn(observed, data)</code> depending on the approximation method so that we can compute the log-likelihood for a subset of observations on demand rather than storing the log-likelihood for all observations, which can be computationally expensive for large datasets.</p>
+<p>This callable signature is the baseline expectation for <code>loo_subsample()</code>, and we can always wrap auxiliary parameters with tools such as <code>functools.partial</code> so the routine still receives <code>(observed, data)</code>.</p>
+<p>For logistic regression, the per-draw log probability mass function is given by</p>
+<p><span class="math display">\[
+\log p(y_i \mid \beta_s, X_i) = y_i \log \pi_{is} + (1 - y_i) \log (1 - \pi_{is}), \qquad \pi_{is} = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta_s).
+\]</span></p>
+<p>A direct approach is to store the design matrix in the <code>constant_data</code> group so that the helper can directly compute the log-likelihood for whichever subset <code>loo_subsample()</code> hands to it.</p>
+<div id="cdce435c" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> scipy.special <span class="im">import</span> expit</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="kw">def</span> log_lik_fn(obs, data):</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    beta <span class="op">=</span> data.posterior[<span class="st">"beta"</span>].values</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    X <span class="op">=</span> data.constant_data[<span class="st">"X"</span>].values</span>
+<span id="cb4-7"><a href="#cb4-7"></a>    logit_pred <span class="op">=</span> X <span class="op">@</span> beta</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    prob <span class="op">=</span> expit(logit_pred)</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="cf">return</span> stats.bernoulli.logpmf(obs, prob)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This log-likelihood helper evaluates the Bernoulli log-pmf for the selected subset and returns log probabilities for each posterior draw. No log-likelihood values are stored permanently, which keeps memory usage modest even when <span class="math inline">\(N\)</span> is large.</p>
+</section>
+</section>
+<section id="subsampled-psis-loo-cv-with-the-plpd-surrogate" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="subsampled-psis-loo-cv-with-the-plpd-surrogate"><span class="header-section-number">8.4</span> Subsampled PSIS-LOO-CV with the PLPD surrogate</h2>
+<p>As we’ve discussed previously, a key component of the PSIS-LOO-CV subsampling method is the notion of a fast surrogate for the leave-one-out term <span class="math inline">\(\pi_i\)</span>. One such surrogate is the point log predictive density (PLPD) which <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> motivate by replacing the leave-one-out term <span class="math inline">\(\pi_i\)</span> with</p>
+<p><span class="math display">\[
+\tilde\pi_i^{\text{plpd}} = \log p(y_i \mid X_i, \hat{\beta}), \quad \hat{\beta} = \mathbb{E}[\beta \mid y].
+\]</span></p>
+<p>The approximation reduces the computational burden to a single evaluation per observation while retaining the shrinkage induced by the posterior mean. Inserting <span class="math inline">\(\tilde\pi_i^{\text{plpd}}\)</span> into the difference estimator converts the exact correction to a subsample average that only requires re-evaluating the full posterior draws on <span class="math inline">\(m\)</span> observations.</p>
+<p>Here we use the <code>method="plpd"</code> argument to <code>loo_subsample()</code> to use the PLPD surrogate.</p>
+<div id="f1c09a7c" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>loo_plpd <span class="op">=</span> azp.loo_subsample(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>    data<span class="op">=</span>data,</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    method<span class="op">=</span><span class="st">"plpd"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    log_lik_fn<span class="op">=</span>log_lik_fn,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    param_names<span class="op">=</span>[<span class="st">"beta"</span>],</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    pointwise<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-9"><a href="#cb5-9"></a>    seed<span class="op">=</span>SEED,</span>
+<span id="cb5-10"><a href="#cb5-10"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11"></a></span>
+<span id="cb5-12"><a href="#cb5-12"></a>loo_plpd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>Computed from 4000 by 100 subsampled log-likelihood
+values from 3020 total observations.
+
+         Estimate   SE subsampling SE
+elpd_loo   -1968.4 15.6            0.3
+p_loo          3.1
+
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)      100  100.0%
+   (0.70, 1]   (bad)         0    0.0%
+    (1, Inf)   (very bad)    0    0.0%</code></pre>
+</div>
+</div>
+<p>The output inherits from the <code>ELPDData</code> interface with an additional column <code>subsampling_se</code> isolating the extra Monte Carlo error introduced by drawing only <span class="math inline">\(100\)</span> of the <span class="math inline">\(3020\)</span> observations. In our wells run with <span class="math inline">\(m=100\)</span> we obtained <span class="math inline">\(\widehat{\operatorname{elpd}}_{\text{loo}}\approx-1968.4\)</span> with <span class="math inline">\(\text{SE}\approx15.6\)</span> and <span class="math inline">\(\text{subsampling SE} \approx0.3\)</span>. All Pareto‑<span class="math inline">\(k\)</span> values on the subsample were <span class="math inline">\(\le 0.7\)</span>.</p>
+</section>
+<section id="subsampled-psis-loo-cv-with-the-lpd-surrogate" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="subsampled-psis-loo-cv-with-the-lpd-surrogate"><span class="header-section-number">8.5</span> Subsampled PSIS-LOO-CV with the LPD surrogate</h2>
+<p>When the posterior mass is diffuse or strongly correlated, evaluating the full posterior predictive density can improve the approximation. We can use the log predictive density (LPD) surrogate given by</p>
+<p><span class="math display">\[
+\tilde\pi_i^{\text{lpd}} = \log \left( \frac{1}{S} \sum_{s=1}^S p(y_i \mid X_i, \beta_s) \right),
+\]</span></p>
+<p>where <span class="math inline">\(\beta_s\)</span> are the draws stored in <code>data.posterior</code>. The additional sum over draws raises the cost and often reduces the approximation error. The same subsample size and random seed ensure that the estimator reuses the indices chosen for the PLPD computation, which makes comparisons straightforward.</p>
+<div id="bb441357" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>loo_lpd <span class="op">=</span> azp.loo_subsample(</span>
+<span id="cb7-2"><a href="#cb7-2"></a>    data<span class="op">=</span>data,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    method<span class="op">=</span><span class="st">"lpd"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6"></a>    pointwise<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    seed<span class="op">=</span>SEED,</span>
+<span id="cb7-8"><a href="#cb7-8"></a>)</span>
+<span id="cb7-9"><a href="#cb7-9"></a></span>
+<span id="cb7-10"><a href="#cb7-10"></a>loo_lpd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>Computed from 4000 by 100 subsampled log-likelihood
+values from 3020 total observations.
+
+         Estimate   SE subsampling SE
+elpd_loo   -1968.5 15.6            0.4
+p_loo          3.2
+
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)      100  100.0%
+   (0.70, 1]   (bad)         0    0.0%
+    (1, Inf)   (very bad)    0    0.0%</code></pre>
+</div>
+</div>
+<p>From the output, we can see that the estimated ELPD closely matches the PLPD result, both about <span class="math inline">\(-1968.5\)</span> with <span class="math inline">\(\text{SE}\approx15.6\)</span>, and the subsampling SEs are very similar (PLPD <span class="math inline">\(\approx0.3\)</span> vs.&nbsp;LPD <span class="math inline">\(\approx0.4\)</span>).</p>
+<p>For well‑identified models with tight posteriors, PLPD can match or even slightly outperform LPD. For more complex models, LPD often gains ground. Taken together, the parallel outputs validate the theoretical trade-off. PLPD minimises computation, whereas LPD expends extra work to tighten the estimator. For larger <span class="math inline">\(m\)</span> the difference between the two surrogates typically diminishes, and the choice becomes a balance between runtime and stability.</p>
+</section>
+<section id="incremental-sampling-updates" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="incremental-sampling-updates"><span class="header-section-number">8.6</span> Incremental sampling updates</h2>
+<p><span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> recommend increasing <span class="math inline">\(m\)</span> until the subsampling uncertainty is negligible for the task at hand. The <code>update_subsample()</code> routine efficiently extends an existing subsample without discarding work already done. Here we add 200 additional observations (from 100 to 300 total in the subsample) by using the previous subsample as a starting point.</p>
+<div id="9491ac2e" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>loo_update <span class="op">=</span> azp.update_subsample(</span>
+<span id="cb9-2"><a href="#cb9-2"></a>    loo_plpd,</span>
+<span id="cb9-3"><a href="#cb9-3"></a>    data,</span>
+<span id="cb9-4"><a href="#cb9-4"></a>    observations<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb9-5"><a href="#cb9-5"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6"></a>    method<span class="op">=</span><span class="st">"plpd"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7"></a>    log_lik_fn<span class="op">=</span>log_lik_fn,</span>
+<span id="cb9-8"><a href="#cb9-8"></a>    param_names<span class="op">=</span>[<span class="st">"beta"</span>],</span>
+<span id="cb9-9"><a href="#cb9-9"></a>    seed<span class="op">=</span>SEED,</span>
+<span id="cb9-10"><a href="#cb9-10"></a>)</span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a>loo_update</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>Computed from 4000 by 300 subsampled log-likelihood
+values from 3020 total observations.
+
+         Estimate   SE subsampling SE
+elpd_loo   -1968.4 15.6            0.2
+p_loo          3.1
+
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)      300  100.0%
+   (0.70, 1]   (bad)         0    0.0%
+    (1, Inf)   (very bad)    0    0.0%</code></pre>
+</div>
+</div>
+<p>The updated result shows how the estimator stabilises as more observations are included. In our run, the subsampling SE decreased from about <span class="math inline">\(0.3\)</span> to <span class="math inline">\(0.2\)</span>, while the estimated ELPD and <span class="math inline">\(p_{\text{loo}}\)</span> remained essentially unchanged.</p>
+</section>
+<section id="approximate-loo-cv-using-psis-loo-with-posterior-approximations" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="approximate-loo-cv-using-psis-loo-with-posterior-approximations"><span class="header-section-number">8.7</span> Approximate LOO-CV using PSIS-LOO with posterior approximations</h2>
+<p>Using posterior approximations such as variational inference or Laplace approximations can further accelerate LOO-CV for large data. These methods avoid the computational cost of full MCMC while maintaining reasonable approximation quality for well-behaved models.</p>
+<p>We will use the Laplace approximation which fits a multivariate normal distribution centered at the posterior mode <span class="math inline">\(\hat{\theta}\)</span> with covariance equal to the inverse Hessian of the negative log posterior. For a model with likelihood <span class="math inline">\(p(y \mid \theta)\)</span> and prior <span class="math inline">\(p(\theta)\)</span>, the Laplace approximation is</p>
+<p><span class="math display">\[
+q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+\hat{\theta} = \arg\max_\theta \log p(\theta \mid y) \quad \text{ and } \quad \Sigma = [-\nabla^2 \log p(\theta \mid y)]^{-1}.
+\]</span></p>
+<p>Draws from <span class="math inline">\(q(\theta \mid y)\)</span> can be obtained efficiently by sampling from the fitted normal distribution.</p>
+<p>The following fits the wells model using a Laplace approximation via <code>pymc_extras.fit_laplace</code>, which returns draws from the approximate posterior along with the mode and covariance estimates.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">CmdStanPy</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div id="f0841adb" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="im">from</span> pymc_extras <span class="im">import</span> fit_laplace</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_laplace:</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    beta <span class="op">=</span> pm.Normal(<span class="st">"beta"</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">1</span>, shape<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    logit_p <span class="op">=</span> pm.math.dot(X, beta)</span>
+<span id="cb11-7"><a href="#cb11-7"></a>    pm.Bernoulli(<span class="st">"y"</span>, logit_p<span class="op">=</span>logit_p, observed<span class="op">=</span>y)</span>
+<span id="cb11-8"><a href="#cb11-8"></a></span>
+<span id="cb11-9"><a href="#cb11-9"></a>    idata_laplace <span class="op">=</span> fit_laplace(</span>
+<span id="cb11-10"><a href="#cb11-10"></a>        chains<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb11-11"><a href="#cb11-11"></a>        draws<span class="op">=</span><span class="dv">2000</span>,</span>
+<span id="cb11-12"><a href="#cb11-12"></a>        random_seed<span class="op">=</span>SEED,</span>
+<span id="cb11-13"><a href="#cb11-13"></a>        progressbar<span class="op">=</span><span class="va">True</span></span>
+<span id="cb11-14"><a href="#cb11-14"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>The <code>fit_laplace</code> function stores the posterior mode in the <code>fit</code> group as <code>mean_vector</code> and the covariance in <code>covariance_matrix</code>. Posterior draws are stored in the <code>posterior</code> group as usual. We convert the result to a <code>DataTree</code> and attach the observed data and design matrix for use with <code>loo_approximate_posterior()</code>.</p>
+<div id="0e4a4e30" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>data_laplace <span class="op">=</span> azp.convert_to_datatree(idata_laplace)</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a>data_laplace[<span class="st">"observed_data"</span>] <span class="op">=</span> xr.Dataset({</span>
+<span id="cb13-4"><a href="#cb13-4"></a>    <span class="st">"y"</span>: ([<span class="st">"obs_id"</span>], y, {<span class="st">"obs_id"</span>: <span class="bu">range</span>(<span class="bu">len</span>(y))})</span>
+<span id="cb13-5"><a href="#cb13-5"></a>})</span>
+<span id="cb13-6"><a href="#cb13-6"></a>data_laplace[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X)})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="computing-log-density-corrections" class="level3" data-number="8.7.1">
+<h3 data-number="8.7.1" class="anchored" data-anchor-id="computing-log-density-corrections"><span class="header-section-number">8.7.1</span> Computing log density corrections</h3>
+<p>To use <code>loo_approximate_posterior()</code>, we must supply <code>log_p</code> and <code>log_q</code>, which represent the log density of the true posterior and the approximate posterior, respectively. The importance ratios are then adjusted to account for the approximation quality with</p>
+<p><span class="math display">\[
+r(\theta_s) \propto \frac{1}{p(y_i \mid \theta_s)} \frac{p(\theta_s \mid y)}{q(\theta_s \mid y)}.
+\]</span></p>
+<p>For the Laplace approximation, <span class="math inline">\(\log q(\theta_s \mid y)\)</span> is the log density of the fitted normal distribution, while <span class="math inline">\(\log p(\theta_s \mid y)\)</span> is the log prior plus the log likelihood. We require both of these quantities to be able to compute the importance ratios.</p>
+<div id="f29cd8b0" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> multivariate_normal</span>
+<span id="cb14-2"><a href="#cb14-2"></a></span>
+<span id="cb14-3"><a href="#cb14-3"></a>beta_samples <span class="op">=</span> data_laplace.posterior[<span class="st">"beta"</span>]</span>
+<span id="cb14-4"><a href="#cb14-4"></a>X_xr <span class="op">=</span> data_laplace.constant_data[<span class="st">"X"</span>]</span>
+<span id="cb14-5"><a href="#cb14-5"></a>y_xr <span class="op">=</span> data_laplace.observed_data[<span class="st">"y"</span>]</span>
+<span id="cb14-6"><a href="#cb14-6"></a></span>
+<span id="cb14-7"><a href="#cb14-7"></a>param_dim <span class="op">=</span> [d <span class="cf">for</span> d <span class="kw">in</span> beta_samples.dims <span class="cf">if</span> d <span class="kw">not</span> <span class="kw">in</span> [<span class="st">"chain"</span>, <span class="st">"draw"</span>]][<span class="dv">0</span>]</span>
+<span id="cb14-8"><a href="#cb14-8"></a>beta_renamed <span class="op">=</span> beta_samples.rename({param_dim: <span class="st">"coef"</span>})</span>
+<span id="cb14-9"><a href="#cb14-9"></a></span>
+<span id="cb14-10"><a href="#cb14-10"></a>logit_pred <span class="op">=</span> xr.dot(X_xr, beta_renamed, dims<span class="op">=</span>[<span class="st">"coef"</span>])</span>
+<span id="cb14-11"><a href="#cb14-11"></a>prob <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> xr.ufuncs.exp(<span class="op">-</span>logit_pred))</span>
+<span id="cb14-12"><a href="#cb14-12"></a>log_lik_laplace <span class="op">=</span> y_xr <span class="op">*</span> xr.ufuncs.log(prob) <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> y_xr) <span class="op">*</span> xr.ufuncs.log(<span class="dv">1</span> <span class="op">-</span> prob)</span>
+<span id="cb14-13"><a href="#cb14-13"></a></span>
+<span id="cb14-14"><a href="#cb14-14"></a>data_laplace[<span class="st">"log_likelihood"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"y"</span>: log_lik_laplace})</span>
+<span id="cb14-15"><a href="#cb14-15"></a></span>
+<span id="cb14-16"><a href="#cb14-16"></a>mean_vals <span class="op">=</span> data_laplace.fit[<span class="st">"mean_vector"</span>].values</span>
+<span id="cb14-17"><a href="#cb14-17"></a>cov_matrix <span class="op">=</span> data_laplace.fit[<span class="st">"covariance_matrix"</span>].values</span>
+<span id="cb14-18"><a href="#cb14-18"></a></span>
+<span id="cb14-19"><a href="#cb14-19"></a><span class="co"># This applies the multivariate normal log density function to each draw along the last axis</span></span>
+<span id="cb14-20"><a href="#cb14-20"></a><span class="co"># which is the parameter dimension</span></span>
+<span id="cb14-21"><a href="#cb14-21"></a>log_q_vals <span class="op">=</span> np.apply_along_axis(</span>
+<span id="cb14-22"><a href="#cb14-22"></a>    <span class="kw">lambda</span> b: multivariate_normal.logpdf(b, mean<span class="op">=</span>mean_vals, cov<span class="op">=</span>cov_matrix),</span>
+<span id="cb14-23"><a href="#cb14-23"></a>    axis<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb14-24"><a href="#cb14-24"></a>    arr<span class="op">=</span>beta_renamed.values</span>
+<span id="cb14-25"><a href="#cb14-25"></a>)</span>
+<span id="cb14-26"><a href="#cb14-26"></a>log_q_da <span class="op">=</span> xr.DataArray(</span>
+<span id="cb14-27"><a href="#cb14-27"></a>    log_q_vals,</span>
+<span id="cb14-28"><a href="#cb14-28"></a>    dims<span class="op">=</span>[<span class="st">"chain"</span>, <span class="st">"draw"</span>],</span>
+<span id="cb14-29"><a href="#cb14-29"></a>    coords<span class="op">=</span>{<span class="st">"chain"</span>: beta_renamed.chain, <span class="st">"draw"</span>: beta_renamed.draw}</span>
+<span id="cb14-30"><a href="#cb14-30"></a>)</span>
+<span id="cb14-31"><a href="#cb14-31"></a></span>
+<span id="cb14-32"><a href="#cb14-32"></a>log_prior <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span> <span class="op">*</span> (beta_renamed <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>(<span class="st">"coef"</span>) <span class="op">-</span> <span class="fl">1.5</span> <span class="op">*</span> np.log(<span class="dv">2</span> <span class="op">*</span> np.pi)</span>
+<span id="cb14-33"><a href="#cb14-33"></a>log_lik_sum <span class="op">=</span> log_lik_laplace.<span class="bu">sum</span>(<span class="st">"obs_id"</span>)</span>
+<span id="cb14-34"><a href="#cb14-34"></a>log_p_da <span class="op">=</span> log_prior <span class="op">+</span> log_lik_sum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The log prior uses the standard normal density <span class="math inline">\(\mathcal{N}(0, I_3)\)</span> specified in the model. The log likelihood sums over all observations to obtain the joint log density. These quantities are then passed to <code>loo_approximate_posterior()</code> to compute corrected LOO estimates.</p>
+</section>
+<section id="running-loo-cv-with-approximate-posterior" class="level3" data-number="8.7.2">
+<h3 data-number="8.7.2" class="anchored" data-anchor-id="running-loo-cv-with-approximate-posterior"><span class="header-section-number">8.7.2</span> Running LOO-CV with approximate posterior</h3>
+<p>With <code>log_p</code> and <code>log_q</code> in hand, we can compute LOO-CV using the approximate posterior. The <code>loo_approximate_posterior()</code> function adjusts the importance ratios to account for the discrepancy between the true posterior and the Laplace approximation.</p>
+<div id="36ab3e77" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>loo_ap <span class="op">=</span> azp.loo_approximate_posterior(</span>
+<span id="cb15-2"><a href="#cb15-2"></a>    data<span class="op">=</span>data_laplace,</span>
+<span id="cb15-3"><a href="#cb15-3"></a>    log_p<span class="op">=</span>log_p_da,</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    log_q<span class="op">=</span>log_q_da,</span>
+<span id="cb15-5"><a href="#cb15-5"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6"></a>    pointwise<span class="op">=</span><span class="va">True</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>)</span>
+<span id="cb15-8"><a href="#cb15-8"></a></span>
+<span id="cb15-9"><a href="#cb15-9"></a>loo_ap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>Computed from 8000 posterior samples and 3020 observations log-likelihood matrix.
+Posterior approximation correction used.
+
+         Estimate       SE
+elpd_loo -1968.42    15.59
+p_loo        3.17        -
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)     3020  100.0%
+   (0.70, 1]   (bad)         0    0.0%
+    (1, Inf)   (very bad)    0    0.0%</code></pre>
+</div>
+</div>
+<p>The output shows how the approximate posterior performs relative to MCMC. The Pareto-<span class="math inline">\(k\)</span> diagnostics remain available and indicate whether the importance sampling correction is reliable. You can also see in the output the line <em>“Posterior approximation correction used”</em>, which indicates that the approximate posterior correction was used.</p>
+</section>
+</section>
+<section id="combining-approximate-posterior-with-subsampling" class="level2" data-number="8.8">
+<h2 data-number="8.8" class="anchored" data-anchor-id="combining-approximate-posterior-with-subsampling"><span class="header-section-number">8.8</span> Combining approximate posterior with subsampling</h2>
+<p>The approximate posterior correction can be combined with subsampling to further reduce computational cost.</p>
+<p>When using <code>loo_subsample()</code> with an approximate posterior, we simply pass <code>log_p</code> and <code>log_q</code> along with the subsample specification. The difference estimator then corrects for both the approximation error and the subsampling uncertainty.</p>
+<div id="3f25c740" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>loo_ap_ss <span class="op">=</span> azp.loo_subsample(</span>
+<span id="cb17-2"><a href="#cb17-2"></a>    data<span class="op">=</span>data_laplace,</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    method<span class="op">=</span><span class="st">"plpd"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6"></a>    log_lik_fn<span class="op">=</span>log_lik_fn,</span>
+<span id="cb17-7"><a href="#cb17-7"></a>    param_names<span class="op">=</span>[<span class="st">"beta"</span>],</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    log_p<span class="op">=</span>log_p_da,</span>
+<span id="cb17-9"><a href="#cb17-9"></a>    log_q<span class="op">=</span>log_q_da,</span>
+<span id="cb17-10"><a href="#cb17-10"></a>    pointwise<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb17-11"><a href="#cb17-11"></a>    seed<span class="op">=</span>SEED</span>
+<span id="cb17-12"><a href="#cb17-12"></a>)</span>
+<span id="cb17-13"><a href="#cb17-13"></a></span>
+<span id="cb17-14"><a href="#cb17-14"></a>loo_ap_ss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>Computed from 8000 by 100 subsampled log-likelihood
+values from 3020 total observations. Posterior approximation correction used.
+
+         Estimate   SE subsampling SE
+elpd_loo   -1968.6 15.6            0.4
+p_loo          3.3
+
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)      100  100.0%
+   (0.70, 1]   (bad)         0    0.0%
+    (1, Inf)   (very bad)    0    0.0%</code></pre>
+</div>
+</div>
+<p>The combined approach leverages the strengths of both methods. The Laplace approximation avoids expensive MCMC sampling, while subsampling reduces the cost of evaluating the full dataset. The correction terms ensure the estimates remain unbiased despite the double approximation.</p>
+<p>In our wells example, the subsampled approximate posterior LOO produces estimates very close to both the full MCMC and the full approximate posterior results, with negligible subsampling SE. This demonstrates that for well-behaved models, aggressive approximation can yield accurate predictive performance estimates at minimal computational cost.</p>
+</section>
+<section id="comparing-models-with-subsampled-loo" class="level2" data-number="8.9">
+<h2 data-number="8.9" class="anchored" data-anchor-id="comparing-models-with-subsampled-loo"><span class="header-section-number">8.9</span> Comparing models with subsampled LOO</h2>
+<p>We can compare models that are estimated via subsampling just like we would for regular LOO using the <code>compare()</code> function. We will fit a second model using <code>log(arsenic)</code> instead of <code>arsenic</code> as a predictor and compare the two models.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">CmdStanPy</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div id="59dd3b05" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>X_log <span class="op">=</span> X.copy()</span>
+<span id="cb19-2"><a href="#cb19-2"></a>X_log[:, <span class="dv">2</span>] <span class="op">=</span> np.log(X[:, <span class="dv">2</span>])</span>
+<span id="cb19-3"><a href="#cb19-3"></a></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="cf">with</span> pm.Model():</span>
+<span id="cb19-5"><a href="#cb19-5"></a>    beta2 <span class="op">=</span> pm.Normal(<span class="st">"beta"</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">1</span>, shape<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb19-6"><a href="#cb19-6"></a>    logit_p2 <span class="op">=</span> pm.math.dot(X_log, beta2)</span>
+<span id="cb19-7"><a href="#cb19-7"></a>    pm.Bernoulli(<span class="st">"y"</span>, logit_p<span class="op">=</span>logit_p2, observed<span class="op">=</span>y)</span>
+<span id="cb19-8"><a href="#cb19-8"></a></span>
+<span id="cb19-9"><a href="#cb19-9"></a>    idata2 <span class="op">=</span> pm.sample(</span>
+<span id="cb19-10"><a href="#cb19-10"></a>        draws<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb19-11"><a href="#cb19-11"></a>        tune<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb19-12"><a href="#cb19-12"></a>        chains<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb19-13"><a href="#cb19-13"></a>        random_seed<span class="op">=</span>SEED,</span>
+<span id="cb19-14"><a href="#cb19-14"></a>        progressbar<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb19-15"><a href="#cb19-15"></a>        idata_kwargs<span class="op">=</span>{<span class="st">'log_likelihood'</span>: <span class="va">True</span>}</span>
+<span id="cb19-16"><a href="#cb19-16"></a>    )</span>
+<span id="cb19-17"><a href="#cb19-17"></a></span>
+<span id="cb19-18"><a href="#cb19-18"></a>data2 <span class="op">=</span> azp.convert_to_datatree(idata2)</span>
+<span id="cb19-19"><a href="#cb19-19"></a>data2[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X_log)})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<section id="comparison-with-different-subsamples" class="level3" data-number="8.9.1">
+<h3 data-number="8.9.1" class="anchored" data-anchor-id="comparison-with-different-subsamples"><span class="header-section-number">8.9.1</span> Comparison with different subsamples</h3>
+<p>We first compute subsampled LOO for the second model using a <em>different</em> random seed than the first model. This means the two models will be evaluated on different subsets of observations.</p>
+<div id="4064604c" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>loo_ss_2_diff <span class="op">=</span> azp.loo_subsample(</span>
+<span id="cb21-2"><a href="#cb21-2"></a>    data<span class="op">=</span>data2,</span>
+<span id="cb21-3"><a href="#cb21-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb21-4"><a href="#cb21-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5"></a>    method<span class="op">=</span><span class="st">"plpd"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6"></a>    log_lik_fn<span class="op">=</span>log_lik_fn,</span>
+<span id="cb21-7"><a href="#cb21-7"></a>    param_names<span class="op">=</span>[<span class="st">"beta"</span>],</span>
+<span id="cb21-8"><a href="#cb21-8"></a>    pointwise<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb21-9"><a href="#cb21-9"></a>    seed<span class="op">=</span><span class="dv">315</span></span>
+<span id="cb21-10"><a href="#cb21-10"></a>)</span>
+<span id="cb21-11"><a href="#cb21-11"></a></span>
+<span id="cb21-12"><a href="#cb21-12"></a>loo_ss_2_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>Computed from 4000 by 100 subsampled log-likelihood
+values from 3020 total observations.
+
+         Estimate   SE subsampling SE
+elpd_loo   -1952.3 16.2            0.3
+p_loo          3.1
+
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)      100  100.0%
+   (0.70, 1]   (bad)         0    0.0%
+    (1, Inf)   (very bad)    0    0.0%</code></pre>
+</div>
+</div>
+<p>Now we compare the models using different subsamples.</p>
+<div id="34b2fd92" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>comparison_diff <span class="op">=</span> azp.compare({</span>
+<span id="cb23-2"><a href="#cb23-2"></a>    <span class="st">"model1_arsenic"</span>: loo_plpd,</span>
+<span id="cb23-3"><a href="#cb23-3"></a>    <span class="st">"model2_log_arsenic"</span>: loo_ss_2_diff,</span>
+<span id="cb23-4"><a href="#cb23-4"></a>}).<span class="bu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb23-5"><a href="#cb23-5"></a></span>
+<span id="cb23-6"><a href="#cb23-6"></a>comparison_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/arviz_stats/loo/compare.py:265: UserWarning: Different subsamples used in 'model2_log_arsenic' and 'model1_arsenic'. Naive diff SE is used.
+  warnings.warn(</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">rank</th>
+<th data-quarto-table-cell-role="th">elpd</th>
+<th data-quarto-table-cell-role="th">p</th>
+<th data-quarto-table-cell-role="th">elpd_diff</th>
+<th data-quarto-table-cell-role="th">weight</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">dse</th>
+<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">subsampling_dse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">model2_log_arsenic</td>
+<td>0</td>
+<td>-1952.3</td>
+<td>3.1</td>
+<td>0.0</td>
+<td>0.5</td>
+<td>16.2</td>
+<td>0.0</td>
+<td>False</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">model1_arsenic</td>
+<td>1</td>
+<td>-1968.4</td>
+<td>3.1</td>
+<td>16.1</td>
+<td>0.5</td>
+<td>15.6</td>
+<td>22.5</td>
+<td>False</td>
+<td>0.4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note on <code>dse</code> and <code>subsampling_dse</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The output is very similar to regular <code>compare()</code> output with an additional column for subsampling uncertainty, <code>subsampling_dse</code>. Note that <code>dse</code> already accounts for the subsampling uncertainty, so we cannot add <code>subsampling_dse</code> to it. We report <code>subsampling_dse</code> to show the exact amount of subsampling uncertainty.</p>
+</div>
+</div>
+<p>When using different subsamples, notice we get a warning message indicating that the subsamples are different. This warning indicates that the comparison cannot account for the correlation between models’ predictions. In this case, the standard error of the difference <code>dse</code> is computed naively by treating the two models as independent, which substantially inflates the uncertainty because we are losing the benefit of the covariance term <span class="math inline">\(\operatorname{Cov}(\operatorname{elpd}_A, \operatorname{elpd}_B)\)</span> discussed earlier.</p>
+</section>
+<section id="comparison-with-the-same-subsample" class="level3" data-number="8.9.2">
+<h3 data-number="8.9.2" class="anchored" data-anchor-id="comparison-with-the-same-subsample"><span class="header-section-number">8.9.2</span> Comparison with the same subsample</h3>
+<p>To properly compare models, we reuse the exact same observations by passing the first LOO subsample object to the second <code>loo_subsample()</code> call. This ensures both models are evaluated on the same subset of observations, which is critical for accurate model comparison.</p>
+<div id="cf581c67" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>loo_ss_2 <span class="op">=</span> azp.loo_subsample(</span>
+<span id="cb25-2"><a href="#cb25-2"></a>    data<span class="op">=</span>data2,</span>
+<span id="cb25-3"><a href="#cb25-3"></a>    observations<span class="op">=</span>loo_plpd.loo_subsample_observations,</span>
+<span id="cb25-4"><a href="#cb25-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
+<span id="cb25-5"><a href="#cb25-5"></a>    method<span class="op">=</span><span class="st">"plpd"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6"></a>    log_lik_fn<span class="op">=</span>log_lik_fn,</span>
+<span id="cb25-7"><a href="#cb25-7"></a>    param_names<span class="op">=</span>[<span class="st">"beta"</span>],</span>
+<span id="cb25-8"><a href="#cb25-8"></a>    pointwise<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb25-9"><a href="#cb25-9"></a>)</span>
+<span id="cb25-10"><a href="#cb25-10"></a></span>
+<span id="cb25-11"><a href="#cb25-11"></a>loo_ss_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>Computed from 4000 by 100 subsampled log-likelihood
+values from 3020 total observations.
+
+         Estimate   SE subsampling SE
+elpd_loo   -1952.2 16.2            0.2
+p_loo          3.0
+
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)      100  100.0%
+   (0.70, 1]   (bad)         0    0.0%
+    (1, Inf)   (very bad)    0    0.0%</code></pre>
+</div>
+</div>
+<p>Now we compare the models using the same subsample.</p>
+<div id="78577a96" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>comparison_same <span class="op">=</span> azp.compare({</span>
+<span id="cb27-2"><a href="#cb27-2"></a>    <span class="st">"model1_arsenic"</span>: loo_plpd,</span>
+<span id="cb27-3"><a href="#cb27-3"></a>    <span class="st">"model2_log_arsenic"</span>: loo_ss_2,</span>
+<span id="cb27-4"><a href="#cb27-4"></a>}).<span class="bu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb27-5"><a href="#cb27-5"></a></span>
+<span id="cb27-6"><a href="#cb27-6"></a>comparison_same</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">rank</th>
+<th data-quarto-table-cell-role="th">elpd</th>
+<th data-quarto-table-cell-role="th">p</th>
+<th data-quarto-table-cell-role="th">elpd_diff</th>
+<th data-quarto-table-cell-role="th">weight</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">dse</th>
+<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">subsampling_dse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">model2_log_arsenic</td>
+<td>0</td>
+<td>-1952.2</td>
+<td>3.0</td>
+<td>0.0</td>
+<td>0.5</td>
+<td>16.2</td>
+<td>0.0</td>
+<td>False</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">model1_arsenic</td>
+<td>1</td>
+<td>-1968.4</td>
+<td>3.1</td>
+<td>16.2</td>
+<td>0.5</td>
+<td>15.6</td>
+<td>4.4</td>
+<td>False</td>
+<td>0.1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>When using the same subsample, we can see that the standard error of the difference is dramatically reduced compared to the previous comparison. This is because the correlation between models’ predictions on the common subsample is properly accounted for in the variance calculation. The SE reduction is substantial, making it much easier to detect meaningful performance differences.</p>
+<p>In this example, the second model (with log-transformed arsenic) has higher ELPD than the first model, indicating better predictive performance. The subsampling SE is very small relative to the difference in ELPD, indicating that the subsample size of 100 is sufficient for accurate comparison. If the subsampling SE were large, we could increase the subsample size using <code>update_subsample()</code> as demonstrated earlier.</p>
+</section>
+</section>
+<section id="comparing-full-loo-to-subsampled-loo" class="level2" data-number="8.10">
+<h2 data-number="8.10" class="anchored" data-anchor-id="comparing-full-loo-to-subsampled-loo"><span class="header-section-number">8.10</span> Comparing full LOO to subsampled LOO</h2>
+<p>We can also compare a subsampled LOO object to a full LOO object that was computed on all <span class="math inline">\(N = 3020\)</span> observations.</p>
+<p>The following computes full PSIS-LOO-CV for the first model using the <code>loo()</code> function.</p>
+<div id="77bc7e36" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>loo_full <span class="op">=</span> azp.loo(data, var_name<span class="op">=</span><span class="st">"y"</span>, pointwise<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb28-2"><a href="#cb28-2"></a>loo_full</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>Computed from 4000 posterior samples and 3020 observations log-likelihood matrix.
+
+         Estimate       SE
+elpd_loo -1968.47    15.60
+p_loo        3.24        -
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)     3020  100.0%
+   (0.70, 1]   (bad)         0    0.0%
+    (1, Inf)   (very bad)    0    0.0%</code></pre>
+</div>
+</div>
+<p>When comparing a full LOO calculation to a subsampled calculation, the <code>compare()</code> function automatically uses only the observations included in both calculations.</p>
+<div id="c56b923f" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>comparison_mixed <span class="op">=</span> azp.compare({</span>
+<span id="cb30-2"><a href="#cb30-2"></a>    <span class="st">"model1_full_loo"</span>: loo_full,</span>
+<span id="cb30-3"><a href="#cb30-3"></a>    <span class="st">"model2_subsampled_loo"</span>: loo_ss_2</span>
+<span id="cb30-4"><a href="#cb30-4"></a>}).<span class="bu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb30-5"><a href="#cb30-5"></a></span>
+<span id="cb30-6"><a href="#cb30-6"></a>comparison_mixed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/arviz_stats/loo/compare.py:308: UserWarning: Estimated elpd_diff using observations included in loo calculations for all models.
+  warnings.warn(</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">rank</th>
+<th data-quarto-table-cell-role="th">elpd</th>
+<th data-quarto-table-cell-role="th">p</th>
+<th data-quarto-table-cell-role="th">elpd_diff</th>
+<th data-quarto-table-cell-role="th">weight</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">dse</th>
+<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">subsampling_dse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">model2_subsampled_loo</td>
+<td>0</td>
+<td>-1952.2</td>
+<td>3.0</td>
+<td>0.0</td>
+<td>0.5</td>
+<td>16.2</td>
+<td>0.0</td>
+<td>False</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">model1_full_loo</td>
+<td>1</td>
+<td>-1968.5</td>
+<td>3.2</td>
+<td>16.3</td>
+<td>0.5</td>
+<td>15.6</td>
+<td>4.4</td>
+<td>False</td>
+<td>0.2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Notice that this comparison triggers a warning message indicating that only observations included in both LOO calculations are used for the difference estimate. Since the subsampled LOO only evaluated 100 observations, the comparison is based on those 100 observations rather than the full dataset. We can also see an increase in <code>subsampling_dse</code> compared to the previous comparison which is due to a technical detail that we omit from this example.</p>
+</section>
+<section id="practical-considerations" class="level2" data-number="8.11">
+<h2 data-number="8.11" class="anchored" data-anchor-id="practical-considerations"><span class="header-section-number">8.11</span> Practical considerations</h2>
+<p>For moderately sized models, the PLPD surrogate typically suffices because the posterior mean encapsulates most of the predictive information. When the model has hierarchical components or weakly identified parameters, <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> recommend richer surrogates such as the LPD or diagnostics-driven truncation of importance weights to reduce the approximation error <span class="math inline">\(e_j\)</span> and therefore the subsampling variance. Truncated importance sampling plays a similar role by clipping large <span class="math inline">\(r_{is}\)</span> values before applying the Pareto smoothing step. Regardless of the surrogate, increasing <span class="math inline">\(m\)</span> under the difference estimator guarantees convergence because the finite population correction shrinks the variance as <span class="math inline">\(m\)</span> approaches <span class="math inline">\(N\)</span>.</p>
+<p>When comparing multiple models via subsampling, it is recommended to reuse a single subsample across all fits. In this case, the difference estimator produces <span class="math inline">\(\widehat{\operatorname{ELPD}}_{\text{diff}}\)</span> for each model and the estimated difference <span class="math inline">\(\widehat{\operatorname{ELPD}}_{A} - \widehat{\operatorname{ELPD}}_{B}\)</span> inherits the same subsampling indices. Consistency results in <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> ensure that even with fixed <span class="math inline">\(m\)</span> and a finite number of posterior draws, the estimator converges as the quality of the surrogate improves.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-bengio_2004" class="csl-entry" role="listitem">
+Bengio, Yoshua, and Yves Grandvalet. 2004. <span>“No Unbiased Estimator of the Variance of k-Fold Cross-Validation.”</span> <em>Journal of Machine Learning Research</em> 5: 1089–1105. <a href="https://jmlr.csail.mit.edu/papers/v5/grandvalet04a.html">https://jmlr.csail.mit.edu/papers/v5/grandvalet04a.html</a>.
+</div>
+<div id="ref-hansen_hurwitz_1943" class="csl-entry" role="listitem">
+Hansen, Morris H., and William N. Hurwitz. 1943. <span>“On the Theory of Sampling from Finite Populations.”</span> <em>The Annals of Mathematical Statistics</em> 14 (4): 333–62. <a href="https://doi.org/10.1214/aoms/1177731360">https://doi.org/10.1214/aoms/1177731360</a>.
+</div>
+<div id="ref-magnusson_2020" class="csl-entry" role="listitem">
+Magnusson, Måns, Michael Riis Andersen, Johan Jonasson, and Aki Vehtari. 2020. <span>“Leave-One-Out Cross-Validation for Model Comparison in Large Data.”</span> In <em>Proceedings of the 23rd International Conference on Artificial Intelligence and Statistics</em>. Vol. 108. Proceedings of Machine Learning Research. PMLR. <a href="https://arxiv.org/abs/2001.00980">https://arxiv.org/abs/2001.00980</a>.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../Chapters/Model_comparison.html" class="pagination-link" aria-label="Model Comparison">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Model Comparison</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Chapters/Case_study_model_comparison.html" class="pagination-link" aria-label="Model Comparison (case study)">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Model Comparison (case study)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
