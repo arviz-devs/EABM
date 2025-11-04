@@ -3,7 +3,6 @@
 ```{python}
 #| echo : false
 #| warning: false
-import arviz as az
 import arviz.preview as azp
 import numpy as np
 import preliz as pz
@@ -389,19 +388,17 @@ The following example shows two things; the `non_centered` model shows several d
 ```{python}
 #| echo : false
 # remove once we add plot_pair to new ArviZ
-idata_cm = az.load_arviz_data("centered_eight")
-idata_ncm = az.load_arviz_data("non_centered_eight")
+idata_cm = azp.load_arviz_data("centered_eight")
+idata_ncm = azp.load_arviz_data("non_centered_eight")
 ```
 
 ```{python}
-_, axes = plt.subplots(1, 2, sharey=True, sharex=True, figsize=(10, 5), constrained_layout=True)
-
-
-for ax, idata, name in zip(axes.ravel(), (idata_cm, idata_ncm), ("centered", "non-centered")):
-    az.plot_pair(idata, var_names=['theta', 'tau'], coords={'school':"Choate"}, kind='scatter',
-                 divergences=True, divergences_kwargs={'color':'C1'},
-                 ax=ax)
-    ax.set_title(name)
+for data in [idata_cm, idata_ncm]:
+    azp.plot_pair(data,
+                var_names=["tau", "theta"],
+                coords={'school':"Choate"},
+                visuals={"divergence": True}
+                )
 ```
 
 Another plot that can be useful to diagnose divergences is `azp.plot_parallel()`, which shows the samples in parallel coordinates. A parallel coordinates plot is a way to visualize high-dimensional data by plotting each dimension as a vertical line and connecting the points across dimensions with lines. 

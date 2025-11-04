@@ -3,7 +3,6 @@
 ```{python}
 #| echo: false
 #| warning: false
-import arviz as az
 import arviz.preview as azp
 import numpy as np
 import preliz as pz
