@@ -1,0 +1,233 @@
+# Moment Matching for Improved PSIS-LOO-CV {#sec-moment-matching}
+
+```{python}
+#| echo: false
+#| warning: false
+import numpy as np
+import matplotlib.pyplot as plt
+import lzma
+from pathlib import Path
+
+import arviz.preview as azp
+azp.style.use("arviz-variat")
+
+plt.rcParams["figure.dpi"] = 100
+SEED = 4711
+```
+
+## Introduction
+
+PSIS-LOO-CV gives us an efficient way to avoid refitting models $n$ times, but its accuracy depends critically on how well importance sampling works. When the Pareto-$k$ diagnostic indicates unreliable importance sampling (typically $k > 0.7$), the PSIS-LOO estimates become unstable.
+
+Instead of expensive model refitting, we can use the approach from @paananen_2020, which presents an *implicitly adaptive importance sampling* method called **importance weighted moment matching (IWMM)**. The method improves the proposal distribution by iteratively transforming existing posterior draws in the unconstrained parameter space. These transformations use simple affine maps guided by importance weights to better match the leave-one-out posterior.
+
+In this chapter, we'll explore the theory behind moment matching and walk through a complete example. We'll fit a negative binomial regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The data includes 264 apartments with varying pre-treatment roach counts and different exposure periods, making it an ideal example for demonstrating moment matching when influential observations lead to high Pareto-$k$ values.
+
+## Background
+
+### Importance sampling for PSIS-LOO-CV
+
+Recall that PSIS-LOO-CV uses importance sampling to approximate the leave-one-out predictive density for each observation $i$
+
+$$
+p(y_i \mid y_{-i}) = \int p(y_i \mid \theta) p(\theta \mid y_{-i}) \, \mathrm{d}\theta,
+$$
+
+where $y_{-i}$ denotes the data with observation $i$ removed. Instead of refitting the model without observation $i$, we use draws from the full-data posterior $p(\theta \mid y)$ as a proposal and reweight them via importance sampling with weights
+
+$$
+w_i(\theta) = \frac{p(\theta \mid y_{-i})}{p(\theta \mid y)} = \frac{1}{p(y_i \mid \theta)}
+$$
+
+to approximate the LOO posterior. When observation $i$ is influential, $p(\theta \mid y_{-i})$ can differ substantially from $p(\theta \mid y)$, leading to highly variable importance weights. The Pareto-$k$ diagnostic quantifies this problem by fitting a generalized Pareto distribution to the tail of the importance weight distribution. 
+
+When $k > 0.7$, the importance weights remain too unstable even after Pareto smoothing, indicating that the importance sampling approximation is unreliable. In these cases, moment matching offers a potential solution for improving the proposal distribution.
+
+### Monte Carlo estimators
+
+Before exploring how moment matching can improve these importance weights, we need to understand the different Monte Carlo estimators used in PSIS-LOO-CV. 
+
+The choice of estimator, particularly whether we use *standard importance sampling* or *self-normalized importance sampling*, fundamentally affects which proposal distributions work best and how moment matching should adapt them.
+
+The central problem is computing $\mathbb{E}_p[h(\theta)] = \int h(\theta) p(\theta) \, d\theta$ using draws $\{\theta^{(s)}\}_{s=1}^S$ from a proposal distribution $g(\theta)$. We need to understand the properties of the two most commonly used estimators.
+
+#### Standard Importance Sampling (IS)
+
+The standard importance sampling estimator computes the expectation as
+$$
+\hat{\mu}_{\text{IS}} = \frac{1}{S} \sum_{s=1}^S w^{(s)} h(\theta^{(s)}), \quad w^{(s)} = \frac{p(\theta^{(s)})}{g(\theta^{(s)})},
+$$
+
+which is unbiased when normalizing constants are known, with variance depending critically on how well $g(\theta)$ matches the target in regions where $|h(\theta)|$ is large.
+
+#### Self-Normalized Importance Sampling (SNIS) 
+
+The SNIS estimator computes the ratio of weighted averages as
+$$
+\hat{\mu}_{\text{SNIS}} = \frac{\sum_{s=1}^S w^{(s)} h(\theta^{(s)})}{\sum_{s=1}^S w^{(s)}}, \quad w^{(s)} = \frac{p(\theta^{(s)})}{g(\theta^{(s)})}.
+$$
+
+This is a natural choice for PSIS-LOO-CV because the normalizing constants of $p(\theta \mid y_{-i})$ and $p(\theta \mid y)$ are typically unknown.
+
+However, SNIS introduces an additional consideration: We need to estimate both the numerator and denominator accurately. This changes which regions of the proposal matter most. The optimal proposal for SNIS emphasizes where $|h(\theta) - \mathbb{E}_p[h(\theta)]|$ is large, whereas for standard IS it emphasizes where $|h(\theta)|$ is large.
+
+In practice, we use self-normalized importance weights $\tilde{w}^{(s)} = w^{(s)} / \sum_{r=1}^S w^{(r)}$ for the moment matching procedure since we often don't know the normalizing constants.
+
+## Multiple importance sampling
+
+We know that SNIS requires us to get both the numerator and denominator right. This creates a challenge for moment matching because the optimal proposal for the numerator differs from the optimal proposal for the denominator. Rather than picking between these two competing proposals, moment matching uses *multiple importance sampling (MIS)* to combine them, a principled framework for sampling from $J$ different proposal distributions and combining the results into a single estimator with provably good properties.
+
+Suppose we independently draw $S_j$ samples from each of $J$ proposal distributions $g_1(\theta), \ldots, g_J(\theta)$, with $\sum_{j=1}^J S_j = S$ total draws. The multiple importance sampling estimator is
+
+$$\hat{\mu}_{\mathrm{MIS}} = \sum_{j=1}^{J} \frac{1}{S_j} \sum_{s=1}^{S_j} \beta_j(\theta^{(j,s)}) \frac{p(\theta^{(j,s)})}{g_j(\theta^{(j,s)})} h(\theta^{(j,s)}),$$
+
+where $\{\beta_j(\theta)\}_{j=1}^{J}$ forms a partition of unity with $\beta_j(\theta) \geq 0$ and $\sum_{j=1}^J \beta_j(\theta) = 1$ for all $\theta$. The weighting functions $\beta_j$ determine how much each proposal contributes at different points in the parameter space.
+
+A natural choice for the weighting functions is the *balance heuristic*
+
+$$\beta_j(\theta) = \frac{S_j g_j(\theta)}{\sum_{k=1}^J S_k g_k(\theta)}.$$
+
+A critical property of this weighting function is that it can be shown that the variance of the MIS estimator using the balance heuristic is provably smaller than the variance of any single proposal distribution, plus a term that vanishes as the sample sizes grow.
+
+Intuitively, the balance heuristic computes importance weights as if all draws came from a mixture proposal $g_{\alpha}(\theta) = \sum_{j=1}^J \alpha_j g_j(\theta)$ where $\alpha_j = S_j / S$, which gives us the weights
+
+$$w^{(j,s)} = \frac{p(\theta^{(j,s)})}{g_{\alpha}(\theta^{(j,s)})} = \frac{p(\theta^{(j,s)})}{\sum_{j=1}^J \alpha_j g_j(\theta^{(j,s)})}.$$
+
+This framework becomes crucial for moment matching when adapting two separate proposal distributions, because rather than choosing between them, we can combine both using MIS and the balance heuristic.
+
+## Importance weighted moment matching
+
+Moment matching extends the idea of PSIS-LOO-CV in a clever way. It *implicitly* updates the proposal without needing auxiliary parameters or resampling. Traditional adaptive importance sampling alternates between drawing samples, computing weights, and updating parameters. The key insight from @paananen_2020 is simpler: skip generating fresh draws and instead repeatedly transform the existing draws from $p(\theta \mid y)$ in the unconstrained parameter space. These transformations align the low-order moments of the draws with the moments implied by the leave-one-out weights.
+
+This implicit adaptation is fully automated and requires only operations on already available posterior draws. It's designed to plug into PSIS-LOO-CV pipelines that flag problematic cases using the Pareto-$k$ diagnostic from @vehtari_2017. Because we reuse the same Monte Carlo sample throughout, the computational cost stays close to that of a single PSIS-LOO-CV evaluation, even when several adaptation rounds are attempted. Importantly, this approach preserves the effective sample size accrued during the original posterior simulation and avoids delicate tuning choices such as regularization of covariance estimates or tempering schedules.
+
+The approach offers three practical advantages over alternative methods:
+
+- Implicit moment alignment works with complex, non-parametric proposals because it never requires an explicit density form;
+- The double adaptation strategy handles both standard and self-normalized importance sampling, with the split proposal providing a safe combination rule;
+- Pareto-$k$ diagnostics offer a ready-made acceptance and stopping criterion.
+
+### Affine transformations and implicit adaptation
+
+The core idea of importance weighted moment matching (IWMM) is to transform existing draws to better match the target distribution without resampling. We achieve this using affine transformations guided by importance-weighted moments.
+
+Consider a set of draws $\{\theta^{(s)}\}_{s=1}^S$ from the full-data posterior $p(\theta \mid y)$. A generic affine transformation consists of a square matrix $\mathbf{A}$ and a translation vector $\mathbf{b}$ such that
+
+$$
+T(\theta^{(s)}) = \mathbf{A}\theta^{(s)} + \mathbf{b} = \theta^{*(s)}.
+$$
+
+The implicit density of the transformed draws is
+
+$$
+g_T(\theta^{*(s)}) = p(\theta^{(s)} \mid y) |\mathbf{J}_T|^{-1},
+$$
+
+where $|\mathbf{J}_T|^{-1} = |\det(\mathbf{A})|^{-1}$ is the inverse Jacobian determinant. Crucially, this allows us to evaluate the proposal density at the transformed draws without ever writing down an explicit functional form. The proposal is adapted *implicitly* through the transformation, which requires an invertible matrix $\mathbf{A}$ so that the Jacobian determinant is well defined.
+
+### Targeting optimal proposal distributions
+
+The affine transformations from the previous section need some target to guide them, and choosing the right target determines whether moment matching will successfully reduce the Pareto-$k$ diagnostic for the problematic observation(s).
+
+Given an expectation $\mathbb{E}_p[h(\theta)]$ and a Monte Carlo estimator, the theoretically optimal proposal density depends on both the function $h(\theta)$ and the weighting scheme. For standard importance sampling or simple Monte Carlo estimators, it can be shown that the optimal proposal satisfies
+
+$$
+g_{\mathrm{IS}}^{\mathrm{opt}}(\theta) \propto p(\theta)\lvert h(\theta)\rvert,
+$$
+
+whereas for SNIS, it can be shown that the optimal proposal takes the form
+
+$$
+g_{\mathrm{SNIS}}^{\mathrm{opt}}(\theta) \propto p(\theta)\left|h(\theta)-\mathbb{E}_{p}[h(\theta)]\right|.
+$$
+
+For standard IS, the estimator is a simple average of $w^{(s)} h(\theta^{(s)})$, so importance sampling works best when we place draws where $|h(\theta)|$ is large. The weight $w^{(s)} = p(\theta^{(s)}) / g(\theta^{(s)})$ naturally emphasizes regions of high posterior mass, and multiplying by $|h(\theta)|$ further emphasizes where the integrand is large.
+
+For SNIS, as we saw earlier, we must estimate both the numerator and denominator of the ratio. If $h(\theta)$ is approximately constant, the denominator $\sum_s w^{(s)}$ determines the estimate, so we want to emphasize posterior mass. If $h(\theta)$ varies substantially, the numerator dominates, so we want to emphasize regions where $h(\theta)$ deviates from its expectation. The SNIS optimal proposal thus targets $|h(\theta) - \mathbb{E}_p[h(\theta)]|$, which balances emphasis between areas where $h(\theta)$ is unusually large or small. Moment matching doesn't try to reproduce these densities exactly. Instead, it uses the available importance weights to steer the affine transformations toward these optimal shapes.
+
+To make this work in practice, we use two types of weights. The absolute expectation-specific weights $|v^{(s)}| = |h(\theta^{(s)}) w^{(s)}|$ emphasize regions where $|h(\theta)|$ is large (for IS) or where its deviation is large (for SNIS). The common weights $w^{(s)}$ emphasize the baseline posterior mass. By monitoring how the transformed draws align with these weighted moments, we get a practical proxy for targeting the optimal proposal without explicit density evaluation.
+
+More formally, we distinguish between:
+
+- **Common weights** $w^{(s)} = p(\theta^{(s)}) / g(\theta^{(s)})$: These quantify the mismatch between proposal and target densities independent of the function $h$.
+- **Expectation-specific weights** $v^{(s)} = h(\theta^{(s)}) w^{(s)}$: These weight each draw by both the density ratio and the integrand value, and naturally arise in importance sampling estimators.
+
+Standard importance sampling estimators average the $v^{(s)}$ values, whereas self-normalized estimators take the ratio of $\sum_s v^{(s)}$ and $\sum_s w^{(s)}$. @paananen_2020 show that the adaptation step in IWMM follows the same principle. The transformations are calibrated either with $\{w^{(s)}\}$ or with $\{|v^{(s)}|\}$, depending on whether the numerator or denominator of the estimator needs improvement.
+
+::: {.callout-note}
+The use of absolute values $|v^{(s)}|$ rather than raw $v^{(s)}$ is important because the optimal proposal densities depend on $|h(\theta)|$, not $h(\theta)$ itself. Both positive and negative values of $h(\theta)$ contribute equally to the variance of the estimator, so we want to place draws where the magnitude is large, regardless of sign. This ensures the affine transformations target regions of high variance contribution rather than being misled by cancellations between positive and negative values.
+:::
+
+### The split proposal for SNIS
+
+The SNIS optimal proposal from the previous section presents a practical challenge. It can easily be multimodal even when the expectation is defined over a unimodal distribution, making it difficult to approximate with simple affine transformations. It also depends on the unknown expectation $\mathbb{E}_p[h(\theta)]$.
+
+To combine the two adaptation strategies into an efficient proposal distribution, @paananen_2020 develop a practical approximation called the *split proposal density* given by
+
+$$
+g_{\mathrm{SNIS}}^{\mathrm{split}}(\theta) \propto |h(\theta)|p(\theta) + \mathbb{E}_{p}[h(\theta)]p(\theta).
+$$
+
+This approximation splits the piecewise-defined optimal proposal into two clear components. The first component $|h(\theta)|p(\theta)$ is proportional to the optimal proposal for standard importance sampling and uses the absolute expectation-specific weights $\{|v^{(s)}|\}$. The second component $\mathbb{E}_{p}[h(\theta)]p(\theta)$ is proportional to the target distribution $p(\theta)$ itself and uses the common weights $\{w^{(s)}\}$. 
+
+This split form is a convenient approximation that has similar tail behavior to the SNIS optimal proposal while being simpler to work with. It avoids the potentially complex multimodal structure of $|h(\theta) - \mathbb{E}_p[h(\theta)]|$ by separating it into two interpretable components.
+
+The trade-off is that this approximation places unnecessary probability mass in regions where $h(\theta) \approx \mathbb{E}_p[h(\theta)]$, thus losing some efficiency. However, the approximation works best precisely when we need it most. When $p(\theta)$ is more distinct from $p(\theta)|h(\theta)|$, the value of $\mathbb{E}_p[h(\theta)]$ becomes smaller and the approximation becomes closer to the optimal form. These are exactly the cases when adaptive importance sampling is most beneficial.
+
+The split proposal naturally suggests a double adaptation strategy. We run two separate moment matching procedures in parallel: one uses the absolute expectation-specific weights $\{|v^{(s)}|\}$ to approximate the first component, and the other uses the common weights $\{w^{(s)}\}$ to approximate the second. These two adapted proposal distributions are then combined using multiple importance sampling with the balance heuristic. 
+
+When $h(\theta) \geq 0$, both components integrate to $\mathbb{E}_p[h(\theta)]$. @paananen_2020 show that equal allocation (50-50 split) is provably optimal in this case and more generally is a conservative choice that guarantees the asymptotic variance is never more than twice that of using the better component alone. 
+
+### Three moment matching transformations
+
+Our overall goal is to transform the existing posterior draws to match the optimal proposals. To do this, we match progressively more moments of the distribution to importance-weighted moments.
+
+@paananen_2020 recommend a sequence of three affine transformations with increasing complexity. The transformations use importance weights to identify where the target distribution places its mass relative to the proposal. We start with the simplest transformation and progress to more complex ones only when simpler ones no longer improve the Pareto-$k$ diagnostic.
+
+**Transformation $T_1$: Matching the mean.** The simplest transformation shifts the sample mean to match the importance-weighted mean
+
+$$
+\theta^{*(s)} = T_1(\theta^{(s)}) = \theta^{(s)} - \bar{\theta} + \bar{\theta}_w,
+$$
+
+where the unweighted mean is $\bar{\theta} = \frac{1}{S} \sum_{s=1}^S \theta^{(s)}$ and the self-normalized importance-weighted mean is
+
+$$
+\bar{\theta}_w = \frac{\sum_{s=1}^S w^{(s)} \theta^{(s)}}{\sum_{s=1}^S w^{(s)}} = \sum_{s=1}^S \tilde{w}^{(s)} \theta^{(s)},
+$$
+
+with $\tilde{w}^{(s)} = w^{(s)} / \sum_{r=1}^S w^{(r)}$ denoting the self-normalized weights.
+
+**Transformation $T_2$: Matching marginal variances.** The second transformation matches both the mean and the marginal variances
+
+$$
+\theta^{*(s)} = T_2(\theta^{(s)}) = \mathbf{v}_w^{1/2} \circ \mathbf{v}^{-1/2} \circ (\theta^{(s)} - \bar{\theta}) + \bar{\theta}_w,
+$$
+
+where $\circ$ denotes element-wise multiplication, $\mathbf{v}$ is the vector of unweighted marginal variances, and $\mathbf{v}_w$ is the vector of importance-weighted marginal variances computed as
+
+$$
+\mathbf{v}_w = \sum_{s=1}^S \tilde{w}^{(s)} (\theta^{(s)} - \bar{\theta}_w) \circ (\theta^{(s)} - \bar{\theta}_w) = \frac{\sum_{s=1}^S w^{(s)} (\theta^{(s)} - \bar{\theta}_w) \circ (\theta^{(s)} - \bar{\theta}_w)}{\sum_{s=1}^S w^{(s)}}.
+$$
+
+**Transformation $T_3$: Matching the covariance.** The most sophisticated transformation matches the full covariance structure
+
+$$
+\theta^{*(s)} = T_3(\theta^{(s)}) = \mathbf{L}_w \mathbf{L}^{-1} (\theta^{(s)} - \bar{\theta}) + \bar{\theta}_w,
+$$
+
+where $\mathbf{L}\mathbf{L}^\top = \boldsymbol{\Sigma}$ and $\mathbf{L}_w\mathbf{L}_w^\top = \boldsymbol{\Sigma}_w$ are Cholesky decompositions of the sample and weighted covariance matrices, with the weighted covariance computed as
+
+$$
+\boldsymbol{\Sigma}_w = \sum_{s=1}^S \tilde{w}^{(s)} (\theta^{(s)} - \bar{\theta}_w)(\theta^{(s)} - \bar{\theta}_w)^\top = \frac{\sum_{s=1}^S w^{(s)} (\theta^{(s)} - \bar{\theta}_w)(\theta^{(s)} - \bar{\theta}_w)^\top}{\sum_{s=1}^S w^{(s)}}.
+$$
+
+## Moment matching in practice
+
+ArviZ handles all of this through the `loo_moment_match()` function, which automates everything we've just described.
+
+The workflow starts with an initial PSIS-LOO-CV computation to identify observations with high Pareto-$k$ values. For each problematic observation, the function runs two complementary adaptations in parallel following the split proposal strategy, then combines results via the balance heuristic. Crucially, before moment matching begins, importance weights are regularized through Pareto smoothing, and these smoothed weights are used for all moment computations to prevent extreme weights from destabilizing the transformations.
+
+In the next section, we'll walk through a complete example using the roaches dataset.
+
+## Roaches data and negative binomial model

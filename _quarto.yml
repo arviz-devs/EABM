@@ -45,6 +45,7 @@ book:
     - Chapters/Sensitivity_checks.qmd
     - Chapters/Model_comparison.qmd
     - Chapters/Model_comparison_large_data.qmd
+    - Chapters/Moment_Matching.qmd
     - Chapters/Case_study_model_comparison.qmd
     - Chapters/Variable_selection.qmd
     - Chapters/Prior_elicitation.qmd
