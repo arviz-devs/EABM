@@ -45,11 +45,9 @@ When $k > 0.7$, the importance weights remain too unstable even after Pareto smo
 
 ### Monte Carlo estimators
 
-Before exploring how moment matching can improve these importance weights, we need to understand the different Monte Carlo estimators used in PSIS-LOO-CV. 
+Before exploring how moment matching can improve these importance weights, we need to understand the different Monte Carlo estimators used in PSIS-LOO-CV. The choice of estimator, particularly whether we use *standard importance sampling* or *self-normalized importance sampling*, fundamentally affects which proposal distributions work best and how moment matching should adapt them.
 
-The choice of estimator, particularly whether we use *standard importance sampling* or *self-normalized importance sampling*, fundamentally affects which proposal distributions work best and how moment matching should adapt them.
-
-The central problem is computing $\mathbb{E}_p[h(\theta)] = \int h(\theta) p(\theta) \, d\theta$ using draws $\{\theta^{(s)}\}_{s=1}^S$ from a proposal distribution $g(\theta)$. We need to understand the properties of the two most commonly used estimators.
+The central problem is computing $\mathbb{E}_p[h(\theta)] = \int h(\theta) p(\theta) \, d\theta$ using draws $\{\theta^{(s)}\}_{s=1}^S$ from a proposal distribution $g(\theta)$. We need to understand the properties of the two most commonly used estimators to approximate this expectation.
 
 #### Standard Importance Sampling (IS)
 
@@ -75,7 +73,7 @@ In practice, we use self-normalized importance weights $\tilde{w}^{(s)} = w^{(s)
 
 ## Multiple importance sampling
 
-We know that SNIS requires us to get both the numerator and denominator right. This creates a challenge for moment matching because the optimal proposal for the numerator differs from the optimal proposal for the denominator. Rather than picking between these two competing proposals, moment matching uses *multiple importance sampling (MIS)* to combine them, a principled framework for sampling from $J$ different proposal distributions and combining the results into a single estimator with provably good properties.
+We know that SNIS requires us to get both the numerator and denominator right. This creates a challenge for moment matching because the optimal proposal for the numerator differs from the optimal proposal for the denominator. Rather than picking between these two competing proposals, moment matching uses *multiple importance sampling (MIS)* to combine them, which is a principled framework for sampling from $J$ different proposal distributions and combining the results into a single estimator with provably good properties.
 
 Suppose we independently draw $S_j$ samples from each of $J$ proposal distributions $g_1(\theta), \ldots, g_J(\theta)$, with $\sum_{j=1}^J S_j = S$ total draws. The multiple importance sampling estimator is
 
@@ -230,4 +228,232 @@ The workflow starts with an initial PSIS-LOO-CV computation to identify observat
 
 In the next section, we'll walk through a complete example using the roaches dataset.
 
-## Roaches data and negative binomial model
+## Roaches data and Poisson regression model
+
+The roaches dataset from @gelman_hill_2007 examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The study followed 264 apartments over several months, recording:
+
+- `y`: Number of roaches caught in traps during the follow-up period
+- `roach1`: Pre-treatment roach count (square root transformed)
+- `treatment`: Indicator for whether the apartment received the pest management treatment
+- `senior`: Indicator for whether the apartment is in a building restricted to elderly residents
+- `exposure2`: Number of days for which the roach traps were used
+
+The outcome variable `y` represents count data with overdispersion, making it an ideal candidate for negative binomial regression. However, we'll use a Poisson model to demonstrate how moment matching can help even when the model may be misspecified. The exposure time varies across apartments, so we include `log(exposure2)` as an offset term.
+
+### Loading and preparing the data
+
+We start by loading the roaches dataset and examining its basic structure.
+
+```{python}
+import pandas as pd
+
+roaches = pd.read_csv("../data/roaches.csv", index_col=0)
+roaches['log_exposure2'] = np.log(roaches['exposure2'])
+
+roaches.describe()
+```
+
+As we can see, the roaches dataset exhibits substantial variation in roach counts with considerable overdispersion (mean 25.6, standard deviation 50.8). Approximately 36% of apartments had zero roaches caught during the follow-up period, while the maximum count reached 357. The exposure period varies from 0.2 to 4.3 days across apartments, necessitating the use of an offset term in the model. This combination of high variability, many zeros, and extreme counts makes certain observations potentially influential, which is precisely the scenario where moment matching becomes valuable for improving LOO-CV estimates.
+
+### Model specification and fitting
+
+We fit a Poisson regression model using Bambi, which provides a high-level interface for Bayesian modeling. The model includes the pre-treatment roach count, treatment indicator, and senior building indicator as predictors, with log exposure as an offset.
+
+::: {.panel-tabset}
+## Bambi
+
+```{python}
+#| eval: false
+import bambi as bmb
+
+model = bmb.Model(
+    'y ~ roach1 + treatment + senior + offset(log_exposure2)',
+    data=roaches,
+    family='poisson',
+    priors={
+        'roach1': bmb.Prior('Normal', mu=0, sigma=2.5),
+        'treatment': bmb.Prior('Normal', mu=0, sigma=2.5),
+        'senior': bmb.Prior('Normal', mu=0, sigma=2.5),
+        'Intercept': bmb.Prior('Normal', mu=0, sigma=5.0)
+    }
+)
+
+idata = model.fit(
+    draws=1000,
+    tune=1000,
+    chains=4,
+    random_seed=SEED,
+    idata_kwargs={'log_likelihood': True}
+)
+```
+
+## CmdStanPy
+
+``` {.python}
+# CmdStanPy implementation will be added in future
+```
+:::
+
+```{python}
+#| echo: false
+import xarray as xr
+
+idata = azp.convert_to_datatree("../models/prerun/moment_matching_00.nc")
+
+# Rename __obs__ to obs_id to avoid dimension name conflict in moment matching
+idata['log_likelihood'] = xr.DataTree(idata['log_likelihood'].ds.rename({'__obs__': 'obs_id'}))
+idata['observed_data'] = xr.DataTree(idata['observed_data'].ds.rename({'__obs__': 'obs_id'}))
+```
+
+```{python}
+azp.summary(idata.posterior.ds, var_names=['roach1', 'treatment', 'senior', 'Intercept'])
+```
+
+### Initial PSIS-LOO-CV evaluation
+
+With the posterior draws in hand, we compute the PSIS-LOO-CV estimate of the model's predictive performance.
+
+```{python}
+loo_result = azp.loo(idata, pointwise=True, var_name="y")
+loo_result
+```
+
+The output shows that 13 observations have Pareto-$k$ values exceeding 0.7, indicating that the importance sampling approximation is unreliable for these cases. For these problematic observations, the most accurate (but computationally expensive) approach would be to refit the model, leaving out each observation in turn. However, this quickly becomes impractical as the number of flagged observations grows. Moment matching offers an efficient solution by improving the reliability of the PSIS-LOO-CV estimates for exactly those cases where brute-force refitting would otherwise be required, reducing computational burden without sacrificing much accuracy.
+
+## Applying moment matching
+
+Now we apply importance weighted moment matching to improve the PSIS-LOO-CV estimates for the problematic observations. In ArviZ, this is done using the `loo_moment_match()` function, which requires us to provide functions that can evaluate the model's log probability and log likelihood in the unconstrained parameter space.
+
+### Function specification and implementation
+
+For PSIS-LOO-CV moment matching to work, we need to provide:
+
+- **`log_prob_upars_fn`**: A function that computes the log posterior density $\log p(\theta \mid y)$ for unconstrained parameters
+- **`log_lik_i_upars_fn`**: A function that computes the log likelihood $\log p(y_i \mid \theta)$ for a single observation $i$
+- **`upars`**: An array of unconstrained parameter draws from the posterior
+
+These functions operate on parameters in the unconstrained space (where all parameters are real-valued and without constraints). For our Poisson regression model, all parameters are already unconstrained, so the transformation is straightforward.
+
+Our Poisson regression model is defined as
+
+$$
+y_i \sim \text{Poisson}(\lambda_i)
+$$
+
+where the Poisson mean is $\lambda_i = \exp(\eta_i)$ and the linear predictor is
+
+$$
+\eta_i = \alpha + \sum_{j=1}^3 \beta_j x_{ij} + \log(\text{exposure2}_i),
+$$
+
+with $x_i = (\text{roach1}_i, \text{treatment}_i, \text{senior}_i)$ as the predictor variables for observation $i$. We place independent normal priors on the parameters: $\beta_j \sim N(0, 2.5^2)$ for $j = 1, 2, 3$ and $\alpha \sim N(0, 5^2)$.
+
+The **log posterior function** combines the log likelihood across all observations with the log prior
+
+$$
+\log p(\theta \mid y) = \sum_{i=1}^n \log p(y_i \mid \theta) + \log p(\theta),
+$$
+
+where $\theta = (\alpha, \beta_1, \beta_2, \beta_3)$ and the log prior is
+
+$$
+\log p(\theta) = \sum_{j=1}^3 \log N(\beta_j \mid 0, 2.5^2) + \log N(\alpha \mid 0, 5^2).
+$$
+
+The **leave-one-out log likelihood function** for a single observation $i$ under the Poisson model is
+
+$$
+\log p(y_i \mid \theta) = y_i \log(\lambda_i) - \lambda_i - \log(y_i!).
+$$
+
+We start by converting our data into `DataArrays` with properly labeled dimensions to use xarray's dimension-aware operations for the computations.
+
+```{python}
+import xarray as xr
+from scipy.special import gammaln
+
+X = roaches[['roach1', 'treatment', 'senior']].values
+y = roaches['y'].values
+log_offset = roaches['log_exposure2'].values
+
+n_obs = len(roaches)
+coef_names = ['roach1', 'treatment', 'senior']
+
+design_matrix = xr.DataArray(
+    X,
+    dims=['obs_id', 'coef'],
+    coords={'obs_id': range(n_obs), 'coef': coef_names}
+)
+y_da = xr.DataArray(y, dims=['obs_id'], coords={'obs_id': range(n_obs)})
+offset_da = xr.DataArray(log_offset, dims=['obs_id'], coords={'obs_id': range(n_obs)})
+factorial_term = xr.DataArray(gammaln(y + 1), dims=['obs_id'], coords={'obs_id': range(n_obs)})
+
+beta_prior_scale = 2.5
+alpha_prior_scale = 5.0
+```
+
+First, we construct an array of unconstrained parameters from the posterior draws.
+
+```{python}
+posterior = idata.posterior
+upars = xr.concat([
+    posterior.ds['roach1'].expand_dims({'uparam': ['roach1']}),
+    posterior.ds['treatment'].expand_dims({'uparam': ['treatment']}),
+    posterior.ds['senior'].expand_dims({'uparam': ['senior']}),
+    posterior.ds['Intercept'].expand_dims({'uparam': ['Intercept']})
+], dim='uparam').transpose('chain', 'draw', 'uparam')
+```
+
+We can now define the log posterior function and the leave-one-out log likelihood function.
+
+```{python}
+def log_prob_upars_fn(upars):
+    """Compute log posterior for unconstrained parameters."""
+    beta = upars.sel(uparam=coef_names).rename({'uparam': 'coef'})
+    intercept = upars.sel(uparam='Intercept')
+
+    lin = xr.dot(design_matrix, beta, dims='coef') + intercept + offset_da
+    exp_lin = xr.ufuncs.exp(lin)
+    log_lik = y_da * lin - exp_lin - factorial_term
+
+    log_prior_beta = (-0.5 * (beta / beta_prior_scale) ** 2).sum('coef')
+    log_prior_intercept = -0.5 * (intercept / alpha_prior_scale) ** 2
+
+    return log_lik.sum('obs_id') + log_prior_beta + log_prior_intercept
+
+def log_lik_i_upars_fn(upars, i):
+    """Compute log likelihood for observation i."""
+    beta = upars.sel(uparam=coef_names).rename({'uparam': 'coef'})
+    intercept = upars.sel(uparam='Intercept')
+
+    features_i = design_matrix.isel(obs_id=i)
+    lin_i = (beta * features_i).sum('coef') + intercept + offset_da.isel(obs_id=i)
+
+    exp_lin_i = xr.ufuncs.exp(lin_i)
+    log_lik_i = y_da.isel(obs_id=i) * lin_i - exp_lin_i - factorial_term.isel(obs_id=i)
+
+    return log_lik_i
+```
+
+### Running moment matching
+
+With the required functions defined, we can now run PSIS-LOO-CV with importance weighted moment matching. We will specify that we want to match the covariance structure of the posterior draws given the complicated structure of the data. 
+
+Keep in mind that the `split` argument, which specifies whether to use the split proposal density, is a boolean that defaults to `True`. This is highly recommended in most applied cases.
+
+```{python}
+#| warning: false
+loo_mm_result = azp.loo_moment_match(
+    idata,
+    loo_result,
+    log_prob_upars_fn=log_prob_upars_fn,
+    log_lik_i_upars_fn=log_lik_i_upars_fn,
+    upars=upars,
+    var_name="y",
+    cov=True
+)
+
+loo_mm_result
+```
+
+After moment matching, the Pareto-$k$ values improve substantially, with all 262 observations now having Pareto-$k$ values below 0.7. This indicates that moment matching has successfully resolved all problematic importance sampling issues, providing reliable PSIS-LOO-CV estimates for every observation. This represents a complete improvement over the original 13 problematic observations. Notably, the ELPD estimate decreases from -5461.14 to -5477.60 after moment matching, indicating that the original PSIS-LOO-CV estimate was too optimistic and `loo()` overestimated the predictive performance.
