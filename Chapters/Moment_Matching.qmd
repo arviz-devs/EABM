@@ -44,37 +44,53 @@ SEED = 4711
 
 ## Introduction
 
-Evaluating model generalization is central to Bayesian analysis. PSIS-LOO-CV provides an efficient way to approximate leave-one-out cross-validation without refitting the model $n$ times. However, this efficiency depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds 0.7, leading to unreliable estimates. When observations produce Pareto-$k$ values exceeding 0.7, refitting the model to evaluate each held-out observation becomes computationally intractable. We need an alternative approach.
+Evaluating model generalization is central to Bayesian analysis. PSIS-LOO-CV provides an efficient way to approximate leave-one-out cross-validation without refitting the model $n$ times. However, this efficiency depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds 0.7, leading to unreliable estimates. When observations produce Pareto-$k$ values exceeding 0.7, refitting the model to evaluate each held-out observation becomes computationally intractable.
 
 Instead of expensive model refitting, we can use the approach from @paananen_2020, which presents an *implicitly adaptive importance sampling* method called **importance weighted moment matching (IWMM)**. The method improves the proposal distribution by iteratively transforming existing posterior draws in the unconstrained parameter space. These transformations use simple affine maps guided by importance weights to better match the leave-one-out posterior.
 
-In this chapter, we'll explore the theory behind moment matching and walk through a complete example. We'll fit a Poisson regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The model is intentioanlly misspecified to demonstrate the benefits of moment matching when influential observations lead to high Pareto-$k$ values. The data includes 264 apartments with varying pre-treatment roach counts and different exposure periods, making it an ideal example for demonstrating moment matching when influential observations lead to high Pareto-$k$ values.
+In this chapter, we'll explore the theory behind moment matching and walk through a complete example. We'll fit a Poisson regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The model is intentioanlly misspecified to demonstrate the benefits of moment matching when influential observations lead to high Pareto-$k$ values.
 
 ## Background
 
 ### Importance sampling for PSIS-LOO-CV
 
-Recall that PSIS-LOO-CV uses importance sampling to approximate the leave-one-out predictive density for each observation $i$
+The goal of cross-validation is to estimate the expected log pointwise predictive density (elpd) for new, unseen data $\widetilde{y} = (\widetilde{y}_1, \ldots, \widetilde{y}_n)$
+
+$$
+\text{elpd} = \sum_{i=1}^{n} \int p_{t}(\widetilde{y}_{i}) \log p(\widetilde{y}_{i} \mid y) \, d\widetilde{y}_{i},
+$$
+
+where $p_t(\widetilde{y}_i)$ is the true data generating mechanism. Since we don't know $p_t$, we estimate elpd using leave-one-out cross-validation, which assumes future data has a similar distribution to the observed data. PSIS-LOO-CV uses importance sampling to approximate
+
+$$
+\text{elpd}_{\text{loo}} = \sum_{i=1}^{n} \log p(y_i \mid y_{-i}),
+$$
+
+where the leave-one-out predictive density for each observation $i$ is
 
 $$
 p(y_i \mid y_{-i}) = \int p(y_i \mid \theta) p(\theta \mid y_{-i}) \, \mathrm{d}\theta,
 $$
 
-where $y_{-i}$ denotes the data with observation $i$ removed. Instead of refitting the model without observation $i$, we use draws from the full-data posterior $p(\theta \mid y)$ as a proposal and reweight them via importance sampling with weights
+and $y_{-i}$ denotes the data with observation $i$ removed. Instead of refitting the model without observation $i$, we use draws from the full-data posterior $p(\theta \mid y)$ as a proposal and reweight them via importance sampling with weights
 
 $$
 w_i(\theta) = \frac{p(\theta \mid y_{-i})}{p(\theta \mid y)} = \frac{1}{p(y_i \mid \theta)}
 $$
 
-to approximate the LOO posterior. When observation $i$ is influential, $p(\theta \mid y_{-i})$ can differ substantially from $p(\theta \mid y)$, leading to highly variable importance weights. The Pareto-$k$ diagnostic quantifies this problem by fitting a generalized Pareto distribution to the tail of the importance weight distribution. 
+to approximate the LOO posterior. This importance sampling approach works because the observations are modeled as conditionally independent given the parameters $\theta$, allowing the likelihood to factorize as
 
-When $k > 0.7$, the importance weights remain too unstable even after Pareto smoothing, indicating that the importance sampling approximation is unreliable. In these cases, moment matching offers a potential solution for improving the proposal distribution.
+$$
+p(y \mid \theta) = \prod_{i=1}^{n} p(y_i \mid \theta).
+$$
+
+When observation $i$ is influential, $p(\theta \mid y_{-i})$ can differ substantially from $p(\theta \mid y)$, leading to highly variable importance weights. The Pareto-$k$ diagnostic quantifies this problem by fitting a generalized Pareto distribution to the tail of the importance weight distribution. When $k > 0.7$, the importance weights remain too unstable even after Pareto smoothing, indicating that the importance sampling approximation is unreliable. In these cases, moment matching offers a potential solution for improving the proposal distribution.
 
 ### Monte Carlo estimators
 
 Before exploring how moment matching can improve these importance weights, we need to understand the different Monte Carlo estimators used in PSIS-LOO-CV. The choice of estimator, particularly whether we use *standard importance sampling* or *self-normalized importance sampling*, fundamentally affects which proposal distributions work best and how moment matching should adapt them.
 
-The central problem is computing $\mathbb{E}_p[h(\theta)] = \int h(\theta) p(\theta) \, d\theta$ using draws $\{\theta^{(s)}\}_{s=1}^S$ from a proposal distribution $g(\theta)$. We need to understand the properties of the two most commonly used estimators to approximate this expectation.
+The central problem we're interested in is computing $\mathbb{E}_p[h(\theta)] = \int h(\theta) p(\theta) \, d\theta$ using draws $\{\theta^{(s)}\}_{s=1}^S$ from a proposal distribution $g(\theta)$. We need to understand the properties of the two most commonly used estimators to approximate this expectation.
 
 #### Standard Importance Sampling (IS)
 
@@ -100,7 +116,7 @@ In practice, we use self-normalized importance weights $\tilde{w}^{(s)} = w^{(s)
 
 ## Multiple importance sampling
 
-Since SNIS requires us to get both the numerator and denominator right, this creates a challenge for moment matching because the optimal proposal for the numerator differs from the optimal proposal for the denominator. Rather than picking between these two competing proposals, moment matching uses *multiple importance sampling (MIS)* to combine them, which is a principled framework for sampling from $J$ different proposal distributions and combining the results into a single estimator with provably good properties.
+Since SNIS requires us to get both the numerator and denominator right, this creates a challenge for moment matching because, as we will see, the optimal proposal for the numerator differs from the optimal proposal for the denominator. Rather than picking between these two competing proposals, moment matching uses *multiple importance sampling (MIS)* to combine them, which is a principled framework for sampling from $J$ different proposal distributions and combining the results into a single estimator with provably good properties.
 
 Suppose we independently draw $S_j$ samples from each of $J$ proposal distributions $g_1(\theta), \ldots, g_J(\theta)$, with $\sum_{j=1}^J S_j = S$ total draws. The multiple importance sampling estimator is
 
@@ -124,13 +140,13 @@ This framework becomes crucial for moment matching when adapting two separate pr
 
 Moment matching extends the idea of PSIS-LOO-CV in a clever way. It *implicitly* updates the proposal without needing auxiliary parameters or resampling. Traditional adaptive importance sampling alternates between drawing samples, computing weights, and updating parameters. The key insight from @paananen_2020 is simpler: skip generating fresh draws and instead repeatedly transform the existing draws from $p(\theta \mid y)$ in the unconstrained parameter space. These transformations align the low-order moments of the draws with the moments implied by the leave-one-out weights.
 
-This implicit adaptation is fully automated and requires only operations on already available posterior draws. It's designed to plug into PSIS-LOO-CV pipelines that flag problematic cases using the Pareto-$k$ diagnostic from @vehtari_2017. Because we reuse the same Monte Carlo sample throughout, the computational cost stays close to that of a single PSIS-LOO-CV evaluation, even when several adaptation rounds are attempted. Importantly, this approach preserves the effective sample size accrued during the original posterior simulation and avoids delicate tuning choices such as regularization of covariance estimates or tempering schedules.
+This implicit adaptation is fully automated and requires only operations on already available posterior draws. It's designed to plug into PSIS-LOO-CV pipelines that flag problematic cases using the Pareto-$k$ diagnostic from @vehtari_2017. Because we reuse the same Monte Carlo sample throughout, the computational cost stays close to that of a single PSIS-LOO-CV evaluation, even when several adaptation rounds are attempted. Importantly, this approach preserves the effective sample size accrued during the original posterior simulation and avoids delicate tuning choices.
 
-The approach offers three practical advantages over alternative methods:
+<!-- The approach offers three practical advantages over alternative methods:
 
 - Implicit moment alignment works with complex, non-parametric proposals because it never requires an explicit density form;
 - The double adaptation strategy handles both standard and self-normalized importance sampling, with the split proposal providing a safe combination rule;
-- Pareto-$k$ diagnostics offer a ready-made acceptance and stopping criterion.
+- Pareto-$k$ diagnostics offer a ready-made acceptance and stopping criterion. -->
 
 ### Affine transformations and implicit adaptation
 
@@ -144,7 +160,7 @@ $$
 T(\theta^{(s)}) = \mathbf{A}\theta^{(s)} + \mathbf{b} = \theta^{*(s)}.
 $$
 
-The implicit density of the transformed draws is
+Since the transformations are affine and the same for all draws, the implicit density of the transformed draws is
 
 $$
 g_T(\theta^{*(s)}) = p(\theta^{(s)} \mid y) |\mathbf{J}_T|^{-1},
@@ -186,8 +202,6 @@ The use of absolute values $|v^{(s)}|$ rather than raw $v^{(s)}$ is important be
 :::
 
 ### The split proposal for SNIS
-
-#### Limitations of the optimal SNIS proposal
 
 The SNIS optimal proposal from the previous section presents a practical challenge. It can easily be multimodal even when the expectation is defined over a unimodal distribution, making it difficult to approximate with simple affine transformations. It also depends on the unknown expectation $\mathbb{E}_p[h(\theta)]$.
 
@@ -255,11 +269,11 @@ $$
 
 ## The moment matching algorithm
 
-Now that we understand the three transformations, let's see how they work together in practice. The algorithm follows a pragmatic strategy that starts simple and only escalates to more complex methods when necessary.
+The moment matching algorithm follows a pragmatic strategy that starts simple and only escalates to more complex methods when necessary.
 
 The three transformations have increasing computational demands. $T_1$ shifts means at minimal cost, $T_2$ adds marginal variance matching, and $T_3$ matches the full covariance structure but can be numerically unstable with small effective sample sizes. The algorithm starts with $T_1$ and only proceeds to more complex transformations if needed, using the Pareto-$k$ diagnostic as an objective decision rule. After each transformation, we recompute the diagnostic and accept only if it improves. If all three fail to help, the algorithm stops with a warning. The entire process ends once the diagnostic reaches $k \leq 0.7$, the threshold for reliable importance sampling.
 
-The moment matching algorithm implements a double adaptation strategy for self-normalized importance sampling. It runs two separate adaptation loops in sequence. The first loop targets the numerator of the SNIS estimator using absolute expectation-specific weights. Once this loop converges, the second loop targets the denominator using common weights. After both loops complete, the two adapted proposal distributions are combined using multiple importance sampling with the balance heuristic.
+The algorithm implements a double adaptation strategy for self-normalized importance sampling. It runs two separate adaptation loops in sequence. The first loop targets the numerator of the SNIS estimator using absolute expectation-specific weights. Once this loop converges, the second loop targets the denominator using common weights. After both loops complete, the two adapted proposal distributions are combined using multiple importance sampling with the balance heuristic.
 
 ```pseudocode
 #| label: algo-moment-matching
