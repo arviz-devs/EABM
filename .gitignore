@@ -2,9 +2,11 @@
 extras
 .vscode/
 /.quarto/
+/_extensions/
 Chapters/*.html
 Chapters/*.quarto_ipynb
 .venv*/
 docs/
 models/prerun/model_comparison_large_data_00.nc
 models/prerun/model_comparison_large_data_03.nc
+**/*.quarto_ipynb

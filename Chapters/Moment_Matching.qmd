@@ -1,3 +1,30 @@
+---
+filters:
+  - pseudocode
+format:
+  html:
+    include-in-header:
+      text: |
+        <script>
+        MathJax = {
+          loader: {
+            load: ['[tex]/boldsymbol']
+          },
+          tex: {
+            tags: "all",
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+            packages: {
+              '[+]': ['boldsymbol']
+            }
+          }
+        };
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+---
+
 # Moment Matching for Improved PSIS-LOO-CV {#sec-moment-matching}
 
 ```{python}
@@ -220,13 +247,77 @@ $$
 \boldsymbol{\Sigma}_w = \sum_{s=1}^S \tilde{w}^{(s)} (\theta^{(s)} - \bar{\theta}_w)(\theta^{(s)} - \bar{\theta}_w)^\top = \frac{\sum_{s=1}^S w^{(s)} (\theta^{(s)} - \bar{\theta}_w)(\theta^{(s)} - \bar{\theta}_w)^\top}{\sum_{s=1}^S w^{(s)}}.
 $$
 
-## Moment matching in practice
+## The moment matching algorithm
 
-ArviZ handles all of this through the `loo_moment_match()` function, which automates everything we've just described.
+Now that we understand the three transformations, let's see how they work together in practice. The algorithm follows a pragmatic strategy that starts simple and only escalates to more complex methods when necessary.
 
-The workflow starts with an initial PSIS-LOO-CV computation to identify observations with high Pareto-$k$ values. For each problematic observation, the function runs two complementary adaptations in parallel following the split proposal strategy, then combines results via the balance heuristic. Crucially, before moment matching begins, importance weights are regularized through Pareto smoothing, and these smoothed weights are used for all moment computations to prevent extreme weights from destabilizing the transformations.
+### Starting simple and building complexity
 
-In the next section, we'll walk through a complete example using the roaches dataset.
+We can think of the three transformations as increasingly sophisticated tools with different computational demands. $T_1$ simply shifts the sample to match weighted means and is computationally cheap, requiring only modest sample sizes to work reliably. $T_2$ adds marginal variance matching on top of the location shift. It demands more computation but remains straightforward since we only scale each dimension independently. $T_3$ is the most sophisticated, matching the full covariance structure via Cholesky decomposition. This becomes numerically unstable when the effective sample size is small or the covariance matrix is nearly singular.
+
+Because of these computational and numerical tradeoffs, the algorithm does not start with $T_3$. Instead, we begin with $T_1$ and only proceed to $T_2$ if $T_1$ stops improving the diagnostic. We only attempt $T_3$ if both $T_1$ and $T_2$ have failed. This conservative approach keeps computations stable and avoids wasting effort on transformations we do not need.
+
+To decide whether to accept a transformation or proceed to the next, the algorithm uses the Pareto-$k$ diagnostic as an objective decision rule. After applying $T_j$, we recompute the diagnostic and accept the transformation only if it improves. This approach ties the acceptance decision directly to finite-sample behavior of importance sampling. If all three transformations fail to improve the diagnostic, the algorithm stops with a warning, signaling that moment matching has reached its practical limits for that problem. We stop the entire algorithm once the diagnostic reaches $k \leq 0.7$, which is the accepted threshold for reliable importance sampling.
+
+### How the algorithm works
+
+The moment matching algorithm implements a double adaptation strategy for self-normalized importance sampling. It runs two separate adaptation loops in sequence. The first loop targets the numerator of the SNIS estimator using absolute expectation-specific weights. Once this loop converges, the second loop targets the denominator using common weights. After both loops complete, the two adapted proposal distributions are combined using multiple importance sampling with the balance heuristic.
+
+```pseudocode
+#| label: algo-moment-matching
+#| html-line-number: true
+#| pdf-line-number: true
+
+\begin{algorithm}
+\caption{Moment Matching for Self-Normalized Importance Sampling}
+\begin{algorithmic}
+\State \textbf{Input:} $k_{\text{threshold}}$, proposal density $g$, draws $\{\boldsymbol{\theta}^{(s)}\}_{s=1}^S$ from $g$
+\State
+\State Compute common weights $\{w^{(s)}\}_{s=1}^S$ and expectation-specific weights $\{v^{(s)}\}_{s=1}^S$, and compute diagnostics $\hat{k}_w$ and $\hat{k}_v$;
+\State
+\State \textbf{// Numerator adaptation: using absolute expectation-specific weights}
+\While{$\hat{k}_v > k_{\text{threshold}}$}
+    \For{$j \in 1:3$}
+        \State Transform the draws with $T_j$: $\boldsymbol{\theta}^{(s)} \mapsto \boldsymbol{\theta}^{*(s)}$ using absolute expectation-specific weights
+        \State Recompute expectation-specific weights $\{\hat{v}^{(s)}\}_{s=1}^S$ and $\hat{\hat{k}}_v$
+        \If{$\hat{k}_v < \hat{k}_v$}
+            \State Accept the transformation and update $\{\boldsymbol{\theta}^{(s)}\}_{s=1}^S$ and $\{v^{(s)}\}_{s=1}^S = \{\hat{v}^{(s)}\}_{s=1}^S$
+            \State $\hat{k}_v = \hat{\hat{k}}_v$
+            \State Exit for loop
+        \Else
+            \State Discard the transformation
+        \EndIf
+        \If{$j = 3$}
+            \State Moment matching failed, end algorithm with warning about sampling inaccuracy
+        \EndIf
+    \EndFor
+\EndWhile
+\State
+\State \textbf{// Denominator adaptation: using common weights}
+\While{$\hat{k}_w > k_{\text{threshold}}$}
+    \For{$j \in 1:3$}
+        \State Transform the draws with $T_j$: $\boldsymbol{\theta}^{(s)} \mapsto \boldsymbol{\theta}^{*(s)}$ using common weights
+        \State Recompute common weights $\{\tilde{w}^{(s)}\}_{s=1}^S$ and $\hat{\hat{k}}_w$
+        \If{$\hat{k}_w < \hat{k}_w$}
+            \State Accept the transformation and update $\{\boldsymbol{\theta}^{(s)}\}_{s=1}^S$ and $\{w^{(s)}\}_{s=1}^S = \{\hat{w}^{(s)}\}_{s=1}^S$
+            \State $\hat{k}_w = \hat{\hat{k}}_w$
+            \State Exit for loop
+        \Else
+            \State Discard the transformation
+        \EndIf
+        \If{$j = 3$}
+            \State Moment matching failed, end algorithm with warning about sampling inaccuracy
+        \EndIf
+    \EndFor
+\EndWhile
+\State
+\State Moment matching succeeded, compute common and expectation-specific weights using multiple importance sampling
+\State Compute expectation $\mathbb{E}_p[h(\boldsymbol{\theta})]$ using self-normalized importance sampling
+\end{algorithmic}
+\end{algorithm}
+```
+
+ArviZ automates this entire workflow through the `loo_moment_match()` function. In the next section, we walk through a concrete example using the roaches dataset to see this algorithm in action.
 
 ## Roaches data and Poisson regression model
 
@@ -253,7 +344,7 @@ roaches['log_exposure2'] = np.log(roaches['exposure2'])
 roaches.describe()
 ```
 
-As we can see, the roaches dataset exhibits substantial variation in roach counts with considerable overdispersion (mean 25.6, standard deviation 50.8). Approximately 36% of apartments had zero roaches caught during the follow-up period, while the maximum count reached 357. The exposure period varies from 0.2 to 4.3 days across apartments, necessitating the use of an offset term in the model. This combination of high variability, many zeros, and extreme counts makes certain observations potentially influential, which is precisely the scenario where moment matching becomes valuable for improving LOO-CV estimates.
+The roaches dataset exhibits substantial variation in roach counts with considerable overdispersion (mean 25.6, standard deviation 50.8). Approximately 36% of apartments had zero roaches caught during the follow-up period, while the maximum count reached 357. The exposure period varies from 0.2 to 4.3 days across apartments, necessitating the use of an offset term in the model. This combination of high variability, many zeros, and extreme counts makes certain observations potentially influential, which is precisely the scenario where moment matching becomes valuable for improving LOO-CV estimates.
 
 ### Model specification and fitting
 
@@ -322,13 +413,13 @@ The output shows that 13 observations have Pareto-$k$ values exceeding 0.7, indi
 
 ## Applying moment matching
 
-Now we apply importance weighted moment matching to improve the PSIS-LOO-CV estimates for the problematic observations. In ArviZ, this is done using the `loo_moment_match()` function, which requires us to provide functions that can evaluate the model's log probability and log likelihood in the unconstrained parameter space.
+Now we apply importance weighted moment matching to improve the PSIS-LOO-CV estimates for the problematic observations. In ArviZ, this is done using the `loo_moment_match()` function, which requires us to provide functions that can evaluate the model's log posterior probability and log likelihood for a single observation in the unconstrained parameter space.
 
 ### Function specification and implementation
 
 For PSIS-LOO-CV moment matching to work, we need to provide:
 
-- **`log_prob_upars_fn`**: A function that computes the log posterior density $\log p(\theta \mid y)$ for unconstrained parameters
+- **`log_prob_upars_fn`**: A function that computes the log posterior density $\log p(\theta \mid y)$ for unconstrained parameters for all observations
 - **`log_lik_i_upars_fn`**: A function that computes the log likelihood $\log p(y_i \mid \theta)$ for a single observation $i$
 - **`upars`**: An array of unconstrained parameter draws from the posterior
 
@@ -418,7 +509,6 @@ def log_prob_upars_fn(upars):
 
     log_prior_beta = (-0.5 * (beta / beta_prior_scale) ** 2).sum('coef')
     log_prior_intercept = -0.5 * (intercept / alpha_prior_scale) ** 2
-
     return log_lik.sum('obs_id') + log_prior_beta + log_prior_intercept
 
 def log_lik_i_upars_fn(upars, i):
@@ -431,7 +521,6 @@ def log_lik_i_upars_fn(upars, i):
 
     exp_lin_i = xr.ufuncs.exp(lin_i)
     log_lik_i = y_da.isel(obs_id=i) * lin_i - exp_lin_i - factorial_term.isel(obs_id=i)
-
     return log_lik_i
 ```
 
@@ -450,10 +539,19 @@ loo_mm_result = azp.loo_moment_match(
     log_lik_i_upars_fn=log_lik_i_upars_fn,
     upars=upars,
     var_name="y",
-    cov=True
+    cov=True,
 )
 
 loo_mm_result
 ```
 
 After moment matching, the Pareto-$k$ values improve substantially, with all 262 observations now having Pareto-$k$ values below 0.7. This indicates that moment matching has successfully resolved all problematic importance sampling issues, providing reliable PSIS-LOO-CV estimates for every observation. This represents a complete improvement over the original 13 problematic observations. Notably, the ELPD estimate decreases from -5461.14 to -5477.60 after moment matching, indicating that the original PSIS-LOO-CV estimate was too optimistic and `loo()` overestimated the predictive performance.
+
+## Summary
+
+Importance weighted moment matching provides an efficient solution for improving PSIS-LOO-CV when influential observations lead to unreliable importance sampling approximations. Rather than refitting models, IWMM transforms existing posterior draws to match importance-weighted moments in the unconstrained parameter space. The approach is fully automated, requires no user tuning, and works with arbitrary posterior samples from probabilistic programming frameworks where density evaluation is possible.
+
+The method has important limitations worth keeping in mind. It targets only first and second moments, so improvements depend on whether these moments adequately capture differences between proposal and target distributions. When importance weights have large variance, the computation of weighted moments can become unreliable; this can be mitigated through weight regularization or larger sample sizes. The algorithm may also fail to find sufficiently helpful transformations in some cases, particularly when target and proposal distributions differ substantially in tail behavior, correlation structure, or number of modes. 
+For extremely high-dimensional problems, the most sophisticated transformation (matching full covariance) may become numerically unstable. 
+
+Finally, the split proposal approximation used for self-normalized importance sampling introduces some inefficiency by placing unnecessary probability mass in regions where the integrand is near its expectation, though this trade-off is least problematic precisely when adaptive methods are most needed. Despite these limitations, moment matching succeeds in most practical applications when the original posterior simulation was reasonably successful, providing both computational efficiency and improved reliability for model assessment without requiring complex tuning or auxiliary assumptions.
