@@ -44,11 +44,11 @@ SEED = 4711
 
 ## Introduction
 
-PSIS-LOO-CV gives us an efficient way to avoid refitting models $n$ times, but its accuracy depends critically on how well importance sampling works. When the Pareto-$k$ diagnostic indicates unreliable importance sampling (typically $k > 0.7$), the PSIS-LOO estimates become unstable.
+Evaluating model generalization is central to Bayesian analysis. PSIS-LOO-CV provides an efficient way to approximate leave-one-out cross-validation without refitting the model $n$ times. However, this efficiency depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds 0.7, leading to unreliable estimates. When observations produce Pareto-$k$ values exceeding 0.7, refitting the model to evaluate each held-out observation becomes computationally intractable. We need an alternative approach.
 
 Instead of expensive model refitting, we can use the approach from @paananen_2020, which presents an *implicitly adaptive importance sampling* method called **importance weighted moment matching (IWMM)**. The method improves the proposal distribution by iteratively transforming existing posterior draws in the unconstrained parameter space. These transformations use simple affine maps guided by importance weights to better match the leave-one-out posterior.
 
-In this chapter, we'll explore the theory behind moment matching and walk through a complete example. We'll fit a negative binomial regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The data includes 264 apartments with varying pre-treatment roach counts and different exposure periods, making it an ideal example for demonstrating moment matching when influential observations lead to high Pareto-$k$ values.
+In this chapter, we'll explore the theory behind moment matching and walk through a complete example. We'll fit a Poisson regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The model is intentioanlly misspecified to demonstrate the benefits of moment matching when influential observations lead to high Pareto-$k$ values. The data includes 264 apartments with varying pre-treatment roach counts and different exposure periods, making it an ideal example for demonstrating moment matching when influential observations lead to high Pareto-$k$ values.
 
 ## Background
 
@@ -100,7 +100,7 @@ In practice, we use self-normalized importance weights $\tilde{w}^{(s)} = w^{(s)
 
 ## Multiple importance sampling
 
-We know that SNIS requires us to get both the numerator and denominator right. This creates a challenge for moment matching because the optimal proposal for the numerator differs from the optimal proposal for the denominator. Rather than picking between these two competing proposals, moment matching uses *multiple importance sampling (MIS)* to combine them, which is a principled framework for sampling from $J$ different proposal distributions and combining the results into a single estimator with provably good properties.
+Since SNIS requires us to get both the numerator and denominator right, this creates a challenge for moment matching because the optimal proposal for the numerator differs from the optimal proposal for the denominator. Rather than picking between these two competing proposals, moment matching uses *multiple importance sampling (MIS)* to combine them, which is a principled framework for sampling from $J$ different proposal distributions and combining the results into a single estimator with provably good properties.
 
 Suppose we independently draw $S_j$ samples from each of $J$ proposal distributions $g_1(\theta), \ldots, g_J(\theta)$, with $\sum_{j=1}^J S_j = S$ total draws. The multiple importance sampling estimator is
 
@@ -135,6 +135,8 @@ The approach offers three practical advantages over alternative methods:
 ### Affine transformations and implicit adaptation
 
 The core idea of importance weighted moment matching (IWMM) is to transform existing draws to better match the target distribution without resampling. We achieve this using affine transformations guided by importance-weighted moments.
+
+Adaptive importance sampling typically uses either weighted resampling or moment estimation to update proposals. Moment matching takes the latter approach but applies it directly to the existing draws via affine transformations rather than to parameters of a fixed functional form. This approach is particularly powerful because it works with proposals that lack a closed form or location-scale parameterization, making it ideal for samples from probabilistic programming languages or MCMC methods. The transformations remain computationally efficient since both the transformation and its Jacobian are inexpensive to evaluate.
 
 Consider a set of draws $\{\theta^{(s)}\}_{s=1}^S$ from the full-data posterior $p(\theta \mid y)$. A generic affine transformation consists of a square matrix $\mathbf{A}$ and a translation vector $\mathbf{b}$ such that
 
@@ -185,7 +187,11 @@ The use of absolute values $|v^{(s)}|$ rather than raw $v^{(s)}$ is important be
 
 ### The split proposal for SNIS
 
+#### Limitations of the optimal SNIS proposal
+
 The SNIS optimal proposal from the previous section presents a practical challenge. It can easily be multimodal even when the expectation is defined over a unimodal distribution, making it difficult to approximate with simple affine transformations. It also depends on the unknown expectation $\mathbb{E}_p[h(\theta)]$.
+
+#### The split proposal approximation
 
 To combine the two adaptation strategies into an efficient proposal distribution, @paananen_2020 develop a practical approximation called the *split proposal density* given by
 
@@ -193,13 +199,13 @@ $$
 g_{\mathrm{SNIS}}^{\mathrm{split}}(\theta) \propto |h(\theta)|p(\theta) + \mathbb{E}_{p}[h(\theta)]p(\theta).
 $$
 
-This approximation splits the piecewise-defined optimal proposal into two clear components. The first component $|h(\theta)|p(\theta)$ is proportional to the optimal proposal for standard importance sampling and uses the absolute expectation-specific weights $\{|v^{(s)}|\}$. The second component $\mathbb{E}_{p}[h(\theta)]p(\theta)$ is proportional to the target distribution $p(\theta)$ itself and uses the common weights $\{w^{(s)}\}$. 
-
-This split form is a convenient approximation that has similar tail behavior to the SNIS optimal proposal while being simpler to work with. It avoids the potentially complex multimodal structure of $|h(\theta) - \mathbb{E}_p[h(\theta)]|$ by separating it into two interpretable components.
+This approximation splits the piecewise-defined optimal proposal into two clear components. The first component $|h(\theta)|p(\theta)$ is proportional to the optimal proposal for standard importance sampling and uses the absolute expectation-specific weights $\{|v^{(s)}|\}$. The second component $\mathbb{E}_{p}[h(\theta)]p(\theta)$ is proportional to the target distribution $p(\theta)$ itself and uses the common weights $\{w^{(s)}\}$. This split form is a convenient approximation that has similar tail behavior to the SNIS optimal proposal while being simpler to work with. It avoids the potentially complex multimodal structure of $|h(\theta) - \mathbb{E}_p[h(\theta)]|$ by separating it into two interpretable components.
 
 The trade-off is that this approximation places unnecessary probability mass in regions where $h(\theta) \approx \mathbb{E}_p[h(\theta)]$, thus losing some efficiency. However, the approximation works best precisely when we need it most. When $p(\theta)$ is more distinct from $p(\theta)|h(\theta)|$, the value of $\mathbb{E}_p[h(\theta)]$ becomes smaller and the approximation becomes closer to the optimal form. These are exactly the cases when adaptive importance sampling is most beneficial.
 
-The split proposal naturally suggests a double adaptation strategy. We run two separate moment matching procedures in parallel: one uses the absolute expectation-specific weights $\{|v^{(s)}|\}$ to approximate the first component, and the other uses the common weights $\{w^{(s)}\}$ to approximate the second. These two adapted proposal distributions are then combined using multiple importance sampling with the balance heuristic. 
+#### Double adaptation strategy
+
+The split proposal naturally suggests a double adaptation strategy. We run two separate moment matching procedures in parallel: one uses the absolute expectation-specific weights $\{|v^{(s)}|\}$ to approximate the first component, and the other uses the common weights $\{w^{(s)}\}$ to approximate the second. These two adapted proposal distributions are then combined using multiple importance sampling with the balance heuristic.
 
 When $h(\theta) \geq 0$, both components integrate to $\mathbb{E}_p[h(\theta)]$. @paananen_2020 show that equal allocation (50-50 split) is provably optimal in this case and more generally is a conservative choice that guarantees the asymptotic variance is never more than twice that of using the better component alone. 
 
@@ -251,15 +257,7 @@ $$
 
 Now that we understand the three transformations, let's see how they work together in practice. The algorithm follows a pragmatic strategy that starts simple and only escalates to more complex methods when necessary.
 
-### Starting simple and building complexity
-
-We can think of the three transformations as increasingly sophisticated tools with different computational demands. $T_1$ simply shifts the sample to match weighted means and is computationally cheap, requiring only modest sample sizes to work reliably. $T_2$ adds marginal variance matching on top of the location shift. It demands more computation but remains straightforward since we only scale each dimension independently. $T_3$ is the most sophisticated, matching the full covariance structure via Cholesky decomposition. This becomes numerically unstable when the effective sample size is small or the covariance matrix is nearly singular.
-
-Because of these computational and numerical tradeoffs, the algorithm does not start with $T_3$. Instead, we begin with $T_1$ and only proceed to $T_2$ if $T_1$ stops improving the diagnostic. We only attempt $T_3$ if both $T_1$ and $T_2$ have failed. This conservative approach keeps computations stable and avoids wasting effort on transformations we do not need.
-
-To decide whether to accept a transformation or proceed to the next, the algorithm uses the Pareto-$k$ diagnostic as an objective decision rule. After applying $T_j$, we recompute the diagnostic and accept the transformation only if it improves. This approach ties the acceptance decision directly to finite-sample behavior of importance sampling. If all three transformations fail to improve the diagnostic, the algorithm stops with a warning, signaling that moment matching has reached its practical limits for that problem. We stop the entire algorithm once the diagnostic reaches $k \leq 0.7$, which is the accepted threshold for reliable importance sampling.
-
-### How the algorithm works
+The three transformations have increasing computational demands. $T_1$ shifts means at minimal cost, $T_2$ adds marginal variance matching, and $T_3$ matches the full covariance structure but can be numerically unstable with small effective sample sizes. The algorithm starts with $T_1$ and only proceeds to more complex transformations if needed, using the Pareto-$k$ diagnostic as an objective decision rule. After each transformation, we recompute the diagnostic and accept only if it improves. If all three fail to help, the algorithm stops with a warning. The entire process ends once the diagnostic reaches $k \leq 0.7$, the threshold for reliable importance sampling.
 
 The moment matching algorithm implements a double adaptation strategy for self-normalized importance sampling. It runs two separate adaptation loops in sequence. The first loop targets the numerator of the SNIS estimator using absolute expectation-specific weights. Once this loop converges, the second loop targets the denominator using common weights. After both loops complete, the two adapted proposal distributions are combined using multiple importance sampling with the balance heuristic.
 
