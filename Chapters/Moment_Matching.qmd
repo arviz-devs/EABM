@@ -282,7 +282,7 @@ Having defined the three transformations, we can now see how they work together 
     \For{$j \in 1:3$}
         \State Transform the draws with $T_j$: $\boldsymbol{\theta}^{(s)} \mapsto \boldsymbol{\theta}^{*(s)}$ using absolute expectation-specific weights
         \State Recompute expectation-specific weights $\{\hat{v}^{(s)}\}_{s=1}^S$ and $\hat{\hat{k}}_v$
-        \If{$\hat{k}_v < \hat{k}_v$}
+        \If{$\hat{\hat{k}}_v < \hat{k}_v$}
             \State Accept the transformation and update $\{\boldsymbol{\theta}^{(s)}\}_{s=1}^S$ and $\{v^{(s)}\}_{s=1}^S = \{\hat{v}^{(s)}\}_{s=1}^S$
             \State $\hat{k}_v = \hat{\hat{k}}_v$
             \State Exit for loop
@@ -300,7 +300,7 @@ Having defined the three transformations, we can now see how they work together 
     \For{$j \in 1:3$}
         \State Transform the draws with $T_j$: $\boldsymbol{\theta}^{(s)} \mapsto \boldsymbol{\theta}^{*(s)}$ using common weights
         \State Recompute common weights $\{\tilde{w}^{(s)}\}_{s=1}^S$ and $\hat{\hat{k}}_w$
-        \If{$\hat{k}_w < \hat{k}_w$}
+        \If{$\hat{\hat{k}}_w < \hat{k}_w$}
             \State Accept the transformation and update $\{\boldsymbol{\theta}^{(s)}\}_{s=1}^S$ and $\{w^{(s)}\}_{s=1}^S = \{\hat{w}^{(s)}\}_{s=1}^S$
             \State $\hat{k}_w = \hat{\hat{k}}_w$
             \State Exit for loop
@@ -319,7 +319,7 @@ Having defined the three transformations, we can now see how they work together 
 \end{algorithm}
 ```
 
-ArviZ automates this entire workflow through the `loo_moment_match()` function.
+Because the numerator and denominator adaptations are combined via MIS, @paananen_2020 split the original Monte Carlo sample into two halves so the two adapted proposals use disjoint draws, avoiding bias from reusing the same draws in both components. ArviZ automates this entire workflow through the `loo_moment_match()` function.
 
 ## Roaches data and Poisson regression model
 
@@ -512,7 +512,13 @@ def log_lik_i_upars_fn(upars, i):
 
 With the required functions defined, we can now run PSIS-LOO-CV with importance weighted moment matching. We will specify that we want to match the covariance structure of the posterior draws given the complicated structure of the data. 
 
-Keep in mind that the `split` argument, which specifies whether to use the split proposal density, is a boolean that defaults to `True`. This is highly recommended in most applied cases.
+Keep in mind that the `split` argument, which specifies whether to use the split proposal density, is a boolean that defaults to `True`. This is highly recommended in most applied cases. When `split=True`, the split proposal density is
+
+$$
+g_{\text{split,loo}}(\theta) \propto p(\theta \mid y) + |\mathbf{J}_{T_w}|^{-1}\, p(T_w^{-1}(\theta) \mid y),
+$$
+
+so each fold mixes the full-data posterior with the transformed draws from the denominator adaptation.
 
 ```{python}
 #| warning: false
