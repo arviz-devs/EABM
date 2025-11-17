@@ -174,7 +174,7 @@ $$
 w_{\text{loo}, i}^{*(s)} = \frac{p(\theta^{*(s)} \mid y)}{p(\theta^{(s)} \mid y) \, p(y_i \mid \theta^{*(s)})} \propto \frac{p(\theta^{*(s)} \mid y_{-i})}{p(\theta^{(s)} \mid y)},
 $$
 
-which is still proportional to the ratio of the LOO posterior to the original proposal $p(\theta^{(s)} \mid y_{-i}) / p(\theta^{(s)} \mid y)$. This reweighting accounts for both the density of the transformed draw under the full-data posterior and its likelihood for observation $i$. The denominator term $p(\theta^{(s)} \mid y)$ remains constant for each draw across all LOO folds, but the numerator terms must be evaluated at each transformed location.
+which is still proportional to the ratio of the LOO posterior to the original proposal. This reweighting accounts for both the density of the transformed draw under the full-data posterior and its likelihood for observation $i$. The denominator term $p(\theta^{(s)} \mid y)$ remains constant for each draw across all LOO folds, but the numerator terms must be evaluated at each transformed location.
 
 ### Targeting optimal proposal distributions
 
