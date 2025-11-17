@@ -168,6 +168,14 @@ $$
 
 where $|\mathbf{J}_T|^{-1} = |\det(\mathbf{A})|^{-1}$ is the inverse Jacobian determinant. Crucially, this allows us to evaluate the proposal density at the transformed draws without ever writing down an explicit functional form. The proposal is adapted *implicitly* through the transformation, which requires an invertible matrix $\mathbf{A}$ so that the Jacobian determinant is well defined.
 
+When moment matching is applied to leave-one-out cross-validation, the importance weights must be recomputed after each transformation. For a transformed draw $\theta^{*(s)}$, the importance weight becomes
+
+$$
+w_{\text{loo}, i}^{*(s)} = \frac{p(\theta^{*(s)} \mid y)}{p(\theta^{(s)} \mid y) \, p(y_i \mid \theta^{*(s)})},
+$$
+
+which is still proportional to the ratio of the LOO posterior to the original proposal $p(\theta^{(s)} \mid y_{-i}) / p(\theta^{(s)} \mid y)$. This reweighting accounts for both the density of the transformed draw under the full-data posterior and its likelihood for observation $i$. The denominator term $p(\theta^{(s)} \mid y)$ remains constant for each draw across all LOO folds, but the numerator terms must be evaluated at each transformed location.
+
 ### Targeting optimal proposal distributions
 
 The affine transformations need some target to guide them. The choice of target determines whether moment matching successfully reduces the Pareto-$k$ diagnostic. The theoretically optimal proposal density depends on both the function $h(\theta)$ being estimated and the weighting scheme used.
@@ -507,6 +515,12 @@ def log_lik_i_upars_fn(upars, i):
     log_lik_i = y_da.isel(obs_id=i) * lin_i - exp_lin_i - factorial_term.isel(obs_id=i)
     return log_lik_i
 ```
+
+### Computational considerations
+
+While moment matching requires additional density evaluations compared to standard PSIS-LOO-CV, the computational cost remains modest. For each transformed draw $\theta^{*(s)}$, we must evaluate both the full-data posterior density $p(\theta^{*(s)} \mid y)$ and the likelihood $p(y_i \mid \theta^{*(s)})$, rather than just the likelihood as in standard PSIS. Even with multiple transformation iterations, this cost is substantially smaller than refitting the model for each problematic observation.
+
+The key trade-off is between accuracy and computational efficiency. When several observations have high Pareto-$k$ values, moment matching provides reliable estimates at a fraction of the cost of exact PSIS-LOO-CV, making it practical for routine model assessment even with computationally expensive models. In our roaches example with 13 problematic observations, moment matching requires a few additional seconds of computation compared to minutes or hours that would be needed to refit the model 13 times.
 
 ### Running moment matching
 
