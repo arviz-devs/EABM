@@ -317,11 +317,10 @@ Let's illustrate this with an example. We will use the same model we used in the
 
 We are going to start by computing predictions at `new_data`, as you may already know how to do this from other examples. To do that we need to create a new DataFrame with the values of the predictors we want to use for prediction. In this case, we will use the median, min, and max values of each covariate. For your particular use case, you may want to use different values, like quantiles of any other specific values of interest.
 
-We can ask ArviZ, to compute the Bayesian R² for us, as long as we provide a DataTree with both observed and predicted data.
-
+We can ask ArviZ, to compute the Bayesian R² for us, we need to specify which variables represent the posterior mean (or location parameter) and standard deviation (or variance).
 ```{python}
-r2_da = azp.ndarray_to_dataarray(azp.r2_score(dt_bf_01, summary=False).reshape(4, 2000), var_name="r2")
-dt_bf_01.posterior["r2_score"] = r2_da
+r2_da = azp.ndarray_to_dataarray(azp.bayesian_r2(dt_bf_01, pred_mean="μ", scale="σ", summary=False).reshape(4, 2000), var_name="r2")
+dt_bf_01.posterior["r2"] = r2_da
 ```
 
 To compute the  joint log-likelihood we just sum the poin-twise log-likelihood evaluations along the observations. In other words we compute one log-likelihood value per MCMC step.
@@ -333,7 +332,7 @@ dt_bf_01.posterior["log_score"] = dt_bf_01.log_likelihood.sum("y_dim_0")["y"]
 Once we have added the derived quantities we just need to call `psense_summary` (or the others `psense_*` functions) as usual:
 
 ```{python}
-azp.psense_summary(dt_bf_01, var_names=["r2_score", "log_score"])
+azp.psense_summary(dt_bf_01, var_names=["r2", "log_score"])
 ```
 
 We see no signs of data-conflict or likelihood noninformativity, we can visually check this as we did before, but given these values we should expect the distributions of the derived quantities to very similar across the different priors.

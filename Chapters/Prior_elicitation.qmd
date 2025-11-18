@@ -127,7 +127,7 @@ dist_mean = pz.Gamma(mu=2)
 pz.maxent(dist_mean, 0, 3, 0.8)
 
 dist_mode = pz.Gamma()
-pz.maxent(dist_mode, 0, 3, 0.8, mode=2);
+pz.maxent(dist_mode, 0, 3, 0.8, fixed_stat=("mode",2));
 ```
 
 Notice that if you call `maxent` several times in the same cell, as we just did, we will get all the distributions in the same figure. This can be very useful to visually compare several alternatives.
