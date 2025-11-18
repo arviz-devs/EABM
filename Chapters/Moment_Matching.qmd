@@ -454,6 +454,7 @@ We start by converting our data into `DataArrays` with properly labeled dimensio
 ```{python}
 import xarray as xr
 from scipy.special import gammaln
+from functools import partial
 
 X = roaches[['roach1', 'treatment', 'senior']].values
 y = roaches['y'].values
@@ -490,7 +491,8 @@ upars = xr.concat([
 We can now define the log posterior function and the leave-one-out log likelihood function. The log posterior function computes the log posterior probability for a given set of unconstrained parameters, and the log likelihood function computes the log likelihood for a given set of unconstrained parameters and a given observation.
 
 ```{python}
-def log_prob_upars_fn(upars):
+def log_prob_upars_fn(upars, design_matrix, y_da, offset_da, factorial_term,
+                       coef_names, beta_prior_scale, alpha_prior_scale):
     """Compute log posterior for unconstrained parameters."""
     beta = upars.sel(uparam=coef_names).rename({'uparam': 'coef'})
     intercept = upars.sel(uparam='Intercept')
@@ -503,7 +505,8 @@ def log_prob_upars_fn(upars):
     log_prior_intercept = -0.5 * (intercept / alpha_prior_scale) ** 2
     return log_lik.sum('obs_id') + log_prior_beta + log_prior_intercept
 
-def log_lik_i_upars_fn(upars, i):
+
+def log_lik_i_upars_fn(upars, i, design_matrix, y_da, offset_da, factorial_term, coef_names):
     """Compute log likelihood for observation i."""
     beta = upars.sel(uparam=coef_names).rename({'uparam': 'coef'})
     intercept = upars.sel(uparam='Intercept')
@@ -514,6 +517,30 @@ def log_lik_i_upars_fn(upars, i):
     exp_lin_i = xr.ufuncs.exp(lin_i)
     log_lik_i = y_da.isel(obs_id=i) * lin_i - exp_lin_i - factorial_term.isel(obs_id=i)
     return log_lik_i
+```
+
+Now we bind the data dependencies to these functions using `functools.partial`. This creates new functions where all the data parameters are fixed, leaving only the unconstrained parameters (and observation index for the likelihood function) as free parameters.
+
+```{python}
+log_prob_upars = partial(
+    log_prob_upars_fn,
+    design_matrix=design_matrix,
+    y_da=y_da,
+    offset_da=offset_da,
+    factorial_term=factorial_term,
+    coef_names=coef_names,
+    beta_prior_scale=beta_prior_scale,
+    alpha_prior_scale=alpha_prior_scale
+)
+
+log_lik_i_upars = partial(
+    log_lik_i_upars_fn,
+    design_matrix=design_matrix,
+    y_da=y_da,
+    offset_da=offset_da,
+    factorial_term=factorial_term,
+    coef_names=coef_names
+)
 ```
 
 ### Computational considerations
@@ -539,8 +566,8 @@ so each fold mixes the full-data posterior with the transformed draws from the d
 loo_mm_result = azp.loo_moment_match(
     idata,
     loo_result,
-    log_prob_upars_fn=log_prob_upars_fn,
-    log_lik_i_upars_fn=log_lik_i_upars_fn,
+    log_prob_upars_fn=log_prob_upars,
+    log_lik_i_upars_fn=log_lik_i_upars,
     upars=upars,
     var_name="y",
     cov=True,
