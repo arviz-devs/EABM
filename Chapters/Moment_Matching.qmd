@@ -1,4 +1,4 @@
----
+<!-- ---
 filters:
   - pseudocode
 format:
@@ -23,7 +23,7 @@ format:
         };
         </script>
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
----
+--- -->
 
 # Moment Matching for Improved PSIS-LOO-CV {#sec-moment-matching}
 
@@ -44,11 +44,13 @@ SEED = 4711
 
 ## Overview
 
-Evaluating model generalization is central to Bayesian analysis. PSIS-LOO-CV provides an efficient way to approximate leave-one-out cross-validation without refitting the model $n$ times. However, this efficiency depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds a sample-size dependent threshold (typically around 0.7 for standard MCMC sample sizes), leading to unreliable estimates. When observations produce high Pareto-$k$ values, refitting the model to evaluate each held-out observation becomes computationally intractable.
+Evaluating model generalization is central to Bayesian analysis. PSIS-LOO-CV provides an efficient way to approximate leave-one-out cross-validation without refitting the model $n$ times. However, this efficiency depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds a sample-size dependent threshold (typically around 0.7 for standard MCMC sample sizes), leading to unreliable estimates. 
 
-Instead of expensive model refitting, we can use the approach from @paananen_2020, which presents an *implicitly adaptive importance sampling* method called **importance weighted moment matching (IWMM)**. The method improves the proposal distribution by iteratively transforming existing posterior draws in the unconstrained parameter space. These transformations use simple affine maps guided by importance weights to better match the leave-one-out posterior.
+When observations produce high Pareto-$k$ values, we can use standard LOO-CV for those observations, i.e. refit the model while removing those problematic observations one at a time. This could be useful if the number of observations with high $\hat k$ is small, otherwise it can easily become too expensive for routine use. K-fold CV is another option but it can also be too expensive.
 
-In this chapter, we'll explore the theory behind moment matching and walk through a complete example. We'll fit a Poisson regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The model is intentioanlly misspecified to demonstrate the benefits of moment matching when influential observations lead to high Pareto-$k$ values.
+But those are not the only two solution when PSIS-LOO-CV gives high $\hat k$ values. Instead of expensive model refitting. The method **importance weighted moment matching (IWMM)** presented by @paananen_2020 works by improving the proposal distribution by iteratively transforming existing posterior draws to better match the moments of the target distribution.
+
+In this chapter, we'll explore the theory behind IWMM and walk through a complete example. We'll fit a Poisson regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The model is intentionally misspecified to demonstrate the benefits of moment matching when influential observations lead to high Pareto-$k$ values.
 
 ## Background
 
