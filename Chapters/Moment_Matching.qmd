@@ -44,7 +44,7 @@ SEED = 4711
 
 ## Overview
 
-Evaluating model generalization is central to Bayesian analysis. PSIS-LOO-CV provides an efficient way to approximate leave-one-out cross-validation without refitting the model $n$ times. However, this efficiency depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds 0.7, leading to unreliable estimates. When observations produce Pareto-$k$ values exceeding 0.7, refitting the model to evaluate each held-out observation becomes computationally intractable.
+Evaluating model generalization is central to Bayesian analysis. PSIS-LOO-CV provides an efficient way to approximate leave-one-out cross-validation without refitting the model $n$ times. However, this efficiency depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds a sample-size dependent threshold (typically around 0.7 for standard MCMC sample sizes), leading to unreliable estimates. When observations produce high Pareto-$k$ values, refitting the model to evaluate each held-out observation becomes computationally intractable.
 
 Instead of expensive model refitting, we can use the approach from @paananen_2020, which presents an *implicitly adaptive importance sampling* method called **importance weighted moment matching (IWMM)**. The method improves the proposal distribution by iteratively transforming existing posterior draws in the unconstrained parameter space. These transformations use simple affine maps guided by importance weights to better match the leave-one-out posterior.
 
