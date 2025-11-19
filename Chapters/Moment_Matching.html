@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Exploratory Analysis of Bayesian Models - 6&nbsp; Prior and likelihood sensitivity checks</title>
+<title>Exploratory Analysis of Bayesian Models - 9&nbsp; Moment Matching for Improved PSIS-LOO-CV</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -84,8 +84,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../Chapters/Model_comparison.html" rel="next">
-<link href="../Chapters/Prior_posterior_predictive_checks.html" rel="prev">
+<link href="../Chapters/Case_study_model_comparison.html" rel="next">
+<link href="../Chapters/Model_comparison_large_data.html" rel="prev">
 <link href="../favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -159,7 +159,7 @@ window.Quarto = {
 };
 </script>
 
-<meta name="citation_title" content="[[6]{.chapter-number}&nbsp; [Prior and likelihood sensitivity checks]{.chapter-title}]{#sec-sensitivity-checks .quarto-section-identifier}">
+<meta name="citation_title" content="[[9]{.chapter-number}&nbsp; [Moment Matching for Improved PSIS-LOO-CV]{.chapter-title}]{#sec-moment-matching .quarto-section-identifier}">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Graphical perception: Theory, experimentation, and application to the development of graphical methods;,citation_author=William S. Cleveland;,citation_author=Robert McGill;,citation_publication_date=1984;,citation_cover_date=1984;,citation_year=1984;,citation_fulltext_html_url= https://www.tandfonline.com/doi/abs/10.1080/01621459.1984.10478080;,citation_issue=387;,citation_doi=10.1080/01621459.1984.10478080;,citation_volume=79;,citation_journal_title=Journal of the American Statistical Association;,citation_publisher=Taylor &amp;amp;amp; Francis;">
 <meta name="citation_reference" content="citation_title=Crowdsourcing graphical perception: Using mechanical turk to assess visualization design;,citation_author=Jeffrey Heer;,citation_author=Michael Bostock;,citation_publication_date=2010-04;,citation_cover_date=2010-04;,citation_year=2010;,citation_fulltext_html_url=https://doi.org/10.1145/1753326.1753357;,citation_doi=10.1145/1753326.1753357;,citation_isbn=978-1-60558-929-9;,citation_conference_title=Proceedings of the SIGCHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’10;">
@@ -240,7 +240,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Chapters/Sensitivity_checks.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Prior and likelihood sensitivity checks</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Chapters/Moment_Matching.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Moment Matching for Improved PSIS-LOO-CV</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -327,7 +327,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapters/Sensitivity_checks.html" class="sidebar-item-text sidebar-link active">
+  <a href="../Chapters/Sensitivity_checks.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Prior and likelihood sensitivity checks</span></span></a>
   </div>
 </li>
@@ -345,7 +345,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../Chapters/Moment_Matching.html" class="sidebar-item-text sidebar-link">
+  <a href="../Chapters/Moment_Matching.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Moment Matching for Improved PSIS-LOO-CV</span></span></a>
   </div>
 </li>
@@ -401,27 +401,34 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#prior-and-likelihood-sensitivity-via-power-scaling" id="toc-prior-and-likelihood-sensitivity-via-power-scaling" class="nav-link active" data-scroll-target="#prior-and-likelihood-sensitivity-via-power-scaling"><span class="header-section-number">6.1</span> Prior and likelihood sensitivity via power-scaling</a>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">9.1</span> Overview</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">9.2</span> Background</a>
   <ul class="collapse">
-  <li><a href="#power-scaling" id="toc-power-scaling" class="nav-link" data-scroll-target="#power-scaling"><span class="header-section-number">6.1.1</span> Power-scaling</a></li>
-  <li><a href="#power-scaling-and-importance-sampling" id="toc-power-scaling-and-importance-sampling" class="nav-link" data-scroll-target="#power-scaling-and-importance-sampling"><span class="header-section-number">6.1.2</span> Power-scaling and importance sampling</a></li>
-  <li><a href="#diagnosing-sensitivity" id="toc-diagnosing-sensitivity" class="nav-link" data-scroll-target="#diagnosing-sensitivity"><span class="header-section-number">6.1.3</span> Diagnosing sensitivity</a></li>
+  <li><a href="#importance-sampling-for-psis-loo-cv" id="toc-importance-sampling-for-psis-loo-cv" class="nav-link" data-scroll-target="#importance-sampling-for-psis-loo-cv"><span class="header-section-number">9.2.1</span> Importance sampling for PSIS-LOO-CV</a></li>
+  <li><a href="#monte-carlo-estimators" id="toc-monte-carlo-estimators" class="nav-link" data-scroll-target="#monte-carlo-estimators"><span class="header-section-number">9.2.2</span> Monte Carlo estimators</a></li>
   </ul></li>
-  <li><a href="#body-fat-example" id="toc-body-fat-example" class="nav-link" data-scroll-target="#body-fat-example"><span class="header-section-number">6.2</span> Body fat example</a>
+  <li><a href="#multiple-importance-sampling" id="toc-multiple-importance-sampling" class="nav-link" data-scroll-target="#multiple-importance-sampling"><span class="header-section-number">9.3</span> Multiple importance sampling</a></li>
+  <li><a href="#importance-weighted-moment-matching" id="toc-importance-weighted-moment-matching" class="nav-link" data-scroll-target="#importance-weighted-moment-matching"><span class="header-section-number">9.4</span> Importance weighted moment matching</a>
   <ul class="collapse">
-  <li><a href="#adjusting-the-prior" id="toc-adjusting-the-prior" class="nav-link" data-scroll-target="#adjusting-the-prior"><span class="header-section-number">6.2.1</span> Adjusting the prior</a></li>
+  <li><a href="#affine-transformations-and-implicit-adaptation" id="toc-affine-transformations-and-implicit-adaptation" class="nav-link" data-scroll-target="#affine-transformations-and-implicit-adaptation"><span class="header-section-number">9.4.1</span> Affine transformations and implicit adaptation</a></li>
+  <li><a href="#targeting-optimal-proposal-distributions" id="toc-targeting-optimal-proposal-distributions" class="nav-link" data-scroll-target="#targeting-optimal-proposal-distributions"><span class="header-section-number">9.4.2</span> Targeting optimal proposal distributions</a></li>
+  <li><a href="#the-split-proposal-for-snis" id="toc-the-split-proposal-for-snis" class="nav-link" data-scroll-target="#the-split-proposal-for-snis"><span class="header-section-number">9.4.3</span> The split proposal for SNIS</a></li>
+  <li><a href="#three-moment-matching-transformations" id="toc-three-moment-matching-transformations" class="nav-link" data-scroll-target="#three-moment-matching-transformations"><span class="header-section-number">9.4.4</span> Three moment matching transformations</a></li>
   </ul></li>
-  <li><a href="#non-interpretable-parameters-and-derived-quantities" id="toc-non-interpretable-parameters-and-derived-quantities" class="nav-link" data-scroll-target="#non-interpretable-parameters-and-derived-quantities"><span class="header-section-number">6.3</span> Non-interpretable parameters and derived quantities</a>
+  <li><a href="#the-moment-matching-algorithm" id="toc-the-moment-matching-algorithm" class="nav-link" data-scroll-target="#the-moment-matching-algorithm"><span class="header-section-number">9.5</span> The moment matching algorithm</a></li>
+  <li><a href="#roaches-data-and-poisson-regression-model" id="toc-roaches-data-and-poisson-regression-model" class="nav-link" data-scroll-target="#roaches-data-and-poisson-regression-model"><span class="header-section-number">9.6</span> Roaches data and Poisson regression model</a>
   <ul class="collapse">
-  <li><a href="#computing-derived-quantities" id="toc-computing-derived-quantities" class="nav-link" data-scroll-target="#computing-derived-quantities"><span class="header-section-number">6.3.1</span> Computing derived quantities</a></li>
+  <li><a href="#loading-and-preparing-the-data" id="toc-loading-and-preparing-the-data" class="nav-link" data-scroll-target="#loading-and-preparing-the-data"><span class="header-section-number">9.6.1</span> Loading and preparing the data</a></li>
+  <li><a href="#model-specification-and-fitting" id="toc-model-specification-and-fitting" class="nav-link" data-scroll-target="#model-specification-and-fitting"><span class="header-section-number">9.6.2</span> Model specification and fitting</a></li>
+  <li><a href="#initial-psis-loo-cv-evaluation" id="toc-initial-psis-loo-cv-evaluation" class="nav-link" data-scroll-target="#initial-psis-loo-cv-evaluation"><span class="header-section-number">9.6.3</span> Initial PSIS-LOO-CV evaluation</a></li>
   </ul></li>
-  <li><a href="#bacteria-treatment" id="toc-bacteria-treatment" class="nav-link" data-scroll-target="#bacteria-treatment"><span class="header-section-number">6.4</span> Bacteria treatment</a></li>
-  <li><a href="#interpreting-sensitivity-diagnostics-summary" id="toc-interpreting-sensitivity-diagnostics-summary" class="nav-link" data-scroll-target="#interpreting-sensitivity-diagnostics-summary"><span class="header-section-number">6.5</span> Interpreting sensitivity diagnostics: Summary</a>
+  <li><a href="#applying-moment-matching" id="toc-applying-moment-matching" class="nav-link" data-scroll-target="#applying-moment-matching"><span class="header-section-number">9.7</span> Applying moment matching</a>
   <ul class="collapse">
-  <li><a href="#diagnostic-value" id="toc-diagnostic-value" class="nav-link" data-scroll-target="#diagnostic-value"><span class="header-section-number">6.5.1</span> Diagnostic value</a></li>
-  <li><a href="#diagnostic-messages" id="toc-diagnostic-messages" class="nav-link" data-scroll-target="#diagnostic-messages"><span class="header-section-number">6.5.2</span> Diagnostic messages</a></li>
-  <li><a href="#what-to-do-with-the-diagnostics" id="toc-what-to-do-with-the-diagnostics" class="nav-link" data-scroll-target="#what-to-do-with-the-diagnostics"><span class="header-section-number">6.5.3</span> What to do with the diagnostics</a></li>
+  <li><a href="#function-specification-and-implementation" id="toc-function-specification-and-implementation" class="nav-link" data-scroll-target="#function-specification-and-implementation"><span class="header-section-number">9.7.1</span> Function specification and implementation</a></li>
+  <li><a href="#computational-considerations" id="toc-computational-considerations" class="nav-link" data-scroll-target="#computational-considerations"><span class="header-section-number">9.7.2</span> Computational considerations</a></li>
+  <li><a href="#running-moment-matching" id="toc-running-moment-matching" class="nav-link" data-scroll-target="#running-moment-matching"><span class="header-section-number">9.7.3</span> Running moment matching</a></li>
   </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">9.8</span> Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -430,7 +437,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-sensitivity-checks" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Prior and likelihood sensitivity checks</span></span></h1>
+<h1 class="title"><span id="sec-moment-matching" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Moment Matching for Improved PSIS-LOO-CV</span></span></h1>
 </div>
 
 
@@ -447,128 +454,314 @@ window.Quarto = {
 </header>
 
 
-<p>Determining the sensitivity of the posterior to perturbations of the prior is an important part of building Bayesian models. The traditional way to assess the prior sensitivity is to compare the posterior obtained using a reference prior against the posterior obtained using one or more alternative priors. The reference prior can be the default prior in packages like <a href="https://bambinos.github.io/bambi/">Bambi</a> or some other “template” prior from literature or previous analysis of a similar dataset/problem. But it can also be the prior obtained after a more careful elicitation process. The “alternative” priors can be prior that for some reason we also consider relevant, or deviations from the reference prior that we consider important to evaluate.</p>
-<p>To perform the comparison we can use visual and numerical summaries as we already explained in <a href="Prior_posterior_predictive_checks.html" class="quarto-xref"><span>Chapter 5</span></a>. For instance, when working with ArviZ, we can use <code>plot_forest</code> or <code>plot_density</code> functions to compare multiple posteriors (or actually their marginals) in the same plot. Ideally, we should summarize and report the results of this analysis, so that others can also understand how robust the model is to different prior choices.</p>
-<p>The same procedure we use to assess the sensitivity of the prior can be used to compare how different likelihoods affect the posterior. So we can discuss the sensitivity of the posterior to the likelihood, the prior or both.</p>
-<p>In summary, the traditional approach to assess prior and likelihood sensitivity is to fit multiple models with different priors and/or likelihoods, and then compare the results. This approach is simple to understand, and should be straightforward to implement. However, in practice thinking about alternative priors, building alternative models and fitting them can be very time-consuming. In the chapter we discuss a more automated way to do this kind of analysis.</p>
-<section id="prior-and-likelihood-sensitivity-via-power-scaling" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="prior-and-likelihood-sensitivity-via-power-scaling"><span class="header-section-number">6.1</span> Prior and likelihood sensitivity via power-scaling</h2>
-<p>The method we will discuss was presented by <span class="citation" data-cites="kallioinen_2023">Kallioinen et al. (<a href="References.html#ref-kallioinen_2023" role="doc-biblioref">2023</a>)</span>, and offers visual and numerical diagnostics that can alert us of potential prior-data conflict or likelihood noninformativity. What makes this approach very practical is that we only need to fit a single model once, and without explicitly modifying the prior or likelihood, we can assess the effect of changing them. If you are eager to see how this method can be applied in practice, you can jump to the example section. If you want to understand the method in more detail, keep reading.</p>
-<section id="power-scaling" class="level3" data-number="6.1.1">
-<h3 data-number="6.1.1" class="anchored" data-anchor-id="power-scaling"><span class="header-section-number">6.1.1</span> Power-scaling</h3>
-<p>A key idea of the method is the concept of power-scaling. By power-scaling we mean raising a distribution to a power <span class="math inline">\(\alpha\)</span>. Why is this interesting? Because by power-scaling a distribution we can “stretch” it or “compress” it. <a href="#fig-beta-normal-power-scaling" class="quarto-xref">Figure&nbsp;<span>6.1</span></a> shows the effect of power-scaling on a Beta and a Normal distribution. Power-scaling is a very general transformation that work for any distribution, except for the uniform distribution. Notice this restriction also applies to a Beta(1, 1), which is uniform. This is a minor restriction, because the uniform distribution is hardly a useful prior, unless we are dealing with a very special case.</p>
-<div id="cell-fig-beta-normal-power-scaling" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display">
-<div id="fig-beta-normal-power-scaling" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-beta-normal-power-scaling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Sensitivity_checks_files/figure-html/fig-beta-normal-power-scaling-output-1.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-beta-normal-power-scaling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.1: The effect of power-scaling on Beta and Normal distributions. α values larger than 1 ‘compress’ the distribution while values of α below 1 ‘stretch’ the distribution.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>In the context of Bayes Theorem we can use power-scaling to modulate the relative weights of the likelihood and prior. For instance we can write a power-scaled version of Bayes’ theorem as follows:</p>
-<p><span class="math display">\[
-p(\theta \mid y)_{\alpha} \propto p(y \mid \theta)^\alpha \; p(\theta)
-\]</span></p>
-<p>Let’s take a moment to understand this expression. If we set <span class="math inline">\(\alpha=1\)</span> we recover the usual expression for Bayes’ theorem, the one that you may have seen many times. Setting <span class="math inline">\(\alpha=0\)</span> is equivalent to ignoring the likelihood, thus <span class="math inline">\(p(\theta \mid y)_{\alpha}\)</span> will be equal to the prior. We can then conclude that any number between 0 and 1 will have the effect of “weakening” the likelihood with respect to the prior. By the same token any number greater than 1 will “strength” the likelihood with respect to the prior.</p>
-<p>We can repeat this exercise for the prior and then we will be able to modulate the relative weights of the prior relative to the likelihood. <a href="#fig-posterior-power-scaling" class="quarto-xref">Figure&nbsp;<span>6.2</span></a> shows the effect on the posterior of power-scaling the prior for a fixed likelihood. The prior is a Beta distribution with parameters <span class="math inline">\(a=2\)</span> and <span class="math inline">\(b=5\)</span> and the likelihood is a Binomial distribution with parameters <span class="math inline">\(n=10\)</span> and <span class="math inline">\(p=0.7\)</span>. The posterior is computed using the prior and likelihood.</p>
-<div id="cell-fig-posterior-power-scaling" class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display">
-<div id="fig-posterior-power-scaling" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-posterior-power-scaling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Sensitivity_checks_files/figure-html/fig-posterior-power-scaling-output-1.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-posterior-power-scaling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.2: The effect on the posterior when power-scaling the prior for a fixed likelihood.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
+<section id="overview" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">9.1</span> Overview</h2>
+<p>Evaluating model generalization is central to Bayesian analysis. PSIS-LOO-CV provides an efficient way to approximate leave-one-out cross-validation without refitting the model <span class="math inline">\(n\)</span> times. However, this efficiency depends critically on stable importance sampling, which breaks down when the Pareto-<span class="math inline">\(k\)</span> diagnostic exceeds a sample-size dependent threshold (typically around 0.7 for standard MCMC sample sizes), leading to unreliable estimates.</p>
+<p>When observations produce high Pareto-<span class="math inline">\(k\)</span> values, we can use standard LOO-CV for those observations, i.e.&nbsp;refit the model while removing those problematic observations one at a time. This could be useful if the number of observations with high <span class="math inline">\(\hat k\)</span> is small, otherwise it can easily become too expensive for routine use. K-fold CV is another option but it can also be too expensive.</p>
+<p>But those are not the only two solution when PSIS-LOO-CV gives high <span class="math inline">\(\hat k\)</span> values. Instead of expensive model refitting. The method <strong>importance weighted moment matching (IWMM)</strong> presented by <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span> works by improving the proposal distribution by iteratively transforming existing posterior draws to better match the moments of the target distribution.</p>
+<p>In this chapter, we’ll explore the theory behind IWMM and walk through a complete example. We’ll fit a Poisson regression model to the <code>roaches</code> data from <span class="citation" data-cites="gelman_hill_2007">Gelman and Hill (<a href="References.html#ref-gelman_hill_2007" role="doc-biblioref">2007</a>)</span>, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The model is intentionally misspecified to demonstrate the benefits of moment matching when influential observations lead to high Pareto-<span class="math inline">\(k\)</span> values.</p>
 </section>
-<section id="power-scaling-and-importance-sampling" class="level3" data-number="6.1.2">
-<h3 data-number="6.1.2" class="anchored" data-anchor-id="power-scaling-and-importance-sampling"><span class="header-section-number">6.1.2</span> Power-scaling and importance sampling</h3>
-<p>We can analytically compute the effect of power scaling a distribution. For instance, for a Normal distribution, <span class="math inline">\(\mathcal{N}(\theta \mid \mu, \sigma)\)</span> and power-scaling factor <span class="math inline">\(\alpha\)</span> we get <span class="math inline">\(\mathcal{N}(\theta \mid \mu, \sigma \; \alpha^{-1/2})\)</span>. In practice we usually work with MCMC samples and arbitrary distributions, thus a more convenient way to perform power-scaling is to use importance sampling. As discussed in <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a> importance sampling is a method to estimate the expected value of a function under a distribution different from the one we have samples from. <span class="citation" data-cites="kallioinen_2023">Kallioinen et al. (<a href="References.html#ref-kallioinen_2023" role="doc-biblioref">2023</a>)</span> proposed to use Pareto smoothed importance sampling (PSIS), a method we also discussed in <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a> to estimate the ELPD.</p>
-<p>In the context of power-scaling perturbations, the proposal distribution is the posterior we computed using MCMC (<span class="math inline">\(p(\theta \mid y)\)</span>) and the target distribution is the perturbed posterior (<span class="math inline">\(p(\theta \mid y)_{\alpha}\)</span>). If the proposal and target distributions are expressed as the products of the prior <span class="math inline">\(p(\theta)\)</span> and likelihood <span class="math inline">\(p(y \mid \theta)\)</span>, with the prior raised to the power of <span class="math inline">\(\alpha\)</span>, then we can write the importance weights for the prior as:</p>
+<section id="background" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="background"><span class="header-section-number">9.2</span> Background</h2>
+<section id="importance-sampling-for-psis-loo-cv" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="importance-sampling-for-psis-loo-cv"><span class="header-section-number">9.2.1</span> Importance sampling for PSIS-LOO-CV</h3>
+<p>Recall from <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a> that PSIS-LOO-CV uses importance sampling to approximate leave-one-out cross-validation without refitting the model. Instead of refitting for each observation <span class="math inline">\(i\)</span>, we reweight draws from the full-data posterior <span class="math inline">\(p(\theta \mid y)\)</span> using importance weights</p>
 <p><span class="math display">\[
-w_{\alpha} = \frac{p(\theta)^{\alpha} \; p(y \mid \theta)}{p(\theta) \;\; p(y \mid \theta)}
+w_i(\theta) = \frac{1}{p(y_i \mid \theta)}
 \]</span></p>
-<p>Which simplifies to:</p>
-<p><span class="math display">\[
-w_{\alpha} = \frac{p(\theta)^{\alpha}}{p(\theta)}
-\]</span></p>
-<p>which is the same as:</p>
-<p><span class="math display">\[
-w_{\alpha} = p(\theta)^{\alpha-1}
-\]</span></p>
-<p>This resulta means that the importance sampling weights for the prior only depend on the density of the prior being power-scaled. This simplifies the computation of the weights. By the same logic the same applies to the likelihood.</p>
-<p>To summarize, the method proposed by <span class="citation" data-cites="kallioinen_2023">Kallioinen et al. (<a href="References.html#ref-kallioinen_2023" role="doc-biblioref">2023</a>)</span> combines two key ideas, importance sampling and power-scaling. This combination allow us to approximate the sensitivity of the posterior to the prior and likelihood without the need to explicitly build and fit multiple models.</p>
+<p>to approximate the leave-one-out posterior <span class="math inline">\(p(\theta \mid y_{-i})\)</span>. When observation <span class="math inline">\(i\)</span> is influential, these weights become highly variable. The Pareto-<span class="math inline">\(k\)</span> diagnostic quantifies this instability by fitting a generalized Pareto distribution to the tail of the importance weight distribution. When <span class="math inline">\(k &gt; 0.7\)</span>, the importance weights remain too unstable even after Pareto smoothing, indicating unreliable approximations. Moment matching offers a solution by transforming the posterior draws to improve the proposal distribution. For detailed coverage of PSIS-LOO-CV, see <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a>.</p>
 </section>
-<section id="diagnosing-sensitivity" class="level3" data-number="6.1.3">
-<h3 data-number="6.1.3" class="anchored" data-anchor-id="diagnosing-sensitivity"><span class="header-section-number">6.1.3</span> Diagnosing sensitivity</h3>
-<p>Once we have power-scaled the prior and likelihood we can visually inspect the effect of the perturbations, by plotting the marginal posterior distributions for the parameter of interest. KDEs, ECDFs and point-intervals allows easy comparison of several distributions. If the perturbations are small, the distributions should overlap. If the perturbations are large, the distributions will be separated.</p>
-<p>We can also compute numerical values based on distances (or divergences) between the unperturbed and perturbed posteriors. In <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a> we discussed the use of the Kullback-Leibler divergence to compare how similar two distributions are. <span class="citation" data-cites="kallioinen_2023">Kallioinen et al. (<a href="References.html#ref-kallioinen_2023" role="doc-biblioref">2023</a>)</span> instead suggest using the cumulative Jensen–Shannon divergence (CJS) <span class="citation" data-cites="nguyen_2015">(<a href="References.html#ref-nguyen_2015" role="doc-biblioref">Nguyen and Vreeken 2015</a>)</span>. This divergence has two good features, its symmetrised form is upper-bounded, which aids interpretation, and it can be computed from the ECDFs, which can be efficiently estimated from MCMC samples. Other methods requieres the estimation of the density of the distributions, which can be computationally expensive and sensible to the choice of the kernel and bandwidth.</p>
-<p>The authors suggest a cut-off value of 0.05 for the CJS. For a standard Normal this value corresponds to the mean being shifted by more than <span class="math inline">\(\approx 0.3\)</span> standard deviations, or the standard deviation differing by a factor greater than <span class="math inline">\(\approx 0.3\)</span>. This value is not set in stone, but it can be used as a reference to interpret the results of the sensitivity analysis.</p>
-<p>If the value of CJS when power-scaling the prior and likelihood is larger than the threshold, we have a potential prior-data conflict. If the value of CJS is larger than the threshold but the value for the likelihood is smaller than the threshold, we potentially have a strong prior and weak likelihood.</p>
-<p>In the next sections we are going to show two examples of on how to use this method in practice.</p>
+<section id="monte-carlo-estimators" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="monte-carlo-estimators"><span class="header-section-number">9.2.2</span> Monte Carlo estimators</h3>
+<p>To understand how moment matching improves these importance weights, we first need to understand which Monte Carlo estimator we are using. Two of the most commonly used estimators are standard importance sampling (IS) and self-normalized importance sampling (SNIS). The choice between IS and SNIS determines which proposal distribution works best, which in turn affects how moment matching should adapt the draws.</p>
+<p>The central problem we’re interested in is computing <span class="math inline">\(\mathbb{E}_p[h(\theta)] = \int h(\theta) p(\theta) \, d\theta\)</span> using draws <span class="math inline">\(\{\theta^{(s)}\}_{s=1}^S\)</span> from a proposal distribution <span class="math inline">\(g(\theta)\)</span>.</p>
+<section id="standard-importance-sampling-is" class="level4" data-number="9.2.2.1">
+<h4 data-number="9.2.2.1" class="anchored" data-anchor-id="standard-importance-sampling-is"><span class="header-section-number">9.2.2.1</span> Standard Importance Sampling (IS)</h4>
+<p>The standard importance sampling estimator computes the expectation as <span class="math display">\[
+\hat{\mu}_{\text{IS}} = \frac{1}{S} \sum_{s=1}^S w^{(s)} h(\theta^{(s)}), \quad w^{(s)} = \frac{p(\theta^{(s)})}{g(\theta^{(s)})},
+\]</span></p>
+<p>which is unbiased when normalizing constants are known, with variance depending on how well <span class="math inline">\(g(\theta)\)</span> matches the target in regions where <span class="math inline">\(|h(\theta)|\)</span> is large.</p>
+</section>
+<section id="self-normalized-importance-sampling-snis" class="level4" data-number="9.2.2.2">
+<h4 data-number="9.2.2.2" class="anchored" data-anchor-id="self-normalized-importance-sampling-snis"><span class="header-section-number">9.2.2.2</span> Self-Normalized Importance Sampling (SNIS)</h4>
+<p>The SNIS estimator computes the ratio of weighted averages as <span class="math display">\[
+\hat{\mu}_{\text{SNIS}} = \frac{\sum_{s=1}^S w^{(s)} h(\theta^{(s)})}{\sum_{s=1}^S w^{(s)}}, \quad w^{(s)} = \frac{p(\theta^{(s)})}{g(\theta^{(s)})}.
+\]</span></p>
+<p>This is a natural choice for PSIS-LOO-CV because the normalizing constants of <span class="math inline">\(p(\theta \mid y_{-i})\)</span> and <span class="math inline">\(p(\theta \mid y)\)</span> are typically unknown.</p>
+<p>SNIS introduces an additional consideration. We need to estimate both numerator and denominator accurately, which changes which regions of the proposal matter most. The optimal proposal for SNIS emphasizes where <span class="math inline">\(|h(\theta) - \mathbb{E}_p[h(\theta)]|\)</span> is large, whereas for standard IS it emphasizes where <span class="math inline">\(|h(\theta)|\)</span> is large. In practice, we use self-normalized weights <span class="math inline">\(\tilde{w}^{(s)} = w^{(s)} / \sum_{r=1}^S w^{(r)}\)</span> for moment matching since normalizing constants are often unknown.</p>
 </section>
 </section>
-<section id="body-fat-example" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="body-fat-example"><span class="header-section-number">6.2</span> Body fat example</h2>
-<p>Let’s see an example of prior-data conflict in a linear regression model. We will use the bodyfat data set <span class="citation" data-cites="johnson_1996">(<a href="References.html#ref-johnson_1996" role="doc-biblioref">Johnson 1996</a>)</span>. The aim of the analysis is to predict an expensive and cumbersome water immersion measurement of body fat percentage (observed variable named <code>siri</code>) from a set of thirteen easier to measure characteristics, including age, height, weight, and circumferences of various body parts.</p>
-<p>Let’s start by loading the data and creating a <code>siri</code> variable for the response and a <code>body_fat</code> variable for the predictors. We center the predictors.</p>
-<div id="feca6b03" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>body_fat <span class="op">=</span> pd.read_csv(<span class="st">"../data/body_fat.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>siri <span class="op">=</span> body_fat.pop(<span class="st">"siri"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>body_fat <span class="op">=</span> body_fat <span class="op">-</span> body_fat.mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>We are going to start by assuming that a resonable prior for all coefficients is Normal(0, 1). With that in mind, we will fit the following linear regression model:</p>
+</section>
+<section id="multiple-importance-sampling" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="multiple-importance-sampling"><span class="header-section-number">9.3</span> Multiple importance sampling</h2>
+<p>The distinction between numerator and denominator adaptation for SNIS creates a challenge. As we will see later, the optimal proposal for the numerator differs from the optimal proposal for the denominator. Rather than choosing between these competing proposals, moment matching uses multiple importance sampling to combine them. MIS provides a principled framework for sampling from <span class="math inline">\(J\)</span> different proposal distributions and combining the results into a single estimator with provably good properties.</p>
+<p>Suppose we independently draw <span class="math inline">\(S_j\)</span> samples from each of <span class="math inline">\(J\)</span> proposal distributions <span class="math inline">\(g_1(\theta), \ldots, g_J(\theta)\)</span>, with <span class="math inline">\(\sum_{j=1}^J S_j = S\)</span> total draws. The multiple importance sampling estimator is</p>
+<p><span class="math display">\[\hat{\mu}_{\mathrm{MIS}} = \sum_{j=1}^{J} \frac{1}{S_j} \sum_{s=1}^{S_j} \beta_j(\theta^{(j,s)}) \frac{p(\theta^{(j,s)})}{g_j(\theta^{(j,s)})} h(\theta^{(j,s)}),\]</span></p>
+<p>where <span class="math inline">\(\{\beta_j(\theta)\}_{j=1}^{J}\)</span> forms a partition of unity with <span class="math inline">\(\beta_j(\theta) \geq 0\)</span> and <span class="math inline">\(\sum_{j=1}^J \beta_j(\theta) = 1\)</span> for all <span class="math inline">\(\theta\)</span>. The weighting functions <span class="math inline">\(\beta_j\)</span> determine how much each proposal contributes at different points in the parameter space.</p>
+<p>A natural choice for the weighting functions is the <em>balance heuristic</em></p>
+<p><span class="math display">\[\beta_j(\theta) = \frac{S_j g_j(\theta)}{\sum_{k=1}^J S_k g_k(\theta)}.\]</span></p>
+<p>A critical property of this weighting function is that it can be shown that the variance of the MIS estimator using the balance heuristic is provably smaller than the variance of any single proposal distribution, plus a term that vanishes as the sample sizes grow.</p>
+<p>Intuitively, the balance heuristic computes importance weights as if all draws came from a mixture proposal <span class="math inline">\(g_{\alpha}(\theta) = \sum_{j=1}^J \alpha_j g_j(\theta)\)</span> where <span class="math inline">\(\alpha_j = S_j / S\)</span>, which gives us the weights</p>
+<p><span class="math display">\[w^{(j,s)} = \frac{p(\theta^{(j,s)})}{g_{\alpha}(\theta^{(j,s)})} = \frac{p(\theta^{(j,s)})}{\sum_{j=1}^J \alpha_j g_j(\theta^{(j,s)})}.\]</span></p>
+<p>This framework becomes crucial for moment matching when adapting two separate proposal distributions, because rather than choosing between them, we can combine both using MIS and the balance heuristic.</p>
+</section>
+<section id="importance-weighted-moment-matching" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="importance-weighted-moment-matching"><span class="header-section-number">9.4</span> Importance weighted moment matching</h2>
+<p>Moment matching extends the idea of PSIS-LOO-CV in a clever way. It <em>implicitly</em> updates the proposal without needing auxiliary parameters or resampling. Traditional adaptive importance sampling alternates between drawing samples, computing weights, and updating parameters. The key insight from <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span> is simpler: skip generating fresh draws and instead repeatedly transform the existing draws from <span class="math inline">\(p(\theta \mid y)\)</span> in the unconstrained parameter space. These transformations align the low-order moments of the draws with the moments implied by the leave-one-out weights.</p>
+<p>This implicit adaptation is fully automated and requires only operations on already available posterior draws. It’s designed to plug into PSIS-LOO-CV pipelines that flag problematic cases using the Pareto-<span class="math inline">\(k\)</span> diagnostic from <span class="citation" data-cites="vehtari_2017">Vehtari, Gelman, and Gabry (<a href="References.html#ref-vehtari_2017" role="doc-biblioref">2017</a>)</span>. Because we reuse the same Monte Carlo sample throughout, the computational cost stays close to that of a single PSIS-LOO-CV evaluation, even when several adaptation rounds are attempted. Importantly, this approach preserves the effective sample size accrued during the original posterior simulation and avoids delicate tuning choices.</p>
+<p>The approach involves several key components:</p>
+<ul>
+<li>Apply affine transformations to existing draws to better match the target distribution</li>
+<li>Recognize that different Monte Carlo estimators require different proposal strategies</li>
+<li>Identify optimal proposal distributions for both standard and self-normalized importance sampling</li>
+<li>Approximate the challenging self-normalized optimal proposal using a split proposal that separates numerator and denominator adaptation</li>
+<li>Combine the adapted proposals using multiple importance sampling</li>
+</ul>
+<p>The following sections develop each of these ideas in turn.</p>
+<section id="affine-transformations-and-implicit-adaptation" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="affine-transformations-and-implicit-adaptation"><span class="header-section-number">9.4.1</span> Affine transformations and implicit adaptation</h3>
+<p>The core idea of importance weighted moment matching (IWMM) is to transform existing draws to better match the target distribution without resampling. We achieve this using affine transformations guided by importance-weighted moments.</p>
+<p>Consider a set of draws <span class="math inline">\(\{\theta^{(s)}\}_{s=1}^S\)</span> from the full-data posterior <span class="math inline">\(p(\theta \mid y)\)</span>. A generic affine transformation consists of a square matrix <span class="math inline">\(\mathbf{A}\)</span> and a translation vector <span class="math inline">\(\mathbf{b}\)</span> such that</p>
 <p><span class="math display">\[
-\begin{aligned}
-    \beta_0 &amp;\sim t_3(0, 9.2) \\
-    \beta_k &amp;\sim \mathcal{N}(0, 1) \\
-    \sigma &amp;\sim t_{3}^{+}(9.2) \\
-    \mu &amp;= β_0 + β X^T \\
-    \text{siri} &amp;\sim \mathcal{N}(\mu, \sigma)
-\end{aligned}
+T(\theta^{(s)}) = \mathbf{A}\theta^{(s)} + \mathbf{b} = \theta^{*(s)}.
 \]</span></p>
-<p>For the prior (and likelihood) sensitivity method to work we need to ensure that the <code>DataTree</code> object includes the groups log-prior and log-likelihood.</p>
+<p>Since the transformations are affine and the same for all draws, the implicit density of the transformed draws is</p>
+<p><span class="math display">\[
+g_T(\theta^{*(s)}) = p(\theta^{(s)} \mid y) |\mathbf{J}_T|^{-1},
+\]</span></p>
+<p>where <span class="math inline">\(|\mathbf{J}_T|^{-1} = |\det(\mathbf{A})|^{-1}\)</span> is the inverse Jacobian determinant. Crucially, this allows us to evaluate the proposal density at the transformed draws without ever writing down an explicit functional form. The proposal is adapted <em>implicitly</em> through the transformation, which requires an invertible matrix <span class="math inline">\(\mathbf{A}\)</span> so that the Jacobian determinant is well defined.</p>
+<p>When moment matching is applied to leave-one-out cross-validation, the importance weights must be recomputed after each transformation. For a transformed draw <span class="math inline">\(\theta^{*(s)}\)</span>, the importance weight becomes</p>
+<p><span class="math display">\[
+w_{\text{loo}, i}^{*(s)} = \frac{p(\theta^{*(s)} \mid y)}{p(\theta^{(s)} \mid y) \, p(y_i \mid \theta^{*(s)})} \propto \frac{p(\theta^{*(s)} \mid y_{-i})}{p(\theta^{(s)} \mid y)},
+\]</span></p>
+<p>which is still proportional to the ratio of the LOO posterior to the original proposal. This reweighting accounts for both the density of the transformed draw under the full-data posterior and its likelihood for observation <span class="math inline">\(i\)</span>. The denominator term <span class="math inline">\(p(\theta^{(s)} \mid y)\)</span> remains constant for each draw across all LOO folds, but the numerator terms must be evaluated at each transformed location.</p>
+</section>
+<section id="targeting-optimal-proposal-distributions" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="targeting-optimal-proposal-distributions"><span class="header-section-number">9.4.2</span> Targeting optimal proposal distributions</h3>
+<p>The affine transformations need some target to guide them. The choice of target determines whether moment matching successfully reduces the Pareto-<span class="math inline">\(k\)</span> diagnostic. The theoretically optimal proposal density depends on both the function <span class="math inline">\(h(\theta)\)</span> being estimated and the weighting scheme used.</p>
+<p>For standard importance sampling, the optimal proposal is</p>
+<p><span class="math display">\[
+g_{\mathrm{IS}}^{\mathrm{opt}}(\theta) \propto p(\theta)\lvert h(\theta)\rvert,
+\]</span></p>
+<p>which emphasizes regions where <span class="math inline">\(|h(\theta)|\)</span> is large. For self-normalized importance sampling, the optimal proposal is</p>
+<p><span class="math display">\[
+g_{\mathrm{SNIS}}^{\mathrm{opt}}(\theta) \propto p(\theta)\left|h(\theta)-\mathbb{E}_{p}[h(\theta)]\right|,
+\]</span></p>
+<p>which emphasizes regions where <span class="math inline">\(h(\theta)\)</span> deviates from its expectation.</p>
+<p>The difference arises because SNIS must estimate both numerator and denominator accurately. When <span class="math inline">\(h(\theta)\)</span> varies substantially, we need draws where <span class="math inline">\(h(\theta)\)</span> deviates most from its mean. When <span class="math inline">\(h(\theta)\)</span> is roughly constant, we need draws emphasizing posterior mass. Moment matching uses the available importance weights to steer affine transformations toward these optimal shapes.</p>
+<p>To make this work in practice, we use two types of weights:</p>
+<ul>
+<li><strong>Common weights</strong> <span class="math inline">\(w^{(s)} = p(\theta^{(s)}) / g(\theta^{(s)})\)</span> quantify the mismatch between proposal and target independent of the function <span class="math inline">\(h\)</span></li>
+<li><strong>Expectation-specific weights</strong> <span class="math inline">\(v^{(s)} = h(\theta^{(s)}) w^{(s)}\)</span> weight each draw by both the density ratio and the integrand value</li>
+</ul>
+<p>The transformations are calibrated with <span class="math inline">\(\{w^{(s)}\}\)</span> or with <span class="math inline">\(\{|v^{(s)}|\}\)</span>, depending on whether the denominator or numerator of the SNIS estimator needs improvement. We use absolute values <span class="math inline">\(|v^{(s)}|\)</span> because both positive and negative values of <span class="math inline">\(h(\theta)\)</span> contribute equally to variance, so we want draws where the magnitude is large regardless of sign.</p>
+</section>
+<section id="the-split-proposal-for-snis" class="level3" data-number="9.4.3">
+<h3 data-number="9.4.3" class="anchored" data-anchor-id="the-split-proposal-for-snis"><span class="header-section-number">9.4.3</span> The split proposal for SNIS</h3>
+<p>The SNIS optimal proposal from the previous section presents a practical challenge. It can easily be multimodal even when the expectation is defined over a unimodal distribution, making it difficult to approximate with simple affine transformations. It also depends on the unknown expectation <span class="math inline">\(\mathbb{E}_p[h(\theta)]\)</span>.</p>
+<section id="the-split-proposal-approximation" class="level4" data-number="9.4.3.1">
+<h4 data-number="9.4.3.1" class="anchored" data-anchor-id="the-split-proposal-approximation"><span class="header-section-number">9.4.3.1</span> The split proposal approximation</h4>
+<p>To combine the two adaptation strategies into an efficient proposal distribution, <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span> develop a practical approximation called the <em>split proposal density</em> given by</p>
+<p><span class="math display">\[
+g_{\mathrm{SNIS}}^{\mathrm{split}}(\theta) \propto |h(\theta)|p(\theta) + \mathbb{E}_{p}[h(\theta)]p(\theta).
+\]</span></p>
+<p>This approximation splits the piecewise-defined optimal proposal into two clear components. The first component <span class="math inline">\(|h(\theta)|p(\theta)\)</span> is proportional to the optimal proposal for standard importance sampling and uses the absolute expectation-specific weights <span class="math inline">\(\{|v^{(s)}|\}\)</span>. The second component <span class="math inline">\(\mathbb{E}_{p}[h(\theta)]p(\theta)\)</span> is proportional to the target distribution <span class="math inline">\(p(\theta)\)</span> itself and uses the common weights <span class="math inline">\(\{w^{(s)}\}\)</span>. This split form is a convenient approximation that has similar tail behavior to the SNIS optimal proposal while being simpler to work with. It avoids the potentially complex multimodal structure of <span class="math inline">\(|h(\theta) - \mathbb{E}_p[h(\theta)]|\)</span> by separating it into two interpretable components.</p>
+<p>The trade-off is that this approximation places unnecessary probability mass in regions where <span class="math inline">\(h(\theta) \approx \mathbb{E}_p[h(\theta)]\)</span>, thus losing some efficiency. However, the approximation works best precisely when we need it most. When <span class="math inline">\(p(\theta)\)</span> is more distinct from <span class="math inline">\(p(\theta)|h(\theta)|\)</span>, the value of <span class="math inline">\(\mathbb{E}_p[h(\theta)]\)</span> becomes smaller and the approximation becomes closer to the optimal form. These are exactly the cases when adaptive importance sampling is most beneficial.</p>
+</section>
+<section id="double-adaptation-strategy" class="level4" data-number="9.4.3.2">
+<h4 data-number="9.4.3.2" class="anchored" data-anchor-id="double-adaptation-strategy"><span class="header-section-number">9.4.3.2</span> Double adaptation strategy</h4>
+<p>The split proposal naturally suggests a double adaptation strategy. We run two separate moment matching procedures in parallel: one uses the absolute expectation-specific weights <span class="math inline">\(\{|v^{(s)}|\}\)</span> to approximate the first component, and the other uses the common weights <span class="math inline">\(\{w^{(s)}\}\)</span> to approximate the second. These two adapted proposal distributions are then combined using multiple importance sampling with the balance heuristic.</p>
+<p>When <span class="math inline">\(h(\theta) \geq 0\)</span>, both components integrate to <span class="math inline">\(\mathbb{E}_p[h(\theta)]\)</span>. <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span> show that equal allocation (50-50 split) is provably optimal in this case and more generally is a conservative choice that guarantees the asymptotic variance is never more than twice that of using the better component alone.</p>
+</section>
+</section>
+<section id="three-moment-matching-transformations" class="level3" data-number="9.4.4">
+<h3 data-number="9.4.4" class="anchored" data-anchor-id="three-moment-matching-transformations"><span class="header-section-number">9.4.4</span> Three moment matching transformations</h3>
+<p>Our overall goal is to transform the existing posterior draws to match the optimal proposals. To do this, we match progressively more moments of the distribution to importance-weighted moments.</p>
+<p><span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span> recommend a sequence of three affine transformations with increasing complexity. The transformations use importance weights to identify where the target distribution places its mass relative to the proposal. We start with the simplest transformation and progress to more complex ones only when simpler ones no longer improve the Pareto-<span class="math inline">\(k\)</span> diagnostic.</p>
+<p><strong>Transformation <span class="math inline">\(T_1\)</span> (matching the mean).</strong> The simplest transformation shifts the sample mean to match the importance-weighted mean</p>
+<p><span class="math display">\[
+\theta^{*(s)} = T_1(\theta^{(s)}) = \theta^{(s)} - \bar{\theta} + \bar{\theta}_w,
+\]</span></p>
+<p>where the unweighted mean is <span class="math inline">\(\bar{\theta} = \frac{1}{S} \sum_{s=1}^S \theta^{(s)}\)</span> and the self-normalized importance-weighted mean is</p>
+<p><span class="math display">\[
+\bar{\theta}_w = \frac{\sum_{s=1}^S w^{(s)} \theta^{(s)}}{\sum_{s=1}^S w^{(s)}} = \sum_{s=1}^S \tilde{w}^{(s)} \theta^{(s)},
+\]</span></p>
+<p>with <span class="math inline">\(\tilde{w}^{(s)} = w^{(s)} / \sum_{r=1}^S w^{(r)}\)</span> denoting the self-normalized weights.</p>
+<p><strong>Transformation <span class="math inline">\(T_2\)</span> (matching marginal variances).</strong> The second transformation matches both the mean and the marginal variances</p>
+<p><span class="math display">\[
+\theta^{*(s)} = T_2(\theta^{(s)}) = \mathbf{v}_w^{1/2} \circ \mathbf{v}^{-1/2} \circ (\theta^{(s)} - \bar{\theta}) + \bar{\theta}_w,
+\]</span></p>
+<p>where <span class="math inline">\(\circ\)</span> denotes element-wise multiplication, <span class="math inline">\(\mathbf{v}\)</span> is the vector of unweighted marginal variances, and <span class="math inline">\(\mathbf{v}_w\)</span> is the vector of importance-weighted marginal variances computed as</p>
+<p><span class="math display">\[
+\mathbf{v}_w = \sum_{s=1}^S \tilde{w}^{(s)} (\theta^{(s)} - \bar{\theta}_w) \circ (\theta^{(s)} - \bar{\theta}_w) = \frac{\sum_{s=1}^S w^{(s)} (\theta^{(s)} - \bar{\theta}_w) \circ (\theta^{(s)} - \bar{\theta}_w)}{\sum_{s=1}^S w^{(s)}}.
+\]</span></p>
+<p><strong>Transformation <span class="math inline">\(T_3\)</span> (matching the covariance).</strong> The most sophisticated transformation matches the full covariance structure</p>
+<p><span class="math display">\[
+\theta^{*(s)} = T_3(\theta^{(s)}) = \mathbf{L}_w \mathbf{L}^{-1} (\theta^{(s)} - \bar{\theta}) + \bar{\theta}_w,
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{L}\mathbf{L}^\top = \boldsymbol{\Sigma}\)</span> and <span class="math inline">\(\mathbf{L}_w\mathbf{L}_w^\top = \boldsymbol{\Sigma}_w\)</span> are Cholesky decompositions of the sample and weighted covariance matrices, with the weighted covariance computed as</p>
+<p><span class="math display">\[
+\boldsymbol{\Sigma}_w = \sum_{s=1}^S \tilde{w}^{(s)} (\theta^{(s)} - \bar{\theta}_w)(\theta^{(s)} - \bar{\theta}_w)^\top = \frac{\sum_{s=1}^S w^{(s)} (\theta^{(s)} - \bar{\theta}_w)(\theta^{(s)} - \bar{\theta}_w)^\top}{\sum_{s=1}^S w^{(s)}}.
+\]</span></p>
+</section>
+</section>
+<section id="the-moment-matching-algorithm" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="the-moment-matching-algorithm"><span class="header-section-number">9.5</span> The moment matching algorithm</h2>
+<p>The ArviZ implementation uses a greedy search strategy for each observation with high Pareto-<span class="math inline">\(k\)</span> values. For each problematic observation, the algorithm iteratively tries the three transformations in sequence. When the mean shift transformation (<span class="math inline">\(T_1\)</span>) reduces the Pareto-<span class="math inline">\(k\)</span> diagnostic, it is accepted and the algorithm restarts from <span class="math inline">\(T_1\)</span> again. Only when <span class="math inline">\(T_1\)</span> fails to improve the diagnostic does the algorithm try the variance transformation (<span class="math inline">\(T_2\)</span>), and similarly for the covariance transformation (<span class="math inline">\(T_3\)</span>) when enabled. This process continues until no transformation improves the diagnostic or the maximum number of iterations is reached.</p>
+<p>After the transformations converge, ArviZ applies an optional split proposal strategy by default. The cumulative transformation is applied to the first half of the posterior draws while the inverse transformation is applied to the second half. These two sets of transformed draws are then combined using multiple importance sampling with the balance heuristic. This split approach helps avoid potential bias from reusing the same draws and often improves the stability of the final estimates. The entire workflow is automated through the <code>loo_moment_match()</code> function.</p>
+</section>
+<section id="roaches-data-and-poisson-regression-model" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="roaches-data-and-poisson-regression-model"><span class="header-section-number">9.6</span> Roaches data and Poisson regression model</h2>
+<p>Let’s now walk through a concrete example using the roaches dataset to see this algorithm in action. The roaches dataset from <span class="citation" data-cites="gelman_hill_2007">Gelman and Hill (<a href="References.html#ref-gelman_hill_2007" role="doc-biblioref">2007</a>)</span> examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The study followed 264 apartments over several months, recording the number of roaches caught during follow-up (<code>y</code>), pre-treatment roach counts (<code>roach1</code>, square root transformed), treatment status (<code>treatment</code>), whether the building is restricted to elderly residents (<code>senior</code>), and trap exposure time in days (<code>exposure2</code>).</p>
+<p>We intentionally use a Poisson model rather than negative binomial regression to demonstrate how moment matching handles misspecified models. The exposure time varies across apartments, so we include <code>log(exposure2)</code> as an offset term.</p>
+<section id="loading-and-preparing-the-data" class="level3" data-number="9.6.1">
+<h3 data-number="9.6.1" class="anchored" data-anchor-id="loading-and-preparing-the-data"><span class="header-section-number">9.6.1</span> Loading and preparing the data</h3>
+<p>We start by loading the roaches dataset and examining its basic structure.</p>
+<div id="231ffb66" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a>roaches <span class="op">=</span> pd.read_csv(<span class="st">"../data/roaches.csv"</span>, index_col<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-4"><a href="#cb1-4"></a>roaches[<span class="st">'log_exposure2'</span>] <span class="op">=</span> np.log(roaches[<span class="st">'exposure2'</span>])</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a>roaches.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">y</th>
+<th data-quarto-table-cell-role="th">roach1</th>
+<th data-quarto-table-cell-role="th">treatment</th>
+<th data-quarto-table-cell-role="th">senior</th>
+<th data-quarto-table-cell-role="th">exposure2</th>
+<th data-quarto-table-cell-role="th">log_exposure2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>262.000000</td>
+<td>262.000000</td>
+<td>262.000000</td>
+<td>262.000000</td>
+<td>262.000000</td>
+<td>262.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>25.648855</td>
+<td>4.419861</td>
+<td>0.603053</td>
+<td>0.305344</td>
+<td>1.021047</td>
+<td>-0.012538</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>50.846539</td>
+<td>4.769184</td>
+<td>0.490201</td>
+<td>0.461434</td>
+<td>0.320757</td>
+<td>0.249755</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>0.200000</td>
+<td>-1.609438</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>3.000000</td>
+<td>2.645751</td>
+<td>1.000000</td>
+<td>0.000000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>24.000000</td>
+<td>7.106071</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>357.000000</td>
+<td>21.213203</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>4.285714</td>
+<td>1.455287</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>The dataset exhibits substantial overdispersion with mean 25.6 and standard deviation 50.8. Approximately 36% of apartments had zero roaches while the maximum reached 357. This combination of high variability, many zeros, and extreme counts makes certain observations potentially influential, which is precisely where moment matching becomes valuable for improving LOO-CV estimates.</p>
+</section>
+<section id="model-specification-and-fitting" class="level3" data-number="9.6.2">
+<h3 data-number="9.6.2" class="anchored" data-anchor-id="model-specification-and-fitting"><span class="header-section-number">9.6.2</span> Model specification and fitting</h3>
+<p>We fit a Poisson regression model using Bambi, which provides a high-level interface for Bayesian modeling. The model includes the pre-treatment roach count, treatment indicator, and senior building indicator as predictors, with log exposure as an offset.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Bambi</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="b1a64bfd" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="cf">with</span> pm.Model(coords<span class="op">=</span>{<span class="st">"covariates"</span>: body_fat.columns}) <span class="im">as</span> model_bf_00:</span>
-<span id="cb2-2"><a href="#cb2-2"></a>    β_0 <span class="op">=</span> pm.StudentT(<span class="st">"β_0"</span>, nu<span class="op">=</span><span class="dv">3</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
-<span id="cb2-3"><a href="#cb2-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">1</span>, dims<span class="op">=</span><span class="st">"covariates"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4"></a>    σ <span class="op">=</span> pm.HalfStudentT(<span class="st">"σ"</span>, nu<span class="op">=</span><span class="dv">3</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
-<span id="cb2-5"><a href="#cb2-5"></a>    μ <span class="op">=</span> pm.Deterministic(<span class="st">"μ"</span>, β_0 <span class="op">+</span> β <span class="op">@</span> body_fat.T)</span>
-<span id="cb2-6"><a href="#cb2-6"></a>    y <span class="op">=</span> pm.Normal(<span class="st">"y"</span>, μ, σ, observed<span class="op">=</span>siri)</span>
-<span id="cb2-7"><a href="#cb2-7"></a>    dt_bf_00 <span class="op">=</span> pm.sample(random_seed<span class="op">=</span>SEED,</span>
-<span id="cb2-8"><a href="#cb2-8"></a>                            idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>, <span class="st">"log_prior"</span>: <span class="va">True</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6465ac59" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> bambi <span class="im">as</span> bmb</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>model <span class="op">=</span> bmb.Model(</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="st">'y ~ roach1 + treatment + senior + offset(log_exposure2)'</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    data<span class="op">=</span>roaches,</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    family<span class="op">=</span><span class="st">'poisson'</span>,</span>
+<span id="cb2-7"><a href="#cb2-7"></a>    priors<span class="op">=</span>{</span>
+<span id="cb2-8"><a href="#cb2-8"></a>        <span class="st">'roach1'</span>: bmb.Prior(<span class="st">'Normal'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">2.5</span>),</span>
+<span id="cb2-9"><a href="#cb2-9"></a>        <span class="st">'treatment'</span>: bmb.Prior(<span class="st">'Normal'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">2.5</span>),</span>
+<span id="cb2-10"><a href="#cb2-10"></a>        <span class="st">'senior'</span>: bmb.Prior(<span class="st">'Normal'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">2.5</span>),</span>
+<span id="cb2-11"><a href="#cb2-11"></a>        <span class="st">'Intercept'</span>: bmb.Prior(<span class="st">'Normal'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">5.0</span>)</span>
+<span id="cb2-12"><a href="#cb2-12"></a>    }</span>
+<span id="cb2-13"><a href="#cb2-13"></a>)</span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a>idata <span class="op">=</span> model.fit(</span>
+<span id="cb2-16"><a href="#cb2-16"></a>    draws<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb2-17"><a href="#cb2-17"></a>    tune<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb2-18"><a href="#cb2-18"></a>    chains<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb2-19"><a href="#cb2-19"></a>    random_seed<span class="op">=</span>SEED,</span>
+<span id="cb2-20"><a href="#cb2-20"></a>    idata_kwargs<span class="op">=</span>{<span class="st">'log_likelihood'</span>: <span class="va">True</span>}</span>
+<span id="cb2-21"><a href="#cb2-21"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">## coming soon</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
-<p>We can now use the <code>psense_summary</code> function from ArviZ to perform a numerical sensitivity analysis. This function returns a four-column DataFrame. The first column is the name of the variables, the second is the value of CJS when power-scaling the prior, then the value of CJS when power-scaling the likelihood and the last one is a textual description of the results.</p>
-<p>For the <span class="math inline">\(\beta\)</span> coefficient <code>wrist</code> we can see that we may have prior-sensitivity (CJS&gt;0.05) and likelihood-sensitivity (CJS&gt;0.05). Thus, we may have a case of prior-data conflict for the <code>wrist</code> variable.</p>
-<div id="f2138ec9" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>azp.psense_summary(dt_bf_00, var_names<span class="op">=</span>[<span class="st">"~μ"</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>We detected potential issues. For more information on how to interpret the results, please check
-https://arviz-devs.github.io/EABM/Chapters/Sensitivity_checks.html#interpreting-sensitivity-diagnostics-summary
-or read original paper https://doi.org/10.1007/s11222-023-10366-5</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div id="721e3bc2" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>azp.summary(idata.posterior.ds, var_names<span class="op">=</span>[<span class="st">'roach1'</span>, <span class="st">'treatment'</span>, <span class="st">'senior'</span>, <span class="st">'Intercept'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <div>
 
@@ -577,101 +770,65 @@ or read original paper https://doi.org/10.1007/s11222-023-10366-5</code></pre>
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">prior</th>
-<th data-quarto-table-cell-role="th">likelihood</th>
-<th data-quarto-table-cell-role="th">diagnosis</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">sd</th>
+<th data-quarto-table-cell-role="th">eti89_lb</th>
+<th data-quarto-table-cell-role="th">eti89_ub</th>
+<th data-quarto-table-cell-role="th">ess_bulk</th>
+<th data-quarto-table-cell-role="th">ess_tail</th>
+<th data-quarto-table-cell-role="th">r_hat</th>
+<th data-quarto-table-cell-role="th">mcse_mean</th>
+<th data-quarto-table-cell-role="th">mcse_sd</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">β[age]</td>
-<td>0.03</td>
-<td>0.12</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[weight]</td>
-<td>0.02</td>
-<td>0.08</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[height]</td>
-<td>0.01</td>
-<td>0.09</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[neck]</td>
-<td>0.01</td>
-<td>0.08</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[chest]</td>
-<td>0.02</td>
-<td>0.09</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[abdomen]</td>
-<td>0.00</td>
-<td>0.09</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[hip]</td>
-<td>0.01</td>
-<td>0.09</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[thigh]</td>
-<td>0.01</td>
-<td>0.10</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[knee]</td>
-<td>0.00</td>
-<td>0.10</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[ankle]</td>
-<td>0.03</td>
-<td>0.09</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[biceps]</td>
-<td>0.01</td>
-<td>0.08</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[forearm]</td>
-<td>0.02</td>
-<td>0.10</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[wrist]</td>
-<td>0.11</td>
+<td data-quarto-table-cell-role="th">roach1</td>
 <td>0.16</td>
-<td>potential prior-data conflict</td>
+<td>0.00</td>
+<td>0.16</td>
+<td>0.16</td>
+<td>3269.45</td>
+<td>3057.47</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">β_0</td>
-<td>0.01</td>
-<td>0.12</td>
-<td>✓</td>
+<td data-quarto-table-cell-role="th">treatment</td>
+<td>-0.57</td>
+<td>0.03</td>
+<td>-0.61</td>
+<td>-0.53</td>
+<td>3412.93</td>
+<td>2837.12</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">σ</td>
-<td>0.01</td>
-<td>0.18</td>
-<td>✓</td>
+<td data-quarto-table-cell-role="th">senior</td>
+<td>-0.32</td>
+<td>0.03</td>
+<td>-0.37</td>
+<td>-0.26</td>
+<td>3535.11</td>
+<td>2733.84</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Intercept</td>
+<td>2.53</td>
+<td>0.03</td>
+<td>2.49</td>
+<td>2.57</td>
+<td>3294.58</td>
+<td>2853.49</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
 </tr>
 </tbody>
 </table>
@@ -680,432 +837,216 @@ or read original paper https://doi.org/10.1007/s11222-023-10366-5</code></pre>
 </div>
 </div>
 </div>
-<p>We can also evaluate the effect of power-scaling visually with the function <code>plot_psense_dist</code>. This function displays the posterior marginal for 3 values of <span class="math inline">\(\alpha\)</span>. By default 0.8 (red), 1 (black) and 1.25 (blue). <code>plot_psense_dist</code> allow as to choose different representations including KDEs and ECDFs. From <a href="#fig-posterior-sensitivity_bf_00" class="quarto-xref">Figure&nbsp;<span>6.3</span></a> we can see that the posterior is sensitive to both prior and likelihood power-scaling, and that it shifts right (towards zero) as the prior is strengthened, and left (away from zero) as the likelihood is strengthened.</p>
-<div id="cell-fig-posterior-sensitivity_bf_00" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>azp.plot_psense_dist(dt_bf_00, </span>
-<span id="cb6-2"><a href="#cb6-2"></a>                     var_names<span class="op">=</span>[<span class="st">"β"</span>], </span>
-<span id="cb6-3"><a href="#cb6-3"></a>                     coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]},</span>
-<span id="cb6-4"><a href="#cb6-4"></a>                     kind<span class="op">=</span><span class="st">"ecdf"</span>,</span>
-<span id="cb6-5"><a href="#cb6-5"></a>                     )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="fig-posterior-sensitivity_bf_00" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-posterior-sensitivity_bf_00-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Sensitivity_checks_files/figure-html/fig-posterior-sensitivity_bf_00-output-1.png" class="img-fluid figure-img">
+</section>
+<section id="initial-psis-loo-cv-evaluation" class="level3" data-number="9.6.3">
+<h3 data-number="9.6.3" class="anchored" data-anchor-id="initial-psis-loo-cv-evaluation"><span class="header-section-number">9.6.3</span> Initial PSIS-LOO-CV evaluation</h3>
+<p>With the posterior draws in hand, we compute the PSIS-LOO-CV estimate of the model’s predictive performance.</p>
+<div id="0e8c0a2c" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>loo_result <span class="op">=</span> azp.loo(idata, pointwise<span class="op">=</span><span class="va">True</span>, var_name<span class="op">=</span><span class="st">"y"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>loo_result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:1179: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+  warnings.warn(</code></pre>
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-posterior-sensitivity_bf_00-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.3: Posterior density estimates depending on amount of power-scaling (alpha). Overlapping lines indicate low sensitivity. Wider gaps between lines indicate greater sensitivity.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>We can also use the <code>plot_psense_quantities</code> function to display quantities of interest like the mean, median, standard deviation, etc. We can then evaluate how much the quantities of interest change when we perturb the prior and likelihood. To get a reference for the relative effect size of the perturbations the function also shows the ±2 Monte Carlo standard errors (MCSE) of the base posterior quantity. From <a href="#fig-quantities_bf_00" class="quarto-xref">Figure&nbsp;<span>6.4</span></a> we can see that power-scaling the prior and likelihood pulls the posterior mean in opposite directions. This suggests there might be a potential mismatch or conflict between the prior and the likelihood.</p>
-<div id="cell-fig-quantities_bf_00" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>azp.plot_psense_quantities(dt_bf_00,</span>
-<span id="cb7-2"><a href="#cb7-2"></a>                           var_names<span class="op">=</span>[<span class="st">"β"</span>],</span>
-<span id="cb7-3"><a href="#cb7-3"></a>                           coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="fig-quantities_bf_00" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-quantities_bf_00-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Sensitivity_checks_files/figure-html/fig-quantities_bf_00-output-1.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quantities_bf_00-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.4: Posterior quantities of βwrist as a function of power-scaling of the prior and the likelihood. Dashed lines are ± 2 Monte Carlo standard errors (MCSE) of the base posterior quantity
-</figcaption>
-</figure>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>Computed from 4000 posterior samples and 262 observations log-likelihood matrix.
+
+         Estimate       SE
+elpd_loo -5461.14   693.85
+p_loo      258.87        -
+
+There has been a warning during the calculation. Please check the results.
+------
+
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)      249   95.0%
+   (0.70, 1]   (bad)         6    2.3%
+    (1, Inf)   (very bad)    7    2.7%</code></pre>
 </div>
 </div>
+<p>The output shows that 13 observations have Pareto-<span class="math inline">\(k\)</span> values exceeding 0.7, indicating that the importance sampling approximation is unreliable for these cases. For these problematic observations, the most accurate (but computationally expensive) approach would be to refit the model, leaving out each observation in turn. However, this quickly becomes impractical as the number of flagged observations grows. Moment matching offers an efficient solution by improving the reliability of the PSIS-LOO-CV estimates for exactly those cases where brute-force refitting would otherwise be required, reducing computational burden without sacrificing much accuracy.</p>
+</section>
+</section>
+<section id="applying-moment-matching" class="level2" data-number="9.7">
+<h2 data-number="9.7" class="anchored" data-anchor-id="applying-moment-matching"><span class="header-section-number">9.7</span> Applying moment matching</h2>
+<p>Now we apply importance weighted moment matching to improve the PSIS-LOO-CV estimates for the problematic observations. ArviZ implements this through the <code>loo_moment_match()</code> function, which requires us to provide the unconstrained parameter draws and functions for evaluating the model’s log posterior and log likelihood.</p>
+<section id="function-specification-and-implementation" class="level3" data-number="9.7.1">
+<h3 data-number="9.7.1" class="anchored" data-anchor-id="function-specification-and-implementation"><span class="header-section-number">9.7.1</span> Function specification and implementation</h3>
+<p>To apply moment matching, we need to provide functions that compute the log posterior <span class="math inline">\(\log p(\theta \mid y)\)</span> and the log likelihood for a single observation <span class="math inline">\(\log p(y_i \mid \theta)\)</span> in the unconstrained parameter space, where all parameters are real-valued without constraints.</p>
+<p>Our Poisson regression model is</p>
+<p><span class="math display">\[
+y_i \sim \text{Poisson}(\lambda_i), \quad \lambda_i = \exp(\eta_i),
+\]</span></p>
+<p>where the linear predictor is</p>
+<p><span class="math display">\[
+\eta_i = \alpha + \sum_{j=1}^3 \beta_j x_{ij} + \log(\text{exposure2}_i),
+\]</span></p>
+<p>with <span class="math inline">\(x_i = (\text{roach1}_i, \text{treatment}_i, \text{senior}_i)\)</span>. We use independent normal priors <span class="math inline">\(\beta_j \sim N(0, 2.5^2)\)</span> and <span class="math inline">\(\alpha \sim N(0, 5^2)\)</span>.</p>
+<p>The log posterior combines the log likelihood with the log prior</p>
+<p><span class="math display">\[
+\log p(\theta \mid y) = \sum_{i=1}^n \log p(y_i \mid \theta) + \log p(\theta),
+\]</span></p>
+<p>where the log likelihood for observation <span class="math inline">\(i\)</span> is</p>
+<p><span class="math display">\[
+\log p(y_i \mid \theta) = y_i \log(\lambda_i) - \lambda_i - \log(y_i!).
+\]</span></p>
+<p>We start by converting our data into <code>DataArrays</code> with properly labeled dimensions to use xarray’s dimension-aware operations for the computations.</p>
+<div id="76a38cb3" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="im">from</span> scipy.special <span class="im">import</span> gammaln</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb8-4"><a href="#cb8-4"></a></span>
+<span id="cb8-5"><a href="#cb8-5"></a>X <span class="op">=</span> roaches[[<span class="st">'roach1'</span>, <span class="st">'treatment'</span>, <span class="st">'senior'</span>]].values</span>
+<span id="cb8-6"><a href="#cb8-6"></a>y <span class="op">=</span> roaches[<span class="st">'y'</span>].values</span>
+<span id="cb8-7"><a href="#cb8-7"></a>log_offset <span class="op">=</span> roaches[<span class="st">'log_exposure2'</span>].values</span>
+<span id="cb8-8"><a href="#cb8-8"></a></span>
+<span id="cb8-9"><a href="#cb8-9"></a>n_obs <span class="op">=</span> <span class="bu">len</span>(roaches)</span>
+<span id="cb8-10"><a href="#cb8-10"></a>coef_names <span class="op">=</span> [<span class="st">'roach1'</span>, <span class="st">'treatment'</span>, <span class="st">'senior'</span>]</span>
+<span id="cb8-11"><a href="#cb8-11"></a></span>
+<span id="cb8-12"><a href="#cb8-12"></a>design_matrix <span class="op">=</span> xr.DataArray(</span>
+<span id="cb8-13"><a href="#cb8-13"></a>    X,</span>
+<span id="cb8-14"><a href="#cb8-14"></a>    dims<span class="op">=</span>[<span class="st">'obs_id'</span>, <span class="st">'coef'</span>],</span>
+<span id="cb8-15"><a href="#cb8-15"></a>    coords<span class="op">=</span>{<span class="st">'obs_id'</span>: <span class="bu">range</span>(n_obs), <span class="st">'coef'</span>: coef_names}</span>
+<span id="cb8-16"><a href="#cb8-16"></a>)</span>
+<span id="cb8-17"><a href="#cb8-17"></a>y_da <span class="op">=</span> xr.DataArray(y, dims<span class="op">=</span>[<span class="st">'obs_id'</span>], coords<span class="op">=</span>{<span class="st">'obs_id'</span>: <span class="bu">range</span>(n_obs)})</span>
+<span id="cb8-18"><a href="#cb8-18"></a>offset_da <span class="op">=</span> xr.DataArray(log_offset, dims<span class="op">=</span>[<span class="st">'obs_id'</span>], coords<span class="op">=</span>{<span class="st">'obs_id'</span>: <span class="bu">range</span>(n_obs)})</span>
+<span id="cb8-19"><a href="#cb8-19"></a>factorial_term <span class="op">=</span> xr.DataArray(gammaln(y <span class="op">+</span> <span class="dv">1</span>), dims<span class="op">=</span>[<span class="st">'obs_id'</span>], coords<span class="op">=</span>{<span class="st">'obs_id'</span>: <span class="bu">range</span>(n_obs)})</span>
+<span id="cb8-20"><a href="#cb8-20"></a></span>
+<span id="cb8-21"><a href="#cb8-21"></a>beta_prior_scale <span class="op">=</span> <span class="fl">2.5</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a>alpha_prior_scale <span class="op">=</span> <span class="fl">5.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="adjusting-the-prior" class="level3" data-number="6.2.1">
-<h3 data-number="6.2.1" class="anchored" data-anchor-id="adjusting-the-prior"><span class="header-section-number">6.2.1</span> Adjusting the prior</h3>
-<p>As there is prior sensitivity arising from prior-data conflict, which is unexpected and unintentional as our priors were chosen to be weakly informative, we consider modifying the priors. On inspecting the raw data, we see that although the predictor variables are all measured on similar scales, the variances of the variables differ substantially. For example, the variance of wrist circumference is 0.83, while the variance of abdomen is 102.65. This leads to our chosen prior to be unintentionally informative for some of the regression coefficients, including wrist, while being weakly informative for others</p>
-<p>Now, let try with a different prior. We will use empirically scaled to the data, <span class="math inline">\(βk \sim \mathcal{N}(0, 2.5 \frac{s_y}{s_{xk}})\)</span>, where <span class="math inline">\(s_y\)</span> is the standard deviation of <span class="math inline">\(y\)</span> and <span class="math inline">\(s_{xk}\)</span> is the standard deviation of predictor variable <span class="math inline">\(xk\)</span>.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">CmdStanPy</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="dd8a0635" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> pm.Model(coords<span class="op">=</span>{<span class="st">"covariates"</span>: body_fat.columns}) <span class="im">as</span> model_bf_01:</span>
-<span id="cb8-2"><a href="#cb8-2"></a>    β_0 <span class="op">=</span> pm.StudentT(<span class="st">"β_0"</span>, nu<span class="op">=</span><span class="dv">3</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
-<span id="cb8-3"><a href="#cb8-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="fl">2.5</span> <span class="op">*</span> siri.std() <span class="op">/</span> body_fat.std(), dims<span class="op">=</span><span class="st">"covariates"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4"></a>    σ <span class="op">=</span> pm.HalfStudentT(<span class="st">"σ"</span>, nu<span class="op">=</span><span class="dv">3</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
-<span id="cb8-5"><a href="#cb8-5"></a>    μ <span class="op">=</span> pm.Deterministic(<span class="st">"μ"</span>, β_0 <span class="op">+</span> β <span class="op">@</span> body_fat.T)</span>
-<span id="cb8-6"><a href="#cb8-6"></a>    y <span class="op">=</span> pm.Normal(<span class="st">"y"</span>, μ, σ, observed<span class="op">=</span>siri)</span>
-<span id="cb8-7"><a href="#cb8-7"></a>    dt_bf_01 <span class="op">=</span> pm.sample(tune<span class="op">=</span><span class="dv">1000</span>,</span>
-<span id="cb8-8"><a href="#cb8-8"></a>                      draws<span class="op">=</span><span class="dv">2000</span>, random_seed<span class="op">=</span>SEED,</span>
-<span id="cb8-9"><a href="#cb8-9"></a>                      idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>, <span class="st">"log_prior"</span>: <span class="va">True</span>})</span>
-<span id="cb8-10"><a href="#cb8-10"></a>    pm.sample_posterior_predictive(dt_bf_01, extend_inferencedata<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>First, we construct an array of unconstrained parameters from the posterior draws. All of the parameters are unconstrained in this model, so we can simply concatenate the posterior draws along the <code>uparam</code> dimension.</p>
+<div id="8b297626" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>posterior <span class="op">=</span> idata.posterior</span>
+<span id="cb9-2"><a href="#cb9-2"></a>upars <span class="op">=</span> xr.concat([</span>
+<span id="cb9-3"><a href="#cb9-3"></a>    posterior.ds[<span class="st">'roach1'</span>].expand_dims({<span class="st">'uparam'</span>: [<span class="st">'roach1'</span>]}),</span>
+<span id="cb9-4"><a href="#cb9-4"></a>    posterior.ds[<span class="st">'treatment'</span>].expand_dims({<span class="st">'uparam'</span>: [<span class="st">'treatment'</span>]}),</span>
+<span id="cb9-5"><a href="#cb9-5"></a>    posterior.ds[<span class="st">'senior'</span>].expand_dims({<span class="st">'uparam'</span>: [<span class="st">'senior'</span>]}),</span>
+<span id="cb9-6"><a href="#cb9-6"></a>    posterior.ds[<span class="st">'Intercept'</span>].expand_dims({<span class="st">'uparam'</span>: [<span class="st">'Intercept'</span>]})</span>
+<span id="cb9-7"><a href="#cb9-7"></a>], dim<span class="op">=</span><span class="st">'uparam'</span>).transpose(<span class="st">'chain'</span>, <span class="st">'draw'</span>, <span class="st">'uparam'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>We can now define the log posterior function and the leave-one-out log likelihood function. The log posterior function computes the log posterior probability for a given set of unconstrained parameters, and the log likelihood function computes the log likelihood for a given set of unconstrained parameters and a given observation.</p>
+<div id="1740d63b" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">def</span> log_prob_upars_fn(upars, design_matrix, y_da, offset_da, factorial_term,</span>
+<span id="cb10-2"><a href="#cb10-2"></a>                       coef_names, beta_prior_scale, alpha_prior_scale):</span>
+<span id="cb10-3"><a href="#cb10-3"></a>    <span class="co">"""Compute log posterior for unconstrained parameters."""</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>    beta <span class="op">=</span> upars.sel(uparam<span class="op">=</span>coef_names).rename({<span class="st">'uparam'</span>: <span class="st">'coef'</span>})</span>
+<span id="cb10-5"><a href="#cb10-5"></a>    intercept <span class="op">=</span> upars.sel(uparam<span class="op">=</span><span class="st">'Intercept'</span>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a>    lin <span class="op">=</span> xr.dot(design_matrix, beta, dims<span class="op">=</span><span class="st">'coef'</span>) <span class="op">+</span> intercept <span class="op">+</span> offset_da</span>
+<span id="cb10-8"><a href="#cb10-8"></a>    exp_lin <span class="op">=</span> xr.ufuncs.exp(lin)</span>
+<span id="cb10-9"><a href="#cb10-9"></a>    log_lik <span class="op">=</span> y_da <span class="op">*</span> lin <span class="op">-</span> exp_lin <span class="op">-</span> factorial_term</span>
+<span id="cb10-10"><a href="#cb10-10"></a></span>
+<span id="cb10-11"><a href="#cb10-11"></a>    log_prior_beta <span class="op">=</span> (<span class="op">-</span><span class="fl">0.5</span> <span class="op">*</span> (beta <span class="op">/</span> beta_prior_scale) <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>(<span class="st">'coef'</span>)</span>
+<span id="cb10-12"><a href="#cb10-12"></a>    log_prior_intercept <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span> <span class="op">*</span> (intercept <span class="op">/</span> alpha_prior_scale) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a>    <span class="cf">return</span> log_lik.<span class="bu">sum</span>(<span class="st">'obs_id'</span>) <span class="op">+</span> log_prior_beta <span class="op">+</span> log_prior_intercept</span>
+<span id="cb10-14"><a href="#cb10-14"></a></span>
+<span id="cb10-15"><a href="#cb10-15"></a></span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="kw">def</span> log_lik_i_upars_fn(upars, i, design_matrix, y_da, offset_da, factorial_term, coef_names):</span>
+<span id="cb10-17"><a href="#cb10-17"></a>    <span class="co">"""Compute log likelihood for observation i."""</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a>    beta <span class="op">=</span> upars.sel(uparam<span class="op">=</span>coef_names).rename({<span class="st">'uparam'</span>: <span class="st">'coef'</span>})</span>
+<span id="cb10-19"><a href="#cb10-19"></a>    intercept <span class="op">=</span> upars.sel(uparam<span class="op">=</span><span class="st">'Intercept'</span>)</span>
+<span id="cb10-20"><a href="#cb10-20"></a></span>
+<span id="cb10-21"><a href="#cb10-21"></a>    features_i <span class="op">=</span> design_matrix.isel(obs_id<span class="op">=</span>i)</span>
+<span id="cb10-22"><a href="#cb10-22"></a>    lin_i <span class="op">=</span> (beta <span class="op">*</span> features_i).<span class="bu">sum</span>(<span class="st">'coef'</span>) <span class="op">+</span> intercept <span class="op">+</span> offset_da.isel(obs_id<span class="op">=</span>i)</span>
+<span id="cb10-23"><a href="#cb10-23"></a></span>
+<span id="cb10-24"><a href="#cb10-24"></a>    exp_lin_i <span class="op">=</span> xr.ufuncs.exp(lin_i)</span>
+<span id="cb10-25"><a href="#cb10-25"></a>    log_lik_i <span class="op">=</span> y_da.isel(obs_id<span class="op">=</span>i) <span class="op">*</span> lin_i <span class="op">-</span> exp_lin_i <span class="op">-</span> factorial_term.isel(obs_id<span class="op">=</span>i)</span>
+<span id="cb10-26"><a href="#cb10-26"></a>    <span class="cf">return</span> log_lik_i</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">## coming soon</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now we bind the data dependencies to these functions using <code>functools.partial</code>. This creates new functions where all the data parameters are fixed, leaving only the unconstrained parameters (and observation index for the likelihood function) as free parameters.</p>
+<div id="39655d60" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>log_prob_upars <span class="op">=</span> partial(</span>
+<span id="cb11-2"><a href="#cb11-2"></a>    log_prob_upars_fn,</span>
+<span id="cb11-3"><a href="#cb11-3"></a>    design_matrix<span class="op">=</span>design_matrix,</span>
+<span id="cb11-4"><a href="#cb11-4"></a>    y_da<span class="op">=</span>y_da,</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    offset_da<span class="op">=</span>offset_da,</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    factorial_term<span class="op">=</span>factorial_term,</span>
+<span id="cb11-7"><a href="#cb11-7"></a>    coef_names<span class="op">=</span>coef_names,</span>
+<span id="cb11-8"><a href="#cb11-8"></a>    beta_prior_scale<span class="op">=</span>beta_prior_scale,</span>
+<span id="cb11-9"><a href="#cb11-9"></a>    alpha_prior_scale<span class="op">=</span>alpha_prior_scale</span>
+<span id="cb11-10"><a href="#cb11-10"></a>)</span>
+<span id="cb11-11"><a href="#cb11-11"></a></span>
+<span id="cb11-12"><a href="#cb11-12"></a>log_lik_i_upars <span class="op">=</span> partial(</span>
+<span id="cb11-13"><a href="#cb11-13"></a>    log_lik_i_upars_fn,</span>
+<span id="cb11-14"><a href="#cb11-14"></a>    design_matrix<span class="op">=</span>design_matrix,</span>
+<span id="cb11-15"><a href="#cb11-15"></a>    y_da<span class="op">=</span>y_da,</span>
+<span id="cb11-16"><a href="#cb11-16"></a>    offset_da<span class="op">=</span>offset_da,</span>
+<span id="cb11-17"><a href="#cb11-17"></a>    factorial_term<span class="op">=</span>factorial_term,</span>
+<span id="cb11-18"><a href="#cb11-18"></a>    coef_names<span class="op">=</span>coef_names</span>
+<span id="cb11-19"><a href="#cb11-19"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</div>
-<p>Now we can perform the sensitivity analysis again. We can see that we managed to remove the warning!</p>
-<div id="5b9dc7ed" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>azp.psense_summary(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"~μ"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="computational-considerations" class="level3" data-number="9.7.2">
+<h3 data-number="9.7.2" class="anchored" data-anchor-id="computational-considerations"><span class="header-section-number">9.7.2</span> Computational considerations</h3>
+<p>While moment matching requires additional density evaluations compared to standard PSIS-LOO-CV, the computational cost remains modest. For each transformed draw <span class="math inline">\(\theta^{*(s)}\)</span>, we must evaluate both the full-data posterior density <span class="math inline">\(p(\theta^{*(s)} \mid y)\)</span> and the likelihood <span class="math inline">\(p(y_i \mid \theta^{*(s)})\)</span>, rather than just the likelihood as in standard PSIS. Even with multiple transformation iterations, this cost is substantially smaller than refitting the model for each problematic observation.</p>
+<p>The key trade-off is between accuracy and computational efficiency. When several observations have high Pareto-<span class="math inline">\(k\)</span> values, moment matching provides reliable estimates at a fraction of the cost of exact PSIS-LOO-CV, making it practical for routine model assessment even with computationally expensive models. In our roaches example with 13 problematic observations, moment matching requires a few additional seconds of computation compared to minutes or hours that would be needed to refit the model 13 times.</p>
+</section>
+<section id="running-moment-matching" class="level3" data-number="9.7.3">
+<h3 data-number="9.7.3" class="anchored" data-anchor-id="running-moment-matching"><span class="header-section-number">9.7.3</span> Running moment matching</h3>
+<p>With the required functions defined, we can now run PSIS-LOO-CV with importance weighted moment matching. We will specify that we want to match the covariance structure of the posterior draws given the complicated structure of the data.</p>
+<p>Keep in mind that the <code>split</code> argument, which specifies whether to use the split proposal density, is a boolean that defaults to <code>True</code>. This is highly recommended in most applied cases. When <code>split=True</code>, the split proposal density is</p>
+<p><span class="math display">\[
+g_{\text{split,loo}}(\theta) \propto p(\theta \mid y) + |\mathbf{J}_{T_w}|^{-1}\, p(T_w^{-1}(\theta) \mid y),
+\]</span></p>
+<p>so each fold mixes the full-data posterior with the transformed draws from the denominator adaptation.</p>
+<div id="a44e47e1" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>loo_mm_result <span class="op">=</span> azp.loo_moment_match(</span>
+<span id="cb12-2"><a href="#cb12-2"></a>    idata,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>    loo_result,</span>
+<span id="cb12-4"><a href="#cb12-4"></a>    log_prob_upars_fn<span class="op">=</span>log_prob_upars,</span>
+<span id="cb12-5"><a href="#cb12-5"></a>    log_lik_i_upars_fn<span class="op">=</span>log_lik_i_upars,</span>
+<span id="cb12-6"><a href="#cb12-6"></a>    upars<span class="op">=</span>upars,</span>
+<span id="cb12-7"><a href="#cb12-7"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8"></a>    cov<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb12-9"><a href="#cb12-9"></a>)</span>
+<span id="cb12-10"><a href="#cb12-10"></a></span>
+<span id="cb12-11"><a href="#cb12-11"></a>loo_mm_result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
-<div>
-<div>
+<pre><code>Computed from 4000 posterior samples and 262 observations log-likelihood matrix.
 
+         Estimate       SE
+elpd_loo -5477.60   699.88
+p_loo      275.34        -
+------
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">prior</th>
-<th data-quarto-table-cell-role="th">likelihood</th>
-<th data-quarto-table-cell-role="th">diagnosis</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[age]</td>
-<td>0.001</td>
-<td>0.087</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[weight]</td>
-<td>0.001</td>
-<td>0.080</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[height]</td>
-<td>0.001</td>
-<td>0.082</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[neck]</td>
-<td>0.000</td>
-<td>0.095</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[chest]</td>
-<td>0.001</td>
-<td>0.083</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[abdomen]</td>
-<td>0.003</td>
-<td>0.096</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[hip]</td>
-<td>0.001</td>
-<td>0.081</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[thigh]</td>
-<td>0.000</td>
-<td>0.097</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[knee]</td>
-<td>0.000</td>
-<td>0.097</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[ankle]</td>
-<td>0.000</td>
-<td>0.092</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[biceps]</td>
-<td>0.001</td>
-<td>0.091</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β[forearm]</td>
-<td>0.000</td>
-<td>0.100</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β[wrist]</td>
-<td>0.000</td>
-<td>0.087</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β_0</td>
-<td>0.005</td>
-<td>0.101</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">σ</td>
-<td>0.002</td>
-<td>0.189</td>
-<td>✓</td>
-</tr>
-</tbody>
-</table>
-
+Pareto k diagnostic values:
+                         Count   Pct.
+(-Inf, 0.70]   (good)      262  100.0%
+   (0.70, 1]   (bad)         0    0.0%
+    (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-</div>
-</div>
-<p>We can see that after changing the prior, the posterior mean for <code>wrist</code> changes from -1.45 to -1.86, indicating that the base prior was indeed unintentionally informative and in conflict with the data, pulling the estimate towards zero.</p>
-<p>As previously, we can also evaluate the effect of power-scaling visually with the function <code>plot_psense_dist</code>. From <a href="#fig-posterior-sensitivity_bf_01" class="quarto-xref">Figure&nbsp;<span>6.5</span></a> we can see a better overlap between the posterior distributions, compared to the original prior.</p>
-<div id="cell-fig-posterior-sensitivity_bf_01" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>azp.plot_psense_dist(dt_bf_01, </span>
-<span id="cb11-2"><a href="#cb11-2"></a>                     var_names<span class="op">=</span>[<span class="st">"β"</span>], </span>
-<span id="cb11-3"><a href="#cb11-3"></a>                     coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]},</span>
-<span id="cb11-4"><a href="#cb11-4"></a>                     kind<span class="op">=</span><span class="st">"ecdf"</span>,</span>
-<span id="cb11-5"><a href="#cb11-5"></a>                     )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="fig-posterior-sensitivity_bf_01" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-posterior-sensitivity_bf_01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Sensitivity_checks_files/figure-html/fig-posterior-sensitivity_bf_01-output-1.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-posterior-sensitivity_bf_01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.5: Posterior density estimates depending on amount of power-scaling (alpha). Overlapping lines indicate low sensitivity. Wider gaps between lines indicate greater sensitivity.
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>In terms or the mean for <code>βwrist</code>, we can see that there is no longer prior or likelihood sensitivity, indicating no prior-data conflict. For the standard deviation, likelihood sensitivity remains, indicating that the likelihood is informative.</p>
-<div id="cell-fig-quantities_bf_01" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>azp.plot_psense_quantities(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"β"</span>], coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="fig-quantities_bf_01" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-quantities_bf_01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Sensitivity_checks_files/figure-html/fig-quantities_bf_01-output-1.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-quantities_bf_01-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6.6: Posterior quantities of βwrist as a function of power-scaling of the prior (purple line and circle markers) and the likelihood (green line and square markers). Dashed lines are ± 2 Monte Carlo standard errors (MCSE) of the base posterior quantity
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Overall, the power-scaling sensitivity analysis on the adjusted prior shows that there is no longer prior sensitivity, and there is appropriate likelihood sensitivity.</p>
+<p>After moment matching, the Pareto-<span class="math inline">\(k\)</span> values improve substantially, with all 262 observations now having Pareto-<span class="math inline">\(k\)</span> values below 0.7. This indicates that moment matching has successfully resolved all problematic importance sampling issues, providing reliable PSIS-LOO-CV estimates for every observation. This represents a complete improvement over the original 13 problematic observations. Notably, the ELPD estimate decreases from -5461.14 to -5477.60 after moment matching, indicating that the original PSIS-LOO-CV estimate was too optimistic and <code>loo()</code> overestimated the predictive performance.</p>
+<!-- TODO: Add some commentary on n_eff_i and influence_pareto_k to compare mm pareto values with original pareto values, and to look at the per observation effective sample size and influence of the Pareto $k$ values. -->
 </section>
 </section>
-<section id="non-interpretable-parameters-and-derived-quantities" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="non-interpretable-parameters-and-derived-quantities"><span class="header-section-number">6.3</span> Non-interpretable parameters and derived quantities</h2>
-<p>In many cases, instead of looking at the posterior distribution of the model parameters, we will be interested in derived quantities. Some examples of derived quantities include, predictive performance measures, such as the Bayesian R² or the joint log-likelihood. Another example are predictions evaluated at specific values of the predictors, like the median of one or more predictors.</p>
-<p>Evaluating the sensitivity of derived quantities can be useful in at least two scenarios:</p>
-<ol type="1">
-<li><p>When the model parameters are not directly interpretable. For example, the coefficient for splines are not only not directly interpretable, they are not relevant <em>per se</em>, they are just an “intermediate step” to get a smooth and flexible function. The same applies to Gaussian processes (GPs), Bayesian additive regression trees (BART), polynomials, just to name a few. If the parameters are not directly interpretable, we can exclude them from these sensitivity checks, and instead focus on the derived quantities.</p></li>
-<li><p>When we are interested in a quantity that is more relevant or easier to explain to our audience. Sometimes we don’t care about the parameters of a model, irrespective of whether they are interpretable or not. This could happen if we are focused on a quantity that is of interest or easier to interpret for our audience, like the R². This could also be the case when our focus is on predictions. If those cases, we may decide to focus on the sensitivity checks for the derived quantities and, if they are ok, ignore the ones for the model parameters, even if they are interpretable. If the checks for the derived quantities are not ok, we may need to go back and check the model parameters, in particular if they are interpretable.</p></li>
-</ol>
-<section id="computing-derived-quantities" class="level3" data-number="6.3.1">
-<h3 data-number="6.3.1" class="anchored" data-anchor-id="computing-derived-quantities"><span class="header-section-number">6.3.1</span> Computing derived quantities</h3>
-<p>Let’s illustrate this with an example. We will use the same model we used in the previous section, but instead of looking at the posterior distribution of the parameters, we will focus on the following derived quantities:</p>
+<section id="summary" class="level2" data-number="9.8">
+<h2 data-number="9.8" class="anchored" data-anchor-id="summary"><span class="header-section-number">9.8</span> Summary</h2>
+<p>Importance weighted moment matching provides an efficient solution for improving PSIS-LOO-CV when influential observations lead to unreliable importance sampling approximations. Rather than refitting models, IWMM transforms existing posterior draws to match importance-weighted moments in the unconstrained parameter space. The approach is fully automated, requires no user tuning, and works with arbitrary posterior samples from probabilistic programming frameworks where density evaluation is possible.</p>
+<p>The method has important limitations worth keeping in mind:</p>
 <ul>
-<li>The Bayesian R².</li>
-<li>The joint log-likelihood. This is the sum of the log-likelihood over all observations.</li>
+<li>It targets only first and second moments, so improvements depend on whether these moments adequately capture differences between proposal and target distributions</li>
+<li>When importance weights have large variance, the computation of weighted moments can become unreliable (mitigated through weight regularization or larger sample sizes)</li>
+<li>The algorithm may fail to find sufficiently helpful transformations when target and proposal distributions differ substantially in tail behavior, correlation structure, or number of modes</li>
+<li>For extremely high-dimensional problems, the most sophisticated transformation (matching full covariance) may become numerically unstable</li>
+<li>The split proposal approximation introduces some inefficiency by placing unnecessary probability mass in regions where the integrand is near its expectation, though this trade-off is least problematic precisely when adaptive methods are most needed</li>
 </ul>
-<p>We are going to start by computing predictions at <code>new_data</code>, as you may already know how to do this from other examples. To do that we need to create a new DataFrame with the values of the predictors we want to use for prediction. In this case, we will use the median, min, and max values of each covariate. For your particular use case, you may want to use different values, like quantiles of any other specific values of interest.</p>
-<p>We can ask ArviZ, to compute the Bayesian R² for us, we need to specify which variables represent the posterior mean (or location parameter) and standard deviation (or variance).</p>
-<div id="26a3d60b" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>r2_da <span class="op">=</span> azp.ndarray_to_dataarray(azp.bayesian_r2(dt_bf_01, pred_mean<span class="op">=</span><span class="st">"μ"</span>, scale<span class="op">=</span><span class="st">"σ"</span>, summary<span class="op">=</span><span class="va">False</span>).reshape(<span class="dv">4</span>, <span class="dv">2000</span>), var_name<span class="op">=</span><span class="st">"r2"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2"></a>dt_bf_01.posterior[<span class="st">"r2"</span>] <span class="op">=</span> r2_da</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>To compute the joint log-likelihood we just sum the poin-twise log-likelihood evaluations along the observations. In other words we compute one log-likelihood value per MCMC step.</p>
-<div id="549f076c" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>dt_bf_01.posterior[<span class="st">"log_score"</span>] <span class="op">=</span> dt_bf_01.log_likelihood.<span class="bu">sum</span>(<span class="st">"y_dim_0"</span>)[<span class="st">"y"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Once we have added the derived quantities we just need to call <code>psense_summary</code> (or the others <code>psense_*</code> functions) as usual:</p>
-<div id="bee6e71d" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>azp.psense_summary(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"r2"</span>, <span class="st">"log_score"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">prior</th>
-<th data-quarto-table-cell-role="th">likelihood</th>
-<th data-quarto-table-cell-role="th">diagnosis</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">r2</td>
-<td>0.001</td>
-<td>0.158</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">log_score</td>
-<td>0.001</td>
-<td>0.619</td>
-<td>✓</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>We see no signs of data-conflict or likelihood noninformativity, we can visually check this as we did before, but given these values we should expect the distributions of the derived quantities to very similar across the different priors.</p>
-</section>
-</section>
-<section id="bacteria-treatment" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="bacteria-treatment"><span class="header-section-number">6.4</span> Bacteria treatment</h2>
-<p>Now we discuss and example of power-scaling sensitivity analysis for hierarchical models. The main motivation for this example is to show that for certain models we should selectively power-scaled the priors. To illustrate this, consider two forms of prior, a non-hierarchical prior with two independent parameters <span class="math inline">\(p(\theta)\)</span> and <span class="math inline">\(p(\phi)\)</span> and a hierarchical prior of the form <span class="math inline">\(p(\theta \mid \psi) p(\psi)\)</span>. In the first case, the appropriate power-scaling for the prior is <span class="math inline">\(p(\theta)^{\alpha} p(\phi)^{\alpha}\)</span>. This is what we did in the previous example. In the second case, for the hierarchical model, we only want to power-scale the top level prior, that is, <span class="math inline">\(p(\theta) p(\phi)^{\alpha}\)</span>.</p>
-<p>For this example we are going to use the bacteria data set <span class="citation" data-cites="venables_2002">(<a href="References.html#ref-venables_2002" role="doc-biblioref">Venables and Ripley 2002</a>)</span>.</p>
-<div id="d43abe15" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>bacteria <span class="op">=</span> pd.read_csv(<span class="st">"../data/bacteria.csv"</span>)</span>
-<span id="cb16-2"><a href="#cb16-2"></a>bacteria[<span class="st">"y"</span>] <span class="op">=</span> bacteria[<span class="st">"y"</span>].astype(<span class="st">"category"</span>).cat.codes</span>
-<span id="cb16-3"><a href="#cb16-3"></a>bacteria[<span class="st">"ID"</span>] <span class="op">=</span> bacteria[<span class="st">"ID"</span>].astype(<span class="st">"category"</span>).cat.codes</span>
-<span id="cb16-4"><a href="#cb16-4"></a>bacteria[<span class="st">"trtDrugP"</span>] <span class="op">=</span> bacteria[<span class="st">"trt"</span>] <span class="op">==</span> <span class="st">"drug+"</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a>bacteria[<span class="st">"trtDrug"</span>] <span class="op">=</span> bacteria[<span class="st">"trt"</span>] <span class="op">==</span> <span class="st">"drug"</span></span>
-<span id="cb16-6"><a href="#cb16-6"></a>K <span class="op">=</span> <span class="bu">len</span>(bacteria[<span class="st">"ID"</span>].unique())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Let’s start by fitting a hierarchical model. The model is as follows:</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">CmdStanPy</a></li></ul>
-<div class="tab-content">
-<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="b2865ddf" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_bt:</span>
-<span id="cb17-2"><a href="#cb17-2"></a>    μ <span class="op">=</span> pm.Normal(<span class="st">'μ'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb17-3"><a href="#cb17-3"></a>    β_week <span class="op">=</span> pm.Normal(<span class="st">'β_week'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb17-4"><a href="#cb17-4"></a>    β_trtDrug <span class="op">=</span> pm.Normal(<span class="st">'β_trtDrug'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb17-5"><a href="#cb17-5"></a>    β_trtDrugP <span class="op">=</span> pm.Normal(<span class="st">'β_trtDrugP'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)    </span>
-<span id="cb17-6"><a href="#cb17-6"></a></span>
-<span id="cb17-7"><a href="#cb17-7"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">'σ'</span>, sigma<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb17-8"><a href="#cb17-8"></a>    b_Intercept <span class="op">=</span> pm.Normal(<span class="st">'b_Intercept'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span>σ, shape<span class="op">=</span>K)</span>
-<span id="cb17-9"><a href="#cb17-9"></a></span>
-<span id="cb17-10"><a href="#cb17-10"></a>    theta <span class="op">=</span> μ <span class="op">+</span> b_Intercept[bacteria.ID] <span class="op">+</span> β_week <span class="op">*</span> bacteria.week <span class="op">+</span> β_trtDrug <span class="op">*</span> bacteria.trtDrug <span class="op">+</span> β_trtDrugP <span class="op">*</span> bacteria.trtDrugP</span>
-<span id="cb17-11"><a href="#cb17-11"></a>    </span>
-<span id="cb17-12"><a href="#cb17-12"></a>    y_obs <span class="op">=</span> pm.Bernoulli(<span class="st">'y_obs'</span>, logit_p<span class="op">=</span>theta, observed<span class="op">=</span>bacteria.y)</span>
-<span id="cb17-13"><a href="#cb17-13"></a>    </span>
-<span id="cb17-14"><a href="#cb17-14"></a>    dt_bt <span class="op">=</span> pm.sample()</span>
-<span id="cb17-15"><a href="#cb17-15"></a>    pm.compute_log_prior(dt_bt, var_names<span class="op">=</span>[<span class="st">"μ"</span>, <span class="st">"β_week"</span>, <span class="st">"β_trtDrug"</span>, <span class="st">"β_trtDrugP"</span>, <span class="st">"σ"</span>])</span>
-<span id="cb17-16"><a href="#cb17-16"></a>    pm.compute_log_likelihood(dt_bt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co">## coming soon</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-<p>From the power-scaling sensitivity analysis perspective the key element in the previous code-block is that we are specifying the variables we want to use for the prior-powerscaling <code>var_names=["μ", "β_week", "β_trtDrug", "β_trtDrugP", "σ"]</code> i.e.&nbsp;we are omitting the <code>b_Intercept</code> variable. This is because we are only interested in power-scaling the top level prior. There are two way to specify the variables for power-scaling, the first is to use the <code>var_names</code> argument when computing the log_prior and/or log_likelihood, as we just did. The second is to use the <code>prior_varnames</code> and <code>likelihood_varnames</code> arguments in the <code>psense</code>-related functions.</p>
-<p>Let’s compute sensitivity diagnostics for all variables except <code>~b_Intercept</code>, if we want to check the sensitivity of all of them we can do it. The key point with hierarchical models is to not power-scale the lower level priors.</p>
-<div id="a4794cd1" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>azp.psense_summary(dt_bt, var_names<span class="op">=</span>[<span class="st">"~b_Intercept"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">prior</th>
-<th data-quarto-table-cell-role="th">likelihood</th>
-<th data-quarto-table-cell-role="th">diagnosis</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β_trtDrug</td>
-<td>0.007</td>
-<td>0.156</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">β_trtDrugP</td>
-<td>0.008</td>
-<td>0.166</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">β_week</td>
-<td>0.005</td>
-<td>0.196</td>
-<td>✓</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">μ</td>
-<td>0.013</td>
-<td>0.367</td>
-<td>✓</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">σ</td>
-<td>0.012</td>
-<td>0.585</td>
-<td>✓</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>We see that everything looks fine. If you like to get potentials issues you could try running the model again with a prior like <code>σ = pm.HalfNormal('σ', sigma=1)</code>.</p>
-</section>
-<section id="interpreting-sensitivity-diagnostics-summary" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="interpreting-sensitivity-diagnostics-summary"><span class="header-section-number">6.5</span> Interpreting sensitivity diagnostics: Summary</h2>
-<p>As with other diagnostics we need to interpret the results of the sensitivity analysis in the context of the model, the data and the problem we are trying to solve. Context and modelling purpose should always be part of an analysis.</p>
-<section id="diagnostic-value" class="level3" data-number="6.5.1">
-<h3 data-number="6.5.1" class="anchored" data-anchor-id="diagnostic-value"><span class="header-section-number">6.5.1</span> Diagnostic value</h3>
-<p>The sensitivity diagnostic value given by <code>psense</code> and <code>psense_summary</code> is based on a measure of how much the posterior would change if the prior or likelihood is changed. This value is provided for each marginal posterior specified in the <code>var_name</code> argument. In simple models with few parameters, it is reasonable to look at sensitivity for all the parameters. But as model complexity increases, and there are more parameters or strong posterior dependencies, it is better to focus on sensitivity of specific parameters with meaningful interpretations or on derived quantities of interest.</p>
-</section>
-<section id="diagnostic-messages" class="level3" data-number="6.5.2">
-<h3 data-number="6.5.2" class="anchored" data-anchor-id="diagnostic-messages"><span class="header-section-number">6.5.2</span> Diagnostic messages</h3>
-<p>Sensitivity diagnostic values are given for both prior and likelihood sensitivity. These values should be considered and interpreted together. Based on the values, a diagnosis is also given. Currently, this is either “strong prior / weak likelihood” (if the prior sensitivity is higher than a threshold and the likelihood sensitivity is lower than a threshold) or “prior-data conflict” (if both types of sensitivity are higher than the threshold).</p>
-<p><strong>These diagnostic messages do not necessarily indicate problems with the model</strong>. They are informative messages that describe the interplay between the chosen prior and likelihood. If your prior is meant to be informative, influence on the posterior is desired and prior-data conflict may not be an issue. However, if you did not put much effort into choosing the priors, these messages can let you know if you should be more deliberate in your prior specification.</p>
-<ul>
-<li><strong>Strong prior / weak likelihood</strong>. This can occur when:
-<ul>
-<li><p>The prior is completely dominating the likelihood such that changing the likelihood strength has little to no impact on the posterior. The prior may be extremely informative and a using a weaker prior may remove this domination.</p></li>
-<li><p>The likelihood is uninformative and no information is gained by increasing the strength of the likelihood. The prior will always have an effect in this case.</p></li>
-</ul></li>
-<li><strong>Prior-data conflict</strong>. This can occur when:
-<ul>
-<li>The posterior is sensitive to changes to both the prior and the likelihood. This indicates that the prior and likelihood are both influencing the posterior and may be in conflict with one-another.</li>
-</ul></li>
-</ul>
-</section>
-<section id="what-to-do-with-the-diagnostics" class="level3" data-number="6.5.3">
-<h3 data-number="6.5.3" class="anchored" data-anchor-id="what-to-do-with-the-diagnostics"><span class="header-section-number">6.5.3</span> What to do with the diagnostics</h3>
-<p>Sensitivity analysis should be conducted with care, avoiding the repeated adjustment of priors solely to resolve discrepancies or diagnostic warnings. If a prior is modified to address a warning, the change must be justified based on domain expertise, data properties, or model assumptions. Conversely, choosing not to alter the model despite warnings can also be valid if there are compelling reasons to believe the model is sound. In such cases, it is essential to be transparent: report the diagnostic results and provide a clear rationale for disregarding the sensitivity diagnostics.</p>
+<p>Despite these limitations, moment matching succeeds in most practical applications when the original posterior simulation was reasonably successful, providing both computational efficiency and improved reliability for model assessment without requiring complex tuning or auxiliary assumptions.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-johnson_1996" class="csl-entry" role="listitem">
-Johnson, Roger W. 1996. <span>“Fitting Percentage of Body Fat to Simple Body Measurements.”</span> <em>Journal of Statistics Education</em> 4 (1). <a href="https://doi.org/10.1080/10691898.1996.11910505">https://doi.org/10.1080/10691898.1996.11910505</a>.
+<div id="ref-gelman_hill_2007" class="csl-entry" role="listitem">
+Gelman, Andrew, and Jennifer Hill. 2007. <em>Data Analysis Using Regression and Multilevel/Hierarchical Models</em>. Cambridge: Cambridge University Press.
 </div>
-<div id="ref-kallioinen_2023" class="csl-entry" role="listitem">
-Kallioinen, Noa, Topi Paananen, Paul-Christian Bürkner, and Aki Vehtari. 2023. <span>“Detecting and Diagnosing Prior and Likelihood Sensitivity with Power-Scaling.”</span> <em>Statistics and Computing</em> 34 (1): 57. <a href="https://doi.org/10.1007/s11222-023-10366-5">https://doi.org/10.1007/s11222-023-10366-5</a>.
+<div id="ref-paananen_2020" class="csl-entry" role="listitem">
+Paananen, Topi, Juho Piironen, Paul-Christian Bürkner, and Aki Vehtari. 2020. <span>“Implicitly Adaptive Importance Sampling.”</span> <a href="https://arxiv.org/abs/1906.08850">https://arxiv.org/abs/1906.08850</a>.
 </div>
-<div id="ref-nguyen_2015" class="csl-entry" role="listitem">
-Nguyen, Hoang-Vu, and Jilles Vreeken. 2015. <span>“Non-Parametric Jensen-Shannon Divergence.”</span> In <em>Machine Learning and Knowledge Discovery in Databases</em>, edited by Annalisa Appice, Pedro Pereira Rodrigues, Vítor Santos Costa, João Gama, Alípio Jorge, and Carlos Soares, 173–89. Cham: Springer International Publishing. <a href="https://doi.org/10.1007/978-3-319-23525-7_11">https://doi.org/10.1007/978-3-319-23525-7_11</a>.
-</div>
-<div id="ref-venables_2002" class="csl-entry" role="listitem">
-Venables, W. N., and B. D. Ripley. 2002. <em>Modern <span>Applied</span> <span>Statistics</span> with <span>S</span></em>. 4th edition. New York: Springer. <a href="https://doi.org/10.1007/978-0-387-21706-2">https://doi.org/10.1007/978-0-387-21706-2</a>.
+<div id="ref-vehtari_2017" class="csl-entry" role="listitem">
+Vehtari, Aki, Andrew Gelman, and Jonah Gabry. 2017. <span>“Practical Bayesian Model Evaluation Using Leave-One-Out Cross-Validation and WAIC.”</span> <em>Statistics and Computing</em> 27 (5): 1413–32. <a href="https://doi.org/10.1007/s11222-016-9696-4">https://doi.org/10.1007/s11222-016-9696-4</a>.
 </div>
 </div>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -1664,13 +1605,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../Chapters/Prior_posterior_predictive_checks.html" class="pagination-link" aria-label="Prior and Posterior predictive checks">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Prior and Posterior predictive checks</span></span>
+      <a href="../Chapters/Model_comparison_large_data.html" class="pagination-link" aria-label="Model Comparison for Large Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Model Comparison for Large Data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Chapters/Model_comparison.html" class="pagination-link" aria-label="Model Comparison">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Model Comparison</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../Chapters/Case_study_model_comparison.html" class="pagination-link" aria-label="Model Comparison (case study)">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model Comparison (case study)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
