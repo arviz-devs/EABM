@@ -1,30 +1,3 @@
-<!-- ---
-filters:
-  - pseudocode
-format:
-  html:
-    include-in-header:
-      text: |
-        <script>
-        MathJax = {
-          loader: {
-            load: ['[tex]/boldsymbol']
-          },
-          tex: {
-            tags: "all",
-            inlineMath: [['$', '$'], ['\\(', '\\)']],
-            displayMath: [['$$', '$$'], ['\\[', '\\]']],
-            processEscapes: true,
-            processEnvironments: true,
-            packages: {
-              '[+]': ['boldsymbol']
-            }
-          }
-        };
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
---- -->
-
 # Moment Matching for Improved PSIS-LOO-CV {#sec-moment-matching}
 
 ```{python}
@@ -56,37 +29,13 @@ In this chapter, we'll explore the theory behind IWMM and walk through a complet
 
 ### Importance sampling for PSIS-LOO-CV
 
-The goal of cross-validation is to estimate the expected log pointwise predictive density (elpd) for new, unseen data $\widetilde{y} = (\widetilde{y}_1, \ldots, \widetilde{y}_n)$
+Recall from @sec-model-comparison that PSIS-LOO-CV uses importance sampling to approximate leave-one-out cross-validation without refitting the model. Instead of refitting for each observation $i$, we reweight draws from the full-data posterior $p(\theta \mid y)$ using importance weights
 
 $$
-\text{elpd} = \sum_{i=1}^{n} \int p_{t}(\widetilde{y}_{i}) \log p(\widetilde{y}_{i} \mid y) \, d\widetilde{y}_{i},
+w_i(\theta) = \frac{1}{p(y_i \mid \theta)}
 $$
 
-where $p_t(\widetilde{y}_i)$ is the true data generating mechanism. Since we don't know $p_t$, we estimate elpd using leave-one-out cross-validation, which assumes future data has a similar distribution to the observed data. PSIS-LOO-CV uses importance sampling to approximate
-
-$$
-\text{elpd}_{\text{loo}} = \sum_{i=1}^{n} \log p(y_i \mid y_{-i}),
-$$
-
-where the leave-one-out predictive density for each observation $i$ is
-
-$$
-p(y_i \mid y_{-i}) = \int p(y_i \mid \theta) p(\theta \mid y_{-i}) \, \mathrm{d}\theta,
-$$
-
-and $y_{-i}$ denotes the data with observation $i$ removed. Instead of refitting the model without observation $i$, we use draws from the full-data posterior $p(\theta \mid y)$ as a proposal and reweight them via importance sampling with weights
-
-$$
-w_i(\theta) = \frac{p(\theta \mid y_{-i})}{p(\theta \mid y)} = \frac{1}{p(y_i \mid \theta)}
-$$
-
-to approximate the LOO posterior. This importance sampling approach works because the observations are modeled as conditionally independent given the parameters $\theta$, allowing the likelihood to factorize as
-
-$$
-p(y \mid \theta) = \prod_{i=1}^{n} p(y_i \mid \theta).
-$$
-
-When observation $i$ is influential, $p(\theta \mid y_{-i})$ can differ substantially from $p(\theta \mid y)$, leading to highly variable importance weights. The Pareto-$k$ diagnostic quantifies this problem by fitting a generalized Pareto distribution to the tail of the importance weight distribution. When $k > 0.7$, the importance weights remain too unstable even after Pareto smoothing, indicating that the importance sampling approximation is unreliable. In these cases, moment matching offers a potential solution for improving the proposal distribution.
+to approximate the leave-one-out posterior $p(\theta \mid y_{-i})$. When observation $i$ is influential, these weights become highly variable. The Pareto-$k$ diagnostic quantifies this instability by fitting a generalized Pareto distribution to the tail of the importance weight distribution. When $k > 0.7$, the importance weights remain too unstable even after Pareto smoothing, indicating unreliable approximations. Moment matching offers a solution by transforming the posterior draws to improve the proposal distribution. For detailed coverage of PSIS-LOO-CV, see @sec-model-comparison.
 
 ### Monte Carlo estimators
 
@@ -273,63 +222,9 @@ $$
 
 ## The moment matching algorithm
 
-Having defined the three transformations, we can now see how they work together in practice. The algorithm starts with the simplest transformation (T1) and only proceeds to more complex ones when necessary, using the Pareto-$k$ diagnostic to decide whether each transformation improves the approximation. It implements the double adaptation strategy by running two sequential loops: one targeting the numerator using absolute expectation-specific weights, and another targeting the denominator using common weights. Both adapted proposals are then combined via multiple importance sampling.
+The ArviZ implementation uses a greedy search strategy for each observation with high Pareto-$k$ values. For each problematic observation, the algorithm iteratively tries the three transformations in sequence. When the mean shift transformation ($T_1$) reduces the Pareto-$k$ diagnostic, it is accepted and the algorithm restarts from $T_1$ again. Only when $T_1$ fails to improve the diagnostic does the algorithm try the variance transformation ($T_2$), and similarly for the covariance transformation ($T_3$) when enabled. This process continues until no transformation improves the diagnostic or the maximum number of iterations is reached.
 
-```pseudocode
-#| label: algo-moment-matching
-#| html-line-number: true
-#| pdf-line-number: true
-
-\begin{algorithm}
-\caption{Moment Matching for Self-Normalized Importance Sampling}
-\begin{algorithmic}
-\State \textbf{Input:} $k_{\text{threshold}}$, proposal density $g$, draws $\{\boldsymbol{\theta}^{(s)}\}_{s=1}^S$ from $g$
-\State
-\State Compute common weights $\{w^{(s)}\}_{s=1}^S$ and expectation-specific weights $\{v^{(s)}\}_{s=1}^S$, and compute diagnostics $\hat{k}_w$ and $\hat{k}_v$;
-\State
-\State \textbf{// Numerator adaptation: using absolute expectation-specific weights}
-\While{$\hat{k}_v > k_{\text{threshold}}$}
-    \For{$j \in 1:3$}
-        \State Transform the draws with $T_j$: $\boldsymbol{\theta}^{(s)} \mapsto \boldsymbol{\theta}^{*(s)}$ using absolute expectation-specific weights
-        \State Recompute expectation-specific weights $\{\hat{v}^{(s)}\}_{s=1}^S$ and $\hat{\hat{k}}_v$
-        \If{$\hat{\hat{k}}_v < \hat{k}_v$}
-            \State Accept the transformation and update $\{\boldsymbol{\theta}^{(s)}\}_{s=1}^S$ and $\{v^{(s)}\}_{s=1}^S = \{\hat{v}^{(s)}\}_{s=1}^S$
-            \State $\hat{k}_v = \hat{\hat{k}}_v$
-            \State Exit for loop
-        \Else
-            \State Discard the transformation
-        \EndIf
-        \If{$j = 3$}
-            \State Moment matching failed, end algorithm with warning about sampling inaccuracy
-        \EndIf
-    \EndFor
-\EndWhile
-\State
-\State \textbf{// Denominator adaptation: using common weights}
-\While{$\hat{k}_w > k_{\text{threshold}}$}
-    \For{$j \in 1:3$}
-        \State Transform the draws with $T_j$: $\boldsymbol{\theta}^{(s)} \mapsto \boldsymbol{\theta}^{*(s)}$ using common weights
-        \State Recompute common weights $\{\tilde{w}^{(s)}\}_{s=1}^S$ and $\hat{\hat{k}}_w$
-        \If{$\hat{\hat{k}}_w < \hat{k}_w$}
-            \State Accept the transformation and update $\{\boldsymbol{\theta}^{(s)}\}_{s=1}^S$ and $\{w^{(s)}\}_{s=1}^S = \{\hat{w}^{(s)}\}_{s=1}^S$
-            \State $\hat{k}_w = \hat{\hat{k}}_w$
-            \State Exit for loop
-        \Else
-            \State Discard the transformation
-        \EndIf
-        \If{$j = 3$}
-            \State Moment matching failed, end algorithm with warning about sampling inaccuracy
-        \EndIf
-    \EndFor
-\EndWhile
-\State
-\State Moment matching succeeded, compute common and expectation-specific weights using multiple importance sampling
-\State Compute expectation $\mathbb{E}_p[h(\boldsymbol{\theta})]$ using self-normalized importance sampling
-\end{algorithmic}
-\end{algorithm}
-```
-
-Because the numerator and denominator adaptations are combined via MIS, @paananen_2020 split the original Monte Carlo sample into two halves so the two adapted proposals use disjoint draws, avoiding bias from reusing the same draws in both components. ArviZ automates this entire workflow through the `loo_moment_match()` function.
+After the transformations converge, ArviZ applies an optional split proposal strategy by default. The cumulative transformation is applied to the first half of the posterior draws while the inverse transformation is applied to the second half. These two sets of transformed draws are then combined using multiple importance sampling with the balance heuristic. This split approach helps avoid potential bias from reusing the same draws and often improves the stability of the final estimates. The entire workflow is automated through the `loo_moment_match()` function.
 
 ## Roaches data and Poisson regression model
 
