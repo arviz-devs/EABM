@@ -4,14 +4,12 @@
 #| echo: false
 #| warning: false
 import numpy as np
-import matplotlib.pyplot as plt
 import lzma
 from pathlib import Path
 
 import arviz.preview as azp
 azp.style.use("arviz-variat")
 
-plt.rcParams["figure.dpi"] = 100
 SEED = 4711
 
 def decompress(nc_path):
@@ -26,159 +24,11 @@ decompress("../models/prerun/model_comparison_large_data_00.nc")
 decompress("../models/prerun/model_comparison_large_data_03.nc")
 ```
 
-## Introduction
-
 Comparing Bayesian models on large datasets presents a computational challenge. Full leave-one-out cross-validation (LOO) requires computing $n$ posteriors and brute force K-fold cross-validation methods become prohibitively expensive as data size grows. 
 
-To overcome these challenges, we will use the approach described in @magnusson_2020 to combine fast approximations with targeted, exact computations. The key idea is to use cheap approximations, called *surrogates*, for all $n$ observations, and then correct these approximations using exact Pareto smoothed importance sampling (PSIS) LOO-CV on just a small random subsample with a *difference estimator* that corrects for the approximation error across the full dataset.
+To overcome these challenges, we will use the approach described in @magnusson_2020 to combine fast approximations with targeted, exact computations. The key idea is to use cheap approximations, called *surrogates*, for all $n$ observations, and then correct these approximations using exact Pareto smoothed importance sampling (PSIS) LOO-CV on just a small random subsample with a *difference estimator* that corrects for the approximation error across the full dataset. For details of the method we recommend you to read @sec-subsampledloo-theory and references therein.
 
-Predictive performance is summarized by the expected log predictive density estimated via LOO as
-
-$$
-\overline{\operatorname{elpd}}_{\text{loo}} = \frac{1}{n} \sum_{i=1}^n \pi_i,
-$$
-
-where $\pi_i = \log p(y_i\mid y_{-i})$ is the LOO predictive density for observation $i$ and $y_{-i}$ is the dataset with observation $i$ removed.
-
-In the example for this chapter using the `wells` data, we demonstrate the complete workflow for model comparison with subsampled PSIS-LOO-CV. We fit a logistic regression model using both MCMC sampling and Laplace approximations to show how posterior approximations can further reduce computational costs. We implement a lightweight log-likelihood helper that enables efficient evaluation on arbitrary observation subsets, demonstrate subsampled PSIS-LOO-CV using different surrogates (PLPD and LPD), and compare multiple models with subsampled LOO.
-
-## Background
-
-The content in this chapter builds on foundational concepts covered in @sec-model-comparison. For detailed explanations of expected log predictive density (ELPD), leave-one-out cross-validation (LOO-CV), Pareto smoothed importance sampling (PSIS), and model comparison principles, please refer to that chapter. Here we focus specifically on the subsampling techniques and difference estimator needed for large datasets.
-
-### From LOO to subsampled LOO
-
-Recall from @sec-model-comparison that PSIS-LOO-CV uses importance sampling to approximate LOO-CV without refitting the model $n$ times. The Pareto-$k$ diagnostic flags unreliable importance sampling approximations when $k > 0.7$. For large $n$, even this efficient computation becomes expensive.
-
-The key insight for large data is to combine three elements:
-
-1. **Fast surrogates** $\tilde\pi_i$ computed for all $n$ observations (e.g., point predictions)
-2. **Exact PSIS-LOO-CV** computed only on a small random subsample $\mathcal{S}$ of size $m \ll n$
-3. **The difference estimator** to correct the surrogates using the subsample
-
-These elements dramatically reduce computational cost while maintaining statistical accuracy. We can also extend the importance ratios with the correction term $p(\theta_s \mid y)/q(\theta_s \mid y)$ when using approximate posteriors from variational inference or Laplace approximations to further reduce computational cost.
-
-A surrogate is simply a computationally inexpensive approximation of each observation's LOO predictive density, such as evaluating the likelihood at the posterior mean, that doesn't require refitting the model. The difference estimator then uses the subsample to correct for approximation errors across the full dataset. The result is accurate estimates of predictive performance with a fraction of the computational cost, making model comparison feasible even when $n$ is very large.
-
-A critical component of the difference estimator is using simple random sampling to select the subsample, rather than model-specific importance sampling schemes. This allows the auxiliary information, e.g., the surrogates $\tilde\pi_i$, to be used in the estimation stage rather than the sampling stage, meaning the same subsample can be efficiently reused for all models and all quantities of interest. Alternative approaches that incorporate model-specific information during sampling, such as the **Hansen-Hurwitz** estimator, which we will describe later, require drawing separate subsamples for each model and each comparison, multiplying computational costs.
-
-The quality of surrogate approximations $\tilde\pi_i$ plays a key role in determining the required subsample size. Surrogates that incorporate model complexity through the effective number of parameters $p_{\text{eff}} = V_\theta(\log p(y_i \mid \theta))$ tend to approximate the true LOO contributions better than simple point predictions, especially for hierarchical or weakly identified models. This improvement can reduce the required subsample size by orders of magnitude. However, computing better surrogates requires more computation per observation, which creates a fundamental trade-off between surrogate quality and subsample size that should be carefully considered in practice.
-
-### Model comparison for large data
-
-When comparing models $A$ and $B$, we are interested in the difference in predictive performance
-
-$$
-\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B,
-$$
-
-along with its variance
-
-$$
-V(\operatorname{elpd}_D) = V(\operatorname{elpd}_A) + V(\operatorname{elpd}_B) - 2\operatorname{Cov}(\operatorname{elpd}_A, \operatorname{elpd}_B).
-$$
-
-The covariance term is crucial and often overlooked in practice. When models make similar predictions for most observations, which is common when comparing related models, the predictions are highly correlated, making $\operatorname{Cov}(\operatorname{elpd}_A, \operatorname{elpd}_B)$ large and positive. This correlation dramatically reduces the variance of the difference compared to naively summing individual variances.
-
-This is why using a common subsample across models is essential. Different random subsamples lose this correlation and fail to capture the variance reduction, whereas the same subsample preserves the correlation structure and accurately estimates both $\operatorname{elpd}_D$ and its much smaller variance, as we will see in the `wells` example.
-
-#### Previous approaches and practical limitations
-
-Before describing the central difference estimator used in LOO-CV for large data, it is important to understand the limitations of previous methods for scaling LOO to large data and model comparison. One previous approach is the **Hansen-Hurwitz (HH) estimator** [@hansen_hurwitz_1943] which uses importance sampling with auxiliary information incorporated at the sampling stage. For estimating $\operatorname{elpd}_{\text{loo}}$, observations are subsampled with probability proportional to an approximate LOO contribution $\tilde{\pi}_i$ giving
-
-$$
-\widehat{\operatorname{elpd}}_{\text{HH}} = \frac{1}{m} \sum_{j \in \mathcal{S}} \frac{1}{\tilde{\pi}_j} \pi_j,
-$$
-
-where $\mathcal{S}$ is the subsample of size $m$. While the HH estimator works well for individual model evaluation, it has two key limitations for model comparison:
-
-(1) Since the auxiliary information $\tilde{\pi}_i$ is model-specific and used in the sampling step, each model requires a different subsample. Comparing models or estimating $V(\operatorname{elpd}_D)$ requires drawing additional subsamples for each quantity of interest, multiplying computational costs. 
-
-(2) Using point estimates like $\log p(y_i \mid \hat{\theta})$ as auxiliary information ignores the effective number of parameters $p_{\text{eff}}$ and can lead to poor approximations for complex models and requiring larger subsample sizes.
-
-These practical limitations motivate the difference estimator approach described below, which uses the same subsample for all models and incorporates model complexity directly in the surrogate approximation.
-
-### Difference estimator for large data
-
-The key to subsampling LOO for large datasets is the difference estimator, which corrects the bias in fast approximations of the full-data LOO. Let $\pi_i = \log p(y_i\mid y_{-i})$ denote the exact LOO predictive density for observation $i$, and let $\tilde\pi_i$ be a computationally efficient approximation. For a simple random subsample $\mathcal S$ of size $m$, the difference estimator is given by
-
-$$
-\widehat{\operatorname{elpd}}_{\text{diff, loo}} 
-= \sum_{i=1}^n \tilde\pi_i 
-+ \frac{n}{m} \sum_{j\in\mathcal S} (\pi_j - \tilde\pi_j).
-$$
-
-Its subsampling variance is
-
-$$
-V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
-= n^2\!\left(1-\frac{m}{n}\right) \frac{s_e^2}{m},
-$$
-
-where $s_e^2 = \frac{1}{m-1} \sum_{j\in\mathcal S} (e_j-\bar e)^2$ is the sample variance of the approximation error $e_j=\pi_j-\tilde\pi_j$, and $\bar e = \frac{1}{m} \sum_{j\in\mathcal S} e_j$.
-
-The difference estimator has two key properties that make it ideal for large-data model comparison:
-
-1. The variance decreases as the surrogate quality improves, e.g., as $\tilde\pi_i \to \pi_i$, the approximation error $e_j \to 0$ and the subsampling variance vanishes.
-
-2. The term $(1-m/n)$ is a **finite population correction factor** that ensures the variance also vanishes as the subsample size approaches the full dataset size. This means we can start with a small subsample and incrementally increase it until we achieve the desired precision, without wasting computational effort.
-
-Crucially, the same subsample can be reused across all models. To estimate model differences $\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B$, we simply apply the difference estimator with difference surrogates $\tilde\pi_{i,D} = \tilde\pi_{i,A} - \tilde\pi_{i,B}$ and exact differences $\pi_{j,D} = \pi_{j,A} - \pi_{j,B}$ on the common subsample.
-
-For model comparison, we also need the variability of pointwise ELPD contributions, $\sigma^2_{\text{loo}} = \tfrac{1}{n}\sum_i (\pi_i-\bar\pi)^2$. Using the same subsample with squared surrogates $\tilde\pi_i^2$ yields the unbiased estimator
-
-$$
-\begin{align}
-\hat{\sigma}^2_{\text{diff, loo}}
-= \sum_{i=1}^n \tilde\pi_i^2 &+ \frac{n}{m} \sum_{j\in\mathcal S} (\pi_j^2 - \tilde\pi_j^2) \\
-&\quad + \frac{1}{n}\biggl[\Bigl( \frac{n}{m}\sum_{j\in\mathcal S} (\pi_j-\tilde\pi_j) \Bigr)^2 - V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)\biggr] \\
-&\quad + \frac{1}{n}\biggl[ 2\Bigl(\sum_{i=1}^n \tilde\pi_i\Bigr)\widehat{\operatorname{elpd}}_{\text{diff, loo}} - \Bigl(\sum_{i=1}^n \tilde\pi_i\Bigr)^2 \biggr].
-\end{align}
-$$
-
-::: {.callout-note}
-## Unbiasedness of the difference estimator
-
-The estimators $\widehat{\operatorname{elpd}}_{\text{diff, loo}}$ and $\hat{\sigma}^2_{\text{diff, loo}}$ are unbiased for $\operatorname{elpd}_{\text{loo}}$ and $\sigma^2_{\text{loo}}$, respectively [@magnusson_2020]. In practice, $\hat{\sigma}^2_{\text{diff, loo}}$ tends to be optimistic since no general unbiased estimator of the true variability exists in cross-validation [@bengio_2004].
-:::
-
-### Fast LOO surrogates
-
-For the difference estimator to be efficient, we need good approximations of the LOO contributions. We want surrogates $\tilde\pi_i$ that
-
-1. Approximate $\pi_i$ well in finite samples
-2. Are computationally cheap
-3. Converge in mean, $\mathbb{E}|\pi_i - \tilde\pi_i| \to 0$ as $n \to \infty$
-
-Notably, the third property ensures favorable scaling characteristics as the data size grows.
-
-#### Practical surrogates: PLPD and LPD
-
-In practice, the function `loo_subsample` in ArviZ implements two main surrogates. 
-
-The first is the **point log predictive density (PLPD)** and is given by
-
-$$
-\tilde\pi_i^{\text{PLPD}} = \log p(y_i \mid \hat\theta),
-$$
-
-where $\hat\theta$ is typically the posterior mean. This is computationally cheapest but ignores posterior uncertainty. 
-
-The second is the **log predictive density (LPD)** and is given by
-
-$$
-\tilde\pi_i^{\text{LPD}} = \log \left(\frac{1}{S} \sum_{s=1}^S p(y_i \mid \theta_s)\right),
-$$
-
-which averages over posterior draws before taking the logarithm. The approximation error $e_j = \pi_j - \tilde\pi_j$ directly affects the subsampling variance, so better surrogates allow smaller subsamples for the same precision.
-
-### Asymptotic guarantees and assumptions
-
-The difference estimator has strong theoretical foundations with convergence guarantees under mild regularity conditions. Remarkably, convergence accelerates as data size grows, even with fixed subsample size and fixed number of posterior draws, making the method more efficient precisely when needed most. 
-
-The required assumptions are standard regularity conditions satisfied by most common parametric models including regression, GLMs, and hierarchical models. For detailed theoretical treatment of the asymptotic properties and regularity conditions, see @magnusson_2020.
-
-### Workflow for model comparison
+## Workflow for model comparison
 
 The workflow for applying subsampled PSIS-LOO-CV to model comparison is straightforward. We compute cheap surrogates for all observations, then refine our estimates using PSIS-LOO-CV on a small subsample, balancing computational efficiency with statistical accuracy:
 
