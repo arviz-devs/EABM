@@ -2,6 +2,7 @@
 extras
 .vscode/
 /.quarto/
+/_extensions/
 Chapters/*.html
 Chapters/*.quarto_ipynb
 .venv*/
