@@ -392,7 +392,11 @@ While the main function of LOO is to compare models, the values ​​of $k$ can
 
 ## When Pareto k values are too high {#sec-IWMM-theory}
 
-The efficiency of PSIS-LOO-CV depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds a threshold (typically around 0.7 for standard MCMC sample sizes), leading to unreliable estimates. The method **importance weighted moment matching (IWMM)** presented by @paananen_2020 offers a solution by transforming the posterior draws to improve the proposal distribution.
+The efficiency of PSIS-LOO-CV depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds a threshold (typically around 0.7 for standard MCMC sample sizes), leading to unreliable estimates. 
+
+When observations produce high Pareto-$k$ values, we can use standard LOO-CV for those observations, i.e. refit the model while removing those problematic observations one at a time. This could be useful if the number of observations with high $\hat k$ is small, otherwise it can easily become too expensive for routine use. K-fold CV is another option but it can also be too expensive.
+
+But those are not the only two solutions when PSIS-LOO-CV produces high $\hat k$ values. Instead of expensive model refitting, the method **importance weighted moment matching (IWMM)**, presented by @paananen_2020, works by improving the proposal distribution by iteratively transforming existing posterior draws to better match the moments of the target distribution.
 
 To understand how moment matching improves these importance weights, we first need to understand which Monte Carlo estimator we are using.
 
