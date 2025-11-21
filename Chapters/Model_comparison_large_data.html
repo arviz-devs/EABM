@@ -346,7 +346,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../Chapters/Moment_Matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Moment Matching for Improved PSIS-LOO-CV</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Moment matching for improved PSIS-LOO-CV</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -401,36 +401,27 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">8.1</span> Introduction</a></li>
-  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">8.2</span> Background</a>
+  <li><a href="#workflow-for-model-comparison" id="toc-workflow-for-model-comparison" class="nav-link active" data-scroll-target="#workflow-for-model-comparison"><span class="header-section-number">8.1</span> Workflow for model comparison</a></li>
+  <li><a href="#wells-data-and-logistic-model" id="toc-wells-data-and-logistic-model" class="nav-link" data-scroll-target="#wells-data-and-logistic-model"><span class="header-section-number">8.2</span> Wells data and logistic model</a>
   <ul class="collapse">
-  <li><a href="#from-loo-to-subsampled-loo" id="toc-from-loo-to-subsampled-loo" class="nav-link" data-scroll-target="#from-loo-to-subsampled-loo"><span class="header-section-number">8.2.1</span> From LOO to subsampled LOO</a></li>
-  <li><a href="#model-comparison-for-large-data" id="toc-model-comparison-for-large-data" class="nav-link" data-scroll-target="#model-comparison-for-large-data"><span class="header-section-number">8.2.2</span> Model comparison for large data</a></li>
-  <li><a href="#difference-estimator-for-large-data" id="toc-difference-estimator-for-large-data" class="nav-link" data-scroll-target="#difference-estimator-for-large-data"><span class="header-section-number">8.2.3</span> Difference estimator for large data</a></li>
-  <li><a href="#fast-loo-surrogates" id="toc-fast-loo-surrogates" class="nav-link" data-scroll-target="#fast-loo-surrogates"><span class="header-section-number">8.2.4</span> Fast LOO surrogates</a></li>
-  <li><a href="#asymptotic-guarantees-and-assumptions" id="toc-asymptotic-guarantees-and-assumptions" class="nav-link" data-scroll-target="#asymptotic-guarantees-and-assumptions"><span class="header-section-number">8.2.5</span> Asymptotic guarantees and assumptions</a></li>
-  <li><a href="#workflow-for-model-comparison" id="toc-workflow-for-model-comparison" class="nav-link" data-scroll-target="#workflow-for-model-comparison"><span class="header-section-number">8.2.6</span> Workflow for model comparison</a></li>
+  <li><a href="#constructing-the-log-likelihood-helper" id="toc-constructing-the-log-likelihood-helper" class="nav-link" data-scroll-target="#constructing-the-log-likelihood-helper"><span class="header-section-number">8.2.1</span> Constructing the log-likelihood helper</a></li>
   </ul></li>
-  <li><a href="#wells-data-and-logistic-model" id="toc-wells-data-and-logistic-model" class="nav-link" data-scroll-target="#wells-data-and-logistic-model"><span class="header-section-number">8.3</span> Wells data and logistic model</a>
+  <li><a href="#subsampled-psis-loo-cv-with-the-plpd-surrogate" id="toc-subsampled-psis-loo-cv-with-the-plpd-surrogate" class="nav-link" data-scroll-target="#subsampled-psis-loo-cv-with-the-plpd-surrogate"><span class="header-section-number">8.3</span> Subsampled PSIS-LOO-CV with the PLPD surrogate</a></li>
+  <li><a href="#subsampled-psis-loo-cv-with-the-lpd-surrogate" id="toc-subsampled-psis-loo-cv-with-the-lpd-surrogate" class="nav-link" data-scroll-target="#subsampled-psis-loo-cv-with-the-lpd-surrogate"><span class="header-section-number">8.4</span> Subsampled PSIS-LOO-CV with the LPD surrogate</a></li>
+  <li><a href="#incremental-sampling-updates" id="toc-incremental-sampling-updates" class="nav-link" data-scroll-target="#incremental-sampling-updates"><span class="header-section-number">8.5</span> Incremental sampling updates</a></li>
+  <li><a href="#approximate-loo-cv-using-psis-loo-with-posterior-approximations" id="toc-approximate-loo-cv-using-psis-loo-with-posterior-approximations" class="nav-link" data-scroll-target="#approximate-loo-cv-using-psis-loo-with-posterior-approximations"><span class="header-section-number">8.6</span> Approximate LOO-CV using PSIS-LOO with posterior approximations</a>
   <ul class="collapse">
-  <li><a href="#constructing-the-log-likelihood-helper" id="toc-constructing-the-log-likelihood-helper" class="nav-link" data-scroll-target="#constructing-the-log-likelihood-helper"><span class="header-section-number">8.3.1</span> Constructing the log-likelihood helper</a></li>
+  <li><a href="#computing-log-density-corrections" id="toc-computing-log-density-corrections" class="nav-link" data-scroll-target="#computing-log-density-corrections"><span class="header-section-number">8.6.1</span> Computing log density corrections</a></li>
+  <li><a href="#running-loo-cv-with-approximate-posterior" id="toc-running-loo-cv-with-approximate-posterior" class="nav-link" data-scroll-target="#running-loo-cv-with-approximate-posterior"><span class="header-section-number">8.6.2</span> Running LOO-CV with approximate posterior</a></li>
   </ul></li>
-  <li><a href="#subsampled-psis-loo-cv-with-the-plpd-surrogate" id="toc-subsampled-psis-loo-cv-with-the-plpd-surrogate" class="nav-link" data-scroll-target="#subsampled-psis-loo-cv-with-the-plpd-surrogate"><span class="header-section-number">8.4</span> Subsampled PSIS-LOO-CV with the PLPD surrogate</a></li>
-  <li><a href="#subsampled-psis-loo-cv-with-the-lpd-surrogate" id="toc-subsampled-psis-loo-cv-with-the-lpd-surrogate" class="nav-link" data-scroll-target="#subsampled-psis-loo-cv-with-the-lpd-surrogate"><span class="header-section-number">8.5</span> Subsampled PSIS-LOO-CV with the LPD surrogate</a></li>
-  <li><a href="#incremental-sampling-updates" id="toc-incremental-sampling-updates" class="nav-link" data-scroll-target="#incremental-sampling-updates"><span class="header-section-number">8.6</span> Incremental sampling updates</a></li>
-  <li><a href="#approximate-loo-cv-using-psis-loo-with-posterior-approximations" id="toc-approximate-loo-cv-using-psis-loo-with-posterior-approximations" class="nav-link" data-scroll-target="#approximate-loo-cv-using-psis-loo-with-posterior-approximations"><span class="header-section-number">8.7</span> Approximate LOO-CV using PSIS-LOO with posterior approximations</a>
+  <li><a href="#combining-approximate-posterior-with-subsampling" id="toc-combining-approximate-posterior-with-subsampling" class="nav-link" data-scroll-target="#combining-approximate-posterior-with-subsampling"><span class="header-section-number">8.7</span> Combining approximate posterior with subsampling</a></li>
+  <li><a href="#comparing-models-with-subsampled-loo" id="toc-comparing-models-with-subsampled-loo" class="nav-link" data-scroll-target="#comparing-models-with-subsampled-loo"><span class="header-section-number">8.8</span> Comparing models with subsampled LOO</a>
   <ul class="collapse">
-  <li><a href="#computing-log-density-corrections" id="toc-computing-log-density-corrections" class="nav-link" data-scroll-target="#computing-log-density-corrections"><span class="header-section-number">8.7.1</span> Computing log density corrections</a></li>
-  <li><a href="#running-loo-cv-with-approximate-posterior" id="toc-running-loo-cv-with-approximate-posterior" class="nav-link" data-scroll-target="#running-loo-cv-with-approximate-posterior"><span class="header-section-number">8.7.2</span> Running LOO-CV with approximate posterior</a></li>
+  <li><a href="#comparison-with-different-subsamples" id="toc-comparison-with-different-subsamples" class="nav-link" data-scroll-target="#comparison-with-different-subsamples"><span class="header-section-number">8.8.1</span> Comparison with different subsamples</a></li>
+  <li><a href="#comparison-with-the-same-subsample" id="toc-comparison-with-the-same-subsample" class="nav-link" data-scroll-target="#comparison-with-the-same-subsample"><span class="header-section-number">8.8.2</span> Comparison with the same subsample</a></li>
   </ul></li>
-  <li><a href="#combining-approximate-posterior-with-subsampling" id="toc-combining-approximate-posterior-with-subsampling" class="nav-link" data-scroll-target="#combining-approximate-posterior-with-subsampling"><span class="header-section-number">8.8</span> Combining approximate posterior with subsampling</a></li>
-  <li><a href="#comparing-models-with-subsampled-loo" id="toc-comparing-models-with-subsampled-loo" class="nav-link" data-scroll-target="#comparing-models-with-subsampled-loo"><span class="header-section-number">8.9</span> Comparing models with subsampled LOO</a>
-  <ul class="collapse">
-  <li><a href="#comparison-with-different-subsamples" id="toc-comparison-with-different-subsamples" class="nav-link" data-scroll-target="#comparison-with-different-subsamples"><span class="header-section-number">8.9.1</span> Comparison with different subsamples</a></li>
-  <li><a href="#comparison-with-the-same-subsample" id="toc-comparison-with-the-same-subsample" class="nav-link" data-scroll-target="#comparison-with-the-same-subsample"><span class="header-section-number">8.9.2</span> Comparison with the same subsample</a></li>
-  </ul></li>
-  <li><a href="#comparing-full-loo-to-subsampled-loo" id="toc-comparing-full-loo-to-subsampled-loo" class="nav-link" data-scroll-target="#comparing-full-loo-to-subsampled-loo"><span class="header-section-number">8.10</span> Comparing full LOO to subsampled LOO</a></li>
-  <li><a href="#practical-considerations" id="toc-practical-considerations" class="nav-link" data-scroll-target="#practical-considerations"><span class="header-section-number">8.11</span> Practical considerations</a></li>
+  <li><a href="#comparing-full-loo-to-subsampled-loo" id="toc-comparing-full-loo-to-subsampled-loo" class="nav-link" data-scroll-target="#comparing-full-loo-to-subsampled-loo"><span class="header-section-number">8.9</span> Comparing full LOO to subsampled LOO</a></li>
+  <li><a href="#practical-considerations" id="toc-practical-considerations" class="nav-link" data-scroll-target="#practical-considerations"><span class="header-section-number">8.10</span> Practical considerations</a></li>
   </ul>
 </nav>
     </div>
@@ -456,134 +447,10 @@ window.Quarto = {
 </header>
 
 
-<section id="introduction" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">8.1</span> Introduction</h2>
 <p>Comparing Bayesian models on large datasets presents a computational challenge. Full leave-one-out cross-validation (LOO) requires computing <span class="math inline">\(n\)</span> posteriors and brute force K-fold cross-validation methods become prohibitively expensive as data size grows.</p>
-<p>To overcome these challenges, we will use the approach described in <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> to combine fast approximations with targeted, exact computations. The key idea is to use cheap approximations, called <em>surrogates</em>, for all <span class="math inline">\(n\)</span> observations, and then correct these approximations using exact Pareto smoothed importance sampling (PSIS) LOO-CV on just a small random subsample with a <em>difference estimator</em> that corrects for the approximation error across the full dataset.</p>
-<p>Predictive performance is summarized by the expected log predictive density estimated via LOO as</p>
-<p><span class="math display">\[
-\overline{\operatorname{elpd}}_{\text{loo}} = \frac{1}{n} \sum_{i=1}^n \pi_i,
-\]</span></p>
-<p>where <span class="math inline">\(\pi_i = \log p(y_i\mid y_{-i})\)</span> is the LOO predictive density for observation <span class="math inline">\(i\)</span> and <span class="math inline">\(y_{-i}\)</span> is the dataset with observation <span class="math inline">\(i\)</span> removed.</p>
-<p>In the example for this chapter using the <code>wells</code> data, we demonstrate the complete workflow for model comparison with subsampled PSIS-LOO-CV. We fit a logistic regression model using both MCMC sampling and Laplace approximations to show how posterior approximations can further reduce computational costs. We implement a lightweight log-likelihood helper that enables efficient evaluation on arbitrary observation subsets, demonstrate subsampled PSIS-LOO-CV using different surrogates (PLPD and LPD), and compare multiple models with subsampled LOO.</p>
-</section>
-<section id="background" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="background"><span class="header-section-number">8.2</span> Background</h2>
-<p>The content in this chapter builds on foundational concepts covered in <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a>. For detailed explanations of expected log predictive density (ELPD), leave-one-out cross-validation (LOO-CV), Pareto smoothed importance sampling (PSIS), and model comparison principles, please refer to that chapter. Here we focus specifically on the subsampling techniques and difference estimator needed for large datasets.</p>
-<section id="from-loo-to-subsampled-loo" class="level3" data-number="8.2.1">
-<h3 data-number="8.2.1" class="anchored" data-anchor-id="from-loo-to-subsampled-loo"><span class="header-section-number">8.2.1</span> From LOO to subsampled LOO</h3>
-<p>Recall from <a href="Model_comparison.html" class="quarto-xref"><span>Chapter 7</span></a> that PSIS-LOO-CV uses importance sampling to approximate LOO-CV without refitting the model <span class="math inline">\(n\)</span> times. The Pareto-<span class="math inline">\(k\)</span> diagnostic flags unreliable importance sampling approximations when <span class="math inline">\(k &gt; 0.7\)</span>. For large <span class="math inline">\(n\)</span>, even this efficient computation becomes expensive.</p>
-<p>The key insight for large data is to combine three elements:</p>
-<ol type="1">
-<li><strong>Fast surrogates</strong> <span class="math inline">\(\tilde\pi_i\)</span> computed for all <span class="math inline">\(n\)</span> observations (e.g., point predictions)</li>
-<li><strong>Exact PSIS-LOO-CV</strong> computed only on a small random subsample <span class="math inline">\(\mathcal{S}\)</span> of size <span class="math inline">\(m \ll n\)</span></li>
-<li><strong>The difference estimator</strong> to correct the surrogates using the subsample</li>
-</ol>
-<p>These elements dramatically reduce computational cost while maintaining statistical accuracy. We can also extend the importance ratios with the correction term <span class="math inline">\(p(\theta_s \mid y)/q(\theta_s \mid y)\)</span> when using approximate posteriors from variational inference or Laplace approximations to further reduce computational cost.</p>
-<p>A surrogate is simply a computationally inexpensive approximation of each observation’s LOO predictive density, such as evaluating the likelihood at the posterior mean, that doesn’t require refitting the model. The difference estimator then uses the subsample to correct for approximation errors across the full dataset. The result is accurate estimates of predictive performance with a fraction of the computational cost, making model comparison feasible even when <span class="math inline">\(n\)</span> is very large.</p>
-<p>A critical component of the difference estimator is using simple random sampling to select the subsample, rather than model-specific importance sampling schemes. This allows the auxiliary information, e.g., the surrogates <span class="math inline">\(\tilde\pi_i\)</span>, to be used in the estimation stage rather than the sampling stage, meaning the same subsample can be efficiently reused for all models and all quantities of interest. Alternative approaches that incorporate model-specific information during sampling, such as the <strong>Hansen-Hurwitz</strong> estimator, which we will describe later, require drawing separate subsamples for each model and each comparison, multiplying computational costs.</p>
-<p>The quality of surrogate approximations <span class="math inline">\(\tilde\pi_i\)</span> plays a key role in determining the required subsample size. Surrogates that incorporate model complexity through the effective number of parameters <span class="math inline">\(p_{\text{eff}} = V_\theta(\log p(y_i \mid \theta))\)</span> tend to approximate the true LOO contributions better than simple point predictions, especially for hierarchical or weakly identified models. This improvement can reduce the required subsample size by orders of magnitude. However, computing better surrogates requires more computation per observation, which creates a fundamental trade-off between surrogate quality and subsample size that should be carefully considered in practice.</p>
-</section>
-<section id="model-comparison-for-large-data" class="level3" data-number="8.2.2">
-<h3 data-number="8.2.2" class="anchored" data-anchor-id="model-comparison-for-large-data"><span class="header-section-number">8.2.2</span> Model comparison for large data</h3>
-<p>When comparing models <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, we are interested in the difference in predictive performance</p>
-<p><span class="math display">\[
-\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B,
-\]</span></p>
-<p>along with its variance</p>
-<p><span class="math display">\[
-V(\operatorname{elpd}_D) = V(\operatorname{elpd}_A) + V(\operatorname{elpd}_B) - 2\operatorname{Cov}(\operatorname{elpd}_A, \operatorname{elpd}_B).
-\]</span></p>
-<p>The covariance term is crucial and often overlooked in practice. When models make similar predictions for most observations, which is common when comparing related models, the predictions are highly correlated, making <span class="math inline">\(\operatorname{Cov}(\operatorname{elpd}_A, \operatorname{elpd}_B)\)</span> large and positive. This correlation dramatically reduces the variance of the difference compared to naively summing individual variances.</p>
-<p>This is why using a common subsample across models is essential. Different random subsamples lose this correlation and fail to capture the variance reduction, whereas the same subsample preserves the correlation structure and accurately estimates both <span class="math inline">\(\operatorname{elpd}_D\)</span> and its much smaller variance, as we will see in the <code>wells</code> example.</p>
-<section id="previous-approaches-and-practical-limitations" class="level4" data-number="8.2.2.1">
-<h4 data-number="8.2.2.1" class="anchored" data-anchor-id="previous-approaches-and-practical-limitations"><span class="header-section-number">8.2.2.1</span> Previous approaches and practical limitations</h4>
-<p>Before describing the central difference estimator used in LOO-CV for large data, it is important to understand the limitations of previous methods for scaling LOO to large data and model comparison. One previous approach is the <strong>Hansen-Hurwitz (HH) estimator</strong> <span class="citation" data-cites="hansen_hurwitz_1943">(<a href="References.html#ref-hansen_hurwitz_1943" role="doc-biblioref">Hansen and Hurwitz 1943</a>)</span> which uses importance sampling with auxiliary information incorporated at the sampling stage. For estimating <span class="math inline">\(\operatorname{elpd}_{\text{loo}}\)</span>, observations are subsampled with probability proportional to an approximate LOO contribution <span class="math inline">\(\tilde{\pi}_i\)</span> giving</p>
-<p><span class="math display">\[
-\widehat{\operatorname{elpd}}_{\text{HH}} = \frac{1}{m} \sum_{j \in \mathcal{S}} \frac{1}{\tilde{\pi}_j} \pi_j,
-\]</span></p>
-<p>where <span class="math inline">\(\mathcal{S}\)</span> is the subsample of size <span class="math inline">\(m\)</span>. While the HH estimator works well for individual model evaluation, it has two key limitations for model comparison:</p>
-<ol type="1">
-<li><p>Since the auxiliary information <span class="math inline">\(\tilde{\pi}_i\)</span> is model-specific and used in the sampling step, each model requires a different subsample. Comparing models or estimating <span class="math inline">\(V(\operatorname{elpd}_D)\)</span> requires drawing additional subsamples for each quantity of interest, multiplying computational costs.</p></li>
-<li><p>Using point estimates like <span class="math inline">\(\log p(y_i \mid \hat{\theta})\)</span> as auxiliary information ignores the effective number of parameters <span class="math inline">\(p_{\text{eff}}\)</span> and can lead to poor approximations for complex models and requiring larger subsample sizes.</p></li>
-</ol>
-<p>These practical limitations motivate the difference estimator approach described below, which uses the same subsample for all models and incorporates model complexity directly in the surrogate approximation.</p>
-</section>
-</section>
-<section id="difference-estimator-for-large-data" class="level3" data-number="8.2.3">
-<h3 data-number="8.2.3" class="anchored" data-anchor-id="difference-estimator-for-large-data"><span class="header-section-number">8.2.3</span> Difference estimator for large data</h3>
-<p>The key to subsampling LOO for large datasets is the difference estimator, which corrects the bias in fast approximations of the full-data LOO. Let <span class="math inline">\(\pi_i = \log p(y_i\mid y_{-i})\)</span> denote the exact LOO predictive density for observation <span class="math inline">\(i\)</span>, and let <span class="math inline">\(\tilde\pi_i\)</span> be a computationally efficient approximation. For a simple random subsample <span class="math inline">\(\mathcal S\)</span> of size <span class="math inline">\(m\)</span>, the difference estimator is given by</p>
-<p><span class="math display">\[
-\widehat{\operatorname{elpd}}_{\text{diff, loo}}
-= \sum_{i=1}^n \tilde\pi_i
-+ \frac{n}{m} \sum_{j\in\mathcal S} (\pi_j - \tilde\pi_j).
-\]</span></p>
-<p>Its subsampling variance is</p>
-<p><span class="math display">\[
-V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
-= n^2\!\left(1-\frac{m}{n}\right) \frac{s_e^2}{m},
-\]</span></p>
-<p>where <span class="math inline">\(s_e^2 = \frac{1}{m-1} \sum_{j\in\mathcal S} (e_j-\bar e)^2\)</span> is the sample variance of the approximation error <span class="math inline">\(e_j=\pi_j-\tilde\pi_j\)</span>, and <span class="math inline">\(\bar e = \frac{1}{m} \sum_{j\in\mathcal S} e_j\)</span>.</p>
-<p>The difference estimator has two key properties that make it ideal for large-data model comparison:</p>
-<ol type="1">
-<li><p>The variance decreases as the surrogate quality improves, e.g., as <span class="math inline">\(\tilde\pi_i \to \pi_i\)</span>, the approximation error <span class="math inline">\(e_j \to 0\)</span> and the subsampling variance vanishes.</p></li>
-<li><p>The term <span class="math inline">\((1-m/n)\)</span> is a <strong>finite population correction factor</strong> that ensures the variance also vanishes as the subsample size approaches the full dataset size. This means we can start with a small subsample and incrementally increase it until we achieve the desired precision, without wasting computational effort.</p></li>
-</ol>
-<p>Crucially, the same subsample can be reused across all models. To estimate model differences <span class="math inline">\(\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B\)</span>, we simply apply the difference estimator with difference surrogates <span class="math inline">\(\tilde\pi_{i,D} = \tilde\pi_{i,A} - \tilde\pi_{i,B}\)</span> and exact differences <span class="math inline">\(\pi_{j,D} = \pi_{j,A} - \pi_{j,B}\)</span> on the common subsample.</p>
-<p>For model comparison, we also need the variability of pointwise ELPD contributions, <span class="math inline">\(\sigma^2_{\text{loo}} = \tfrac{1}{n}\sum_i (\pi_i-\bar\pi)^2\)</span>. Using the same subsample with squared surrogates <span class="math inline">\(\tilde\pi_i^2\)</span> yields the unbiased estimator</p>
-<p><span class="math display">\[
-\begin{align}
-\hat{\sigma}^2_{\text{diff, loo}}
-= \sum_{i=1}^n \tilde\pi_i^2 &amp;+ \frac{n}{m} \sum_{j\in\mathcal S} (\pi_j^2 - \tilde\pi_j^2) \\
-&amp;\quad + \frac{1}{n}\biggl[\Bigl( \frac{n}{m}\sum_{j\in\mathcal S} (\pi_j-\tilde\pi_j) \Bigr)^2 - V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)\biggr] \\
-&amp;\quad + \frac{1}{n}\biggl[ 2\Bigl(\sum_{i=1}^n \tilde\pi_i\Bigr)\widehat{\operatorname{elpd}}_{\text{diff, loo}} - \Bigl(\sum_{i=1}^n \tilde\pi_i\Bigr)^2 \biggr].
-\end{align}
-\]</span></p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Unbiasedness of the difference estimator
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The estimators <span class="math inline">\(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\)</span> and <span class="math inline">\(\hat{\sigma}^2_{\text{diff, loo}}\)</span> are unbiased for <span class="math inline">\(\operatorname{elpd}_{\text{loo}}\)</span> and <span class="math inline">\(\sigma^2_{\text{loo}}\)</span>, respectively <span class="citation" data-cites="magnusson_2020">(<a href="References.html#ref-magnusson_2020" role="doc-biblioref">Magnusson et al. 2020</a>)</span>. In practice, <span class="math inline">\(\hat{\sigma}^2_{\text{diff, loo}}\)</span> tends to be optimistic since no general unbiased estimator of the true variability exists in cross-validation <span class="citation" data-cites="bengio_2004">(<a href="References.html#ref-bengio_2004" role="doc-biblioref">Bengio and Grandvalet 2004</a>)</span>.</p>
-</div>
-</div>
-</section>
-<section id="fast-loo-surrogates" class="level3" data-number="8.2.4">
-<h3 data-number="8.2.4" class="anchored" data-anchor-id="fast-loo-surrogates"><span class="header-section-number">8.2.4</span> Fast LOO surrogates</h3>
-<p>For the difference estimator to be efficient, we need good approximations of the LOO contributions. We want surrogates <span class="math inline">\(\tilde\pi_i\)</span> that</p>
-<ol type="1">
-<li>Approximate <span class="math inline">\(\pi_i\)</span> well in finite samples</li>
-<li>Are computationally cheap</li>
-<li>Converge in mean, <span class="math inline">\(\mathbb{E}|\pi_i - \tilde\pi_i| \to 0\)</span> as <span class="math inline">\(n \to \infty\)</span></li>
-</ol>
-<p>Notably, the third property ensures favorable scaling characteristics as the data size grows.</p>
-<section id="practical-surrogates-plpd-and-lpd" class="level4" data-number="8.2.4.1">
-<h4 data-number="8.2.4.1" class="anchored" data-anchor-id="practical-surrogates-plpd-and-lpd"><span class="header-section-number">8.2.4.1</span> Practical surrogates: PLPD and LPD</h4>
-<p>In practice, the function <code>loo_subsample</code> in ArviZ implements two main surrogates.</p>
-<p>The first is the <strong>point log predictive density (PLPD)</strong> and is given by</p>
-<p><span class="math display">\[
-\tilde\pi_i^{\text{PLPD}} = \log p(y_i \mid \hat\theta),
-\]</span></p>
-<p>where <span class="math inline">\(\hat\theta\)</span> is typically the posterior mean. This is computationally cheapest but ignores posterior uncertainty.</p>
-<p>The second is the <strong>log predictive density (LPD)</strong> and is given by</p>
-<p><span class="math display">\[
-\tilde\pi_i^{\text{LPD}} = \log \left(\frac{1}{S} \sum_{s=1}^S p(y_i \mid \theta_s)\right),
-\]</span></p>
-<p>which averages over posterior draws before taking the logarithm. The approximation error <span class="math inline">\(e_j = \pi_j - \tilde\pi_j\)</span> directly affects the subsampling variance, so better surrogates allow smaller subsamples for the same precision.</p>
-</section>
-</section>
-<section id="asymptotic-guarantees-and-assumptions" class="level3" data-number="8.2.5">
-<h3 data-number="8.2.5" class="anchored" data-anchor-id="asymptotic-guarantees-and-assumptions"><span class="header-section-number">8.2.5</span> Asymptotic guarantees and assumptions</h3>
-<p>The difference estimator has strong theoretical foundations with convergence guarantees under mild regularity conditions. Remarkably, convergence accelerates as data size grows, even with fixed subsample size and fixed number of posterior draws, making the method more efficient precisely when needed most.</p>
-<p>The required assumptions are standard regularity conditions satisfied by most common parametric models including regression, GLMs, and hierarchical models. For detailed theoretical treatment of the asymptotic properties and regularity conditions, see <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span>.</p>
-</section>
-<section id="workflow-for-model-comparison" class="level3" data-number="8.2.6">
-<h3 data-number="8.2.6" class="anchored" data-anchor-id="workflow-for-model-comparison"><span class="header-section-number">8.2.6</span> Workflow for model comparison</h3>
+<p>To overcome these challenges, we will use the approach described in <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> to combine fast approximations with targeted, exact computations. The key idea is to use cheap approximations, called <em>surrogates</em>, for all <span class="math inline">\(n\)</span> observations, and then correct these approximations using exact Pareto smoothed importance sampling (PSIS) LOO-CV on just a small random subsample with a <em>difference estimator</em> that corrects for the approximation error across the full dataset. For details of the method we recommend you to read <a href="Model_comparison.html#sec-subsampledloo-theory" class="quarto-xref"><span>Section 7.8</span></a> and references therein.</p>
+<section id="workflow-for-model-comparison" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="workflow-for-model-comparison"><span class="header-section-number">8.1</span> Workflow for model comparison</h2>
 <p>The workflow for applying subsampled PSIS-LOO-CV to model comparison is straightforward. We compute cheap surrogates for all observations, then refine our estimates using PSIS-LOO-CV on a small subsample, balancing computational efficiency with statistical accuracy:</p>
 <ol type="1">
 <li>Compute posteriors <span class="math inline">\(p_A(\theta \mid y)\)</span> and <span class="math inline">\(p_B(\theta \mid y)\)</span> for models <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span></li>
@@ -596,16 +463,15 @@ Unbiasedness of the difference estimator
 <p>Again, the key advantage is that the same subsample can be reused across all models, making the approach highly efficient for comparing multiple models. The difference <span class="math inline">\(\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B\)</span> and its variance are estimated directly from the common subsample, properly accounting for the correlation between models’ predictions.</p>
 <p>This reuse is what makes the difference estimator superior to the Hansen-Hurwitz approach for model comparison tasks. This is also the reason why we recommend using the same subsample for all models, rather than subsampling each model separately.</p>
 </section>
-</section>
-<section id="wells-data-and-logistic-model" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="wells-data-and-logistic-model"><span class="header-section-number">8.3</span> Wells data and logistic model</h2>
+<section id="wells-data-and-logistic-model" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="wells-data-and-logistic-model"><span class="header-section-number">8.2</span> Wells data and logistic model</h2>
 <p>To demonstrate the PSIS-LOO-CV subsampling method, we use data from a household survey in a region of Bangladesh where drinking water was contaminated with arsenic. Households with unsafe arsenic levels in their wells were asked whether they would switch to using a neighbor’s safe well. The goal is to predict this binary switching decision using household characteristics.</p>
 <p>We focus on a simple logistic regression with two key predictors: the arsenic concentration in the household’s well and the distance to the nearest safe well. The dataset contains <span class="math inline">\(n = 3020\)</span> observations. While this is not massive by modern standards, it is large enough that efficient computational methods become valuable. The advantage of this sample size is that individual observations have limited influence on the overall model fit, which helps ensure stable importance sampling computations. The data is available from the R package <code>loo</code>.</p>
 <p>We model the indicator of switching water wells using a logistic regression with intercept, arsenic concentration, and distance to the nearest safe well in hundreds of metres. The design matrix is <span class="math inline">\(X = [1, \text{dist}/100, \text{arsenic}]\)</span> and the likelihood is given by</p>
 <p><span class="math display">\[
 \Pr(y_i = 1 \mid \beta) = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta), \qquad \beta \sim \mathcal{N}(0, I_3).
 \]</span></p>
-<div id="4a0117d8" class="cell" data-execution_count="2">
+<div id="9f164af9" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -624,7 +490,7 @@ Unbiasedness of the difference estimator
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="059d3db3" class="cell" data-execution_count="3">
+<div id="4cdb81ae" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
@@ -651,8 +517,8 @@ Unbiasedness of the difference estimator
 </div>
 </div>
 </div>
-<section id="constructing-the-log-likelihood-helper" class="level3" data-number="8.3.1">
-<h3 data-number="8.3.1" class="anchored" data-anchor-id="constructing-the-log-likelihood-helper"><span class="header-section-number">8.3.1</span> Constructing the log-likelihood helper</h3>
+<section id="constructing-the-log-likelihood-helper" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="constructing-the-log-likelihood-helper"><span class="header-section-number">8.2.1</span> Constructing the log-likelihood helper</h3>
 <p>Unlike regular <code>loo()</code>, the routine <code>loo_subsample()</code> expects a callable with signature <code>log_lik_fn(observed, data)</code> depending on the approximation method so that we can compute the log-likelihood for a subset of observations on demand rather than storing the log-likelihood for all observations, which can be computationally expensive for large datasets.</p>
 <p>This callable signature is the baseline expectation for <code>loo_subsample()</code>, and we can always wrap auxiliary parameters with tools such as <code>functools.partial</code> so the routine still receives <code>(observed, data)</code>.</p>
 <p>For logistic regression, the per-draw log probability mass function is given by</p>
@@ -660,7 +526,7 @@ Unbiasedness of the difference estimator
 \log p(y_i \mid \beta_s, X_i) = y_i \log \pi_{is} + (1 - y_i) \log (1 - \pi_{is}), \qquad \pi_{is} = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta_s).
 \]</span></p>
 <p>A direct approach is to store the design matrix in the <code>constant_data</code> group so that the helper can directly compute the log-likelihood for whichever subset <code>loo_subsample()</code> hands to it.</p>
-<div id="f3736731" class="cell" data-execution_count="5">
+<div id="98a0b472" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> scipy.special <span class="im">import</span> expit</span>
 <span id="cb4-3"><a href="#cb4-3"></a></span>
@@ -674,15 +540,15 @@ Unbiasedness of the difference estimator
 <p>This log-likelihood helper evaluates the Bernoulli log-pmf for the selected subset and returns log probabilities for each posterior draw. No log-likelihood values are stored permanently, which keeps memory usage modest even when <span class="math inline">\(N\)</span> is large.</p>
 </section>
 </section>
-<section id="subsampled-psis-loo-cv-with-the-plpd-surrogate" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="subsampled-psis-loo-cv-with-the-plpd-surrogate"><span class="header-section-number">8.4</span> Subsampled PSIS-LOO-CV with the PLPD surrogate</h2>
+<section id="subsampled-psis-loo-cv-with-the-plpd-surrogate" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="subsampled-psis-loo-cv-with-the-plpd-surrogate"><span class="header-section-number">8.3</span> Subsampled PSIS-LOO-CV with the PLPD surrogate</h2>
 <p>As we’ve discussed previously, a key component of the PSIS-LOO-CV subsampling method is the notion of a fast surrogate for the leave-one-out term <span class="math inline">\(\pi_i\)</span>. One such surrogate is the point log predictive density (PLPD) which <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> motivate by replacing the leave-one-out term <span class="math inline">\(\pi_i\)</span> with</p>
 <p><span class="math display">\[
 \tilde\pi_i^{\text{plpd}} = \log p(y_i \mid X_i, \hat{\beta}), \quad \hat{\beta} = \mathbb{E}[\beta \mid y].
 \]</span></p>
 <p>The approximation reduces the computational burden to a single evaluation per observation while retaining the shrinkage induced by the posterior mean. Inserting <span class="math inline">\(\tilde\pi_i^{\text{plpd}}\)</span> into the difference estimator converts the exact correction to a subsample average that only requires re-evaluating the full posterior draws on <span class="math inline">\(m\)</span> observations.</p>
 <p>Here we use the <code>method="plpd"</code> argument to <code>loo_subsample()</code> to use the PLPD surrogate.</p>
-<div id="94d24178" class="cell" data-execution_count="6">
+<div id="575853ae" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>loo_plpd <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb5-2"><a href="#cb5-2"></a>    data<span class="op">=</span>data,</span>
 <span id="cb5-3"><a href="#cb5-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
@@ -714,14 +580,14 @@ Pareto k diagnostic values:
 </div>
 <p>The output inherits from the <code>ELPDData</code> interface with an additional column <code>subsampling_se</code> isolating the extra Monte Carlo error introduced by drawing only <span class="math inline">\(100\)</span> of the <span class="math inline">\(3020\)</span> observations. In our wells run with <span class="math inline">\(m=100\)</span> we obtained <span class="math inline">\(\widehat{\operatorname{elpd}}_{\text{loo}}\approx-1968.4\)</span> with <span class="math inline">\(\text{SE}\approx15.6\)</span> and <span class="math inline">\(\text{subsampling SE} \approx0.3\)</span>. All Pareto‑<span class="math inline">\(k\)</span> values on the subsample were <span class="math inline">\(\le 0.7\)</span>.</p>
 </section>
-<section id="subsampled-psis-loo-cv-with-the-lpd-surrogate" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="subsampled-psis-loo-cv-with-the-lpd-surrogate"><span class="header-section-number">8.5</span> Subsampled PSIS-LOO-CV with the LPD surrogate</h2>
+<section id="subsampled-psis-loo-cv-with-the-lpd-surrogate" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="subsampled-psis-loo-cv-with-the-lpd-surrogate"><span class="header-section-number">8.4</span> Subsampled PSIS-LOO-CV with the LPD surrogate</h2>
 <p>When the posterior mass is diffuse or strongly correlated, evaluating the full posterior predictive density can improve the approximation. We can use the log predictive density (LPD) surrogate given by</p>
 <p><span class="math display">\[
 \tilde\pi_i^{\text{lpd}} = \log \left( \frac{1}{S} \sum_{s=1}^S p(y_i \mid X_i, \beta_s) \right),
 \]</span></p>
 <p>where <span class="math inline">\(\beta_s\)</span> are the draws stored in <code>data.posterior</code>. The additional sum over draws raises the cost and often reduces the approximation error. The same subsample size and random seed ensure that the estimator reuses the indices chosen for the PLPD computation, which makes comparisons straightforward.</p>
-<div id="18ac6830" class="cell" data-execution_count="7">
+<div id="95f8b367" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>loo_lpd <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb7-2"><a href="#cb7-2"></a>    data<span class="op">=</span>data,</span>
 <span id="cb7-3"><a href="#cb7-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
@@ -752,10 +618,10 @@ Pareto k diagnostic values:
 <p>From the output, we can see that the estimated ELPD closely matches the PLPD result, both about <span class="math inline">\(-1968.5\)</span> with <span class="math inline">\(\text{SE}\approx15.6\)</span>, and the subsampling SEs are very similar (PLPD <span class="math inline">\(\approx0.3\)</span> vs.&nbsp;LPD <span class="math inline">\(\approx0.4\)</span>).</p>
 <p>For well‑identified models with tight posteriors, PLPD can match or even slightly outperform LPD. For more complex models, LPD often gains ground. Taken together, the parallel outputs validate the theoretical trade-off. PLPD minimises computation, whereas LPD expends extra work to tighten the estimator. For larger <span class="math inline">\(m\)</span> the difference between the two surrogates typically diminishes, and the choice becomes a balance between runtime and stability.</p>
 </section>
-<section id="incremental-sampling-updates" class="level2" data-number="8.6">
-<h2 data-number="8.6" class="anchored" data-anchor-id="incremental-sampling-updates"><span class="header-section-number">8.6</span> Incremental sampling updates</h2>
+<section id="incremental-sampling-updates" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="incremental-sampling-updates"><span class="header-section-number">8.5</span> Incremental sampling updates</h2>
 <p><span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> recommend increasing <span class="math inline">\(m\)</span> until the subsampling uncertainty is negligible for the task at hand. The <code>update_subsample()</code> routine efficiently extends an existing subsample without discarding work already done. Here we add 200 additional observations (from 100 to 300 total in the subsample) by using the previous subsample as a starting point.</p>
-<div id="7b743668" class="cell" data-execution_count="8">
+<div id="685dacb0" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>loo_update <span class="op">=</span> azp.update_subsample(</span>
 <span id="cb9-2"><a href="#cb9-2"></a>    loo_plpd,</span>
 <span id="cb9-3"><a href="#cb9-3"></a>    data,</span>
@@ -787,8 +653,8 @@ Pareto k diagnostic values:
 </div>
 <p>The updated result shows how the estimator stabilises as more observations are included. In our run, the subsampling SE decreased from about <span class="math inline">\(0.3\)</span> to <span class="math inline">\(0.2\)</span>, while the estimated ELPD and <span class="math inline">\(p_{\text{loo}}\)</span> remained essentially unchanged.</p>
 </section>
-<section id="approximate-loo-cv-using-psis-loo-with-posterior-approximations" class="level2" data-number="8.7">
-<h2 data-number="8.7" class="anchored" data-anchor-id="approximate-loo-cv-using-psis-loo-with-posterior-approximations"><span class="header-section-number">8.7</span> Approximate LOO-CV using PSIS-LOO with posterior approximations</h2>
+<section id="approximate-loo-cv-using-psis-loo-with-posterior-approximations" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="approximate-loo-cv-using-psis-loo-with-posterior-approximations"><span class="header-section-number">8.6</span> Approximate LOO-CV using PSIS-LOO with posterior approximations</h2>
 <p>Using posterior approximations such as variational inference or Laplace approximations can further accelerate LOO-CV for large data. These methods avoid the computational cost of full MCMC while maintaining reasonable approximation quality for well-behaved models.</p>
 <p>We will use the Laplace approximation which fits a multivariate normal distribution centered at the posterior mode <span class="math inline">\(\hat{\theta}\)</span> with covariance equal to the inverse Hessian of the negative log posterior. For a model with likelihood <span class="math inline">\(p(y \mid \theta)\)</span> and prior <span class="math inline">\(p(\theta)\)</span>, the Laplace approximation is</p>
 <p><span class="math display">\[
@@ -804,7 +670,7 @@ q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="3883ec9b" class="cell" data-execution_count="9">
+<div id="02bbe05b" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="im">from</span> pymc_extras <span class="im">import</span> fit_laplace</span>
 <span id="cb11-3"><a href="#cb11-3"></a></span>
@@ -827,7 +693,7 @@ q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
 </div>
 </div>
 <p>The <code>fit_laplace</code> function stores the posterior mode in the <code>fit</code> group as <code>mean_vector</code> and the covariance in <code>covariance_matrix</code>. Posterior draws are stored in the <code>posterior</code> group as usual. We convert the result to a <code>DataTree</code> and attach the observed data and design matrix for use with <code>loo_approximate_posterior()</code>.</p>
-<div id="66508c59" class="cell" data-execution_count="11">
+<div id="7ff63991" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>data_laplace <span class="op">=</span> azp.convert_to_datatree(idata_laplace)</span>
 <span id="cb13-2"><a href="#cb13-2"></a></span>
 <span id="cb13-3"><a href="#cb13-3"></a>data_laplace[<span class="st">"observed_data"</span>] <span class="op">=</span> xr.Dataset({</span>
@@ -835,14 +701,14 @@ q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
 <span id="cb13-5"><a href="#cb13-5"></a>})</span>
 <span id="cb13-6"><a href="#cb13-6"></a>data_laplace[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X)})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="computing-log-density-corrections" class="level3" data-number="8.7.1">
-<h3 data-number="8.7.1" class="anchored" data-anchor-id="computing-log-density-corrections"><span class="header-section-number">8.7.1</span> Computing log density corrections</h3>
+<section id="computing-log-density-corrections" class="level3" data-number="8.6.1">
+<h3 data-number="8.6.1" class="anchored" data-anchor-id="computing-log-density-corrections"><span class="header-section-number">8.6.1</span> Computing log density corrections</h3>
 <p>To use <code>loo_approximate_posterior()</code>, we must supply <code>log_p</code> and <code>log_q</code>, which represent the log density of the true posterior and the approximate posterior, respectively. The importance ratios are then adjusted to account for the approximation quality with</p>
 <p><span class="math display">\[
 r(\theta_s) \propto \frac{1}{p(y_i \mid \theta_s)} \frac{p(\theta_s \mid y)}{q(\theta_s \mid y)}.
 \]</span></p>
 <p>For the Laplace approximation, <span class="math inline">\(\log q(\theta_s \mid y)\)</span> is the log density of the fitted normal distribution, while <span class="math inline">\(\log p(\theta_s \mid y)\)</span> is the log prior plus the log likelihood. We require both of these quantities to be able to compute the importance ratios.</p>
-<div id="01416836" class="cell" data-execution_count="13">
+<div id="901d5789" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> multivariate_normal</span>
 <span id="cb14-2"><a href="#cb14-2"></a></span>
 <span id="cb14-3"><a href="#cb14-3"></a>beta_samples <span class="op">=</span> data_laplace.posterior[<span class="st">"beta"</span>]</span>
@@ -880,10 +746,10 @@ r(\theta_s) \propto \frac{1}{p(y_i \mid \theta_s)} \frac{p(\theta_s \mid y)}{q(\
 </div>
 <p>The log prior uses the standard normal density <span class="math inline">\(\mathcal{N}(0, I_3)\)</span> specified in the model. The log likelihood sums over all observations to obtain the joint log density. These quantities are then passed to <code>loo_approximate_posterior()</code> to compute corrected LOO estimates.</p>
 </section>
-<section id="running-loo-cv-with-approximate-posterior" class="level3" data-number="8.7.2">
-<h3 data-number="8.7.2" class="anchored" data-anchor-id="running-loo-cv-with-approximate-posterior"><span class="header-section-number">8.7.2</span> Running LOO-CV with approximate posterior</h3>
+<section id="running-loo-cv-with-approximate-posterior" class="level3" data-number="8.6.2">
+<h3 data-number="8.6.2" class="anchored" data-anchor-id="running-loo-cv-with-approximate-posterior"><span class="header-section-number">8.6.2</span> Running LOO-CV with approximate posterior</h3>
 <p>With <code>log_p</code> and <code>log_q</code> in hand, we can compute LOO-CV using the approximate posterior. The <code>loo_approximate_posterior()</code> function adjusts the importance ratios to account for the discrepancy between the true posterior and the Laplace approximation.</p>
-<div id="897fded8" class="cell" data-execution_count="14">
+<div id="12af9a09" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>loo_ap <span class="op">=</span> azp.loo_approximate_posterior(</span>
 <span id="cb15-2"><a href="#cb15-2"></a>    data<span class="op">=</span>data_laplace,</span>
 <span id="cb15-3"><a href="#cb15-3"></a>    log_p<span class="op">=</span>log_p_da,</span>
@@ -912,11 +778,11 @@ Pareto k diagnostic values:
 <p>The output shows how the approximate posterior performs relative to MCMC. The Pareto-<span class="math inline">\(k\)</span> diagnostics remain available and indicate whether the importance sampling correction is reliable. You can also see in the output the line <em>“Posterior approximation correction used”</em>, which indicates that the approximate posterior correction was used.</p>
 </section>
 </section>
-<section id="combining-approximate-posterior-with-subsampling" class="level2" data-number="8.8">
-<h2 data-number="8.8" class="anchored" data-anchor-id="combining-approximate-posterior-with-subsampling"><span class="header-section-number">8.8</span> Combining approximate posterior with subsampling</h2>
+<section id="combining-approximate-posterior-with-subsampling" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="combining-approximate-posterior-with-subsampling"><span class="header-section-number">8.7</span> Combining approximate posterior with subsampling</h2>
 <p>The approximate posterior correction can be combined with subsampling to further reduce computational cost.</p>
 <p>When using <code>loo_subsample()</code> with an approximate posterior, we simply pass <code>log_p</code> and <code>log_q</code> along with the subsample specification. The difference estimator then corrects for both the approximation error and the subsampling uncertainty.</p>
-<div id="9a112818" class="cell" data-execution_count="15">
+<div id="0221959b" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>loo_ap_ss <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb17-2"><a href="#cb17-2"></a>    data<span class="op">=</span>data_laplace,</span>
 <span id="cb17-3"><a href="#cb17-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
@@ -951,14 +817,14 @@ Pareto k diagnostic values:
 <p>The combined approach leverages the strengths of both methods. The Laplace approximation avoids expensive MCMC sampling, while subsampling reduces the cost of evaluating the full dataset. The correction terms ensure the estimates remain unbiased despite the double approximation.</p>
 <p>In our wells example, the subsampled approximate posterior LOO produces estimates very close to both the full MCMC and the full approximate posterior results, with negligible subsampling SE. This demonstrates that for well-behaved models, aggressive approximation can yield accurate predictive performance estimates at minimal computational cost.</p>
 </section>
-<section id="comparing-models-with-subsampled-loo" class="level2" data-number="8.9">
-<h2 data-number="8.9" class="anchored" data-anchor-id="comparing-models-with-subsampled-loo"><span class="header-section-number">8.9</span> Comparing models with subsampled LOO</h2>
+<section id="comparing-models-with-subsampled-loo" class="level2" data-number="8.8">
+<h2 data-number="8.8" class="anchored" data-anchor-id="comparing-models-with-subsampled-loo"><span class="header-section-number">8.8</span> Comparing models with subsampled LOO</h2>
 <p>We can compare models that are estimated via subsampling just like we would for regular LOO using the <code>compare()</code> function. We will fit a second model using <code>log(arsenic)</code> instead of <code>arsenic</code> as a predictor and compare the two models.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="9fb24fc1" class="cell" data-execution_count="16">
+<div id="acdfb8b9" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>X_log <span class="op">=</span> X.copy()</span>
 <span id="cb19-2"><a href="#cb19-2"></a>X_log[:, <span class="dv">2</span>] <span class="op">=</span> np.log(X[:, <span class="dv">2</span>])</span>
 <span id="cb19-3"><a href="#cb19-3"></a></span>
@@ -985,10 +851,10 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-<section id="comparison-with-different-subsamples" class="level3" data-number="8.9.1">
-<h3 data-number="8.9.1" class="anchored" data-anchor-id="comparison-with-different-subsamples"><span class="header-section-number">8.9.1</span> Comparison with different subsamples</h3>
+<section id="comparison-with-different-subsamples" class="level3" data-number="8.8.1">
+<h3 data-number="8.8.1" class="anchored" data-anchor-id="comparison-with-different-subsamples"><span class="header-section-number">8.8.1</span> Comparison with different subsamples</h3>
 <p>We first compute subsampled LOO for the second model using a <em>different</em> random seed than the first model. This means the two models will be evaluated on different subsets of observations.</p>
-<div id="cd4db303" class="cell" data-execution_count="18">
+<div id="a7812c69" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>loo_ss_2_diff <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb21-2"><a href="#cb21-2"></a>    data<span class="op">=</span>data2,</span>
 <span id="cb21-3"><a href="#cb21-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
@@ -1019,7 +885,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>Now we compare the models using different subsamples.</p>
-<div id="5ce52aa0" class="cell" data-execution_count="19">
+<div id="b48018aa" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>comparison_diff <span class="op">=</span> azp.compare({</span>
 <span id="cb23-2"><a href="#cb23-2"></a>    <span class="st">"model1_arsenic"</span>: loo_plpd,</span>
 <span id="cb23-3"><a href="#cb23-3"></a>    <span class="st">"model2_log_arsenic"</span>: loo_ss_2_diff,</span>
@@ -1097,10 +963,10 @@ Note on <code>dse</code> and <code>subsampling_dse</code>
 </div>
 <p>When using different subsamples, notice we get a warning message indicating that the subsamples are different. This warning indicates that the comparison cannot account for the correlation between models’ predictions. In this case, the standard error of the difference <code>dse</code> is computed naively by treating the two models as independent, which substantially inflates the uncertainty because we are losing the benefit of the covariance term <span class="math inline">\(\operatorname{Cov}(\operatorname{elpd}_A, \operatorname{elpd}_B)\)</span> discussed earlier.</p>
 </section>
-<section id="comparison-with-the-same-subsample" class="level3" data-number="8.9.2">
-<h3 data-number="8.9.2" class="anchored" data-anchor-id="comparison-with-the-same-subsample"><span class="header-section-number">8.9.2</span> Comparison with the same subsample</h3>
+<section id="comparison-with-the-same-subsample" class="level3" data-number="8.8.2">
+<h3 data-number="8.8.2" class="anchored" data-anchor-id="comparison-with-the-same-subsample"><span class="header-section-number">8.8.2</span> Comparison with the same subsample</h3>
 <p>To properly compare models, we reuse the exact same observations by passing the first LOO subsample object to the second <code>loo_subsample()</code> call. This ensures both models are evaluated on the same subset of observations, which is critical for accurate model comparison.</p>
-<div id="321dba02" class="cell" data-execution_count="20">
+<div id="3f266744" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>loo_ss_2 <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb25-2"><a href="#cb25-2"></a>    data<span class="op">=</span>data2,</span>
 <span id="cb25-3"><a href="#cb25-3"></a>    observations<span class="op">=</span>loo_plpd.loo_subsample_observations,</span>
@@ -1130,7 +996,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>Now we compare the models using the same subsample.</p>
-<div id="e662fed8" class="cell" data-execution_count="21">
+<div id="05cce06e" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>comparison_same <span class="op">=</span> azp.compare({</span>
 <span id="cb27-2"><a href="#cb27-2"></a>    <span class="st">"model1_arsenic"</span>: loo_plpd,</span>
 <span id="cb27-3"><a href="#cb27-3"></a>    <span class="st">"model2_log_arsenic"</span>: loo_ss_2,</span>
@@ -1193,11 +1059,11 @@ Pareto k diagnostic values:
 <p>In this example, the second model (with log-transformed arsenic) has higher ELPD than the first model, indicating better predictive performance. The subsampling SE is very small relative to the difference in ELPD, indicating that the subsample size of 100 is sufficient for accurate comparison. If the subsampling SE were large, we could increase the subsample size using <code>update_subsample()</code> as demonstrated earlier.</p>
 </section>
 </section>
-<section id="comparing-full-loo-to-subsampled-loo" class="level2" data-number="8.10">
-<h2 data-number="8.10" class="anchored" data-anchor-id="comparing-full-loo-to-subsampled-loo"><span class="header-section-number">8.10</span> Comparing full LOO to subsampled LOO</h2>
+<section id="comparing-full-loo-to-subsampled-loo" class="level2" data-number="8.9">
+<h2 data-number="8.9" class="anchored" data-anchor-id="comparing-full-loo-to-subsampled-loo"><span class="header-section-number">8.9</span> Comparing full LOO to subsampled LOO</h2>
 <p>We can also compare a subsampled LOO object to a full LOO object that was computed on all <span class="math inline">\(N = 3020\)</span> observations.</p>
 <p>The following computes full PSIS-LOO-CV for the first model using the <code>loo()</code> function.</p>
-<div id="a3aad3b9" class="cell" data-execution_count="22">
+<div id="b38cca21" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>loo_full <span class="op">=</span> azp.loo(data, var_name<span class="op">=</span><span class="st">"y"</span>, pointwise<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb28-2"><a href="#cb28-2"></a>loo_full</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
@@ -1216,7 +1082,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>When comparing a full LOO calculation to a subsampled calculation, the <code>compare()</code> function automatically uses only the observations included in both calculations.</p>
-<div id="4d93e7f4" class="cell" data-execution_count="23">
+<div id="d1593b41" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>comparison_mixed <span class="op">=</span> azp.compare({</span>
 <span id="cb30-2"><a href="#cb30-2"></a>    <span class="st">"model1_full_loo"</span>: loo_full,</span>
 <span id="cb30-3"><a href="#cb30-3"></a>    <span class="st">"model2_subsampled_loo"</span>: loo_ss_2</span>
@@ -1281,19 +1147,13 @@ Pareto k diagnostic values:
 </div>
 <p>Notice that this comparison triggers a warning message indicating that only observations included in both LOO calculations are used for the difference estimate. Since the subsampled LOO only evaluated 100 observations, the comparison is based on those 100 observations rather than the full dataset. We can also see an increase in <code>subsampling_dse</code> compared to the previous comparison which is due to a technical detail that we omit from this example.</p>
 </section>
-<section id="practical-considerations" class="level2" data-number="8.11">
-<h2 data-number="8.11" class="anchored" data-anchor-id="practical-considerations"><span class="header-section-number">8.11</span> Practical considerations</h2>
+<section id="practical-considerations" class="level2" data-number="8.10">
+<h2 data-number="8.10" class="anchored" data-anchor-id="practical-considerations"><span class="header-section-number">8.10</span> Practical considerations</h2>
 <p>For moderately sized models, the PLPD surrogate typically suffices because the posterior mean encapsulates most of the predictive information. When the model has hierarchical components or weakly identified parameters, <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> recommend richer surrogates such as the LPD or diagnostics-driven truncation of importance weights to reduce the approximation error <span class="math inline">\(e_j\)</span> and therefore the subsampling variance. Truncated importance sampling plays a similar role by clipping large <span class="math inline">\(r_{is}\)</span> values before applying the Pareto smoothing step. Regardless of the surrogate, increasing <span class="math inline">\(m\)</span> under the difference estimator guarantees convergence because the finite population correction shrinks the variance as <span class="math inline">\(m\)</span> approaches <span class="math inline">\(N\)</span>.</p>
 <p>When comparing multiple models via subsampling, it is recommended to reuse a single subsample across all fits. In this case, the difference estimator produces <span class="math inline">\(\widehat{\operatorname{ELPD}}_{\text{diff}}\)</span> for each model and the estimated difference <span class="math inline">\(\widehat{\operatorname{ELPD}}_{A} - \widehat{\operatorname{ELPD}}_{B}\)</span> inherits the same subsampling indices. Consistency results in <span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> ensure that even with fixed <span class="math inline">\(m\)</span> and a finite number of posterior draws, the estimator converges as the quality of the surrogate improves.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-bengio_2004" class="csl-entry" role="listitem">
-Bengio, Yoshua, and Yves Grandvalet. 2004. <span>“No Unbiased Estimator of the Variance of k-Fold Cross-Validation.”</span> <em>Journal of Machine Learning Research</em> 5: 1089–1105. <a href="https://jmlr.csail.mit.edu/papers/v5/grandvalet04a.html">https://jmlr.csail.mit.edu/papers/v5/grandvalet04a.html</a>.
-</div>
-<div id="ref-hansen_hurwitz_1943" class="csl-entry" role="listitem">
-Hansen, Morris H., and William N. Hurwitz. 1943. <span>“On the Theory of Sampling from Finite Populations.”</span> <em>The Annals of Mathematical Statistics</em> 14 (4): 333–62. <a href="https://doi.org/10.1214/aoms/1177731360">https://doi.org/10.1214/aoms/1177731360</a>.
-</div>
 <div id="ref-magnusson_2020" class="csl-entry" role="listitem">
 Magnusson, Måns, Michael Riis Andersen, Johan Jonasson, and Aki Vehtari. 2020. <span>“Leave-One-Out Cross-Validation for Model Comparison in Large Data.”</span> In <em>Proceedings of the 23rd International Conference on Artificial Intelligence and Statistics</em>. Vol. 108. Proceedings of Machine Learning Research. PMLR. <a href="https://arxiv.org/abs/2001.00980">https://arxiv.org/abs/2001.00980</a>.
 </div>
@@ -1861,8 +1721,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../Chapters/Moment_Matching.html" class="pagination-link" aria-label="Moment Matching for Improved PSIS-LOO-CV">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Moment Matching for Improved PSIS-LOO-CV</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../Chapters/Moment_Matching.html" class="pagination-link" aria-label="Moment matching for improved PSIS-LOO-CV">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Moment matching for improved PSIS-LOO-CV</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
