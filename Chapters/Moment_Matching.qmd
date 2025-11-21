@@ -15,15 +15,7 @@ plt.rcParams["figure.dpi"] = 100
 SEED = 4711
 ```
 
-The efficiency of PSIS-LOO-CV depends critically on stable importance sampling, which breaks down when the Pareto-$k$ diagnostic exceeds a threshold (typically around 0.7 for standard MCMC sample sizes), leading to unreliable estimates. 
-
-When observations produce high Pareto-$k$ values, we can use standard LOO-CV for those observations, i.e. refit the model while removing those problematic observations one at a time. This could be useful if the number of observations with high $\hat k$ is small, otherwise it can easily become too expensive for routine use. K-fold CV is another option but it can also be too expensive.
-
-But those are not the only two solution when PSIS-LOO-CV gives high $\hat k$ values. Instead of expensive model refitting. The method **importance weighted moment matching (IWMM)** presented by @paananen_2020 works by improving the proposal distribution by iteratively transforming existing posterior draws to better match the moments of the target distribution.
-
-In this chapter we walk through a complete example showing how to use IWMM with ArviZ, for details on how this methods works we recommend @sec-IWMM-theory.
-
-For this example, we'll fit a Poisson regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The model is intentionally misspecified to demonstrate the benefits of moment matching when influential observations lead to high Pareto-$k$ values.
+In this chapter, we demonstrate how to apply importance weighted moment matching (IWMM) to improve PSIS-LOO-CV estimates when influential observations produce high Pareto-$k$ values. We walk through a complete applied example using the `roaches` dataset from @gelman_hill_2007, showing how to specify the required functions and apply moment matching to resolve problematic importance sampling approximations without expensive model refitting. The workflow demonstrates ArviZ's `loo_moment_match()` function with a deliberately misspecified Poisson regression model where multiple observations are flagged as problematic. For theoretical background and details of how moment matching works, we recommend you read @sec-IWMM-theory and references therein.
 
 ## Roaches data and Poisson regression model
 

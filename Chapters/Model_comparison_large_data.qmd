@@ -24,9 +24,7 @@ decompress("../models/prerun/model_comparison_large_data_00.nc")
 decompress("../models/prerun/model_comparison_large_data_03.nc")
 ```
 
-Comparing Bayesian models on large datasets presents a computational challenge. Full leave-one-out cross-validation (LOO) requires computing $n$ posteriors and brute force K-fold cross-validation methods become prohibitively expensive as data size grows. 
-
-To overcome these challenges, we will use the approach described in @magnusson_2020 to combine fast approximations with targeted, exact computations. The key idea is to use cheap approximations, called *surrogates*, for all $n$ observations, and then correct these approximations using exact Pareto smoothed importance sampling (PSIS) LOO-CV on just a small random subsample with a *difference estimator* that corrects for the approximation error across the full dataset. For details of the method we recommend you to read @sec-subsampledloo-theory and references therein.
+In this chapter, we demonstrate how to efficiently compare Bayesian models on large datasets using subsampled PSIS-LOO-CV. We apply the methods introduced in @sec-subsampledloo-theory to a real dataset containing thousands of observations, showing how to balance computational efficiency with statistical accuracy. The workflow combines fast surrogate approximations with exact computations on a small subsample, and can be further accelerated using approximate posteriors from variational inference or Laplace approximations. For theoretical background and details of the method, we recommend you read @sec-subsampledloo-theory and references therein.
 
 ## Workflow for model comparison
 
