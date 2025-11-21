@@ -23,7 +23,7 @@ But those are not the only two solution when PSIS-LOO-CV gives high $\hat k$ val
 
 In this chapter we walk through a complete example showing how to use IWMM with ArviZ, for details on how this methods works we recommend @sec-IWMM-theory.
 
-For this example we'll fit a Poisson regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The model is intentionally misspecified to demonstrate the benefits of moment matching when influential observations lead to high Pareto-$k$ values.
+For this example, we'll fit a Poisson regression model to the `roaches` data from @gelman_hill_2007, which examines the efficacy of a pest management system at reducing cockroach infestations in urban apartments. The model is intentionally misspecified to demonstrate the benefits of moment matching when influential observations lead to high Pareto-$k$ values.
 
 ## Roaches data and Poisson regression model
 

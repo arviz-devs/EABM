@@ -22,15 +22,15 @@ In a typical data analysis, it's common to develop multiple models that fit the 
 
 Understanding the goals of the analysis and the problem at hand often provides valuable guidance. Models rarely incorporate all of our prior knowledge, so this additional information can help us evaluate and compare them. Prior and posterior predictive checks (see @sec-ppc) and computational diagnostics (see @sec-mcmc-diagnostics) can further inform model choice (a model we can not fit well is a model we can not trust!). Even convention and tradition may influence selection, although scientific reasoning should ideally prevail over tradition.
 
-In this chapter, we provided a theoretical, yet accesible, foundation for a series of method for efficient model comparison. Later in @sec-model-comparison-large-data,@sec-model-comparison-case-study, and @sec-moment-matching we provided applied examples of these methods.
+In this chapter, we provided a theoretical, yet accesible, foundation for a series of methods for efficient model comparison. Later in @sec-model-comparison-large-data, @sec-model-comparison-case-study, and @sec-moment-matching we provided applied examples of these methods.
 
-## The balance between simplicity, accuracy
+## The balance between simplicity and accuracy
 
 When comparing models, we seek a balance between simplicity and accuracy. Occam's razor suggests that, among equally plausible explanations, the simplest should be preferred. In modeling, simplicity is often measured by the number of parameters, while accuracy reflects how well a model fits the data. Ideally, we want models that fit the data well without overfitting.
 
 Overfitting occurs when a model captures not only the underlying patterns but also random noise. Such models perform well on the data used for fitting (within-sample error) but poorly on new, unseen data. Overfitting is more likely in highly flexible models with many parameters or when the model structure is overly complex. Detecting it requires evaluating performance on data not used for fitting, motivating out-of-sample measures such as cross-validation or information criteria.
 
-Bayesian models are generally less prone to overfitting than many alternative approaches. This is because priors constrain the parameter space, and the computing the posterior involves averaging over these priors rather than committing to a single point estimate. As a result, even highly flexible Bayesian models often avoid the extreme overfitting seen in classical settings. A typical text book example of overfitting is a polynomial with as many degrees of freedom as data points. This will indeed badly overfit under optimization-based methods, but a Bayesian model with even quite vague priors will provide a reasonable solution. Priors can even stabilize models with more parameters than observations, and for decades we have known that Bayesian methods can handle models with infinitely many parameters, such as Gaussian processes. However, this protection is not automatic. Bayesian models with very vague priors are more prone to overfitting, while models whose priors induce a prior predictive distribution consistent with domain knowledge tend to be more resistant to it.
+Bayesian models are generally less prone to overfitting than many alternative approaches. This is because priors constrain the parameter space, and computing the posterior involves averaging over these priors rather than committing to a single point estimate. As a result, even highly flexible Bayesian models often avoid the extreme overfitting seen in classical settings. A typical text book example of overfitting is a polynomial with as many degrees of freedom as data points. This will indeed badly overfit under optimization-based methods, but a Bayesian model with even quite vague priors will provide a reasonable solution. Priors can even stabilize models with more parameters than observations, and for decades we have known that Bayesian methods can handle models with infinitely many parameters, such as Gaussian processes. However, this protection is not automatic. Bayesian models with very vague priors are more prone to overfitting, while models whose priors induce a prior predictive distribution consistent with domain knowledge tend to be more resistant to it.
 
 
 ### Predictive accuracy measures
@@ -46,7 +46,7 @@ We will focus on two families of methods:
 
 ## Cross validation
 
-Cross-validation is a simple and, in most cases, effective solution for comparing models. We take our data and divide it into $K$ slices. We try to keep the portions more or less the same (in size and sometimes also in other characteristics, such as an equal number of classes). We then use $K-1$ portions to train the model and the rest to evaluate it. This process is systematically repeated leaving, for each iteration, a different portion out of the training set and using that portion as the evaluation set. This is repeated until we have completed $K$ rounds of adjustment-evaluation. The accuracy of the model will be the average over the $K$ rounds. This is known as K-fold cross validation. Finally, once we have cross-validated, we use all the data to fit our model and this is the model that is used to make predictions or for any other purpose.
+Cross-validation is a simple and, in most cases, effective solution for comparing models. We take our data and divide it into $K$ slices. We try to keep the portions more or less the same (in size and sometimes also in other characteristics, such as an equal number of classes). We then use $K-1$ portions to train the model and the rest to evaluate it. This process is systematically repeated, leaving, for each iteration, a different portion out of the training set and using that portion as the evaluation set. This is repeated until we have completed $K$ rounds of adjustment–evaluation. The accuracy of the model will be the average over the $K$ rounds. This is known as $K$-fold cross-validation. Finally, once we have cross-validated, we use all the data to fit our model, and this is the model that is used to make predictions or for any other purpose.
 
 <img src='../img/cv.png' width=500 >
 
@@ -128,7 +128,7 @@ $$
 
 This tell us that when comparing models the best model, from the set of compared models, will be the one that has the larger (log-)likelihood value. In other words, minimizing the KL divergence is proportional to maximizing likelihood. 
 
-This result is very general and useful but it has a catch. In practice we don't really have $\mathbb{E}[\log{q}]$. And hence we need to estimate with. We can use the observed data to estimate the parameters of a model and then use those parameters to estimate $\mathbb{E}[\log{q}]$, but that will introduce a bias. We will be overconfident on the ability of our model to explain the data. Information criteria and cross-validation provides a way to reduce this bias without having to get a new dataset.
+This result is very general and useful, but it has a catch. In practice, we don't really have $\mathbb{E}[\log{q}]$, and hence we need to estimate it. We can use the observed data to estimate the parameters of a model and then use those parameters to estimate $\mathbb{E}[\log{q}]$, but that will introduce bias. We will be overconfident about the ability of our model to explain the data. Information criteria and cross-validation provide a way to reduce this bias without having to get a new dataset.
 
 
 ### Akaike information criterion
@@ -200,7 +200,7 @@ A model where $\beta=0$ will be less flexible, since it is equivalent to a model
 
 ## Efficient LOO-CV {#sec-efficient-loo-cv}
 
-We have seen that we can use Information criteria estimate the expected log-predictive density (ELPD) by adding a introducing a penalization term to the log-likelihood term, which corrects for the bias introduced when *double-dipping* our model into the data
+We have seen that we can use information criteria to estimate the expected log-predictive density (ELPD) by introducing a penalization term to the log-likelihood, which corrects for the bias introduced when *double-dipping* our model into the data.
 
 As already discussed cross-validation provides an alternative way to address this bias. The LOO-CV ELPD can be computed as:
 
@@ -260,7 +260,7 @@ $$
 
 The beauty of this expression is that all terms in the numerator and the denominator will cancel out except for only one! The likelihood for the observation we want to remove, that will remain in the denominator.
 
-The weights computed in this way are are not normalized, so to use them we need to divide each weight by the total sum of the weights. Once the weights has been normalize we can use them to estimate the ELPD as:
+The weights computed in this way are are not normalized, so to use them we need to divide each weight by the total sum of the weights. Once the weights have been normalized, we can use them to estimate the ELPD as:
 
 $$
 \sum_i^N \log \left( \frac{1}{S} \sum_j^S w_i^j p(y_i \mid \theta^j) \right)
@@ -268,11 +268,11 @@ $$
 
 This result is fantastic news, it tells us that we can calculate the leave-one-out cross-validation ELPD, without having to refit the model $N$ times.
 
-The catch, because there is always a catch! Is that the expected $p(\theta^j \mid y_{-i} )$ will in general be "wider" than $p(\theta^j \mid y)$, since it is a posterior distribution estimated with one less observation. This is the opposite to the ideal case in importance sampling. For many cases the difference will be small enough that it will not interfere with our goal. But in some cases the difference will be large enough to render the approximation, unreliable. When? Well, the more "influential" the observation the larger then difference when we remove it. 
+The catch is that the expected $p(\theta^j \mid y_{-i})$ will, in general, be wider than $p(\theta^j \mid y)$, because it is a posterior distribution estimated with one fewer observation. This is the opposite of the ideal situation for importance sampling. Often the difference is small enough that it does not cause problems, but in some cases it can be large enough to make the approximation unreliable. When does this happen? The more influential the observation, the larger the change when we remove it.
 
 Is everything lost? Not yet! In terms of importance sampling this translates into weights with greater relative importance and which therefore tend to dominate the estimation. One way to correct this problem is to simply truncate the weights that are "too high", this can be done but is sweeping the problem under the rug. We can do something similar but better. 
 
-Theory indicates that under very general conditions the tail of the distribution of weights can be approximated by a Generalized-Pareto distribution. So instead of truncating them we can fit them the Generalized-Pareto distribution to the tail of the computed weights and then replace the computed weight from weights from this fit. This is a form of *smoothing* that, within a certain range, allows stabilizing the importance sampling estimate by making some "very large" weights ​​not so large.
+Theory indicates that, under very general conditions, the tail of the distribution of weights can be approximated by a generalized Pareto distribution. So instead of truncating them, we can fit a generalized Pareto distribution to the tail of the computed weights and then replace the original weights with draws from this fit. This is a form of *smoothing* that, within a certain range, allows stabilizing the importance sampling estimate by making some "very large" weights not so large.
 
 When we combine all these ideas we get a method called Pareto-Smooth Importance Sampling Leave-One-Out Cross Validation [@vehtari_2017; @yao_2018], which is abbreviated as PSIS-LOO-CV. 
 
@@ -287,9 +287,9 @@ elpd
 ```
 
 We can see that we get the estimated ELPD value using LOO and its standard error. `p_loo` can be roughly interpreted as the effective number of parameters. For some models this number should be close to the actual number of parameters, for models with regularization, like hierarchical models, it should be less than the actual number of parameters.
-In order to be able to compute After all this introduction, calculating LOO may seem somewhat disappointing.
+After all this introduction, actually computing LOO may seem somewhat disappointing.
 
-To compare two or more models we can use the `compare` functions that accepts a dictionary with the keys being the names of the models and the values DataTree objects.
+To compare two or more models, we can use the `compare` function, which accepts a dictionary where the keys are the names of the models and the values are `DataTree` objects.
 
 ::: {.panel-tabset}
 ## PyMC
@@ -368,9 +368,9 @@ The simplest way to use information criteria is to choose a single model. Simply
 
 ### Pareto k and LOO diagnostics
 
-Then we can see a table with the title "Pareto k diagnostic values". We previously said that we used a method involving a Pareto distribution to regularize the estimation of the importance weights. One of the parameters of that fit is called $k$. Sometimes we call it $\hat k$ (because is an estimate of $k$). Since we have a Pareto adjustment per observation we have a $\hat k$ value per observation. This parameter is useful because it tells us two sides of the same story, it tells us when an observation is "very influential" and it tells us that the approximation used by LOO could be failing for that observation.
+Then we see a table titled “Pareto k diagnostic values”. Earlier we said that we use a method involving a Pareto distribution to regularize the estimation of the importance weights. One of the parameters of that fit is called $k$, and its estimate is often written as $\hat{k}$. Because we compute a Pareto adjustment per observation, we obtain one $\hat{k}$ value per observation. This parameter is useful because it tells us two related things: when an observation is "very influential" and when the LOO approximation may be failing for that observation.
 
-As a general rule, if $\hat k$ is less than 0.7 there are no problems, if it's between 0.7 and 1 is very likely that we are in trouble and if it's greater than 1, we are doom. The cut-off value 0.7 is not fixed, it can strictly be lower and depends on the total number of samples of the posterior distribution, 2000, in this example. But when the number of draws is about 2000 we are almost at 0.7. In practice it is common to use sample values ​​of 2000 or larger. Increasing the number of samples from the posterior may reduce the value of $k$ and so we could remove some of these warnings, but in general the number needed will be too large to make any practical sense.
+As a general rule, if $\hat{k}$ is less than 0.7 there are no problems; if it is between 0.7 and 1 it is very likely that we are in trouble; and if it is greater than 1, we are doomed. The cut-off value 0.7 is not fixed, it can in principle be lower, and it depends on the total number of posterior draws (2000 in this example). But when the number of draws is about 2000, the recommended threshold is close to 0.7. In practice, it is common to use at least 2000 posterior draws. Increasing the number of samples from the posterior may reduce the value of $\hat{k}$ and thus remove some of these warnings, but in general the number needed will be too large to be practically useful.
 
 It is possible to visualize the values ​​of $k$, using `plot_khat`
 
@@ -382,7 +382,7 @@ It is possible to visualize the values ​​of $k$, using `plot_khat`
 
 While the main function of LOO is to compare models, the values ​​of $k$ can be useful even if we only have only one model. For example, we could have extra knowledge that tells us why these observations are influential, perhaps there was a problem in data collection and the values ​​are incorrect. Or perhaps the values ​​are correct but from the perspective of our model they are influential, "strange", "surprising".
 
- If $k > 0.7$, the value of `p_loo` can give us some more information. Where $p$ is the total number of parameters in a model.
+ If $k > 0.7$, the value of `p_loo` can give us some more information, where $p$ is the total number of parameters in a model.
 
 * If $p_{\text{loo}} << p$ then the model must be misspecified. This should also be seen in post-hoc predictive testing. One solution is to use an overdispersed model (such as changing a Poisson for a NegativeBinomial or for a ZeroInflatedPoisson or HurdlePoisson, or changing a Normal for a Student's T, etc.). Or it is likely that the model needs more structure or complexity, perhaps we need a non-linear term, etc.
 
@@ -720,14 +720,14 @@ which averages over posterior draws before taking the logarithm. The approximati
 
 ### Asymptotic guarantees and assumptions
 
-The difference estimator has strong theoretical foundations with convergence guarantees under mild regularity conditions. Remarkably, convergence accelerates as data size grows, even with fixed subsample size and fixed number of posterior draws, making the method more efficient precisely when needed most. 
+The difference estimator has strong theoretical foundations, with convergence guarantees under mild regularity conditions. Remarkably, convergence accelerates as the data size grows, even when the subsample size and number of posterior draws are fixed, making the method more efficient precisely when it is needed most.
 
 The required assumptions are standard regularity conditions satisfied by most common parametric models including regression, GLMs, and hierarchical models. For detailed theoretical treatment of the asymptotic properties and regularity conditions, see @magnusson_2020.
 
 
 ## Absolute metrics
 
-In the previous sections we have seen how to compare models using relative metrics. By relative we mean that we are comparing the models with respect to each other. For example, we can say that model A is better than model B because it has a higher ELPD value. But we can not, in general, judge a single model by its ELPD alone. 
+In the previous sections, we have seen how to compare models using relative metrics. By relative we mean that we are comparing the models with respect to each other. For example, we can say that model A is better than model B because it has a higher ELPD value. But we can not, in general, judge a single model by its ELPD alone. 
 In contrast, sometimes we are interested in absolute metrics. Some common absolute metrics are the root mean square error (RMSE), the mean absolute error (MAE), the coeﬀicient of determination ($R^2$), etc. Interestingly, we can use PSIS-LOO-CV procedure to compute the leave-one-out cross-validation version of these metrics. 
 
 ### LOO expectations and metrics
@@ -771,11 +771,11 @@ azp.plot_loo_pit(dt_rugby, var_names="home_points")
 
 ## Other information criteria
 
-PSIS-LOO_CV and WAIC converge asymptotically, and they based on the same set of assumptions. So theoretically they are equivalent. However, in practice PSIS-LOO_CV is more robust, and also offers us a diagnosis that indicates when it could be failing (this is thanks to the Pareto adjustment). For this reason ArviZ only implementes PSIS-LOO-CV. We now briefly discuss two other information criteria that are somewhat popular.
+PSIS-LOO-CV and WAIC converge asymptotically and are based on the same set of assumptions, so theoretically they are equivalent. However, in practice PSIS-LOO-CV is more robust and also offers a diagnostic that indicates when it could be failing (thanks to the Pareto adjustment). For this reason, ArviZ only implements PSIS-LOO-CV. We now briefly discuss two other information criteria that are somewhat popular.
 
 Deviance Information Criteria, DIC, if we use the *bayes-o-meter™*, DIC is more Bayesian than AIC but less than WAIC. Although still popular, PSIS-LOO_CV (and also WAIC) have proven to be more useful both theoretically and empirically than DIC. Therefore we DO NOT recommend its use.
 
-Bayesian Information Criteria, BIC. It was proposed as a way to correct some of the problems with AIC and the author proposed a Bayesian rationale for it. But BIC is not really Bayesian in the sense that, like AIC, assumes *flat* priors and uses maximum likelihood estimation. But more importantly, BIC differs from AIC and WAIC in its objective. AIC and WAIC try to reflect which model generalizes better to other data (predictive accuracy) while BIC tries to identify which is the _correct_ model and therefore is more related to Bayes factors than with WAIC. In the next section we discuss Bayes Factors and how they differs from PSIS-LOO-CV and WAIC.
+Bayesian Information Criterion (BIC) was proposed as a way to correct some of the problems with AIC, and the author provided a Bayesian rationale for it. But BIC is not really Bayesian in the sense that, like AIC, it assumes *flat* priors and uses maximum likelihood estimation. More importantly, BIC differs from AIC and WAIC in its objective. AIC and WAIC aim to reflect which model generalizes better to new data (predictive accuracy), while BIC tries to identify the *correct* model and is therefore more closely related to Bayes factors than to WAIC. In the next section, we discuss Bayes factors and how they differ from PSIS-LOO-CV and WAIC.
 
 
 ## Bayes factors
@@ -934,4 +934,4 @@ We can see that the `BF_01` is $\approx 1.6$, which we can interpret as *anecdot
 
 ### Bayes factors vs the alternatives
 
-We could say that the Bayes factors measure which model, as a whole, is better for explaining the data. This includes the details of the prior, no matter how similar the model predictions are. In many scenarios, this is not what interests us when comparing models. For many real problems prior are not intended to be an accurate description of the *True* prior distribution of parameters, instead in many problems priors are choosen using some information and with the goal of providing some regulatization. In this and other cases we prefer to evaluate models in terms of how similar their predictions are. For those cases, we can use LOO.
+We could say that the Bayes factors measure which model, as a whole, is better at explaining the data. This includes the details of the prior, no matter how similar the model predictions are. In many scenarios, this is not what interests us when comparing models. For many real problems, priors are not intended to be an accurate description of the *True* prior distribution of parameters; instead, they are often chosen using partial information and with the goal of providing some regularization. In these cases, we prefer to evaluate models in terms of how similar their predictions are. For those cases, we can use LOO.
