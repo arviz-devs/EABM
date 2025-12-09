@@ -266,7 +266,13 @@ loo_mm_result
 
 After moment matching, the Pareto-$k$ values improve substantially, with all 262 observations now having Pareto-$k$ values below 0.7. This indicates that moment matching has successfully resolved all problematic importance sampling issues, providing reliable PSIS-LOO-CV estimates for every observation. This represents a complete improvement over the original 13 problematic observations. Notably, the ELPD estimate decreases from -5461.14 to -5477.60 after moment matching, indicating that the original PSIS-LOO-CV estimate was too optimistic and `loo()` overestimated the predictive performance.
 
-<!-- TODO: Add some commentary on n_eff_i and influence_pareto_k to compare mm pareto values with original pareto values, and to look at the per observation effective sample size and influence of the Pareto $k$ values. -->
+### Interpreting diagnostic quantities
+
+After moment matching, two distinct Pareto-$k$ diagnostics are available. The values in `pareto_k` reflect the accuracy of the importance sampling approximation after applying the moment matching transformations. These are the values we use to assess whether our PSIS-LOO-CV estimates are reliable. The original values are preserved in `influence_pareto_k` and serve a different purpose: they indicate how much each observation influences the posterior distribution. An observation with high `influence_pareto_k` substantially affects the model fit when included, regardless of whether moment matching successfully improved the sampling accuracy.
+
+Moment matching also provides per-observation effective sample size estimates in `n_eff_i`. These values quantify how many independent samples effectively contribute to each observation's PSIS-LOO-CV estimate after accounting for the importance weights and MCMC sampling efficiency. Lower effective sample sizes indicate observations where the importance weights are more variable, suggesting greater uncertainty in those particular estimates.
+
+These diagnostic quantities can be accessed directly from the `loo_mm_result` object as attributes.
 
 ## Summary
 
