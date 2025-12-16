@@ -244,16 +244,15 @@ The following video shows a step-by-step animation of a quantile dot plot being 
 {{< video ../videos/dotplot.mp4 >}}
 
 
-From @fig-dist_qdot we can easily see that 30% of the data is below 2. We do this by noticing that we have a total of 10 dots and 3 of them are below 2.
+From @fig-dist_qdot we can easily see that 30% of the data is below 1. We do this by noticing that we have a total of 10 dots and 3 of them are below 1.
 
 ```{python}
 #| label: fig-dist_qdot
 #| fig-cap: "Quantile dot plot"
-d_values = azp.convert_to_dataset(pz.Poisson(3).rvs((1, 500), random_state=rng))
-try:
-    azp.plot_dist(d_values, kind="dots");
-except NotImplementedError:
-    pass
+d_values = azp.convert_to_dataset(pz.Normal(2, 2).rvs((4, 1000), random_state=123))
+azp.plot_dist(d_values, kind="dot",
+              stats={"dist":{"nquantiles":10}}
+);
 ```
 
 The number of quantiles is something you will need to choose by yourself, usually, it is a good idea to keep this number relatively small and "round", as the main feature of a quantile dot plot is that finding probability intervals reduces to counting dots [@kay_2016; @fernandes_2018]. It is easier to count and compute proportions if you have 10, or 20 dots than if you have 11 or 57. But sometimes a larger number could be a good idea too. When we are interested in the tails of a distribution, using more quantiles can help. A choice like 100 is often a good default because each dot represents exactly 1% of the distribution, ensuring small probabilities can still be estimated accurately. 100 is the default in ArviZ.
