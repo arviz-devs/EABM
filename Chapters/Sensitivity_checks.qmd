@@ -421,7 +421,7 @@ Sensitivity diagnostic values are given for both prior and likelihood sensitivit
 **These diagnostic messages do not necessarily indicate problems with the model**. They are informative messages that describe the interplay between the chosen prior and likelihood. If your prior is meant to be informative, influence on the posterior is desired and prior-data conflict may not be an issue. However, if you did not put much effort into choosing the priors, these messages can let you know if you should be more deliberate in your prior specification.
 
 * **Strong prior / weak likelihood**. This can occur when:
-    * The prior is completely dominating the likelihood such that changing the likelihood strength has little to no impact on the posterior. The prior may be extremely informative and a using a weaker prior may remove this domination.
+    * The prior is completely dominating the likelihood such that changing the likelihood strength has little to no impact on the posterior. The prior may be extremely informative and using a weaker prior may remove this domination.
 
     * The likelihood is uninformative and no information is gained by increasing the strength of the likelihood. The prior will always have an effect in this case.
 
