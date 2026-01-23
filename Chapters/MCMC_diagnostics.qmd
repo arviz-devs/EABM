@@ -128,19 +128,37 @@ pz.Uniform(0, 1).plot_cdf(figsize=(6, 4));
 
 The disadvantage of such visualization is that all the "action" is close to the diagonal line and most of the figure is just blank space, specially as the MCMC sample size increase. A simple trick to improve the *data-ink* ratio is to plot the $\Delta$-ECDF, i.e. (observed ECDF - expected ECDF). Then a uniform distribution is a flat line that goes from (0,0) to (1, 0). 
 
-@fig-rank_plot shows fractional rank plots for `good_sample`, `bad_sample_0` and `bad_sample_1`. 
+The following figures shows fractional rank plots for `good_sample`, `bad_sample_0` and `bad_sample_1`. 
 
 
 ```{python}
-#| label: fig-rank_plot
+#| label: fig-rank_plot_good
 #| code-fold: true
-#| fig-cap: "Rank plot for `good_sample`, `bad_sample_0` and `bad_sample_1`"
-azp.plot_rank(sample);
+#| fig-cap: "Rank plot for `good_sample`"
+azp.plot_rank(sample, var_names=["good_sample"]);
 ```
 
-For `good_sample` we can see that ranks for both chains are uniform, as the deviations are within the envelope. In sharp contrast `bad_sample_0` looks awful, deviations are very large as both chains belong to different distributions. Finally, `bad_sample_1` also shows problems, we see than for chain 0 (blue) there are more high ranks than expected, and the opposite for chain 1 (red). This is a consequence of chain 1 being stuck in some regions of relatively high values as shown in @fig-traceplot_bad_sample_1.
+For `good_sample` we can see that ranks looks relative flat and deviations are within the envelope. In sharp contrast `bad_sample_0` looks awful, deviations are very large as both chains belong to different distributions. The envelopes computation does not take into account autocorrelation, so it is recommend to thin the draws as discussed in @sec-thinning. `plot_rank` does this automatically. To disable thinning we can do `azp.plot_rank(..., thin=False)`, as we did for @fig-rank_plot_bad_sample_0. 
 
-Rank plots provide a more reliable way to diagnose MCMC sampling issues compared to trace plots. While trace plots can reveal mixing problems, they often become cluttered, making it difficult to identify subtle issues like chains exploring different regions unevenly. In contrast, rank plots summarize sampling behaviour more effectively by checking for uniformity across chains, helping to detect biases, poor mixing, or convergence issues in a more interpretable way. This makes them a powerful complement—or even a preferred alternative—to trace plots for assessing MCMC performance.
+```{python}
+#| label: fig-rank_plot_bad_sample_0
+#| code-fold: true
+#| fig-cap: "Rank plot for `bad_sample_0`"
+azp.plot_rank(sample, var_names=["bad_sample_0"], thin=False);
+```
+
+Finally, `bad_sample_1` also shows problems, see how chain 0 (blue) get out of the envelope. Notice also how the envelope and lines looks very "squared-shaped" compared with those from @fig-rank_plot_good. This is indicating a relatively low ESS (high thinning). This is a consequence of the chains being stuck in some regions as shown in @fig-traceplot_bad_sample_1.
+
+
+```{python}
+#| label: fig-rank_plot_bad_sample_1
+#| code-fold: true
+#| fig-cap: "Rank plot for `bad_sample_1`"
+azp.plot_rank(sample, var_names=["bad_sample_1"]);
+```
+
+
+Rank plots provide a more reliable way to diagnose MCMC sampling issues compared to trace plots. While trace plots can reveal mixing problems, they often become cluttered, making it difficult to identify subtle issues like chains exploring different regions unevenly. In contrast, rank plots summarize sampling behaviour more effectively by checking for uniformity across chains, helping to detect biases, poor mixing, or convergence issues in a more interpretable way. This makes them a powerful method for visually assessing MCMC performance.
 
 Finally, we want to mention that we can use $\Delta$-ECDF plots to visually inspect any quantity that is expected to be uniformly distributed, not just the ranks. For example, in @sec-ppc we use them to compare the posterior predictive distribution to the observed data (see @fig-post_ppc_pit_ecdf_alt_0 and @fig-post_ppc_pit_ecdf_alt_1).
 
@@ -328,7 +346,7 @@ With ArviZ we can get the MCSE with `azp.mcse(⋅)` or `azp.summary(⋅)`.
 azp.mcse(sample)
 ```
 
-### Thinning
+### Thinning  {#sec-thinning}
 
 One way to reduce autocorrelation in an MCMC chain is through thinning, where we retain only every $n$-th sample. While this method is straightforward, it has the drawback of discarding useful information. Research generally suggests that it's better to keep all the samples when calculating estimates [@maceachern_1994; @link_2011]. Provided the variance is finite, the central limit theorem applies even to correlated samples. Then if higher accuracy is needed, it's more effective to increase the number of draws rather than to perform thinning. Still, there are situations where thinning might be useful, such as:
 
@@ -343,7 +361,7 @@ In ArviZ we have the `thin` function, which allows us to perform thinning automa
 azp.thin(sample)
 ```
 
-Additionally, if needed, we can specify the thinning factor manually or we can pass a `target_ess`, this last option is useful when we want as much thinning as possible provided we still get an ESS around the specified value of `target_ess`. 
+Additionally, if needed, we can specify the thinning factor manually by passing an integer to the argument `factor`.
 
 ## Diagnosis of gradient-based algorithms
 
