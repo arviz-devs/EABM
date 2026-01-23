@@ -2,12 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2025-04-02">
 
-<title>Exploratory Analysis of Bayesian Models - 12&nbsp; Prior Elicitation</title>
+<title>12&nbsp; Prior Elicitation – Exploratory Analysis of Bayesian Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,8 +22,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -87,17 +89,21 @@ div.csl-indent {
 <link href="../Chapters/Simulation_based_calibration.html" rel="next">
 <link href="../Chapters/Variable_selection.html" rel="prev">
 <link href="../favicon.ico" rel="icon">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-7bf12d62aa84b4fa538b342f1416a45b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-691c43ad62c52d8f2a4cfbd07224d002.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-7bf12d62aa84b4fa538b342f1416a45b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -126,7 +132,7 @@ div.csl-indent {
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -140,7 +146,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -157,6 +163,10 @@ window.Quarto = {
 </script>
 
 <meta name="citation_title" content="[[12]{.chapter-number}&nbsp; [Prior Elicitation ]{.chapter-title}]{#sec-prior-elicitation .quarto-section-identifier}">
+<meta name="citation_publication_date" content="2025-04-02">
+<meta name="citation_cover_date" content="2025-04-02">
+<meta name="citation_year" content="2025">
+<meta name="citation_online_date" content="2025-04-02">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Graphical perception: Theory, experimentation, and application to the development of graphical methods;,citation_author=William S. Cleveland;,citation_author=Robert McGill;,citation_publication_date=1984;,citation_cover_date=1984;,citation_year=1984;,citation_fulltext_html_url= https://www.tandfonline.com/doi/abs/10.1080/01621459.1984.10478080;,citation_issue=387;,citation_doi=10.1080/01621459.1984.10478080;,citation_volume=79;,citation_journal_title=Journal of the American Statistical Association;,citation_publisher=Taylor &amp;amp;amp; Francis;">
 <meta name="citation_reference" content="citation_title=Crowdsourcing graphical perception: Using mechanical turk to assess visualization design;,citation_author=Jeffrey Heer;,citation_author=Michael Bostock;,citation_publication_date=2010-04;,citation_cover_date=2010-04;,citation_year=2010;,citation_fulltext_html_url=https://doi.org/10.1145/1753326.1753357;,citation_doi=10.1145/1753326.1753357;,citation_isbn=978-1-60558-929-9;,citation_conference_title=Proceedings of the SIGCHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’10;">
@@ -188,7 +198,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Using Stacking to Average Bayesian Predictive Distributions (with Discussion);,citation_author=Yuling Yao;,citation_author=Aki Vehtari;,citation_author=Daniel Simpson;,citation_author=Andrew Gelman;,citation_publication_date=2018;,citation_cover_date=2018;,citation_year=2018;,citation_fulltext_html_url=https://doi.org/10.1214/17-BA1091;,citation_issue=3;,citation_doi=10.1214/17-BA1091;,citation_volume=13;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=A Widely Applicable Bayesian Information Criterion;,citation_author=Sumio Watanabe;,citation_publication_date=2013-03;,citation_cover_date=2013-03;,citation_year=2013;,citation_fulltext_html_url=https://dl.acm.org/doi/10.5555/2567709.2502609;,citation_volume=14;,citation_journal_title=Journal of Machine Learning Research;">
 <meta name="citation_reference" content="citation_title=A new look at the statistical model identification;,citation_author=H. Akaike;,citation_publication_date=1974;,citation_cover_date=1974;,citation_year=1974;,citation_issue=6;,citation_doi=10.1109/TAC.1974.1100705;,citation_volume=19;,citation_journal_title=IEEE Transactions on Automatic Control;">
-<meta name="citation_reference" content="citation_title=Rank-Normalization, Folding, and Localization: An Improved \widehat{R} for Assessing Convergence of MCMC (with Discussion);,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_author=Daniel Simpson;,citation_author=Bob Carpenter;,citation_author=Paul-Christian Bürkner;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_fulltext_html_url=https://doi.org/10.1214/20-BA1221;,citation_issue=2;,citation_doi=10.1214/20-BA1221;,citation_volume=16;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
+<meta name="citation_reference" content="citation_title=Rank-Normalization, Folding, and Localization: An Improved $\widehat{R}$ for Assessing Convergence of MCMC (with Discussion);,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_author=Daniel Simpson;,citation_author=Bob Carpenter;,citation_author=Paul-Christian Bürkner;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_fulltext_html_url=https://doi.org/10.1214/20-BA1221;,citation_issue=2;,citation_doi=10.1214/20-BA1221;,citation_volume=16;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=Truncated importance sampling;,citation_author=Edward L. Ionides;,citation_publication_date=2008;,citation_cover_date=2008;,citation_year=2008;,citation_issue=2;,citation_doi=10.1198/106186008X320465;,citation_volume=17;,citation_journal_title=Journal of Computational and Graphical Statistics;">
 <meta name="citation_reference" content="citation_title=No unbiased estimator of the variance of k-fold cross-validation;,citation_author=Yoshua Bengio;,citation_author=Yves Grandvalet;,citation_publication_date=2004;,citation_cover_date=2004;,citation_year=2004;,citation_fulltext_html_url=https://jmlr.csail.mit.edu/papers/v5/grandvalet04a.html;,citation_volume=5;,citation_journal_title=Journal of Machine Learning Research;">
 <meta name="citation_reference" content="citation_title=On the theory of sampling from finite populations;,citation_author=Morris H. Hansen;,citation_author=William N. Hurwitz;,citation_publication_date=1943;,citation_cover_date=1943;,citation_year=1943;,citation_issue=4;,citation_doi=10.1214/aoms/1177731360;,citation_volume=14;,citation_journal_title=The Annals of Mathematical Statistics;">
@@ -204,7 +214,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Satellite male groups in horseshoe crabs, limulus polyphemus;,citation_author=H. Jane Brockmann;,citation_publication_date=1996;,citation_cover_date=1996;,citation_year=1996;,citation_fulltext_html_url=https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1439-0310.1996.tb01099.x;,citation_issue=1;,citation_doi=10.1111/j.1439-0310.1996.tb01099.x;,citation_volume=102;,citation_journal_title=Ethology;">
 <meta name="citation_reference" content="citation_title=Recommendations for visual predictive checks in bayesian workflow;,citation_author=Teemu Säilynoja;,citation_author=Andrew R. Johnson;,citation_author=Osvaldo A. Martin;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2503.01509;">
 <meta name="citation_reference" content="citation_title=Visualization in bayesian workflow;,citation_author=Jonah Gabry;,citation_author=Daniel Simpson;,citation_author=Aki Vehtari;,citation_author=Michael Betancourt;,citation_author=Andrew Gelman;,citation_publication_date=2019-01;,citation_cover_date=2019-01;,citation_year=2019;,citation_fulltext_html_url=https://doi.org/10.1111/rssa.12378;,citation_issue=2;,citation_doi=10.1111/rssa.12378;,citation_issn=0964-1998;,citation_volume=182;,citation_journal_title=Journal of the Royal Statistical Society Series A: Statistics in Society;">
-<meta name="citation_reference" content="citation_title=Posterior Predictive p-Values;,citation_author=Xiao-Li Meng;,citation_publication_date=1994;,citation_cover_date=1994;,citation_year=1994;,citation_fulltext_html_url=https://doi.org/10.1214/aos/1176325622;,citation_issue=3;,citation_doi=10.1214/aos/1176325622;,citation_volume=22;,citation_journal_title=The Annals of Statistics;,citation_publisher=Institute of Mathematical Statistics;">
+<meta name="citation_reference" content="citation_title=Posterior Predictive $p$-Values;,citation_author=Xiao-Li Meng;,citation_publication_date=1994;,citation_cover_date=1994;,citation_year=1994;,citation_fulltext_html_url=https://doi.org/10.1214/aos/1176325622;,citation_issue=3;,citation_doi=10.1214/aos/1176325622;,citation_volume=22;,citation_journal_title=The Annals of Statistics;,citation_publisher=Institute of Mathematical Statistics;">
 <meta name="citation_reference" content="citation_title=Bayesian Data Analysis;,citation_author=Andrew Gelman;,citation_author=John B. Carlin;,citation_author=Hal S. Stern;,citation_author=David B. Dunson;,citation_author=Aki Vehtari;,citation_author=Donald B. Rubin;,citation_publication_date=2013-11;,citation_cover_date=2013-11;,citation_year=2013;,citation_fulltext_html_url=https://doi.org/10.1201/b16018;,citation_isbn=978-1-4398-4095-5;">
 <meta name="citation_reference" content="citation_title=Two simple examples for understanding posterior p-values whose distributions are far from uniform;,citation_author=Andrew Gelman;,citation_publication_date=2013;,citation_cover_date=2013;,citation_year=2013;,citation_fulltext_html_url=https://doi.org/10.1214/13-EJS854;,citation_issue=none;,citation_doi=10.1214/13-EJS854;,citation_volume=7;,citation_journal_title=Electronic Journal of Statistics;,citation_publisher=Institute of Mathematical Statistics; Bernoulli Society;">
 <meta name="citation_reference" content="citation_title=Stable reliability diagrams for probabilistic classifiers;,citation_author=Timo Dimitriadis;,citation_author=Tilmann Gneiting;,citation_author=Alexander I. Jordan;,citation_publication_date=2021-02;,citation_cover_date=2021-02;,citation_year=2021;,citation_fulltext_html_url=https://www.pnas.org/doi/abs/10.1073/pnas.2016191118;,citation_issue=8;,citation_doi=10.1073/pnas.2016191118;,citation_volume=118;,citation_journal_title=Proceedings of the National Academy of Sciences;">
@@ -229,19 +239,181 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Predictive assessment and comparison of bayesian survival models for cancer recurrence;,citation_author=Saku Suorsa;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2601.01662;">
 </head>
 
-<body class="nav-sidebar docked">
+<body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Chapters/Prior_elicitation.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Prior Elicitation</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -256,7 +428,7 @@ window.Quarto = {
       <a href="../">Exploratory Analysis of Bayesian Models</a> 
         <div class="sidebar-tools-main tools-wide">
     <div class="dropdown">
-      <a href="" title="github" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="github"><i class="bi bi-github"></i></a>
+      <a href="" title="github" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="github"><i class="bi bi-github"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/arviz-devs/Exploratory-Analysis-of-Bayesian-Models">
@@ -421,6 +593,7 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title"><span id="sec-prior-elicitation" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Prior Elicitation</span></span></h1>
@@ -431,7 +604,19 @@ window.Quarto = {
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 2, 2025</p>
+    </div>
+  </div>
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">January 23, 2026</p>
+    </div>
+  </div>
     
   </div>
   
@@ -441,7 +626,7 @@ window.Quarto = {
 
 
 <p>Specification of the prior distribution for a Bayesian model is key, but it is often difficult even for statistical experts. Having to choose a prior distribution is portrayed both as a burden and as a blessing. We choose to affirm that is a necessity, if you are not choosing your priors someone else is doing it for you <span class="citation" data-cites="mikkola_2024">(<a href="References.html#ref-mikkola_2024" role="doc-biblioref">Mikkola et al. 2024</a>)</span>. Letting others decide for you is not always a bad idea. Default priors provided by tools like <a href="https://github.com/bambinos/bambi">Bambi</a> or <a href="http://paulbuerkner.com/brms/">brms</a> can be very useful in many problems, but it’s advantageous to be able to specify custom priors when needed.</p>
-<div id="fig-prior_anxiety" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-prior_anxiety" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_anxiety-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/prior_anxiety.png" class="img-fluid figure-img" style="width:30.0%">
@@ -457,7 +642,7 @@ Figure&nbsp;12.1: Having to set priors are often seen as a burden, a nuisance of
 <p>If you are reading this guide, you probably already know what a prior distribution is. But let’s do a quick recap. In Bayesian statistics, the prior distribution is the probability distribution that expresses information about the parameters of the model before observing the data. The prior distribution is combined with the likelihood to obtain the posterior distribution, which is the distribution of the parameters after observing the data.</p>
 <p>Priors are one way to convey domain-knowledge information into models. Other ways to include information in a model are the type of model or its overall structure, e.g.&nbsp;using a linear model, and the choice of likelihood.</p>
 <p>Let use a couple of examples to think about priors and it’s role in Bayesian statistics, <a href="#fig-prior_init" class="quarto-xref">Figure&nbsp;<span>12.2</span></a> shows two priors, one in blue (Beta(0.5, 0.5)) and one in red (Beta(10, 10)).</p>
-<div id="fig-prior_init" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-prior_init" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_init-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/beta_binomial_update.png" class="img-fluid figure-img">
@@ -469,7 +654,7 @@ Figure&nbsp;12.2: Two different priors
 </div>
 <p>We are going to combine these priors with data using a Binomial likelihood. And we are going to update these priors sequentially, i.e.&nbsp;we will be adding some data and compute the posterior. And then add some more data and keep updating. So, at each step <span class="math inline">\(i\)</span> we add data and the distribution we are computing are the posteriors, but these posteriors are also the priors for step <span class="math inline">\(i+1\)</span>. This sequential updating, where a posterior becomes the prior of the next analysis, is possible because the Beta distribution is conjugate with the Binomial. <a href="https://en.wikipedia.org/wiki/Conjugate_prior">Conjugate prior</a> are priors that when combined with a likelihood function result in a posterior distribution that is of the same form as the prior distribution. Usually, we don’t care too much about conjugate priors, but sometimes, like for this animation, they can be useful.</p>
 <p>We have represented these sequential updating in an animation (see <a href="#fig-prior_update" class="quarto-xref">Figure&nbsp;<span>12.3</span></a>). As the animation moves forward, i.e.&nbsp;we add more data, we will see that the posteriors gradually converge to the same distribution.</p>
-<div id="fig-prior_update" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-prior_update" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_update-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/beta_binomial_update.gif" class="img-fluid figure-img">
@@ -481,7 +666,7 @@ Figure&nbsp;12.3: Priors updating as we keep adding data
 </div>
 <p>Asymptotically, priors have no meaning. If we have infinite data, the posterior will be the same regardless of the chosen prior. When there is large amount of data, the update is dominated by the likelihood function, and the prior has little influence. Different reasonable priors converge to the same posterior as data size is increased.</p>
 <p>But there are two catches. If we assign 0 prior probability to a value, no amount of data will turn that into a positive value. In other words, if a particular value or hypothesis is assigned zero prior probability, it will also have zero posterior probability, regardless of the data observed. Alternatively, if we assign a prior probability of 1 to a value (and zero to the rest), no amount of data will allow us to update that prior neither. This is known as Cromwell’s rule and states that the use of prior probabilities of 1 (“the event will definitely occur”) or 0 (“the event will definitely not occur”) should be avoided, except when applied to statements that are logically true or false, such as <span class="math inline">\(2+2=4\)</span>.</p>
-<div id="fig-prior_Cromwell" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-prior_Cromwell" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_Cromwell-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/bayes_theorem_01.png" class="img-fluid figure-img">
@@ -492,7 +677,7 @@ Figure&nbsp;12.4: If we give 0 prior probability, then we will always get 0 post
 </figure>
 </div>
 <p>OK, but if we take Cromwell’s advice and avoid these corner cases eventually the data will dominate the priors. That’s true, as well as that asymptotically, we are all dead. For real, finite data, we should expect priors to have some impact on the results. The actual impact will depend on the specific combinations of priors, likelihood and data. <a href="#sec-prior-elicitation-workflow" class="quarto-xref"><span>Section 12.3</span></a> shows a couple of combinations. In practice we often need to worry about our priors, but maybe less than we think.</p>
-<div id="fig-prior_posterior" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-prior_posterior" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_posterior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/prior_posterior.gif" class="img-fluid figure-img">
@@ -507,7 +692,7 @@ Figure&nbsp;12.5: The posterior is an interplay of prior and likelihood
 <h2 data-number="12.2" class="anchored" data-anchor-id="types-of-priors"><span class="header-section-number">12.2</span> Types of Priors</h2>
 <p>Usually, priors are described as informative vs non-informative. Informative priors are priors that convey specific information about the parameters of the model, while non-informative priors do not convey specific information about the parameters of the model. Non-informative priors are often used when little or no domain knowledge is available. A simple, intuitive and old rule for specifying a non-informative prior is the principle of indifference, which assigns the same probability to all possible events. Non-informative priors are also called objective priors especially when the main motivation for using them is to avoid the need to specify a prior distribution.</p>
 <p>Non-informative priors can be detrimental and difficult to implement or use. Informative priors can also be problematic in practice, as the information needed to specify them may be absent or difficult to obtain. And even if the information is available specifying informative priors can be time-consuming. A middle ground is to use weakly informative priors, which are priors that convey some information about the parameters of the model but are not overly specific. Weakly informative priors can help to regularize inference and even have positive side effects like improving sampling efficiency.</p>
-<div id="fig-prior_type_meme" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-prior_type_meme" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_type_meme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/priors_int_meme.jpg" class="img-fluid figure-img" style="width:35.0%">
@@ -525,7 +710,7 @@ Figure&nbsp;12.6: Priors are often defined in terms of how much information they
 <li>Second, it gives us an operational definition of what we mean by vague, informative, or weakly informative prior. An informative prior is a prior that makes predictions that are about the same. A weakly informative prior is a prior that makes predictions that are somewhere in between. The distinctions are still qualitative and subjective, but we have a criteria that is context-dependent and we can evaluate during a Bayesian data analysis. <a href="#fig-prior_vagueness" class="quarto-xref">Figure&nbsp;<span>12.7</span></a> shows a very schematic representation of this idea.</li>
 <li>Third, it provides us with a way to evaluate the priors for consistency, because the priors we are setting should agree with the prior predictive distribution we imagine. For instance, if we are setting an informative prior that induces a prior predictive distribution that is narrower, shifted or very different in any other way from the one we imagine either the prior or our expectation of the prior predictive distribution is wrong. We have specified two conflicting pieces of information. Reconciling these two pieces of information does not guarantee that the prior or any other part of the model is correct, but it provides internal consistency, which is a good starting point for a model.</li>
 </ul>
-<div id="fig-prior_vagueness" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-prior_vagueness" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_vagueness-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/prior_vagueness.png" class="img-fluid figure-img">
@@ -553,7 +738,7 @@ Figure&nbsp;12.7: Prior amount of information in terms of the prior predictive d
 <section id="priors-and-entropy" class="level2" data-number="12.4">
 <h2 data-number="12.4" class="anchored" data-anchor-id="priors-and-entropy"><span class="header-section-number">12.4</span> Priors and entropy</h2>
 <p>The entropy is a property of probability distributions the same way the mean or variance are, actually it’s the expected value of the negative log probability of the distribution. We can think of entropy as a measure of the information or uncertainty of a distribution has. Loosely speaking the entropy of a distribution is high when the distribution is spread out and low when the distribution is concentrated. In the context of prior elicitation maximum entropy can be a guiding principle to pick priors. According to this principle we should choose the prior that maximizes the entropy, subject to known constraints of the prior <span class="citation" data-cites="jaynes_2003">(<a href="References.html#ref-jaynes_2003" role="doc-biblioref">Jaynes 2003</a>)</span>. This is a way to choose a prior that is as <em>vague</em> as possible, given the information we have. <a href="#fig-max_ent" class="quarto-xref">Figure&nbsp;<span>12.8</span></a> shows a distribution with support in [0, 1]. On the first panel we have the distribution with maximum entropy and no other restrictions. We can see that this is a uniform distribution. On the middle we have the distribution with maximum entropy and a given mean. This distribution looks similar to an exponential distribution. On the last panel we have the distribution with maximum entropy and 70% of its mass between 0.5 and 0.75.</p>
-<div id="fig-max_ent" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-max_ent" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-max_ent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/max_ent.png" class="img-fluid figure-img">
@@ -564,7 +749,7 @@ Figure&nbsp;12.8: 3 maximum entropy distributions subject to different constrain
 </figure>
 </div>
 <p>For some priors in a model, we may know or assume that most of the mass is within a certain interval. This information is useful for determining a suitable prior, but this information alone may not be enough to obtain a unique set of parameters. <a href="#fig-beta_bounds" class="quarto-xref">Figure&nbsp;<span>12.9</span></a> shows Beta distributions with 90% of the mass between 0.1 and 0.7. As you can see we can obtain very different distributions, conveying very different prior knowledge. The red distribution is the one with maximum entropy, given the constraints.</p>
-<div id="fig-beta_bounds" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-beta_bounds" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-beta_bounds-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/beta_bounds.png" class="img-fluid figure-img">
@@ -583,46 +768,46 @@ Figure&nbsp;12.9: Beta distributions with a 90% of it mass between 0.1 and 0.7, 
 <h2 data-number="12.6" class="anchored" data-anchor-id="maximum-entropy-distributions-with-maxent"><span class="header-section-number">12.6</span> Maximum entropy distributions with maxent</h2>
 <p>In PreliZ we can compute maximum entropy priors using the function <a href="https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.maxent"><code>maxent</code></a>. It works for unidimensional distributions. The first argument is a PreliZ distribution. Then we specify an upper and lower bound and the probability between them.</p>
 <p>As an example, we want to elicit a scale parameter. From domain knowledge we know the parameter has a relatively high probability of being less than 3. Hence, we could use a HalfNormal distribution and do:</p>
-<div id="6e3537a3" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>pz.maxent(pz.HalfNormal(), <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="62ccac11" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>pz.maxent(pz.HalfNormal(), <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Prior_elicitation_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Prior_elicitation_files/figure-html/cell-3-output-1.png" width="830" height="434" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>When we want to avoid values too close to zero, other distributions like Gamma or InverseGamma may be a better choice.</p>
-<div id="73e6e215" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>pz.maxent(pz.Gamma(), <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2f64d4fb" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>pz.maxent(pz.Gamma(), <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Prior_elicitation_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Prior_elicitation_files/figure-html/cell-4-output-1.png" width="915" height="434" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We could also have extra restrictions like knowledge about the mean or mode. Let’s say we think a mean of 2 is very likely. The Gamma distribution can be parametrized in terms of the mean as <code>pz.Gamma(mu=2)</code>. If we instead believe the mode is likely to be 2, then <code>maxent</code> takes a <code>mode</code> argument.</p>
-<div id="67eaa908" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>dist_mean <span class="op">=</span> pz.Gamma(mu<span class="op">=</span><span class="dv">2</span>)</span>
+<div id="e144d59b" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>dist_mean <span class="op">=</span> pz.Gamma(mu<span class="op">=</span><span class="dv">2</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a>pz.maxent(dist_mean, <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>)</span>
 <span id="cb3-3"><a href="#cb3-3"></a></span>
 <span id="cb3-4"><a href="#cb3-4"></a>dist_mode <span class="op">=</span> pz.Gamma()</span>
-<span id="cb3-5"><a href="#cb3-5"></a>pz.maxent(dist_mode, <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>, fixed_stat<span class="op">=</span>(<span class="st">"mode"</span>,<span class="dv">2</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5"></a>pz.maxent(dist_mode, <span class="dv">0</span>, <span class="dv">3</span>, <span class="fl">0.8</span>, fixed_stat<span class="op">=</span>(<span class="st">"mode"</span>,<span class="dv">2</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Prior_elicitation_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Prior_elicitation_files/figure-html/cell-5-output-1.png" width="901" height="434" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Notice that if you call <code>maxent</code> several times in the same cell, as we just did, we will get all the distributions in the same figure. This can be very useful to visually compare several alternatives.</p>
 <p>The function <code>maxent</code> as others in PreliZ modify distribution in place, so a common workflow is to instantiate a distribution first, perform the elicitation, and then inspect its properties, plot it, or use it in some other way. For instance, we may want to check a summary of some of its properties:</p>
-<div id="b811d685" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>dist_mean.summary(), dist_mode.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="413a33f2" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>dist_mean.summary(), dist_mode.summary()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>(Gamma(mean=2.0, median=1.67, std=1.43, lower=0.37, upper=4.65),
  Gamma(mean=2.32, median=2.22, std=0.86, lower=1.13, upper=3.84))</code></pre>
@@ -634,12 +819,12 @@ Figure&nbsp;12.9: Beta distributions with a 90% of it mass between 0.1 and 0.7, 
 <p>There are many other method for direct elicitation of parameters. For instance the <a href="https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.quartile"><code>quartile</code></a> function identifies a distribution that matches specified quartiles, and <a href="https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.QuartileInt"><code>Quartine_int</code></a> provides an interactive approach to achieve the same, offering a more hands-on experience for refining distributions.</p>
 <p>One method worth of special mention is the <a href="https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.Roulette"><code>Roulette</code></a> method allows which allows users to find a prior distribution by drawing it interactively <span class="citation" data-cites="morris_2014">(<a href="References.html#ref-morris_2014" role="doc-biblioref">Morris, Oakley, and Crowe 2014</a>)</span>. The name “roulette” comes from the analogy of placing a limited set of chips where one believes the mass of a distribution should be concentrated. In this method, a grid of <code>m</code> equally sized bins is provided, covering the range of <code>x</code>, and users allocate a total of <code>n</code> chips across the bins. Effectively, this creates a histogram,representing the user’s information about the distribution. The method then identifies the best-fitting distribution from a predefined pool of options, translating the drawn histogram into a suitable probabilistic model.</p>
 <p>As this is an interactive method we can’t show it here, but you can run the following cell to see how it works.</p>
-<div id="8d398df2" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="op">%</span>matplotlib widget</span>
-<span id="cb6-2"><a href="#cb6-2"></a>result <span class="op">=</span> pz.Roulette()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7a4d3e25" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="op">%</span>matplotlib widget</span>
+<span id="cb6-2"><a href="#cb6-2"></a>result <span class="op">=</span> pz.Roulette()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>And this gif should give you an idea on how to use it.</p>
-<div id="fig-prior_anxiety" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-prior_anxiety" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_anxiety-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/roulette.gif" class="img-fluid figure-img">
@@ -651,8 +836,8 @@ Figure&nbsp;12.10: To elicit a distribution, we can interactively <em>draw</em> 
 </div>
 <p>Once we have elicited the distribution we can call <code>.dist</code> attribute to get the selected distribution. In this example, it will be <code>result.dist</code>.</p>
 <p>If needed, we can combine results for many independent “roulette sessions” with the <a href="https://preliz.readthedocs.io/en/latest/unidimensional.html#preliz.unidimensional.combine_roulette">combine_roulette</a> function. Combining information from different elicitation sessions can be useful to aggregate information from different domain experts. Or even from a single person unable to pick a single option. For instance if we run <code>Roulette</code> twice, and for the first one we get <code>result0</code> and for the second <code>result1</code>. Then, we can combine both solutions into a single one using:</p>
-<div id="ced4a4c6" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>pz.combine_roulette([result0.inputs, result1.inputs], weights<span class="op">=</span>[<span class="fl">0.3</span>, <span class="fl">0.7</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="56e030b7" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>pz.combine_roulette([result0.inputs, result1.inputs], weights<span class="op">=</span>[<span class="fl">0.3</span>, <span class="fl">0.7</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In this example, we assign a larger weight to the results from the second elicitation session, we can do this to reflect uneven degrees of trust. By default, all sessions are weighted equally.</p>
 </section>
@@ -664,15 +849,15 @@ Figure&nbsp;12.10: To elicit a distribution, we can interactively <em>draw</em> 
 <h3 data-number="12.8.1" class="anchored" data-anchor-id="predator-vs-prey-example"><span class="header-section-number">12.8.1</span> Predator vs prey example</h3>
 <p>We are interested in modelling the relationship between the masses of organisms that are prey and organisms that are predators, and since masses vary in orders of magnitude from a 1e-9 grams for a typical cell to a 1.3e8 grams for the blue whale, it is convenient to work on a logarithmic scale.</p>
 <p>Let’s load the data and define the reference values.</p>
-<div id="b197c373" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>pp_mass <span class="op">=</span> pd.read_csv(<span class="st">"../data/pp_mass.csv"</span>)</span>
+<div id="e1d14538" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>pp_mass <span class="op">=</span> pd.read_csv(<span class="st">"../data/pp_mass.csv"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2"></a>pp_mass[<span class="st">"predator_log"</span>] <span class="op">=</span> np.log(pp_mass[<span class="st">"predator"</span>])</span>
 <span id="cb8-3"><a href="#cb8-3"></a>pp_mass[<span class="st">"prey_log"</span>] <span class="op">=</span> np.log(pp_mass[<span class="st">"prey"</span>])</span>
 <span id="cb8-4"><a href="#cb8-4"></a></span>
 <span id="cb8-5"><a href="#cb8-5"></a></span>
 <span id="cb8-6"><a href="#cb8-6"></a><span class="co"># Reference values in log-scale</span></span>
 <span id="cb8-7"><a href="#cb8-7"></a>refs <span class="op">=</span> {<span class="st">"Blue whale"</span>:np.log(<span class="fl">1.3e8</span>),</span>
-<span id="cb8-8"><a href="#cb8-8"></a>       <span class="st">"Typical cell"</span>:np.log(<span class="fl">1e-9</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-8"><a href="#cb8-8"></a>       <span class="st">"Typical cell"</span>:np.log(<span class="fl">1e-9</span>)}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>So a model might be something like:</p>
 <p><span class="math display">\[\begin{align}
@@ -681,49 +866,49 @@ Figure&nbsp;12.10: To elicit a distribution, we can interactively <em>draw</em> 
     log(mass) =&amp; Normal(\mu, \sigma)
 \end{align}\]</span></p>
 <p>Let’s now define a model with some priors and see what these priors imply on the scale of the data. To sample from the predictive prior we use <code>pm.sample_prior_predictive()</code> instead of <code>sample</code> and we need to define dummy observations. This is necessary to indicate to PyMC which term is the likelihood and to control the size of each predicted distribution, but the actual values do not affect the prior predictive distributions.</p>
-<div id="a63589a3" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
+<div id="921a8799" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb9-2"><a href="#cb9-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
 <span id="cb9-3"><a href="#cb9-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
 <span id="cb9-4"><a href="#cb9-4"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, <span class="dv">5</span>)</span>
 <span id="cb9-5"><a href="#cb9-5"></a>    pm.Normal(<span class="st">"prey"</span>, α <span class="op">+</span> β <span class="op">*</span> pp_mass[<span class="st">"prey_log"</span>], σ, observed<span class="op">=</span>pp_mass[<span class="st">"predator_log"</span>])</span>
-<span id="cb9-6"><a href="#cb9-6"></a>    idata <span class="op">=</span> pm.sample_prior_predictive(samples<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-6"><a href="#cb9-6"></a>    idata <span class="op">=</span> pm.sample_prior_predictive(samples<span class="op">=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Sampling: [prey, α, β, σ]</code></pre>
 </div>
 </div>
 <p>Now we can plot the prior predictive distribution and compare it with the reference values.</p>
-<div id="28e7a21e" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>pc <span class="op">=</span> azp.plot_ppc_dist(idata, group<span class="op">=</span><span class="st">"prior_predictive"</span>, kind<span class="op">=</span><span class="st">"ecdf"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2"></a>azp.add_lines(pc, refs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="26aae98a" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>pc <span class="op">=</span> azp.plot_ppc_dist(idata, group<span class="op">=</span><span class="st">"prior_predictive"</span>, kind<span class="op">=</span><span class="st">"ecdf"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>azp.add_lines(pc, refs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Prior_elicitation_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Prior_elicitation_files/figure-html/cell-11-output-1.png" width="611" height="279" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Priors are so vague that we can not even distinguish the reference values from each other. Let’s try refining our priors.</p>
-<div id="78cb294b" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
+<div id="69bc3072" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb12-2"><a href="#cb12-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
 <span id="cb12-3"><a href="#cb12-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
 <span id="cb12-4"><a href="#cb12-4"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, <span class="dv">5</span>)</span>
 <span id="cb12-5"><a href="#cb12-5"></a>    prey <span class="op">=</span> pm.Normal(<span class="st">"prey"</span>, α <span class="op">+</span> β <span class="op">*</span> pp_mass[<span class="st">"prey_log"</span>], σ, observed<span class="op">=</span>pp_mass[<span class="st">"predator_log"</span>])</span>
-<span id="cb12-6"><a href="#cb12-6"></a>    idata <span class="op">=</span> pm.sample_prior_predictive(samples<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-6"><a href="#cb12-6"></a>    idata <span class="op">=</span> pm.sample_prior_predictive(samples<span class="op">=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Sampling: [prey, α, β, σ]</code></pre>
 </div>
 </div>
 <p>We can plot the prior predictive distribution and compare it with the reference values.</p>
-<div id="3356a3f9" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>pc <span class="op">=</span> azp.plot_ppc_dist(idata, group<span class="op">=</span><span class="st">"prior_predictive"</span>, kind<span class="op">=</span><span class="st">"ecdf"</span>)</span>
-<span id="cb14-2"><a href="#cb14-2"></a>azp.add_lines(pc, refs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5286a20b" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>pc <span class="op">=</span> azp.plot_ppc_dist(idata, group<span class="op">=</span><span class="st">"prior_predictive"</span>, kind<span class="op">=</span><span class="st">"ecdf"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>azp.add_lines(pc, refs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Prior_elicitation_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Prior_elicitation_files/figure-html/cell-13-output-1.png" width="611" height="279" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -734,17 +919,17 @@ Figure&nbsp;12.10: To elicit a distribution, we can interactively <em>draw</em> 
 <h3 data-number="12.8.2" class="anchored" data-anchor-id="interactive-predictive-elicitation"><span class="header-section-number">12.8.2</span> Interactive predictive elicitation</h3>
 <p>The process described in the previous section is straightforward: sample from the prior predictive –&gt; plot –&gt; refine –&gt; repeat. On the good side, this is a very flexible approach and can be a good way to understand the effect of individual parameters in the predictions of a model. But it can be time-consuming and it requires some understanding of the model so you know which parameters to tweak and in which direction.</p>
 <p>One way to improve this workflow is by adding interactivity. We can do this with PreliZ’s function, <a href="https://preliz.readthedocs.io/en/latest/predictive.html#preliz.predictive.predictive_explorer"><code>predictive_explorer</code></a>. Which we can not show here, in a full glory but you can see a static image in <a href="#fig-predictive-explorer" class="quarto-xref">Figure&nbsp;<span>12.11</span></a>, and you can try it for yourself by running the following block of code.</p>
-<div id="7074ea20" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">def</span> pp_model(α_μ<span class="op">=</span><span class="dv">0</span>, α_σ<span class="op">=</span><span class="dv">100</span>, β_μ<span class="op">=</span><span class="dv">0</span>, β_σ<span class="op">=</span><span class="dv">100</span>, σ_σ<span class="op">=</span><span class="dv">5</span>):</span>
+<div id="e3ad2c12" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">def</span> pp_model(α_μ<span class="op">=</span><span class="dv">0</span>, α_σ<span class="op">=</span><span class="dv">100</span>, β_μ<span class="op">=</span><span class="dv">0</span>, β_σ<span class="op">=</span><span class="dv">100</span>, σ_σ<span class="op">=</span><span class="dv">5</span>):</span>
 <span id="cb15-2"><a href="#cb15-2"></a>    α <span class="op">=</span> pz.Normal(α_μ, α_σ).rvs()</span>
 <span id="cb15-3"><a href="#cb15-3"></a>    β <span class="op">=</span> pz.Normal(β_μ, β_σ).rvs()</span>
 <span id="cb15-4"><a href="#cb15-4"></a>    σ <span class="op">=</span> pz.HalfNormal(σ_σ).rvs()</span>
 <span id="cb15-5"><a href="#cb15-5"></a>    prey <span class="op">=</span> pz.Normal(α <span class="op">+</span> β <span class="op">*</span> pp_mass.predator_log, σ).rvs()</span>
 <span id="cb15-6"><a href="#cb15-6"></a>    <span class="cf">return</span> prey</span>
 <span id="cb15-7"><a href="#cb15-7"></a></span>
-<span id="cb15-8"><a href="#cb15-8"></a>pz.predictive_explorer(pp_model, references<span class="op">=</span>refs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-8"><a href="#cb15-8"></a>pz.predictive_explorer(pp_model, references<span class="op">=</span>refs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="fig-predictive-explorer" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-predictive-explorer" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-predictive-explorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="../img/predictive_explorer.png" class="img-fluid figure-img">
@@ -762,62 +947,69 @@ Figure&nbsp;12.11: We can use the boxes to specify different prior values and se
 <p>In this section we discuss a procedure to automatize the <em>tweaking</em>. We first think what a <em>reasonable</em> prior predictive distribution could be and then apply and automatic procedure to find the parameters of the priors that indice a prior predictive distribution that is as close as possible to the target distribution. This method is particularly useful when we have a good idea of how the data should look like, but we are not sure how to translate this into a prior distribution.</p>
 <p>In principle, there are many ways to achieve this. We are going to discuss a method called projective predictive elicitation, as it is inspired in the projective inference method discussed in <a href="Variable_selection.html" class="quarto-xref"><span>Chapter 11</span></a>. The method is experimental and it is implemented in PreliZ.</p>
 <p>To keep things concrete and familiar let’s assume we are still interested in the predator-prey example. As in the previous examples, our initial model could be something like this. We know the priors are very wide, and we want to refine them.</p>
-<div id="32dbcefa" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
+<div id="285c3263" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb16-2"><a href="#cb16-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
 <span id="cb16-3"><a href="#cb16-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
 <span id="cb16-4"><a href="#cb16-4"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, <span class="dv">5</span>)</span>
-<span id="cb16-5"><a href="#cb16-5"></a>    prey <span class="op">=</span> pm.Normal(<span class="st">"prey"</span>, α <span class="op">+</span> β <span class="op">*</span> pp_mass[<span class="st">"prey_log"</span>], σ, observed<span class="op">=</span>pp_mass[<span class="st">"predator_log"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a href="#cb16-5"></a>    prey <span class="op">=</span> pm.Normal(<span class="st">"prey"</span>, α <span class="op">+</span> β <span class="op">*</span> pp_mass[<span class="st">"prey_log"</span>], σ, observed<span class="op">=</span>pp_mass[<span class="st">"predator_log"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The first thing to do is to define our target distribution. We may be tempted to describe it a Gaussian with most of its mass between the weight of a typical cell and the weight of a blue whale. While this is a resonable assumption, is not enough. We are modeling <span class="math inline">\(p(Y \mid X)\)</span>, so it’s not enough to just describe <span class="math inline">\(p(Y)\)</span>. What we can do is to think what values of <span class="math inline">\(Y\)</span> (mass of the predator) we should expect for <span class="math inline">\(X\)</span> the mass of preys. This of course rellies of expert knowledge (as priors should). For this example we are going to use some information from the data and some prior knowledge. We can argue that we are only weakly informing the prior from the data. We are going to take a few quantiles from our <span class="math inline">\(X\)</span>, the mass of the preys. And then we are going to assume that usually predator are larger that prey.</p>
-<div id="c14f0950" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>q <span class="op">=</span> [<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>]</span>
+<div id="e269b6ef" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>q <span class="op">=</span> [<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>]</span>
 <span id="cb17-2"><a href="#cb17-2"></a>x_prior <span class="op">=</span> np.quantile(pp_mass[<span class="st">"prey_log"</span>], q)</span>
-<span id="cb17-3"><a href="#cb17-3"></a>target <span class="op">=</span> pz.Normal(x_prior<span class="op">+</span>np.log(<span class="dv">10</span>), pp_mass[<span class="st">"predator_log"</span>].std()<span class="op">/</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-3"><a href="#cb17-3"></a>target <span class="op">=</span> pz.Normal(x_prior<span class="op">+</span>np.log(<span class="dv">10</span>), pp_mass[<span class="st">"predator_log"</span>].std()<span class="op">/</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>To be sure we are on the same page, the target distribution should be the distribution that you expect to match in a prior predictive check as discussed in previous sections. Additionally, if the goal is to define weakly informative prior, as it’s usually the case in most analysis, the target will usually be a very approximate distribution.</p>
 <p>Now that we have the target, we write a model using the <code>x_prior</code>, for the observations we just pass a dummy values. The actual values are ignored, only the shape must be correct. Finally we pass the model and target distributions to the <code>ppe</code> function.</p>
-<div id="4d6382f5" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
+<div id="b10c9a4e" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb18-2"><a href="#cb18-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
 <span id="cb18-3"><a href="#cb18-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
 <span id="cb18-4"><a href="#cb18-4"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, <span class="dv">5</span>)</span>
 <span id="cb18-5"><a href="#cb18-5"></a>    prey <span class="op">=</span> pm.Normal(<span class="st">"prey"</span>, α <span class="op">+</span> β <span class="op">*</span> x_prior, σ, observed<span class="op">=</span>[<span class="dv">0</span>]<span class="op">*</span><span class="bu">len</span>(x_prior))</span>
 <span id="cb18-6"><a href="#cb18-6"></a></span>
-<span id="cb18-7"><a href="#cb18-7"></a><span class="bu">print</span>(pz.ppe(model, target)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-7"><a href="#cb18-7"></a><span class="bu">print</span>(pz.ppe(model, target)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/preliz/predictive/ppe.py:63: UserWarning: This method is experimental and under development with no guarantees of correctness.
                   Use with caution and triple-check the results.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>with pm.Model() as model:
-    α = pm.Normal("α", mu=2.29, sigma=3.65)
-    β = pm.Normal("β", mu=0.992, sigma=0.457)
-    σ = pm.HalfNormal("σ", sigma=1.74)
-</code></pre>
+<div class="ansi-escaped-output">
+<pre>with pm.Model() as model:
+
+    α = pm.<span class="ansi-bold">Normal</span>("α", mu=2.29, sigma=3.65)
+
+    β = pm.<span class="ansi-bold">Normal</span>("β", mu=0.992, sigma=0.457)
+
+    σ = pm.<span class="ansi-bold">HalfNormal</span>("σ", sigma=1.74)
+
+
+</pre>
+</div>
 </div>
 </div>
 <p>Now we can check that the suggested prior is reasonable given the provided information. To do this we write the model with the new prior and sample from the prior predictive. Notice that we could have copied the priors as-is, but we’ve rounded them instead. Rounded numbers are easier to read and we don’t care about the exact solution provided by <code>ppe</code>. Feel free to question answer from algorithms, blind obedience is how you end up in a <a href="https://www.youtube.com/watch?v=DOW_kPzY_JY">lake</a>.</p>
-<div id="295986a2" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
-<span id="cb21-2"><a href="#cb21-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, mu<span class="op">=</span><span class="dv">2</span>, sigma<span class="op">=</span><span class="fl">3.5</span>)</span>
-<span id="cb21-3"><a href="#cb21-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, mu<span class="op">=</span><span class="dv">1</span>, sigma<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb21-4"><a href="#cb21-4"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, sigma<span class="op">=</span><span class="fl">1.7</span>)</span>
-<span id="cb21-5"><a href="#cb21-5"></a>    prey <span class="op">=</span> pm.Normal(<span class="st">"prey"</span>, α <span class="op">+</span> β <span class="op">*</span> pp_mass[<span class="st">"prey_log"</span>], σ, observed<span class="op">=</span>pp_mass[<span class="st">"predator_log"</span>])</span>
-<span id="cb21-6"><a href="#cb21-6"></a>    idata <span class="op">=</span> pm.sample_prior_predictive()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="60e4fa5b" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
+<span id="cb20-2"><a href="#cb20-2"></a>    α <span class="op">=</span> pm.Normal(<span class="st">"α"</span>, mu<span class="op">=</span><span class="dv">2</span>, sigma<span class="op">=</span><span class="fl">3.5</span>)</span>
+<span id="cb20-3"><a href="#cb20-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, mu<span class="op">=</span><span class="dv">1</span>, sigma<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb20-4"><a href="#cb20-4"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, sigma<span class="op">=</span><span class="fl">1.7</span>)</span>
+<span id="cb20-5"><a href="#cb20-5"></a>    prey <span class="op">=</span> pm.Normal(<span class="st">"prey"</span>, α <span class="op">+</span> β <span class="op">*</span> pp_mass[<span class="st">"prey_log"</span>], σ, observed<span class="op">=</span>pp_mass[<span class="st">"predator_log"</span>])</span>
+<span id="cb20-6"><a href="#cb20-6"></a>    idata <span class="op">=</span> pm.sample_prior_predictive()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Sampling: [prey, α, β, σ]</code></pre>
 </div>
 </div>
 <p>Now we can plot the prior predictive distribution, the target distribution and compare it with the reference values.</p>
-<div id="ad68f788" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>pc <span class="op">=</span> azp.plot_ppc_dist(idata, group<span class="op">=</span><span class="st">"prior_predictive"</span>, kind<span class="op">=</span><span class="st">"ecdf"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2"></a>azp.add_lines(pc, <span class="bu">list</span>(refs.values()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="50a92275" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>pc <span class="op">=</span> azp.plot_ppc_dist(idata, group<span class="op">=</span><span class="st">"prior_predictive"</span>, kind<span class="op">=</span><span class="st">"ecdf"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2"></a>azp.add_lines(pc, <span class="bu">list</span>(refs.values()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Prior_elicitation_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="Prior_elicitation_files/figure-html/cell-19-output-1.png" width="611" height="279" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -861,187 +1053,71 @@ Morris, David E., Jeremy E. Oakley, and John A. Crowe. 2014. <span>“A Web-Base
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
     }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
         }
       }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
       return false;
     }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -1049,184 +1125,184 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1234,185 +1310,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../Chapters/Variable_selection.html" class="pagination-link" aria-label="Variable Selection">

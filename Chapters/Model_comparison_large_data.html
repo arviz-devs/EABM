@@ -2,12 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2025-04-02">
 
-<title>Exploratory Analysis of Bayesian Models - 8&nbsp; Model Comparison for Large Data</title>
+<title>8&nbsp; Model Comparison for Large Data – Exploratory Analysis of Bayesian Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,8 +22,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -77,7 +79,7 @@ div.csl-indent {
 }</style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -87,17 +89,21 @@ div.csl-indent {
 <link href="../Chapters/Moment_Matching.html" rel="next">
 <link href="../Chapters/Model_comparison.html" rel="prev">
 <link href="../favicon.ico" rel="icon">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-7bf12d62aa84b4fa538b342f1416a45b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-691c43ad62c52d8f2a4cfbd07224d002.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-7bf12d62aa84b4fa538b342f1416a45b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -125,11 +131,11 @@ div.csl-indent {
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -143,7 +149,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -160,6 +166,10 @@ window.Quarto = {
 </script>
 
 <meta name="citation_title" content="[[8]{.chapter-number}&nbsp; [Model Comparison for Large Data]{.chapter-title}]{#sec-model-comparison-large-data .quarto-section-identifier}">
+<meta name="citation_publication_date" content="2025-04-02">
+<meta name="citation_cover_date" content="2025-04-02">
+<meta name="citation_year" content="2025">
+<meta name="citation_online_date" content="2025-04-02">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Graphical perception: Theory, experimentation, and application to the development of graphical methods;,citation_author=William S. Cleveland;,citation_author=Robert McGill;,citation_publication_date=1984;,citation_cover_date=1984;,citation_year=1984;,citation_fulltext_html_url= https://www.tandfonline.com/doi/abs/10.1080/01621459.1984.10478080;,citation_issue=387;,citation_doi=10.1080/01621459.1984.10478080;,citation_volume=79;,citation_journal_title=Journal of the American Statistical Association;,citation_publisher=Taylor &amp;amp;amp; Francis;">
 <meta name="citation_reference" content="citation_title=Crowdsourcing graphical perception: Using mechanical turk to assess visualization design;,citation_author=Jeffrey Heer;,citation_author=Michael Bostock;,citation_publication_date=2010-04;,citation_cover_date=2010-04;,citation_year=2010;,citation_fulltext_html_url=https://doi.org/10.1145/1753326.1753357;,citation_doi=10.1145/1753326.1753357;,citation_isbn=978-1-60558-929-9;,citation_conference_title=Proceedings of the SIGCHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’10;">
@@ -191,7 +201,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Using Stacking to Average Bayesian Predictive Distributions (with Discussion);,citation_author=Yuling Yao;,citation_author=Aki Vehtari;,citation_author=Daniel Simpson;,citation_author=Andrew Gelman;,citation_publication_date=2018;,citation_cover_date=2018;,citation_year=2018;,citation_fulltext_html_url=https://doi.org/10.1214/17-BA1091;,citation_issue=3;,citation_doi=10.1214/17-BA1091;,citation_volume=13;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=A Widely Applicable Bayesian Information Criterion;,citation_author=Sumio Watanabe;,citation_publication_date=2013-03;,citation_cover_date=2013-03;,citation_year=2013;,citation_fulltext_html_url=https://dl.acm.org/doi/10.5555/2567709.2502609;,citation_volume=14;,citation_journal_title=Journal of Machine Learning Research;">
 <meta name="citation_reference" content="citation_title=A new look at the statistical model identification;,citation_author=H. Akaike;,citation_publication_date=1974;,citation_cover_date=1974;,citation_year=1974;,citation_issue=6;,citation_doi=10.1109/TAC.1974.1100705;,citation_volume=19;,citation_journal_title=IEEE Transactions on Automatic Control;">
-<meta name="citation_reference" content="citation_title=Rank-Normalization, Folding, and Localization: An Improved \widehat{R} for Assessing Convergence of MCMC (with Discussion);,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_author=Daniel Simpson;,citation_author=Bob Carpenter;,citation_author=Paul-Christian Bürkner;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_fulltext_html_url=https://doi.org/10.1214/20-BA1221;,citation_issue=2;,citation_doi=10.1214/20-BA1221;,citation_volume=16;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
+<meta name="citation_reference" content="citation_title=Rank-Normalization, Folding, and Localization: An Improved $\widehat{R}$ for Assessing Convergence of MCMC (with Discussion);,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_author=Daniel Simpson;,citation_author=Bob Carpenter;,citation_author=Paul-Christian Bürkner;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_fulltext_html_url=https://doi.org/10.1214/20-BA1221;,citation_issue=2;,citation_doi=10.1214/20-BA1221;,citation_volume=16;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=Truncated importance sampling;,citation_author=Edward L. Ionides;,citation_publication_date=2008;,citation_cover_date=2008;,citation_year=2008;,citation_issue=2;,citation_doi=10.1198/106186008X320465;,citation_volume=17;,citation_journal_title=Journal of Computational and Graphical Statistics;">
 <meta name="citation_reference" content="citation_title=No unbiased estimator of the variance of k-fold cross-validation;,citation_author=Yoshua Bengio;,citation_author=Yves Grandvalet;,citation_publication_date=2004;,citation_cover_date=2004;,citation_year=2004;,citation_fulltext_html_url=https://jmlr.csail.mit.edu/papers/v5/grandvalet04a.html;,citation_volume=5;,citation_journal_title=Journal of Machine Learning Research;">
 <meta name="citation_reference" content="citation_title=On the theory of sampling from finite populations;,citation_author=Morris H. Hansen;,citation_author=William N. Hurwitz;,citation_publication_date=1943;,citation_cover_date=1943;,citation_year=1943;,citation_issue=4;,citation_doi=10.1214/aoms/1177731360;,citation_volume=14;,citation_journal_title=The Annals of Mathematical Statistics;">
@@ -207,7 +217,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Satellite male groups in horseshoe crabs, limulus polyphemus;,citation_author=H. Jane Brockmann;,citation_publication_date=1996;,citation_cover_date=1996;,citation_year=1996;,citation_fulltext_html_url=https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1439-0310.1996.tb01099.x;,citation_issue=1;,citation_doi=10.1111/j.1439-0310.1996.tb01099.x;,citation_volume=102;,citation_journal_title=Ethology;">
 <meta name="citation_reference" content="citation_title=Recommendations for visual predictive checks in bayesian workflow;,citation_author=Teemu Säilynoja;,citation_author=Andrew R. Johnson;,citation_author=Osvaldo A. Martin;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2503.01509;">
 <meta name="citation_reference" content="citation_title=Visualization in bayesian workflow;,citation_author=Jonah Gabry;,citation_author=Daniel Simpson;,citation_author=Aki Vehtari;,citation_author=Michael Betancourt;,citation_author=Andrew Gelman;,citation_publication_date=2019-01;,citation_cover_date=2019-01;,citation_year=2019;,citation_fulltext_html_url=https://doi.org/10.1111/rssa.12378;,citation_issue=2;,citation_doi=10.1111/rssa.12378;,citation_issn=0964-1998;,citation_volume=182;,citation_journal_title=Journal of the Royal Statistical Society Series A: Statistics in Society;">
-<meta name="citation_reference" content="citation_title=Posterior Predictive p-Values;,citation_author=Xiao-Li Meng;,citation_publication_date=1994;,citation_cover_date=1994;,citation_year=1994;,citation_fulltext_html_url=https://doi.org/10.1214/aos/1176325622;,citation_issue=3;,citation_doi=10.1214/aos/1176325622;,citation_volume=22;,citation_journal_title=The Annals of Statistics;,citation_publisher=Institute of Mathematical Statistics;">
+<meta name="citation_reference" content="citation_title=Posterior Predictive $p$-Values;,citation_author=Xiao-Li Meng;,citation_publication_date=1994;,citation_cover_date=1994;,citation_year=1994;,citation_fulltext_html_url=https://doi.org/10.1214/aos/1176325622;,citation_issue=3;,citation_doi=10.1214/aos/1176325622;,citation_volume=22;,citation_journal_title=The Annals of Statistics;,citation_publisher=Institute of Mathematical Statistics;">
 <meta name="citation_reference" content="citation_title=Bayesian Data Analysis;,citation_author=Andrew Gelman;,citation_author=John B. Carlin;,citation_author=Hal S. Stern;,citation_author=David B. Dunson;,citation_author=Aki Vehtari;,citation_author=Donald B. Rubin;,citation_publication_date=2013-11;,citation_cover_date=2013-11;,citation_year=2013;,citation_fulltext_html_url=https://doi.org/10.1201/b16018;,citation_isbn=978-1-4398-4095-5;">
 <meta name="citation_reference" content="citation_title=Two simple examples for understanding posterior p-values whose distributions are far from uniform;,citation_author=Andrew Gelman;,citation_publication_date=2013;,citation_cover_date=2013;,citation_year=2013;,citation_fulltext_html_url=https://doi.org/10.1214/13-EJS854;,citation_issue=none;,citation_doi=10.1214/13-EJS854;,citation_volume=7;,citation_journal_title=Electronic Journal of Statistics;,citation_publisher=Institute of Mathematical Statistics; Bernoulli Society;">
 <meta name="citation_reference" content="citation_title=Stable reliability diagrams for probabilistic classifiers;,citation_author=Timo Dimitriadis;,citation_author=Tilmann Gneiting;,citation_author=Alexander I. Jordan;,citation_publication_date=2021-02;,citation_cover_date=2021-02;,citation_year=2021;,citation_fulltext_html_url=https://www.pnas.org/doi/abs/10.1073/pnas.2016191118;,citation_issue=8;,citation_doi=10.1073/pnas.2016191118;,citation_volume=118;,citation_journal_title=Proceedings of the National Academy of Sciences;">
@@ -232,19 +242,181 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Predictive assessment and comparison of bayesian survival models for cancer recurrence;,citation_author=Saku Suorsa;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2601.01662;">
 </head>
 
-<body class="nav-sidebar docked">
+<body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Chapters/Model_comparison_large_data.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Model Comparison for Large Data</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -259,7 +431,7 @@ window.Quarto = {
       <a href="../">Exploratory Analysis of Bayesian Models</a> 
         <div class="sidebar-tools-main tools-wide">
     <div class="dropdown">
-      <a href="" title="github" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="github"><i class="bi bi-github"></i></a>
+      <a href="" title="github" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="github"><i class="bi bi-github"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/arviz-devs/Exploratory-Analysis-of-Bayesian-Models">
@@ -429,6 +601,7 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title"><span id="sec-model-comparison-large-data" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Model Comparison for Large Data</span></span></h1>
@@ -439,7 +612,19 @@ window.Quarto = {
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 2, 2025</p>
+    </div>
+  </div>
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">January 23, 2026</p>
+    </div>
+  </div>
     
   </div>
   
@@ -471,8 +656,8 @@ window.Quarto = {
 <p><span class="math display">\[
 \Pr(y_i = 1 \mid \beta) = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta), \qquad \beta \sim \mathcal{N}(0, I_3).
 \]</span></p>
-<div id="2260fc44" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<div id="4c59b6da" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
 <span id="cb1-4"><a href="#cb1-4"></a>wells <span class="op">=</span> pd.read_csv(<span class="st">"../data/wells.csv"</span>)</span>
@@ -483,15 +668,15 @@ window.Quarto = {
 <span id="cb1-9"><a href="#cb1-9"></a>    wells[<span class="st">"dist100"</span>].values,     </span>
 <span id="cb1-10"><a href="#cb1-10"></a>    wells[<span class="st">"arsenic"</span>].values </span>
 <span id="cb1-11"><a href="#cb1-11"></a>])</span>
-<span id="cb1-12"><a href="#cb1-12"></a>y <span class="op">=</span> wells[<span class="st">"switch"</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-12"><a href="#cb1-12"></a>y <span class="op">=</span> wells[<span class="st">"switch"</span>].values</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can fit the model using PyMC or CmdStanPy where posterior draws are stored in a <code>DataTree</code> object.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">CmdStanPy</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="72c96277" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
+<div id="0b33b41f" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="cf">with</span> pm.Model():</span>
@@ -509,11 +694,11 @@ window.Quarto = {
 <span id="cb2-16"><a href="#cb2-16"></a>    )</span>
 <span id="cb2-17"><a href="#cb2-17"></a></span>
 <span id="cb2-18"><a href="#cb2-18"></a>data <span class="op">=</span> azp.convert_to_datatree(idata)</span>
-<span id="cb2-19"><a href="#cb2-19"></a>data[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X)})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-19"><a href="#cb2-19"></a>data[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X)})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -526,8 +711,8 @@ window.Quarto = {
 \log p(y_i \mid \beta_s, X_i) = y_i \log \pi_{is} + (1 - y_i) \log (1 - \pi_{is}), \qquad \pi_{is} = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta_s).
 \]</span></p>
 <p>A direct approach is to store the design matrix in the <code>constant_data</code> group so that the helper can directly compute the log-likelihood for whichever subset <code>loo_subsample()</code> hands to it.</p>
-<div id="223d4c34" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<div id="4aeeb74f" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> scipy.special <span class="im">import</span> expit</span>
 <span id="cb4-3"><a href="#cb4-3"></a></span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="kw">def</span> log_lik_fn(obs, data):</span>
@@ -535,7 +720,7 @@ window.Quarto = {
 <span id="cb4-6"><a href="#cb4-6"></a>    X <span class="op">=</span> data.constant_data[<span class="st">"X"</span>].values</span>
 <span id="cb4-7"><a href="#cb4-7"></a>    logit_pred <span class="op">=</span> X <span class="op">@</span> beta</span>
 <span id="cb4-8"><a href="#cb4-8"></a>    prob <span class="op">=</span> expit(logit_pred)</span>
-<span id="cb4-9"><a href="#cb4-9"></a>    <span class="cf">return</span> stats.bernoulli.logpmf(obs, prob)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="cf">return</span> stats.bernoulli.logpmf(obs, prob)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This log-likelihood helper evaluates the Bernoulli log-pmf for the selected subset and returns log probabilities for each posterior draw. No log-likelihood values are stored permanently, which keeps memory usage modest even when <span class="math inline">\(N\)</span> is large.</p>
 </section>
@@ -548,8 +733,8 @@ window.Quarto = {
 \]</span></p>
 <p>The approximation reduces the computational burden to a single evaluation per observation while retaining the shrinkage induced by the posterior mean. Inserting <span class="math inline">\(\tilde\pi_i^{\text{plpd}}\)</span> into the difference estimator converts the exact correction to a subsample average that only requires re-evaluating the full posterior draws on <span class="math inline">\(m\)</span> observations.</p>
 <p>Here we use the <code>method="plpd"</code> argument to <code>loo_subsample()</code> to use the PLPD surrogate.</p>
-<div id="1cf79e04" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>loo_plpd <span class="op">=</span> azp.loo_subsample(</span>
+<div id="a7fac587" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>loo_plpd <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb5-2"><a href="#cb5-2"></a>    data<span class="op">=</span>data,</span>
 <span id="cb5-3"><a href="#cb5-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
 <span id="cb5-4"><a href="#cb5-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
@@ -560,7 +745,7 @@ window.Quarto = {
 <span id="cb5-9"><a href="#cb5-9"></a>    seed<span class="op">=</span>SEED,</span>
 <span id="cb5-10"><a href="#cb5-10"></a>)</span>
 <span id="cb5-11"><a href="#cb5-11"></a></span>
-<span id="cb5-12"><a href="#cb5-12"></a>loo_plpd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-12"><a href="#cb5-12"></a>loo_plpd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>Computed from 4000 by 100 subsampled log-likelihood
 values from 3020 total observations.
@@ -587,8 +772,8 @@ Pareto k diagnostic values:
 \tilde\pi_i^{\text{lpd}} = \log \left( \frac{1}{S} \sum_{s=1}^S p(y_i \mid X_i, \beta_s) \right),
 \]</span></p>
 <p>where <span class="math inline">\(\beta_s\)</span> are the draws stored in <code>data.posterior</code>. The additional sum over draws raises the cost and often reduces the approximation error. The same subsample size and random seed ensure that the estimator reuses the indices chosen for the PLPD computation, which makes comparisons straightforward.</p>
-<div id="5a4be245" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>loo_lpd <span class="op">=</span> azp.loo_subsample(</span>
+<div id="8c5acd60" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>loo_lpd <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb7-2"><a href="#cb7-2"></a>    data<span class="op">=</span>data,</span>
 <span id="cb7-3"><a href="#cb7-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
 <span id="cb7-4"><a href="#cb7-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
@@ -597,7 +782,7 @@ Pareto k diagnostic values:
 <span id="cb7-7"><a href="#cb7-7"></a>    seed<span class="op">=</span>SEED,</span>
 <span id="cb7-8"><a href="#cb7-8"></a>)</span>
 <span id="cb7-9"><a href="#cb7-9"></a></span>
-<span id="cb7-10"><a href="#cb7-10"></a>loo_lpd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-10"><a href="#cb7-10"></a>loo_lpd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>Computed from 4000 by 100 subsampled log-likelihood
 values from 3020 total observations.
@@ -621,8 +806,8 @@ Pareto k diagnostic values:
 <section id="incremental-sampling-updates" class="level2" data-number="8.5">
 <h2 data-number="8.5" class="anchored" data-anchor-id="incremental-sampling-updates"><span class="header-section-number">8.5</span> Incremental sampling updates</h2>
 <p><span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> recommend increasing <span class="math inline">\(m\)</span> until the subsampling uncertainty is negligible for the task at hand. The <code>update_subsample()</code> routine efficiently extends an existing subsample without discarding work already done. Here we add 200 additional observations (from 100 to 300 total in the subsample) by using the previous subsample as a starting point.</p>
-<div id="c2438526" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>loo_update <span class="op">=</span> azp.update_subsample(</span>
+<div id="7b35d114" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>loo_update <span class="op">=</span> azp.update_subsample(</span>
 <span id="cb9-2"><a href="#cb9-2"></a>    loo_plpd,</span>
 <span id="cb9-3"><a href="#cb9-3"></a>    data,</span>
 <span id="cb9-4"><a href="#cb9-4"></a>    observations<span class="op">=</span><span class="dv">200</span>,</span>
@@ -633,7 +818,7 @@ Pareto k diagnostic values:
 <span id="cb9-9"><a href="#cb9-9"></a>    seed<span class="op">=</span>SEED,</span>
 <span id="cb9-10"><a href="#cb9-10"></a>)</span>
 <span id="cb9-11"><a href="#cb9-11"></a></span>
-<span id="cb9-12"><a href="#cb9-12"></a>loo_update</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-12"><a href="#cb9-12"></a>loo_update</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>Computed from 4000 by 300 subsampled log-likelihood
 values from 3020 total observations.
@@ -667,11 +852,11 @@ q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
 <p>Draws from <span class="math inline">\(q(\theta \mid y)\)</span> can be obtained efficiently by sampling from the fitted normal distribution.</p>
 <p>The following fits the wells model using a Laplace approximation via <code>pymc_extras.fit_laplace</code>, which returns draws from the approximate posterior along with the mode and covariance estimates.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">CmdStanPy</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="ad85cf32" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
+<div id="b1de3720" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="im">from</span> pymc_extras <span class="im">import</span> fit_laplace</span>
 <span id="cb11-3"><a href="#cb11-3"></a></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_laplace:</span>
@@ -684,22 +869,22 @@ q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
 <span id="cb11-11"><a href="#cb11-11"></a>        draws<span class="op">=</span><span class="dv">2000</span>,</span>
 <span id="cb11-12"><a href="#cb11-12"></a>        random_seed<span class="op">=</span>SEED,</span>
 <span id="cb11-13"><a href="#cb11-13"></a>        progressbar<span class="op">=</span><span class="va">True</span></span>
-<span id="cb11-14"><a href="#cb11-14"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-14"><a href="#cb11-14"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p>The <code>fit_laplace</code> function stores the posterior mode in the <code>fit</code> group as <code>mean_vector</code> and the covariance in <code>covariance_matrix</code>. Posterior draws are stored in the <code>posterior</code> group as usual. We convert the result to a <code>DataTree</code> and attach the observed data and design matrix for use with <code>loo_approximate_posterior()</code>.</p>
-<div id="7c3e1503" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>data_laplace <span class="op">=</span> azp.convert_to_datatree(idata_laplace)</span>
+<div id="333fc3dc" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>data_laplace <span class="op">=</span> azp.convert_to_datatree(idata_laplace)</span>
 <span id="cb13-2"><a href="#cb13-2"></a></span>
 <span id="cb13-3"><a href="#cb13-3"></a>data_laplace[<span class="st">"observed_data"</span>] <span class="op">=</span> xr.Dataset({</span>
 <span id="cb13-4"><a href="#cb13-4"></a>    <span class="st">"y"</span>: ([<span class="st">"obs_id"</span>], y, {<span class="st">"obs_id"</span>: <span class="bu">range</span>(<span class="bu">len</span>(y))})</span>
 <span id="cb13-5"><a href="#cb13-5"></a>})</span>
-<span id="cb13-6"><a href="#cb13-6"></a>data_laplace[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X)})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-6"><a href="#cb13-6"></a>data_laplace[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X)})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="computing-log-density-corrections" class="level3" data-number="8.6.1">
 <h3 data-number="8.6.1" class="anchored" data-anchor-id="computing-log-density-corrections"><span class="header-section-number">8.6.1</span> Computing log density corrections</h3>
@@ -708,8 +893,8 @@ q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
 r(\theta_s) \propto \frac{1}{p(y_i \mid \theta_s)} \frac{p(\theta_s \mid y)}{q(\theta_s \mid y)}.
 \]</span></p>
 <p>For the Laplace approximation, <span class="math inline">\(\log q(\theta_s \mid y)\)</span> is the log density of the fitted normal distribution, while <span class="math inline">\(\log p(\theta_s \mid y)\)</span> is the log prior plus the log likelihood. We require both of these quantities to be able to compute the importance ratios.</p>
-<div id="fb317f1f" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> multivariate_normal</span>
+<div id="d0dcdba3" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> multivariate_normal</span>
 <span id="cb14-2"><a href="#cb14-2"></a></span>
 <span id="cb14-3"><a href="#cb14-3"></a>beta_samples <span class="op">=</span> data_laplace.posterior[<span class="st">"beta"</span>]</span>
 <span id="cb14-4"><a href="#cb14-4"></a>X_xr <span class="op">=</span> data_laplace.constant_data[<span class="st">"X"</span>]</span>
@@ -742,15 +927,15 @@ r(\theta_s) \propto \frac{1}{p(y_i \mid \theta_s)} \frac{p(\theta_s \mid y)}{q(\
 <span id="cb14-31"><a href="#cb14-31"></a></span>
 <span id="cb14-32"><a href="#cb14-32"></a>log_prior <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span> <span class="op">*</span> (beta_renamed <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>(<span class="st">"coef"</span>) <span class="op">-</span> <span class="fl">1.5</span> <span class="op">*</span> np.log(<span class="dv">2</span> <span class="op">*</span> np.pi)</span>
 <span id="cb14-33"><a href="#cb14-33"></a>log_lik_sum <span class="op">=</span> log_lik_laplace.<span class="bu">sum</span>(<span class="st">"obs_id"</span>)</span>
-<span id="cb14-34"><a href="#cb14-34"></a>log_p_da <span class="op">=</span> log_prior <span class="op">+</span> log_lik_sum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-34"><a href="#cb14-34"></a>log_p_da <span class="op">=</span> log_prior <span class="op">+</span> log_lik_sum</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The log prior uses the standard normal density <span class="math inline">\(\mathcal{N}(0, I_3)\)</span> specified in the model. The log likelihood sums over all observations to obtain the joint log density. These quantities are then passed to <code>loo_approximate_posterior()</code> to compute corrected LOO estimates.</p>
 </section>
 <section id="running-loo-cv-with-approximate-posterior" class="level3" data-number="8.6.2">
 <h3 data-number="8.6.2" class="anchored" data-anchor-id="running-loo-cv-with-approximate-posterior"><span class="header-section-number">8.6.2</span> Running LOO-CV with approximate posterior</h3>
 <p>With <code>log_p</code> and <code>log_q</code> in hand, we can compute LOO-CV using the approximate posterior. The <code>loo_approximate_posterior()</code> function adjusts the importance ratios to account for the discrepancy between the true posterior and the Laplace approximation.</p>
-<div id="1963c750" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>loo_ap <span class="op">=</span> azp.loo_approximate_posterior(</span>
+<div id="d5ede8c1" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>loo_ap <span class="op">=</span> azp.loo_approximate_posterior(</span>
 <span id="cb15-2"><a href="#cb15-2"></a>    data<span class="op">=</span>data_laplace,</span>
 <span id="cb15-3"><a href="#cb15-3"></a>    log_p<span class="op">=</span>log_p_da,</span>
 <span id="cb15-4"><a href="#cb15-4"></a>    log_q<span class="op">=</span>log_q_da,</span>
@@ -758,7 +943,7 @@ r(\theta_s) \propto \frac{1}{p(y_i \mid \theta_s)} \frac{p(\theta_s \mid y)}{q(\
 <span id="cb15-6"><a href="#cb15-6"></a>    pointwise<span class="op">=</span><span class="va">True</span></span>
 <span id="cb15-7"><a href="#cb15-7"></a>)</span>
 <span id="cb15-8"><a href="#cb15-8"></a></span>
-<span id="cb15-9"><a href="#cb15-9"></a>loo_ap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-9"><a href="#cb15-9"></a>loo_ap</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>Computed from 8000 posterior samples and 3020 observations log-likelihood matrix.
 Posterior approximation correction used.
@@ -782,8 +967,8 @@ Pareto k diagnostic values:
 <h2 data-number="8.7" class="anchored" data-anchor-id="combining-approximate-posterior-with-subsampling"><span class="header-section-number">8.7</span> Combining approximate posterior with subsampling</h2>
 <p>The approximate posterior correction can be combined with subsampling to further reduce computational cost.</p>
 <p>When using <code>loo_subsample()</code> with an approximate posterior, we simply pass <code>log_p</code> and <code>log_q</code> along with the subsample specification. The difference estimator then corrects for both the approximation error and the subsampling uncertainty.</p>
-<div id="ed23b9d2" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>loo_ap_ss <span class="op">=</span> azp.loo_subsample(</span>
+<div id="af393c68" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>loo_ap_ss <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb17-2"><a href="#cb17-2"></a>    data<span class="op">=</span>data_laplace,</span>
 <span id="cb17-3"><a href="#cb17-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
 <span id="cb17-4"><a href="#cb17-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
@@ -796,7 +981,7 @@ Pareto k diagnostic values:
 <span id="cb17-11"><a href="#cb17-11"></a>    seed<span class="op">=</span>SEED</span>
 <span id="cb17-12"><a href="#cb17-12"></a>)</span>
 <span id="cb17-13"><a href="#cb17-13"></a></span>
-<span id="cb17-14"><a href="#cb17-14"></a>loo_ap_ss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-14"><a href="#cb17-14"></a>loo_ap_ss</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>Computed from 8000 by 100 subsampled log-likelihood
 values from 3020 total observations. Posterior approximation correction used.
@@ -821,11 +1006,11 @@ Pareto k diagnostic values:
 <h2 data-number="8.8" class="anchored" data-anchor-id="comparing-models-with-subsampled-loo"><span class="header-section-number">8.8</span> Comparing models with subsampled LOO</h2>
 <p>We can compare models that are estimated via subsampling just like we would for regular LOO using the <code>compare()</code> function. We will fit a second model using <code>log(arsenic)</code> instead of <code>arsenic</code> as a predictor and compare the two models.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">CmdStanPy</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="c887b2d4" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>X_log <span class="op">=</span> X.copy()</span>
+<div id="f7eb29ee" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>X_log <span class="op">=</span> X.copy()</span>
 <span id="cb19-2"><a href="#cb19-2"></a>X_log[:, <span class="dv">2</span>] <span class="op">=</span> np.log(X[:, <span class="dv">2</span>])</span>
 <span id="cb19-3"><a href="#cb19-3"></a></span>
 <span id="cb19-4"><a href="#cb19-4"></a><span class="cf">with</span> pm.Model():</span>
@@ -843,19 +1028,19 @@ Pareto k diagnostic values:
 <span id="cb19-16"><a href="#cb19-16"></a>    )</span>
 <span id="cb19-17"><a href="#cb19-17"></a></span>
 <span id="cb19-18"><a href="#cb19-18"></a>data2 <span class="op">=</span> azp.convert_to_datatree(idata2)</span>
-<span id="cb19-19"><a href="#cb19-19"></a>data2[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X_log)})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-19"><a href="#cb19-19"></a>data2[<span class="st">"constant_data"</span>] <span class="op">=</span> xr.Dataset({<span class="st">"X"</span>: ([<span class="st">"obs_id"</span>, <span class="st">"coef"</span>], X_log)})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># CmdStanPy implementation will be added in future</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <section id="comparison-with-different-subsamples" class="level3" data-number="8.8.1">
 <h3 data-number="8.8.1" class="anchored" data-anchor-id="comparison-with-different-subsamples"><span class="header-section-number">8.8.1</span> Comparison with different subsamples</h3>
 <p>We first compute subsampled LOO for the second model using a <em>different</em> random seed than the first model. This means the two models will be evaluated on different subsets of observations.</p>
-<div id="1aa5cac5" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>loo_ss_2_diff <span class="op">=</span> azp.loo_subsample(</span>
+<div id="4436e457" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>loo_ss_2_diff <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb21-2"><a href="#cb21-2"></a>    data<span class="op">=</span>data2,</span>
 <span id="cb21-3"><a href="#cb21-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
 <span id="cb21-4"><a href="#cb21-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
@@ -866,7 +1051,7 @@ Pareto k diagnostic values:
 <span id="cb21-9"><a href="#cb21-9"></a>    seed<span class="op">=</span><span class="dv">315</span></span>
 <span id="cb21-10"><a href="#cb21-10"></a>)</span>
 <span id="cb21-11"><a href="#cb21-11"></a></span>
-<span id="cb21-12"><a href="#cb21-12"></a>loo_ss_2_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-12"><a href="#cb21-12"></a>loo_ss_2_diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>Computed from 4000 by 100 subsampled log-likelihood
 values from 3020 total observations.
@@ -885,23 +1070,22 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>Now we compare the models using different subsamples.</p>
-<div id="7a34953d" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>comparison_diff <span class="op">=</span> azp.compare({</span>
+<div id="91f1fb82" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>comparison_diff <span class="op">=</span> azp.compare({</span>
 <span id="cb23-2"><a href="#cb23-2"></a>    <span class="st">"model1_arsenic"</span>: loo_plpd,</span>
 <span id="cb23-3"><a href="#cb23-3"></a>    <span class="st">"model2_log_arsenic"</span>: loo_ss_2_diff,</span>
 <span id="cb23-4"><a href="#cb23-4"></a>}).<span class="bu">round</span>(<span class="dv">1</span>)</span>
 <span id="cb23-5"><a href="#cb23-5"></a></span>
-<span id="cb23-6"><a href="#cb23-6"></a>comparison_diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-6"><a href="#cb23-6"></a>comparison_diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/compare.py:292: UserWarning: Different subsamples used in 'model2_log_arsenic' and 'model1_arsenic'. Naive diff SE is used.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -918,7 +1102,7 @@ Pareto k diagnostic values:
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">model2_log_arsenic</td>
+<th data-quarto-table-cell-role="th">model2_log_arsenic</th>
 <td>0</td>
 <td>-1952.3</td>
 <td>3.1</td>
@@ -930,7 +1114,7 @@ Pareto k diagnostic values:
 <td>0.0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">model1_arsenic</td>
+<th data-quarto-table-cell-role="th">model1_arsenic</th>
 <td>1</td>
 <td>-1968.4</td>
 <td>3.1</td>
@@ -947,14 +1131,13 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Note on <code>dse</code> and <code>subsampling_dse</code>
+<span class="screen-reader-only">Note</span>Note on <code>dse</code> and <code>subsampling_dse</code>
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -966,8 +1149,8 @@ Note on <code>dse</code> and <code>subsampling_dse</code>
 <section id="comparison-with-the-same-subsample" class="level3" data-number="8.8.2">
 <h3 data-number="8.8.2" class="anchored" data-anchor-id="comparison-with-the-same-subsample"><span class="header-section-number">8.8.2</span> Comparison with the same subsample</h3>
 <p>To properly compare models, we reuse the exact same observations by passing the first LOO subsample object to the second <code>loo_subsample()</code> call. This ensures both models are evaluated on the same subset of observations, which is critical for accurate model comparison.</p>
-<div id="dce14e03" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>loo_ss_2 <span class="op">=</span> azp.loo_subsample(</span>
+<div id="d5b17ff2" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>loo_ss_2 <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb25-2"><a href="#cb25-2"></a>    data<span class="op">=</span>data2,</span>
 <span id="cb25-3"><a href="#cb25-3"></a>    observations<span class="op">=</span>loo_plpd.loo_subsample_observations,</span>
 <span id="cb25-4"><a href="#cb25-4"></a>    var_name<span class="op">=</span><span class="st">"y"</span>,</span>
@@ -977,7 +1160,7 @@ Note on <code>dse</code> and <code>subsampling_dse</code>
 <span id="cb25-8"><a href="#cb25-8"></a>    pointwise<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb25-9"><a href="#cb25-9"></a>)</span>
 <span id="cb25-10"><a href="#cb25-10"></a></span>
-<span id="cb25-11"><a href="#cb25-11"></a>loo_ss_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-11"><a href="#cb25-11"></a>loo_ss_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>Computed from 4000 by 100 subsampled log-likelihood
 values from 3020 total observations.
@@ -996,19 +1179,18 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>Now we compare the models using the same subsample.</p>
-<div id="0e9d6053" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>comparison_same <span class="op">=</span> azp.compare({</span>
+<div id="454f7112" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>comparison_same <span class="op">=</span> azp.compare({</span>
 <span id="cb27-2"><a href="#cb27-2"></a>    <span class="st">"model1_arsenic"</span>: loo_plpd,</span>
 <span id="cb27-3"><a href="#cb27-3"></a>    <span class="st">"model2_log_arsenic"</span>: loo_ss_2,</span>
 <span id="cb27-4"><a href="#cb27-4"></a>}).<span class="bu">round</span>(<span class="dv">1</span>)</span>
 <span id="cb27-5"><a href="#cb27-5"></a></span>
-<span id="cb27-6"><a href="#cb27-6"></a>comparison_same</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-6"><a href="#cb27-6"></a>comparison_same</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="17">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -1025,7 +1207,7 @@ Pareto k diagnostic values:
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">model2_log_arsenic</td>
+<th data-quarto-table-cell-role="th">model2_log_arsenic</th>
 <td>0</td>
 <td>-1952.2</td>
 <td>3.0</td>
@@ -1037,7 +1219,7 @@ Pareto k diagnostic values:
 <td>0.0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">model1_arsenic</td>
+<th data-quarto-table-cell-role="th">model1_arsenic</th>
 <td>1</td>
 <td>-1968.4</td>
 <td>3.1</td>
@@ -1054,7 +1236,6 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-</div>
 <p>When using the same subsample, we can see that the standard error of the difference is dramatically reduced compared to the previous comparison. This is because the correlation between models’ predictions on the common subsample is properly accounted for in the variance calculation. The SE reduction is substantial, making it much easier to detect meaningful performance differences.</p>
 <p>In this example, the second model (with log-transformed arsenic) has higher ELPD than the first model, indicating better predictive performance. The subsampling SE is very small relative to the difference in ELPD, indicating that the subsample size of 100 is sufficient for accurate comparison. If the subsampling SE were large, we could increase the subsample size using <code>update_subsample()</code> as demonstrated earlier.</p>
 </section>
@@ -1063,9 +1244,9 @@ Pareto k diagnostic values:
 <h2 data-number="8.9" class="anchored" data-anchor-id="comparing-full-loo-to-subsampled-loo"><span class="header-section-number">8.9</span> Comparing full LOO to subsampled LOO</h2>
 <p>We can also compare a subsampled LOO object to a full LOO object that was computed on all <span class="math inline">\(N = 3020\)</span> observations.</p>
 <p>The following computes full PSIS-LOO-CV for the first model using the <code>loo()</code> function.</p>
-<div id="54946007" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>loo_full <span class="op">=</span> azp.loo(data, var_name<span class="op">=</span><span class="st">"y"</span>, pointwise<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb28-2"><a href="#cb28-2"></a>loo_full</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8148e543" class="cell" data-execution_count="22">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>loo_full <span class="op">=</span> azp.loo(data, var_name<span class="op">=</span><span class="st">"y"</span>, pointwise<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb28-2"><a href="#cb28-2"></a>loo_full</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>Computed from 4000 posterior samples and 3020 observations log-likelihood matrix.
 
@@ -1082,23 +1263,22 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>When comparing a full LOO calculation to a subsampled calculation, the <code>compare()</code> function automatically uses only the observations included in both calculations.</p>
-<div id="497681cc" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>comparison_mixed <span class="op">=</span> azp.compare({</span>
+<div id="9168a90a" class="cell" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>comparison_mixed <span class="op">=</span> azp.compare({</span>
 <span id="cb30-2"><a href="#cb30-2"></a>    <span class="st">"model1_full_loo"</span>: loo_full,</span>
 <span id="cb30-3"><a href="#cb30-3"></a>    <span class="st">"model2_subsampled_loo"</span>: loo_ss_2</span>
 <span id="cb30-4"><a href="#cb30-4"></a>}).<span class="bu">round</span>(<span class="dv">1</span>)</span>
 <span id="cb30-5"><a href="#cb30-5"></a></span>
-<span id="cb30-6"><a href="#cb30-6"></a>comparison_mixed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-6"><a href="#cb30-6"></a>comparison_mixed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/compare.py:338: UserWarning: Estimated elpd_diff using observations included in loo calculations for all models.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -1115,7 +1295,7 @@ Pareto k diagnostic values:
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">model2_subsampled_loo</td>
+<th data-quarto-table-cell-role="th">model2_subsampled_loo</th>
 <td>0</td>
 <td>-1952.2</td>
 <td>3.0</td>
@@ -1127,7 +1307,7 @@ Pareto k diagnostic values:
 <td>0.0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">model1_full_loo</td>
+<th data-quarto-table-cell-role="th">model1_full_loo</th>
 <td>1</td>
 <td>-1968.5</td>
 <td>3.2</td>
@@ -1141,7 +1321,6 @@ Pareto k diagnostic values:
 </tbody>
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -1162,187 +1341,71 @@ Magnusson, Måns, Michael Riis Andersen, Johan Jonasson, and Aki Vehtari. 2020. 
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
     }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
         }
       }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
       return false;
     }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -1350,184 +1413,184 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1535,185 +1598,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../Chapters/Model_comparison.html" class="pagination-link" aria-label="Model Comparison">

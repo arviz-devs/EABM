@@ -2,12 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.554">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2025-04-02">
 
-<title>Exploratory Analysis of Bayesian Models - 10&nbsp; Model Comparison (case study)</title>
+<title>10&nbsp; Model Comparison (case study) – Exploratory Analysis of Bayesian Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,8 +22,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -57,7 +59,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -67,17 +69,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../Chapters/Variable_selection.html" rel="next">
 <link href="../Chapters/Moment_Matching.html" rel="prev">
 <link href="../favicon.ico" rel="icon">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-7bf12d62aa84b4fa538b342f1416a45b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-691c43ad62c52d8f2a4cfbd07224d002.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-7bf12d62aa84b4fa538b342f1416a45b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -105,11 +111,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -123,7 +129,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -140,6 +146,10 @@ window.Quarto = {
 </script>
 
 <meta name="citation_title" content="[[10]{.chapter-number}&nbsp; [Model Comparison (case study)]{.chapter-title}]{#sec-model-comparison-case-study .quarto-section-identifier}">
+<meta name="citation_publication_date" content="2025-04-02">
+<meta name="citation_cover_date" content="2025-04-02">
+<meta name="citation_year" content="2025">
+<meta name="citation_online_date" content="2025-04-02">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Graphical perception: Theory, experimentation, and application to the development of graphical methods;,citation_author=William S. Cleveland;,citation_author=Robert McGill;,citation_publication_date=1984;,citation_cover_date=1984;,citation_year=1984;,citation_fulltext_html_url= https://www.tandfonline.com/doi/abs/10.1080/01621459.1984.10478080;,citation_issue=387;,citation_doi=10.1080/01621459.1984.10478080;,citation_volume=79;,citation_journal_title=Journal of the American Statistical Association;,citation_publisher=Taylor &amp;amp;amp; Francis;">
 <meta name="citation_reference" content="citation_title=Crowdsourcing graphical perception: Using mechanical turk to assess visualization design;,citation_author=Jeffrey Heer;,citation_author=Michael Bostock;,citation_publication_date=2010-04;,citation_cover_date=2010-04;,citation_year=2010;,citation_fulltext_html_url=https://doi.org/10.1145/1753326.1753357;,citation_doi=10.1145/1753326.1753357;,citation_isbn=978-1-60558-929-9;,citation_conference_title=Proceedings of the SIGCHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’10;">
@@ -171,7 +181,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Using Stacking to Average Bayesian Predictive Distributions (with Discussion);,citation_author=Yuling Yao;,citation_author=Aki Vehtari;,citation_author=Daniel Simpson;,citation_author=Andrew Gelman;,citation_publication_date=2018;,citation_cover_date=2018;,citation_year=2018;,citation_fulltext_html_url=https://doi.org/10.1214/17-BA1091;,citation_issue=3;,citation_doi=10.1214/17-BA1091;,citation_volume=13;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=A Widely Applicable Bayesian Information Criterion;,citation_author=Sumio Watanabe;,citation_publication_date=2013-03;,citation_cover_date=2013-03;,citation_year=2013;,citation_fulltext_html_url=https://dl.acm.org/doi/10.5555/2567709.2502609;,citation_volume=14;,citation_journal_title=Journal of Machine Learning Research;">
 <meta name="citation_reference" content="citation_title=A new look at the statistical model identification;,citation_author=H. Akaike;,citation_publication_date=1974;,citation_cover_date=1974;,citation_year=1974;,citation_issue=6;,citation_doi=10.1109/TAC.1974.1100705;,citation_volume=19;,citation_journal_title=IEEE Transactions on Automatic Control;">
-<meta name="citation_reference" content="citation_title=Rank-Normalization, Folding, and Localization: An Improved \widehat{R} for Assessing Convergence of MCMC (with Discussion);,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_author=Daniel Simpson;,citation_author=Bob Carpenter;,citation_author=Paul-Christian Bürkner;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_fulltext_html_url=https://doi.org/10.1214/20-BA1221;,citation_issue=2;,citation_doi=10.1214/20-BA1221;,citation_volume=16;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
+<meta name="citation_reference" content="citation_title=Rank-Normalization, Folding, and Localization: An Improved $\widehat{R}$ for Assessing Convergence of MCMC (with Discussion);,citation_author=Aki Vehtari;,citation_author=Andrew Gelman;,citation_author=Daniel Simpson;,citation_author=Bob Carpenter;,citation_author=Paul-Christian Bürkner;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_fulltext_html_url=https://doi.org/10.1214/20-BA1221;,citation_issue=2;,citation_doi=10.1214/20-BA1221;,citation_volume=16;,citation_journal_title=Bayesian Analysis;,citation_publisher=International Society for Bayesian Analysis;">
 <meta name="citation_reference" content="citation_title=Truncated importance sampling;,citation_author=Edward L. Ionides;,citation_publication_date=2008;,citation_cover_date=2008;,citation_year=2008;,citation_issue=2;,citation_doi=10.1198/106186008X320465;,citation_volume=17;,citation_journal_title=Journal of Computational and Graphical Statistics;">
 <meta name="citation_reference" content="citation_title=No unbiased estimator of the variance of k-fold cross-validation;,citation_author=Yoshua Bengio;,citation_author=Yves Grandvalet;,citation_publication_date=2004;,citation_cover_date=2004;,citation_year=2004;,citation_fulltext_html_url=https://jmlr.csail.mit.edu/papers/v5/grandvalet04a.html;,citation_volume=5;,citation_journal_title=Journal of Machine Learning Research;">
 <meta name="citation_reference" content="citation_title=On the theory of sampling from finite populations;,citation_author=Morris H. Hansen;,citation_author=William N. Hurwitz;,citation_publication_date=1943;,citation_cover_date=1943;,citation_year=1943;,citation_issue=4;,citation_doi=10.1214/aoms/1177731360;,citation_volume=14;,citation_journal_title=The Annals of Mathematical Statistics;">
@@ -187,7 +197,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Satellite male groups in horseshoe crabs, limulus polyphemus;,citation_author=H. Jane Brockmann;,citation_publication_date=1996;,citation_cover_date=1996;,citation_year=1996;,citation_fulltext_html_url=https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1439-0310.1996.tb01099.x;,citation_issue=1;,citation_doi=10.1111/j.1439-0310.1996.tb01099.x;,citation_volume=102;,citation_journal_title=Ethology;">
 <meta name="citation_reference" content="citation_title=Recommendations for visual predictive checks in bayesian workflow;,citation_author=Teemu Säilynoja;,citation_author=Andrew R. Johnson;,citation_author=Osvaldo A. Martin;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2503.01509;">
 <meta name="citation_reference" content="citation_title=Visualization in bayesian workflow;,citation_author=Jonah Gabry;,citation_author=Daniel Simpson;,citation_author=Aki Vehtari;,citation_author=Michael Betancourt;,citation_author=Andrew Gelman;,citation_publication_date=2019-01;,citation_cover_date=2019-01;,citation_year=2019;,citation_fulltext_html_url=https://doi.org/10.1111/rssa.12378;,citation_issue=2;,citation_doi=10.1111/rssa.12378;,citation_issn=0964-1998;,citation_volume=182;,citation_journal_title=Journal of the Royal Statistical Society Series A: Statistics in Society;">
-<meta name="citation_reference" content="citation_title=Posterior Predictive p-Values;,citation_author=Xiao-Li Meng;,citation_publication_date=1994;,citation_cover_date=1994;,citation_year=1994;,citation_fulltext_html_url=https://doi.org/10.1214/aos/1176325622;,citation_issue=3;,citation_doi=10.1214/aos/1176325622;,citation_volume=22;,citation_journal_title=The Annals of Statistics;,citation_publisher=Institute of Mathematical Statistics;">
+<meta name="citation_reference" content="citation_title=Posterior Predictive $p$-Values;,citation_author=Xiao-Li Meng;,citation_publication_date=1994;,citation_cover_date=1994;,citation_year=1994;,citation_fulltext_html_url=https://doi.org/10.1214/aos/1176325622;,citation_issue=3;,citation_doi=10.1214/aos/1176325622;,citation_volume=22;,citation_journal_title=The Annals of Statistics;,citation_publisher=Institute of Mathematical Statistics;">
 <meta name="citation_reference" content="citation_title=Bayesian Data Analysis;,citation_author=Andrew Gelman;,citation_author=John B. Carlin;,citation_author=Hal S. Stern;,citation_author=David B. Dunson;,citation_author=Aki Vehtari;,citation_author=Donald B. Rubin;,citation_publication_date=2013-11;,citation_cover_date=2013-11;,citation_year=2013;,citation_fulltext_html_url=https://doi.org/10.1201/b16018;,citation_isbn=978-1-4398-4095-5;">
 <meta name="citation_reference" content="citation_title=Two simple examples for understanding posterior p-values whose distributions are far from uniform;,citation_author=Andrew Gelman;,citation_publication_date=2013;,citation_cover_date=2013;,citation_year=2013;,citation_fulltext_html_url=https://doi.org/10.1214/13-EJS854;,citation_issue=none;,citation_doi=10.1214/13-EJS854;,citation_volume=7;,citation_journal_title=Electronic Journal of Statistics;,citation_publisher=Institute of Mathematical Statistics; Bernoulli Society;">
 <meta name="citation_reference" content="citation_title=Stable reliability diagrams for probabilistic classifiers;,citation_author=Timo Dimitriadis;,citation_author=Tilmann Gneiting;,citation_author=Alexander I. Jordan;,citation_publication_date=2021-02;,citation_cover_date=2021-02;,citation_year=2021;,citation_fulltext_html_url=https://www.pnas.org/doi/abs/10.1073/pnas.2016191118;,citation_issue=8;,citation_doi=10.1073/pnas.2016191118;,citation_volume=118;,citation_journal_title=Proceedings of the National Academy of Sciences;">
@@ -212,19 +222,181 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Predictive assessment and comparison of bayesian survival models for cancer recurrence;,citation_author=Saku Suorsa;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2601.01662;">
 </head>
 
-<body class="nav-sidebar docked">
+<body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Chapters/Case_study_model_comparison.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model Comparison (case study)</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -239,7 +411,7 @@ window.Quarto = {
       <a href="../">Exploratory Analysis of Bayesian Models</a> 
         <div class="sidebar-tools-main tools-wide">
     <div class="dropdown">
-      <a href="" title="github" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="github"><i class="bi bi-github"></i></a>
+      <a href="" title="github" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="github"><i class="bi bi-github"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/arviz-devs/Exploratory-Analysis-of-Bayesian-Models">
@@ -401,6 +573,7 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title"><span id="sec-model-comparison-case-study" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Model Comparison (case study)</span></span></h1>
@@ -411,7 +584,19 @@ window.Quarto = {
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 2, 2025</p>
+    </div>
+  </div>
   
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">January 23, 2026</p>
+    </div>
+  </div>
     
   </div>
   
@@ -503,10 +688,48 @@ defs &amp;= defs_* - \text{mean}(defs_*) + budget_{def} \log{\mathbf{b}} \qquad 
 </ul>
 <p>There are even more examples of predictive tasks where this particular model can be of use. However, it is important to keep in mind that this model predicts the number of goals scored. Its results can be used to estimate probabilities of victory and other derived quantities, but calculating the likelihood of these derived quantities may not be straightforward. And as you can see above, there isn’t <em>one</em> unique predictive task: it all depends on the specific question you’re interested in. As often in statistics, the answer to these questions lies <em>outside</em> the model, <em>you</em> must tell the model what to do, not the other way around.</p>
 <p>Even though we know that the predictive task is ambiguous, we will start trying to calculate <code>az.loo</code> with <code>idata_base</code> and then work on the examples above and a couple more to show how would this kind of tasks be performed with ArviZ. But before that, let’s see what ArviZ says when you naively ask it for the LOO of a multi-likelihood model:</p>
-<div id="d8e6c0c5" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>azp.loo(base_idata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="25aea0a0" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>azp.loo(base_idata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
-<pre><code>TypeError: Found several log likelihood arrays ['away_goals', 'home_goals'], var_name cannot be None</code></pre>
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[3]</span><span class="ansi-green-fg">, line 1</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">1</span> <span class="ansi-yellow-bg">azp</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">loo</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">base_idata</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/loo.py:160</span>, in <span class="ansi-cyan-fg">loo</span><span class="ansi-blue-fg">(data, pointwise, var_name, reff, log_weights, pareto_k, log_jacobian, mixture)</span>
+<span class="ansi-green-fg">     22</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span class="ansi-blue-fg">loo</span>(
+<span class="ansi-green-fg">     23</span>     data,
+<span class="ansi-green-fg">     24</span>     pointwise=<span style="font-weight:bold;color:rgb(0,135,0)">None</span>,
+<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">     30</span>     mixture=<span style="font-weight:bold;color:rgb(0,135,0)">False</span>,
+<span class="ansi-green-fg">     31</span> ):
+<span class="ansi-green-fg">     32</span> <span style="color:rgb(188,188,188)">    </span><span class="ansi-yellow-fg">r</span><span style="font-style:italic" class="ansi-yellow-fg">"""Compute Pareto-smoothed importance sampling leave-one-out cross-validation (PSIS-LOO-CV).</span>
+<span class="ansi-green-fg">     33</span> 
+<span class="ansi-green-fg">     34</span> <span style="font-style:italic" class="ansi-yellow-fg">    Estimates the expected log pointwise predictive density (elpd) using Pareto-smoothed</span>
+<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">    158</span> <span style="font-style:italic" class="ansi-yellow-fg">       arXiv preprint https://arxiv.org/abs/1507.02646</span>
+<span class="ansi-green-fg">    159</span> <span style="font-style:italic" class="ansi-yellow-fg">    """</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">160</span>     loo_inputs = <span class="ansi-yellow-bg">_prepare_loo_inputs</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">data</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">var_name</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    161</span>     pointwise = rcParams[<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">stats.ic_pointwise</span><span class="ansi-yellow-fg">"</span>] <span style="font-weight:bold;color:rgb(0,135,0)">if</span> pointwise <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span> pointwise
+<span class="ansi-green-fg">    163</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> reff <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:169</span>, in <span class="ansi-cyan-fg">_prepare_loo_inputs</span><span class="ansi-blue-fg">(data, var_name, thin_factor)</span>
+<span class="ansi-green-fg">    166</span> <span style="font-style:italic" class="ansi-yellow-fg">"""Prepare inputs for PSIS-LOO-CV."""</span>
+<span class="ansi-green-fg">    167</span> data = convert_to_datatree(data)
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">169</span> log_likelihood = <span class="ansi-yellow-bg">get_log_likelihood</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">data</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">var_name</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">var_name</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    170</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> var_name <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span> <span style="font-weight:bold;color:rgb(175,0,255)">and</span> log_likelihood.name <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(175,0,255)">not</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">    171</span>     var_name = log_likelihood.name
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/utils.py:89</span>, in <span class="ansi-cyan-fg">get_log_likelihood</span><span class="ansi-blue-fg">(idata, var_name)</span>
+<span class="ansi-green-fg">     87</span>     var_names = <span style="color:rgb(0,135,0)">list</span>(idata.log_likelihood.data_vars)
+<span class="ansi-green-fg">     88</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">len</span>(var_names) &gt; <span class="ansi-green-fg">1</span>:
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">89</span>         <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">TypeError</span>(
+<span class="ansi-green-fg">     90</span>             <span class="ansi-yellow-fg">f</span><span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">Found several log likelihood arrays </span><span style="font-weight:bold;color:rgb(175,95,135)">{</span>var_names<span style="font-weight:bold;color:rgb(175,95,135)">}</span><span class="ansi-yellow-fg">, var_name cannot be None</span><span class="ansi-yellow-fg">"</span>
+<span class="ansi-green-fg">     91</span>         )
+<span class="ansi-green-fg">     92</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> idata.log_likelihood[var_names[<span class="ansi-green-fg">0</span>]]
+<span class="ansi-green-fg">     93</span> <span style="font-weight:bold;color:rgb(0,135,0)">try</span>:
+
+<span class="ansi-red-fg">TypeError</span>: Found several log likelihood arrays ['away_goals', 'home_goals'], var_name cannot be None</pre>
+</div>
 </div>
 </div>
 <p>As expected, ArviZ has no way of knowing what predictive task we have in mind so it raises an error.</p>
@@ -518,8 +741,8 @@ defs &amp;= defs_* - \text{mean}(defs_*) + budget_{def} \log{\mathbf{b}} \qquad 
 <p><span class="math display">\[ p(y_i|\theta) = p(y_{i,h}|\theta_{i,h}) = \text{Poiss}(y_{i,h}; \theta_{i,h}) \]</span></p>
 <p>with <span class="math inline">\(i\)</span> being both the match indicator (<span class="math inline">\(m\)</span>, which varies with <span class="math inline">\(i\)</span>) and the field indicator (<span class="math inline">\(f\)</span>, here always fixed at <span class="math inline">\(h\)</span>). These are precisely the values stored in the <code>home_goals</code> of the <code>log_likelihood</code> group of <code>idata_base</code>.</p>
 <p>We can tell ArviZ to use these values using the argument <code>var_name</code>.</p>
-<div id="58956c52" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"home_goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="db228141" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"home_goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>Computed from 8000 posterior samples and 380 observations log-likelihood matrix.
 
@@ -535,14 +758,13 @@ Pareto k diagnostic values:
     (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-<div id="5731a07c" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"home_goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="563b1fce" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"home_goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -558,7 +780,7 @@ Pareto k diagnostic values:
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">budget</td>
+<th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
 <td>-567.043220</td>
 <td>10.816315</td>
@@ -569,7 +791,7 @@ Pareto k diagnostic values:
 <td>False</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">base</td>
+<th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
 <td>-568.638368</td>
 <td>15.658577</td>
@@ -580,7 +802,7 @@ Pareto k diagnostic values:
 <td>False</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">nofield</td>
+<th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
 <td>-574.236398</td>
 <td>15.856731</td>
@@ -596,15 +818,13 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-</div>
-<div id="0b6f62a6" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"away_goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="978dd971" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"away_goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -620,7 +840,7 @@ Pareto k diagnostic values:
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">budget</td>
+<th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
 <td>-480.396382</td>
 <td>6.934533</td>
@@ -631,7 +851,7 @@ Pareto k diagnostic values:
 <td>False</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">base</td>
+<th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
 <td>-482.986789</td>
 <td>10.281413</td>
@@ -642,7 +862,7 @@ Pareto k diagnostic values:
 <td>False</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">nofield</td>
+<th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
 <td>-489.086355</td>
 <td>10.270825</td>
@@ -658,7 +878,6 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-</div>
 </section>
 <section id="predicting-the-outcome-of-a-match" class="level3" data-number="10.7.2">
 <h3 data-number="10.7.2" class="anchored" data-anchor-id="predicting-the-outcome-of-a-match"><span class="header-section-number">10.7.2</span> Predicting the outcome of a match</h3>
@@ -671,17 +890,17 @@ p(y_i|\theta) = p(y_{i,h}|\theta_{i,h})p(y_{i,a}|\theta_{i,a}) =
 \]</span></p>
 <p>with <span class="math inline">\(i\)</span> being equal to the match indicator <span class="math inline">\(m\)</span>. Therefore, we have <span class="math inline">\(M\)</span> observations like in the previous example, but each observation has two components.</p>
 <p>We can calculate the product as a sum of logarithms and store the result in a new variable inside the <code>log_likelihood</code> group.</p>
-<div id="e6980c75" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">def</span> match_lik(idata):</span>
-<span id="cb7-2"><a href="#cb7-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood</span>
-<span id="cb7-3"><a href="#cb7-3"></a>    log_lik[<span class="st">"matches"</span>] <span class="op">=</span> log_lik.home_goals <span class="op">+</span> log_lik.away_goals</span>
-<span id="cb7-4"><a href="#cb7-4"></a>    <span class="cf">return</span> idata</span>
-<span id="cb7-5"><a href="#cb7-5"></a></span>
-<span id="cb7-6"><a href="#cb7-6"></a>base_idata <span class="op">=</span> match_lik(base_idata)</span>
-<span id="cb7-7"><a href="#cb7-7"></a>budget_idata <span class="op">=</span> match_lik(budget_idata)</span>
-<span id="cb7-8"><a href="#cb7-8"></a>nofield_idata <span class="op">=</span> match_lik(nofield_idata)</span>
-<span id="cb7-9"><a href="#cb7-9"></a></span>
-<span id="cb7-10"><a href="#cb7-10"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"matches"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b672773d" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">def</span> match_lik(idata):</span>
+<span id="cb6-2"><a href="#cb6-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood</span>
+<span id="cb6-3"><a href="#cb6-3"></a>    log_lik[<span class="st">"matches"</span>] <span class="op">=</span> log_lik.home_goals <span class="op">+</span> log_lik.away_goals</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="cf">return</span> idata</span>
+<span id="cb6-5"><a href="#cb6-5"></a></span>
+<span id="cb6-6"><a href="#cb6-6"></a>base_idata <span class="op">=</span> match_lik(base_idata)</span>
+<span id="cb6-7"><a href="#cb6-7"></a>budget_idata <span class="op">=</span> match_lik(budget_idata)</span>
+<span id="cb6-8"><a href="#cb6-8"></a>nofield_idata <span class="op">=</span> match_lik(nofield_idata)</span>
+<span id="cb6-9"><a href="#cb6-9"></a></span>
+<span id="cb6-10"><a href="#cb6-10"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"matches"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>Computed from 8000 posterior samples and 380 observations log-likelihood matrix.
 
@@ -697,14 +916,13 @@ Pareto k diagnostic values:
     (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-<div id="4b5f8337" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"matches"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="578ed164" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"matches"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -720,7 +938,7 @@ Pareto k diagnostic values:
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">budget</td>
+<th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
 <td>-1047.433817</td>
 <td>17.747036</td>
@@ -731,7 +949,7 @@ Pareto k diagnostic values:
 <td>False</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">base</td>
+<th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
 <td>-1051.613764</td>
 <td>25.922732</td>
@@ -742,7 +960,7 @@ Pareto k diagnostic values:
 <td>False</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">nofield</td>
+<th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
 <td>-1063.324209</td>
 <td>26.128229</td>
@@ -755,7 +973,6 @@ Pareto k diagnostic values:
 </tbody>
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -773,17 +990,17 @@ p(y_i|\theta) = p(y_{i}|\theta_{i}) =
 <p><span class="math display">\[\big\{(1,h), (2,h), \dots, (M-1,h), (M,h), (1,a), (2,a), \dots, (M-1,a), (M,a)\big\}\]</span></p>
 <p>Therefore, unlike in previous cases, we have <span class="math inline">\(2M\)</span> observations.</p>
 <p>We can obtain the pointwise log likelihood corresponding to this case by concatenating the pointwise log likelihoods of <code>home_goals</code> and <code>away_goals</code>. Then, like in the previous case, store the result in a new variable inside the <code>log_likelihood</code> group.</p>
-<div id="ba977f9d" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">def</span> goals_lik(idata):</span>
-<span id="cb10-2"><a href="#cb10-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood</span>
-<span id="cb10-3"><a href="#cb10-3"></a>    log_lik[<span class="st">"goals"</span>] <span class="op">=</span> xr.concat((log_lik.home_goals, log_lik.away_goals), <span class="st">"match"</span>).rename({<span class="st">"match"</span>: <span class="st">"goal"</span>})</span>
-<span id="cb10-4"><a href="#cb10-4"></a>    <span class="cf">return</span> idata</span>
-<span id="cb10-5"><a href="#cb10-5"></a>    </span>
-<span id="cb10-6"><a href="#cb10-6"></a>base_idata <span class="op">=</span> goals_lik(base_idata)</span>
-<span id="cb10-7"><a href="#cb10-7"></a>budget_idata <span class="op">=</span> goals_lik(budget_idata)</span>
-<span id="cb10-8"><a href="#cb10-8"></a>nofield_idata <span class="op">=</span> goals_lik(nofield_idata)</span>
-<span id="cb10-9"><a href="#cb10-9"></a></span>
-<span id="cb10-10"><a href="#cb10-10"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="eeaa043f" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">def</span> goals_lik(idata):</span>
+<span id="cb9-2"><a href="#cb9-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood</span>
+<span id="cb9-3"><a href="#cb9-3"></a>    log_lik[<span class="st">"goals"</span>] <span class="op">=</span> xr.concat((log_lik.home_goals, log_lik.away_goals), <span class="st">"match"</span>).rename({<span class="st">"match"</span>: <span class="st">"goal"</span>})</span>
+<span id="cb9-4"><a href="#cb9-4"></a>    <span class="cf">return</span> idata</span>
+<span id="cb9-5"><a href="#cb9-5"></a>    </span>
+<span id="cb9-6"><a href="#cb9-6"></a>base_idata <span class="op">=</span> goals_lik(base_idata)</span>
+<span id="cb9-7"><a href="#cb9-7"></a>budget_idata <span class="op">=</span> goals_lik(budget_idata)</span>
+<span id="cb9-8"><a href="#cb9-8"></a>nofield_idata <span class="op">=</span> goals_lik(nofield_idata)</span>
+<span id="cb9-9"><a href="#cb9-9"></a></span>
+<span id="cb9-10"><a href="#cb9-10"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>Computed from 8000 posterior samples and 760 observations log-likelihood matrix.
 
@@ -799,14 +1016,13 @@ Pareto k diagnostic values:
     (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-<div id="b94ce7ad" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"goals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="46a009e3" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -822,7 +1038,7 @@ Pareto k diagnostic values:
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">budget</td>
+<th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
 <td>-1047.439602</td>
 <td>17.750849</td>
@@ -833,7 +1049,7 @@ Pareto k diagnostic values:
 <td>False</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">base</td>
+<th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
 <td>-1051.625157</td>
 <td>25.939989</td>
@@ -844,7 +1060,7 @@ Pareto k diagnostic values:
 <td>False</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">nofield</td>
+<th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
 <td>-1063.322753</td>
 <td>26.127556</td>
@@ -860,7 +1076,6 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-</div>
 </section>
 <section id="predicting-team-level-performance" class="level3" data-number="10.7.4">
 <h3 data-number="10.7.4" class="anchored" data-anchor-id="predicting-team-level-performance"><span class="header-section-number">10.7.4</span> Predicting team level performance</h3>
@@ -869,25 +1084,25 @@ Pareto k diagnostic values:
 <p>In this situation, we could describe the cross validation as excluding a team. When we exclude a team, we will exclude all the matches played by the team, not only the goals scored by the team but the whole match. Here is the illustration:</p>
 <p><img src="../img/cv_team.png" class="img-fluid"></p>
 <p>In the first column, we are excluding “Levante U.D.” which in the rows shown only appears once. In the second one, we are excluding “Athletic Club” which appears two times. This goes on following the order of appearance in the away team column.</p>
-<div id="32ab876b" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">def</span> team_lik(idata):</span>
-<span id="cb13-2"><a href="#cb13-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood.to_dataset()</span>
-<span id="cb13-3"><a href="#cb13-3"></a>    const <span class="op">=</span> idata.constant_data.to_dataset()</span>
-<span id="cb13-4"><a href="#cb13-4"></a>    groupby_sum_home <span class="op">=</span> log_lik.groupby(const.home_team).<span class="bu">sum</span>().rename({<span class="st">"home_team"</span>: <span class="st">"team"</span>})</span>
-<span id="cb13-5"><a href="#cb13-5"></a>    groupby_sum_away <span class="op">=</span> log_lik.groupby(const.away_team).<span class="bu">sum</span>().rename({<span class="st">"away_team"</span>: <span class="st">"team"</span>})</span>
-<span id="cb13-6"><a href="#cb13-6"></a></span>
-<span id="cb13-7"><a href="#cb13-7"></a>    idata.log_likelihood[<span class="st">"teams_match"</span>] <span class="op">=</span> (</span>
-<span id="cb13-8"><a href="#cb13-8"></a>        groupby_sum_home.home_goals <span class="op">+</span> groupby_sum_home.away_goals <span class="op">+</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a>        groupby_sum_away.home_goals <span class="op">+</span> groupby_sum_away.away_goals</span>
-<span id="cb13-10"><a href="#cb13-10"></a>    )</span>
-<span id="cb13-11"><a href="#cb13-11"></a>    <span class="cf">return</span> idata</span>
-<span id="cb13-12"><a href="#cb13-12"></a>    </span>
-<span id="cb13-13"><a href="#cb13-13"></a>base_idata <span class="op">=</span> team_lik(base_idata)</span>
-<span id="cb13-14"><a href="#cb13-14"></a>budget_idata <span class="op">=</span> team_lik(budget_idata)</span>
-<span id="cb13-15"><a href="#cb13-15"></a>nofield_idata <span class="op">=</span> team_lik(nofield_idata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9a9eded7" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">def</span> team_lik(idata):</span>
+<span id="cb12-2"><a href="#cb12-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood.to_dataset()</span>
+<span id="cb12-3"><a href="#cb12-3"></a>    const <span class="op">=</span> idata.constant_data.to_dataset()</span>
+<span id="cb12-4"><a href="#cb12-4"></a>    groupby_sum_home <span class="op">=</span> log_lik.groupby(const.home_team).<span class="bu">sum</span>().rename({<span class="st">"home_team"</span>: <span class="st">"team"</span>})</span>
+<span id="cb12-5"><a href="#cb12-5"></a>    groupby_sum_away <span class="op">=</span> log_lik.groupby(const.away_team).<span class="bu">sum</span>().rename({<span class="st">"away_team"</span>: <span class="st">"team"</span>})</span>
+<span id="cb12-6"><a href="#cb12-6"></a></span>
+<span id="cb12-7"><a href="#cb12-7"></a>    idata.log_likelihood[<span class="st">"teams_match"</span>] <span class="op">=</span> (</span>
+<span id="cb12-8"><a href="#cb12-8"></a>        groupby_sum_home.home_goals <span class="op">+</span> groupby_sum_home.away_goals <span class="op">+</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>        groupby_sum_away.home_goals <span class="op">+</span> groupby_sum_away.away_goals</span>
+<span id="cb12-10"><a href="#cb12-10"></a>    )</span>
+<span id="cb12-11"><a href="#cb12-11"></a>    <span class="cf">return</span> idata</span>
+<span id="cb12-12"><a href="#cb12-12"></a>    </span>
+<span id="cb12-13"><a href="#cb12-13"></a>base_idata <span class="op">=</span> team_lik(base_idata)</span>
+<span id="cb12-14"><a href="#cb12-14"></a>budget_idata <span class="op">=</span> team_lik(budget_idata)</span>
+<span id="cb12-15"><a href="#cb12-15"></a>nofield_idata <span class="op">=</span> team_lik(nofield_idata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="8574aa12" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"teams_match"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="14775a9c" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>azp.loo(base_idata, var_name<span class="op">=</span><span class="st">"teams_match"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:1149: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
@@ -910,8 +1125,8 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>TODO: it would probably be best to run reloo for the three models for this case and include that on figshare too.</p>
-<div id="a9d2dfcc" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"teams_match"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="646a83c6" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>azp.compare(model_dict, var_name<span class="op">=</span><span class="st">"teams_match"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:1149: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(
@@ -922,10 +1137,9 @@ Pareto k diagnostic values:
 </div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <div>
-<div>
 
 
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -941,7 +1155,7 @@ Pareto k diagnostic values:
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">budget</td>
+<th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
 <td>-2098.355462</td>
 <td>36.701964</td>
@@ -952,7 +1166,7 @@ Pareto k diagnostic values:
 <td>True</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">base</td>
+<th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
 <td>-2110.296027</td>
 <td>53.290944</td>
@@ -963,7 +1177,7 @@ Pareto k diagnostic values:
 <td>True</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">nofield</td>
+<th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
 <td>-2132.258357</td>
 <td>51.606961</td>
@@ -979,7 +1193,6 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-</div>
 
 
 </section>
@@ -987,187 +1200,71 @@ Pareto k diagnostic values:
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
     }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
-      }
-    }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
-      }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
-        }
-      });
-    }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
         }
       }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
       return false;
     }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -1175,184 +1272,184 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
-        return container.innerHTML
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1360,185 +1457,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../Chapters/Moment_Matching.html" class="pagination-link" aria-label="Moment matching for improved PSIS-LOO-CV">
