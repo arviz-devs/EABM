@@ -32,7 +32,8 @@ book:
           postal-code: 15108
     - name: ArviZ-devs
       url: https://github.com/arviz-devs
-  date: today
+  date: 2025-04-02
+  date-modified: today
   favicon: favicon.ico
 
   chapters:
