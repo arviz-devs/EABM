@@ -136,7 +136,7 @@ pz.Normal(30, 4).plot_ppf();
 ```
 
 
-## Distributions in ArviZ
+## Distributions in ArviZ {#sec-dist}
 
 The PMF/PDF, CDF, and PPF are convenient ways to represent distributions for which we know the analytical form. But in practice, we often work with distributions that we don't know their analytical form. Instead, we have a set of samples from the distribution. A clear example is a posterior distribution, computed using an MCMC method. For those cases, we still want useful visualization that we can use for ourselves or to show others. Some common methods are: 
 
@@ -198,15 +198,14 @@ n_obs = len(data)
 bandwidth = 0.4
 grid = np.linspace(data.min() - bandwidth * 3, data.max() + bandwidth * 3, 200)
 kernels = np.transpose([pz.Normal(x_i, bandwidth).pdf(grid) for x_i in data])
-kernels *= 1/n_obs  # normalize the results
+kernels *= 1 / n_obs  # normalize the results
 
 # plot the results
 _, ax = plt.subplots(figsize=(9, 4))
-ax.plot(grid, kernels, 'k--', alpha=0.5)
-ax.plot(data, np.zeros(n_obs), 'C1o')
+ax.plot(grid, kernels, "k--", alpha=0.5)
+ax.plot(data, np.zeros(n_obs), "C1o")
 ax.plot(grid, kernels.sum(1))
-ax.set_xticks([])
-ax.set_yticks([]);
+ax.set(xticks=[], yticks=[]);
 ```
 
 The most important parameter of a KDE is the _bandwidth_ which controls the degree of smoothness of the resulting curve. It is analogous to the number of bins for the histograms. ArviZ's default method to compute the bandwidth works well for a wide range of distributions including multimodal ones. Compared to other KDEs in the Python ecosystem, the KDE implemented in ArviZ automatically handles the boundaries of a distribution. ArviZ will assign a density of zero to any point outside the range of the data. 
@@ -215,7 +214,7 @@ The following example shows a KDE computed from a sample from a `Gamma` distribu
 
 ```{python}
 #| label: fig-dist_KDE_0
-#| fig-cap: "KDE from a sample of floats. By default, ArviZ computes a KDE instead of a histogram."
+#| fig-cap: "KDE from a sample of floats. By default, ArviZ computes a KDE."
 c_values = azp.convert_to_dataset(pz.Gamma(2, 3).rvs((1,1000), random_state=rng))
 azp.plot_dist(c_values);
 ```
@@ -231,7 +230,7 @@ The following block of code shows a very simple example of an ECDF.
 
 ```{python}
 #| label: fig-dist_ecdf
-#| fig-cap: "empirical cumulative distribution function"
+#| fig-cap: "Empirical cumulative distribution function"
 azp.plot_dist(c_values, kind="ecdf");
 ```
 
@@ -250,8 +249,10 @@ From @fig-dist_qdot we can easily see that 30% of the data is below 1. We do thi
 #| label: fig-dist_qdot
 #| fig-cap: "Quantile dot plot"
 d_values = azp.convert_to_dataset(pz.Normal(2, 2).rvs((4, 1000), random_state=123))
-azp.plot_dist(d_values, kind="dot",
-              stats={"dist":{"nquantiles":10}}
+azp.plot_dist(
+    d_values,
+    kind="dot",
+    stats={"dist": {"nquantiles": 10}},
 );
 ```
 

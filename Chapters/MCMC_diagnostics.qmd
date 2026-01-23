@@ -41,7 +41,7 @@ We are going to see that many diagnostics need multiple chains. Each chain is an
 To keep the focus on the diagnostics and not on any particular Bayesian model. We are going to first create 3 synthetic samples, we will use them to emulate samples from a posterior distribution. 
 
 * `good_sample`: A random sample from a `Gamma(2, 5)`. This is an example of a good sample because we are generating independent and identically distributed (iid) draws. This is the ideal scenario. 
-* `bad_sample_0`: We sorted good_sample, split it into three chains, and then added a small Gaussian error. This is a representation of a bad sample because values are not independent (we sorted the values!) and they do not come from the same distribution. This represents a scenario where the sampler has very poor mixing. 
+* `bad_sample_0`: We sorted good_sample, split it into four chains, and then added a small Gaussian error. This is a representation of a bad sample because values are not independent (we sorted the values!) and they do not come from the same distribution. This represents a scenario where the sampler has very poor mixing. 
 * `bad_sample_1`: we start from `good_chains`, and turn into a poor sample by randomly introducing portions where consecutive samples are highly correlated to each other. This represents a common scenario, a sampler can resolve a region of the parameter space very well, but get stuck into one or more regions.
 
 
@@ -74,7 +74,8 @@ After reading this chapter a good exercise is to come back here and modify these
 
 A trace plot is created by drawing the sampled values at each iteration step. Ideally, we should expect to see a very noisy plot, some people call it a caterpillar. The reason is that draws should be uncorrelated from each other, the value of a draw should not provide any hint about the previous or next draw. Also, the draws from the first iterations should be indistinguishable from the ones coming from the last iterations the middle iterations, or any other region. The ideal scenario is the lack of any clear pattern as we can see at the right panel of @fig-tracedistplot_good_sample.
 
-In ArviZ by calling the function `azp.plot_trace_dist(.)` we get a trace plot on the right and on the left a KDE (we can also plot ECDFs, or histograms). @fig-tracedistplot_good_sample is an example of this. The KDE/ECDF/histogram can help to spot differences between chains, ideally, distributions should overlap. 
+In ArviZ by calling the function `azp.plot_trace_dist(.)` we get a trace plot on the right and on the left a KDE @fig-tracedistplot_good_sample is an example of this. 
+
 
 ```{python}
 #| label: fig-tracedistplot_good_sample
@@ -82,7 +83,16 @@ In ArviZ by calling the function `azp.plot_trace_dist(.)` we get a trace plot on
 azp.plot_trace_dist(sample, var_names="good_sample", compact=False);
 ```
 
-If you just want the trace without the density call  `azp.plot_trace(.)`
+As discussed in @sec-dist, there are many methods to represent distributions. We can use the argument `kind` to define other methods:
+
+* `kind="kde"` for kernel density estimation (KDE)
+* `kind="hist"`for histograms
+* `kind="ecdf"` for empirical cumulative distribution function (ECDF)
+* `kind="dot"` for quantile dot plots
+
+Instead of a KDE we use other visualizations like ECDFs, histograms or quantile dot plots, this is specified with the `kind` argument. Inspecting the KDE, ECDF, histogram, or quantile dot plot may also help to spot differences between chains, ideally, distributions should overlap. Overlayed KDEs and ECDFs are usually easy to interpret than overlayed histograms or quantile dot plots.
+
+Alternatively, if we just want the trace without the density representation we can use the function `azp.plot_trace(.)`
 
 ```{python}
 #| label: fig-traceplot_good_sample
@@ -138,7 +148,7 @@ The following figures shows fractional rank plots for `good_sample`, `bad_sample
 azp.plot_rank(sample, var_names=["good_sample"]);
 ```
 
-For `good_sample` we can see that ranks looks relative flat and deviations are within the envelope. In sharp contrast `bad_sample_0` looks awful, deviations are very large as both chains belong to different distributions. The envelopes computation does not take into account autocorrelation, so it is recommend to thin the draws as discussed in @sec-thinning. `plot_rank` does this automatically. To disable thinning we can do `azp.plot_rank(..., thin=False)`, as we did for @fig-rank_plot_bad_sample_0. 
+For `good_sample` we can see that ranks looks relative flat and deviations are within the envelope. In sharp contrast `bad_sample_0` looks awful, deviations are very large as chains belong to different distributions. The envelopes computation does not take into account autocorrelation, so it is recommend to thin the draws as discussed in @sec-thinning. `plot_rank` does this automatically. To disable thinning we can do `azp.plot_rank(., thin=False)`, as we did for @fig-rank_plot_bad_sample_0. 
 
 ```{python}
 #| label: fig-rank_plot_bad_sample_0
@@ -147,7 +157,7 @@ For `good_sample` we can see that ranks looks relative flat and deviations are w
 azp.plot_rank(sample, var_names=["bad_sample_0"], thin=False);
 ```
 
-Finally, `bad_sample_1` also shows problems, see how chain 0 (blue) get out of the envelope. Notice also how the envelope and lines looks very "squared-shaped" compared with those from @fig-rank_plot_good. This is indicating a relatively low ESS (high thinning). This is a consequence of the chains being stuck in some regions as shown in @fig-traceplot_bad_sample_1.
+Finally, `bad_sample_1` also shows problems, see how chain 0 (blue) get out of the envelope. Notice also how the envelope and lines looks very "squared-shaped" compared with those from @fig-rank_plot_good. This is indicating a relatively low ESS (high thinning). This is a consequence of the chain 0 (blue) being stuck in some regions as shown in @fig-traceplot_bad_sample_1.
 
 
 ```{python}
@@ -195,7 +205,7 @@ def generate_autocorrelated_sample(original, rho):
 
     Parameters:
     ----------
-    sample: numpy array, 
+    sample: numpy array,
         The original sample
     rho: float,
         Desired autocorrelation value
@@ -208,9 +218,10 @@ def generate_autocorrelated_sample(original, rho):
     y = np.copy(original)
     mean = np.mean(original)
     for i in range(1, n):
-        y[i] += rho * (y[i-1]-mean) + np.random.randn()
+        y[i] += rho * (y[i - 1] - mean) + np.random.randn()
 
     return y
+
 
 mean = 0
 lag = 30
@@ -224,25 +235,30 @@ N = len(rhos)
 fig, ax = plt.subplots(figsize=(12, 4))
 
 for k, rho in enumerate(rhos):
-    auto_samples = np.stack([generate_autocorrelated_sample(iid_sample, rho) for iid_sample in iid_samples])
+    auto_samples = np.stack(
+        [generate_autocorrelated_sample(iid_sample, rho) for iid_sample in iid_samples]
+    )
     auto_error = []
     for i in range(1, size):
-        auto_error.append(np.mean(((np.mean(auto_samples[:,:i] - mean, 1)**2)**0.5)))
+        auto_error.append(
+            np.mean(((np.mean(auto_samples[:, :i] - mean, 1) ** 2) ** 0.5))
+        )
 
-    ax.plot(auto_error[lag:], color=plt.cm.viridis_r(k/N))
+    ax.plot(auto_error[lag:], color=plt.cm.viridis_r(k / N))
 
 sm = plt.cm.ScalarMappable(cmap=plt.cm.viridis_r)
-cbar = plt.colorbar(sm, ax=ax, label='Autocorrelation', ticks=[0, 1])
-cbar.ax.set_yticklabels(['Low', 'High'])
+cbar = plt.colorbar(sm, ax=ax, label="Autocorrelation", ticks=[0, 1])
+cbar.ax.set_yticklabels(["Low", "High"])
 cbar.ax.tick_params(length=0)
 
-ax.set_yticks([])
-ax.set_ylabel("Error")
-ax.set_xticks([])
-ax.set_xlabel("Sample size")
-
-ax.set_ylim(bottom=0)
-ax.set_xlim(-2)
+ax.set(
+    yticks=[],
+    ylabel="Error",
+    xticks=[],
+    xlabel="Sample size",
+    ylim=(0, None),
+    xlim=(-2, None),
+)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
 ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(), clip_on=False)
@@ -256,11 +272,11 @@ As for MCMC samples, the sample size can be misleading, we instead estimate the 
 #| code-fold: true
 #| code-summary: "Show the code for more details"
 #| fig-cap: "Effective sample size as a function of the sample size for different autocorrelation values."
- 
+
 mean = 0
 size = 300
 
-iid_samples =  pz.Normal(mean, 1).rvs((500, size))
+iid_samples = pz.Normal(mean, 1).rvs((500, size))
 
 rhos = np.linspace(0, 0.90, 7)
 N = len(rhos)
@@ -268,26 +284,30 @@ N = len(rhos)
 fig, ax = plt.subplots(figsize=(12, 4))
 
 for k, rho in enumerate(rhos):
-    auto_samples = np.stack([generate_autocorrelated_sample(iid_sample, rho) for iid_sample in iid_samples])
+    auto_samples = np.stack(
+        [generate_autocorrelated_sample(iid_sample, rho) for iid_sample in iid_samples]
+    )
     auto_error = []
 
     for i in range(50, size, 10):
-        auto_error.append(azp.ess(auto_samples[:,:i])/500)
+        auto_error.append(azp.ess(auto_samples[:, :i]) / 500)
 
-    ax.plot(range(50, size, 10), auto_error, color=plt.cm.viridis_r(k/N))
+    ax.plot(range(50, size, 10), auto_error, color=plt.cm.viridis_r(k / N))
 
 sm = plt.cm.ScalarMappable(cmap=plt.cm.viridis_r)
-cbar = plt.colorbar(sm, ax=ax, label='Autocorrelation', ticks=[0, 1])
-cbar.ax.set_yticklabels(['Low', 'High'])
+cbar = plt.colorbar(sm, ax=ax, label="Autocorrelation", ticks=[0, 1])
+cbar.ax.set_yticklabels(["Low", "High"])
 cbar.ax.tick_params(length=0)
 
-ax.set_yticks([])
-ax.set_ylabel("Effective sample size")
-ax.set_xticks([])
-ax.set_xlabel("Sample size")
+ax.set(
+    yticks=[],
+    ylabel="Effective sample size",
+    xticks=[],
+    xlabel="Sample size",
+    ylim=(0, None),
+    xlim=(48, None),
+)
 
-ax.set_ylim(0)
-ax.set_xlim(48)
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
 ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(), clip_on=False)
@@ -300,7 +320,7 @@ With ArviZ we can get `azp.ess(⋅)`, `azp.summary(⋅)` and `azp.plot_forest(�
 azp.ess(sample)
 ```
 
-One way to use the ESS is as a minimum requirement for trustworthy MCMC samples.  It is recommended the ESS to be greater than 100 per chain. That is, for 4 chains we want a minimum of 400 effective samples. 
+One way to use the ESS is as a minimum requirement for trustworthy MCMC samples.  It is recommended the ESS to be larger than 100 per chain. That is, for 4 chains we want a minimum of 400 effective samples. 
 
 ::: {.callout-note}
 The ESS can also be used as a metric of the efficiency of MCMC sampling methods. For instance, we may want to measure the ESS per sample (ESS/n), a sampler that generates an ESS/n closer to 1 is more efficient than a sampler that generates values closer to 0. Other common metrics are the ESS per second, and the ESS per likelihood evaluation. 
@@ -317,9 +337,11 @@ If we are going to use the MCMC samples to calculate central values such as mean
 ArviZ offers several functions linked to the ESS. For example, if we want to evaluate the performance of the sampler for several regions at the same time we can use `azp.plot_ess`.
 
 ```{python}
-azp.plot_ess(sample,
-            figure_kwargs={"figsize": (10, 8)},
-            col_wrap=1)
+azp.plot_ess(
+    sample,
+    figure_kwargs={"figsize": (10, 8)},
+    col_wrap=1,
+)
 ```
 
 A simple way to increase the ESS is to increase the number of samples, but it could be the case that the ESS grows very slowly with the number of samples, so even if we increased the number of samples 10 times we could still be very far from our target value. One way to estimate "how many more samples do we need" is to use `azp.plot_ess_evolution(.)`. This graph shows us how the ESS changed with each iteration, which allows us to make predictions. 
@@ -328,11 +350,12 @@ From @fig-ess_evolution we can see that the ESS grows linearly with the number o
 
 ```{python}
 #| label: fig-ess_evolution
-#| fig-cap: "ESS evolution plot for `good_sample` and `bad_sample_0`." 
-azp.plot_ess_evolution(sample,
-            var_names=["good_sample", "bad_sample_0"],
-            col_wrap=1,
-            );
+#| fig-cap: "ESS evolution plot for `good_sample` and `bad_sample_0`."
+azp.plot_ess_evolution(
+    sample,
+    var_names=["good_sample", "bad_sample_0"],
+    col_wrap=1,
+);
 ```
 
 ### Monte Carlo standard error (MCSE)
@@ -412,11 +435,12 @@ idata_ncm = azp.load_arviz_data("non_centered_eight")
 
 ```{python}
 for data in [idata_cm, idata_ncm]:
-    azp.plot_pair(data,
-                var_names=["tau", "theta"],
-                coords={'school':"Choate"},
-                visuals={"divergence": True}
-                )
+    azp.plot_pair(
+        data,
+        var_names=["tau", "theta"],
+        coords={"school": "Choate"},
+        visuals={"divergence": True},
+    )
 ```
 
 Another plot that can be useful to diagnose divergences is `azp.plot_parallel()`, which shows the samples in parallel coordinates. A parallel coordinates plot is a way to visualize high-dimensional data by plotting each dimension as a vertical line and connecting the points across dimensions with lines. 
@@ -446,6 +470,6 @@ azp.plot_parallel(idata_cm, var_names=['theta', 'tau'])
 
 * Some models can be expressed in more than one way, all mathematically equivalent. In those cases, some parameterizations may be more efficient than others. For example, as we will see later with hierarchical linear models.
 
-* In the case of divergences, these are usually eliminated by increasing the acceptance rate, for instance in PyMC you can do `pm.sample(..., target_accept=x)` where `x` is 0.8 by default and the maximum value is 1. If you reach 0.99 you should probably do something else.
+* In the case of divergences, these are usually eliminated by increasing the acceptance rate, for instance in PyMC you can do `pm.sample(., target_accept=x)` where `x` is 0.8 by default and the maximum value is 1. If you reach 0.99 you should probably do something else.
 
 * Modern probabilistic programming languages, usually provide useful warning messages and tips if they detect issues with sampling, paying attention to those messages can save you a lot of time.
