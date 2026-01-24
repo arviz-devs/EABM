@@ -652,7 +652,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">January 23, 2026</p>
+      <p class="date-modified">January 24, 2026</p>
     </div>
   </div>
     
@@ -840,7 +840,7 @@ w_i = \frac{f(x_i)}{g(x_i)}
 </ul>
 <p>Once the weights <span class="math inline">\(w_i\)</span> are obtained, we can use them to estimate properties of <span class="math inline">\(f\)</span>, its density, moments, quantiles, etc.</p>
 <p>In the code-block below <span class="math inline">\(g\)</span> is a Normal distribution and <span class="math inline">\(f\)</span> is a Gamma and we use importance sampling to estimate the PDF of <span class="math inline">\(f\)</span>. This is just a pedagogic example, since we actually have a very direct way to calculate the PDF of a Gamma. But in practice <span class="math inline">\(f\)</span> can be a much more complex object.</p>
-<div id="4a70512c" class="cell" data-execution_count="3">
+<div id="de6044b0" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>g <span class="op">=</span> pz.Normal(<span class="dv">0</span>, <span class="dv">10</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a>samples <span class="op">=</span> g.rvs(<span class="dv">1000</span>, random_state<span class="op">=</span>SEED)</span>
 <span id="cb2-3"><a href="#cb2-3"></a>f <span class="op">=</span> pz.Gamma(mu<span class="op">=</span><span class="dv">4</span>, sigma<span class="op">=</span><span class="fl">1.5</span>)</span>
@@ -882,7 +882,7 @@ w_i^j \propto \frac{p(\theta^j \mid y_{-i} )}{p(\theta^j \mid y)} \propto \frac{
 <section id="psis-loo-cv-in-arviz" class="level2" data-number="7.6">
 <h2 data-number="7.6" class="anchored" data-anchor-id="psis-loo-cv-in-arviz"><span class="header-section-number">7.6</span> PSIS-LOO-CV in Arviz</h2>
 <p>Since the name and even acronym are too long and not that easy to pronounce, in ArviZ, we usually refer to this and related methods as LOO. For example to compute the ELPD, estimated using PSIS-LOO_CV, we call the <code>loo</code> function, we just need to pass DataTree object containing a <code>log-likelihood</code> group.</p>
-<div id="67f61470" class="cell" data-execution_count="4">
+<div id="3b8d2e49" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>dt_rugby <span class="op">=</span> azp.load_arviz_data(<span class="st">'rugby'</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a>elpd <span class="op">=</span> azp.loo(dt_rugby, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span>
 <span id="cb3-3"><a href="#cb3-3"></a>elpd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -913,7 +913,7 @@ Pareto k diagnostic values:
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="0228d495" class="cell" data-execution_count="5">
+<div id="b6b130d6" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>target <span class="op">=</span> pz.StudentT(nu<span class="op">=</span><span class="dv">4</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">1</span>).rvs(<span class="dv">200</span>, random_state<span class="op">=</span>SEED)</span>
 <span id="cb6-2"><a href="#cb6-2"></a></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_n:</span>
@@ -935,7 +935,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-<div id="043bc17b" class="cell" data-execution_count="7">
+<div id="5763497c" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>cmp_df <span class="op">=</span> azp.compare({<span class="st">'model_n'</span>:idata_n, <span class="st">'model_t'</span>:idata_t})</span>
 <span id="cb8-2"><a href="#cb8-2"></a>cmp_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
@@ -998,7 +998,7 @@ Pareto k diagnostic values:
 <li>scale: the scale on which the ELPD is calculated</li>
 </ul>
 <p>We can obtain similar information, but graphically, using the <code>azp.plot_compare</code> function</p>
-<div id="ca9dab83" class="cell" data-execution_count="8">
+<div id="63fafe1d" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>azp.plot_compare(cmp_df)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1019,7 +1019,7 @@ Pareto k diagnostic values:
 <p>Then we see a table titled “Pareto k diagnostic values”. Earlier we said that we use a method involving a Pareto distribution to regularize the estimation of the importance weights. One of the parameters of that fit is called <span class="math inline">\(k\)</span>, and its estimate is often written as <span class="math inline">\(\hat{k}\)</span>. Because we compute a Pareto adjustment per observation, we obtain one <span class="math inline">\(\hat{k}\)</span> value per observation. This parameter is useful because it tells us two related things: when an observation is “very influential” and when the LOO approximation may be failing for that observation.</p>
 <p>As a general rule, if <span class="math inline">\(\hat{k}\)</span> is less than 0.7 there are no problems; if it is between 0.7 and 1 it is very likely that we are in trouble; and if it is greater than 1, we are doomed. The cut-off value 0.7 is not fixed, it can in principle be lower, and it depends on the total number of posterior draws (2000 in this example). But when the number of draws is about 2000, the recommended threshold is close to 0.7. In practice, it is common to use at least 2000 posterior draws. Increasing the number of samples from the posterior may reduce the value of <span class="math inline">\(\hat{k}\)</span> and thus remove some of these warnings, but in general the number needed will be too large to be practically useful.</p>
 <p>It is possible to visualize the values ​​of <span class="math inline">\(k\)</span>, using <code>plot_khat</code></p>
-<div id="5a9bef4b" class="cell" data-execution_count="9">
+<div id="428431aa" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># coming soon</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="co">#azp.plot_khat(elpd, threshold=0.7);</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1300,7 +1300,7 @@ V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
 <section id="loo-expectations-and-metrics" class="level3" data-number="7.9.1">
 <h3 data-number="7.9.1" class="anchored" data-anchor-id="loo-expectations-and-metrics"><span class="header-section-number">7.9.1</span> LOO expectations and metrics</h3>
 <p>From the PSIS procedure, we obtain a set of weights. The <code>loo</code> function utilizes these weights to estimate the ELPD we should have obtained if we have performed leave-one-out cross-validation. Furthermore, these weights can be used to estimate other quantities, such as the mean, standard deviation, and quantiles, as if we had performed leave-one-out cross-validation. For example, to compute the 25th and 75th percentiles we use:</p>
-<div id="cd33df7c" class="cell" data-execution_count="10">
+<div id="a397dcc6" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>azp.loo_expectations(dt_rugby, kind<span class="op">=</span><span class="st">"quantile"</span>, probs<span class="op">=</span>[<span class="fl">0.25</span>, <span class="fl">0.75</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:1149: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
@@ -1357,7 +1357,7 @@ V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
 </div>
 </div>
 <p>Similarly we may be interested in computing estimates of leave-one-out predictive metrics given a set of predictions and observations. For instance to compute the root mean square error we can do:</p>
-<div id="c343cba4" class="cell" data-execution_count="11">
+<div id="386a93e0" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>azp.loo_metrics(dt_rugby, kind<span class="op">=</span><span class="st">"rmse"</span>, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:1149: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
@@ -1368,7 +1368,7 @@ V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
 </div>
 </div>
 <p>Anoth</p>
-<div id="e96795a1" class="cell" data-execution_count="12">
+<div id="0ae9c388" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>azp.loo_r2(dt_rugby, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:1149: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
@@ -1486,7 +1486,7 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="3816516b" class="cell" data-execution_count="14">
+<div id="761b2903" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>y <span class="op">=</span> np.repeat([<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">50</span>, <span class="dv">50</span>])  <span class="co"># 50 heads, 50 tails</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_uni:</span>
 <span id="cb21-3"><a href="#cb21-3"></a>    a <span class="op">=</span> pm.Beta(<span class="st">"a"</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
@@ -1501,7 +1501,7 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 </div>
 </div>
 <p>And now we call <code>azp.plot_bf</code></p>
-<div id="9236b8ee" class="cell" data-execution_count="16">
+<div id="2c68b3ea" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>azp.plot_bf(idata_uni, var_names<span class="op">=</span><span class="st">"a"</span>, ref_val<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1518,7 +1518,7 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="02271a68" class="cell" data-execution_count="17">
+<div id="07fd7838" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_conc:</span>
 <span id="cb24-2"><a href="#cb24-2"></a>    a <span class="op">=</span> pm.Beta(<span class="st">"a"</span>, <span class="dv">30</span>, <span class="dv">30</span>)</span>
 <span id="cb24-3"><a href="#cb24-3"></a>    yl <span class="op">=</span> pm.Bernoulli(<span class="st">"yl"</span>, a, observed<span class="op">=</span>y)</span>
@@ -1531,7 +1531,7 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 </div>
 </div>
 </div>
-<div id="e1d48882" class="cell" data-execution_count="19">
+<div id="62a99011" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>azp.plot_bf(idata_conc, var_names<span class="op">=</span>[<span class="st">"a"</span>], ref_val<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
