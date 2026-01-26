@@ -777,14 +777,14 @@ Figure&nbsp;3.7: CDF of a normal distribution
 </div>
 </div>
 <p>The CDF is usually easier to read than the PDF, as we already saw y-axis for a PDF is a density that has no intrinsic meaning, and to get probability from a PDF we need to evaluate areas. Instead for a CDF the y-axis is a probability. For the PMF/PDF it is easier to get the mode (the highest value for the point/curve), and for the CDF it is easier to get the median (the value of <span class="math inline">\(x\)</span> for which <span class="math inline">\(y=0.5\)</span>), or other quantiles. From the CDF it is also easier to quickly get quantities like <em>the probability of getting a temperature equal or lower than 35 degrees</em>. It is the value of the CDF at 35. From <a href="#fig-normal_cdf" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> we can see that it is roughly 0.9 or 90%, if you want more accuracy you could use a matplotlib/ArviZ style with a grid (like <code>arviz-darkgrid</code>) or use the <code>cdf()</code> function.</p>
-<div id="641d51f5" class="cell" data-execution_count="9">
+<div id="4b9fb551" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>pz.Normal(<span class="dv">30</span>, <span class="dv">4</span>).cdf(<span class="dv">35</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>0.894350157794624</code></pre>
 </div>
 </div>
 <p>From the CDF we can also easily get the probability of a range of values. For example, the probability of the temperature being between 25 and 35 degrees is the difference between the CDF at 35 and the CDF at 25. From <a href="#fig-normal_cdf" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> we can get that it is roughly 0.9 or 90%. Again even when you can get a good estimate just by looking at the graph you can use the <code>cdf()</code> function to get a more accurate estimate. But the fact that you can get a good estimate by looking at the graph is a good feature.</p>
-<div id="981c91aa" class="cell" data-execution_count="10">
+<div id="c74ac80c" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>np.diff(pz.Normal(<span class="dv">30</span>, <span class="dv">4</span>).cdf([<span class="dv">25</span>, <span class="dv">35</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>array([0.78870032])</code></pre>
@@ -828,8 +828,8 @@ Figure&nbsp;3.9: PPF of a normal distribution
 <section id="point-estimates" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="point-estimates"><span class="header-section-number">3.5</span> Point estimates</h2>
 <p>Sometimes, rather than visualizing distributions, we summarize them using a few numbers. This is useful when dealing with many distributions, when only a brief summary is needed, or when the distributions are high-dimensional and hard to plot.</p>
-<p>To summarize a distribution we usually use some measure of central tendency and some measure of dispersion. Common measures of central tendency include the <code>mean</code>, <code>median</code>, and <code>mode</code>. <span class="quarto-unresolved-ref">?fig-point-estimates</span> shows these three measures for a <code>Gamma</code> distribution.</p>
-<div id="cell-point-estimates" class="cell" data-execution_count="13">
+<p>To summarize a distribution we usually use some measure of central tendency and some measure of dispersion. Common measures of central tendency include the <code>mean</code>, <code>median</code>, and <code>mode</code>. <a href="#fig-point-estimates" class="quarto-xref">Figure&nbsp;<span>3.10</span></a> shows these three measures for a <code>Gamma</code> distribution.</p>
+<div id="cell-fig-point-estimates" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>dist <span class="op">=</span> pz.Gamma(<span class="dv">3</span>, <span class="dv">2</span>)</span>
@@ -838,31 +838,36 @@ Figure&nbsp;3.9: PPF of a normal distribution
 <span id="cb14-4"><a href="#cb14-4"></a>mode <span class="op">=</span> dist.mode()</span>
 <span id="cb14-5"><a href="#cb14-5"></a>ax <span class="op">=</span> dist.plot_pdf(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">3</span>), legend<span class="op">=</span><span class="st">"title"</span>)</span>
 <span id="cb14-6"><a href="#cb14-6"></a><span class="cf">for</span> idx, (stat, value) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(</span>
-<span id="cb14-7"><a href="#cb14-7"></a>    [<span class="ss">f"mean    = </span><span class="sc">{</span>mean<span class="sc">:.2f}</span><span class="ss">"</span>, <span class="ss">f"median = </span><span class="sc">{</span>median<span class="sc">:.2f}</span><span class="ss">"</span>, <span class="ss">f"mode    = </span><span class="sc">{</span>mode<span class="sc">:.2f}</span><span class="ss">"</span>], [mean, median, mode]</span>
+<span id="cb14-7"><a href="#cb14-7"></a>    [<span class="ss">f"mean    = </span><span class="sc">{</span>mean<span class="sc">:.1f}</span><span class="ss">"</span>, <span class="ss">f"median = </span><span class="sc">{</span>median<span class="sc">:.1f}</span><span class="ss">"</span>, <span class="ss">f"mode    = </span><span class="sc">{</span>mode<span class="sc">:.1f}</span><span class="ss">"</span>], [mean, median, mode]</span>
 <span id="cb14-8"><a href="#cb14-8"></a>)):</span>
 <span id="cb14-9"><a href="#cb14-9"></a>    ax.axvline(value, label<span class="op">=</span>stat, color<span class="op">=</span><span class="ss">f"C</span><span class="sc">{</span>idx<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>, ls<span class="op">=</span><span class="st">"--"</span>)</span>
 <span id="cb14-10"><a href="#cb14-10"></a>ax.legend()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
-<div id="point-estimates" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="Distributions_files/figure-html/point-estimates-output-1.png" width="1011" height="311" class="figure-img"></p>
-<figcaption>A gamma distribution with its mean, median, and mode.</figcaption>
+<div id="fig-point-estimates" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-point-estimates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Distributions_files/figure-html/fig-point-estimates-output-1.png" width="1011" height="311" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-point-estimates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.10: A gamma distribution with dashed lines representing its mean, median, and mode.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>The mean is the average value of the distribution, the median is the value that divides the distribution into two equal halves, and the mode is the value with the highest probability density. In symmetric distributions like the <code>Normal</code>, these three measures are equal. But in skewed distributions like the <code>Gamma</code>, they can be quite different. The mean is probably the most commonly used measure of central tendency, but it can be sensitive to outliers. The median is more robust to outliers and is often preferred in skewed distributions. The mode is useful when we are interested in the most probable value of the distribution, the mode is usually less common than the other too. In practice, the choice of which measure to use depends on the context and the specific characteristics of the distribution being analyzed.</p>
-<p>In ArviZ we can compute these point estimates from samples using the <code>azp.mean()</code>, <code>azp.median()</code>, and <code>azp.mode()</code> functions.</p>
-<div id="abbad86e" class="cell" data-execution_count="14">
+<p>The mean is the average value of the distribution, the median is the value that divides the distribution into two equal halves, and the mode is the value with the highest probability density. In symmetric distributions like the <code>Normal</code>, these three measures are equal. But in skewed distributions like the <code>Gamma</code>, they can be quite different.</p>
+<p>The mean is probably the most commonly used measure of central tendency, but it can be sensitive to outliers. The median is more robust to outliers and is often preferred in skewed distributions. The mode is useful when we are interested in the most probable value of the distribution. The mode is usually less common than the other too. In practice, the choice of which measure to use depends on the context and the specific characteristics of the distribution being analyzed.</p>
+<p>In ArviZ, we can compute these point estimates from samples using the <code>azp.mean()</code>, <code>azp.median()</code>, and <code>azp.mode()</code> functions.</p>
+<div id="ce0af931" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>pois_data <span class="op">=</span> dist.rvs(<span class="dv">50_000</span>, random_state<span class="op">=</span>rng)</span>
 <span id="cb15-2"><a href="#cb15-2"></a>azp.mean(pois_data), azp.median(pois_data), azp.mode(pois_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>(array(1.5), array(1.3), array(1.1))</code></pre>
 </div>
 </div>
-<p>Point estimates also show in other places in ArviZ, for example in the <code>plot_dist()</code> or when calling <code>summary()</code>, these functions has a <code>point_estimate</code> argument to choose which point estimate to use. The default value is controlled globally by:</p>
-<div id="84047814" class="cell" data-execution_count="15">
+<p>Point estimates also show in other places in ArviZ, for example, in the <code>plot_dist()</code> or when calling <code>summary()</code>. Some functions have a <code>point_estimate</code> argument to choose which point estimate to use. The default value is controlled globally by:</p>
+<div id="4948da15" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>azp.rcParams[<span class="st">"stats.point_estimate"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>'mean'</code></pre>
@@ -872,11 +877,11 @@ Figure&nbsp;3.9: PPF of a normal distribution
 <section id="credible-intervals" class="level2" data-number="3.6">
 <h2 data-number="3.6" class="anchored" data-anchor-id="credible-intervals"><span class="header-section-number">3.6</span> Credible intervals</h2>
 <p>To describe the uncertainty in our estimates, we usually want to complement point estimates with some measure of dispersion. A common approach is to use the standard deviation or the variance. The standard deviation is usually preferred over the variance because it is in the same units as the original data. However, both measures can be misleading for skewed distributions or distributions with heavy tails. Hence, other measures of dispersion are often preferred like the median absolute deviation <a href="https://en.wikipedia.org/wiki/Median_absolute_deviation">MAD</a> or the interquartile range <a href="https://en.wikipedia.org/wiki/Interquartile_range">IQR</a>.</p>
-<p>One issue with using a single number to summarize uncertainty is that it does not provide information about the shape of the distribution. For example two distributions can have the same standard deviation but very different shapes. Or for bounded distributions like the <code>Gamma</code>, the standard deviation can be misleading as it does not take into account that negative values are not allowed.</p>
-<p>One popular way to summarize the uncertainty in a distribution is to use intervals. For example, we may want to report that 90% of the values lie within a certain range. In Bayesian statistics, these often called <code>credible intervals</code>. In principle we can defined infinite intervals containing a given mass. Then we need to add some other constraint to build useful intervals. Two common types of credible intervals are the <code>equal-tailed interval</code> (ETI) and the <code>highest-density interval</code> (HDI).</p>
+<p>One issue with using a single number to summarize uncertainty is that it does not provide information about the shape of the distribution. For example, two distributions can have the same standard deviation but very different shapes. Or for bounded distributions like the <code>Gamma</code>, the standard deviation can be misleading, as it does not take into account that negative values are not allowed.</p>
+<p>One popular way to summarize the uncertainty in a distribution is to use intervals. For example, we may want to report that 90% of the values lie within a certain range. In Bayesian statistics, these are often called <code>credible intervals</code>. In principle, we can defined infinite intervals containing a given mass. Then we need to add some other constraint to build useful intervals. Two common types of credible intervals are:</p>
 <ul>
-<li><p>ETI: The interval that contains a given percentage of the distribution, with equal probability in both tails. For example, a 90% equal-tailed interval has 90% of the distribution between the lower and upper bounds, with 5% of the distribution in each tail.</p></li>
-<li><p>HDI: The interval that contains a given mass and where all points inside the interval have a higher density than any point outside the interval. Alternatively, we can think of it as the shortest interval containing a given portion of the probability density.</p></li>
+<li><p>The <code>equal-tailed interval</code> (ETI): The interval that contains a given percentage of the distribution, with equal probability in both tails. For example, a 90% equal-tailed interval has 90% of the distribution between the lower and upper bounds, with 5% of the distribution in each tail.</p></li>
+<li><p>The <code>highest-density interval</code> (HDI): The interval that contains a given mass and where all points inside the interval have a higher density than any point outside the interval. Alternatively, we can think of it as the shortest interval containing a given portion of the probability density.</p></li>
 </ul>
 <p>For some distributions like asymmetric ones, the HDI is usually preferred over the ETI because it better represents the most credible values of the distribution.</p>
 <div id="cell-credible-intervals" class="cell" data-execution_count="16">
@@ -897,14 +902,14 @@ Figure&nbsp;3.9: PPF of a normal distribution
 </div>
 </div>
 <p>In ArviZ we can compute credible intervals from samples using the <code>azp.hdi()</code> and <code>azp.eti()</code> functions.</p>
-<div id="0b4c686c" class="cell" data-execution_count="17">
+<div id="ee95c0a4" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>azp.hdi(pois_data), azp.eti(pois_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>(array([0.24145828, 2.67576132]), array([0.42987465, 3.07525881]))</code></pre>
 </div>
 </div>
 <p>These, as well as other functions, have a <code>ci_prob</code> argument to choose the mass of the credible interval. The default value is globally controlled by:</p>
-<div id="61e2cffc" class="cell" data-execution_count="18">
+<div id="86c0a30f" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>azp.rcParams[<span class="st">"stats.ci_prob"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>0.89</code></pre>
@@ -938,13 +943,13 @@ Figure&nbsp;3.9: PPF of a normal distribution
 <img src="Distributions_files/figure-html/fig-dist_histogram_0-output-1.png" width="611" height="279" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dist_histogram_0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.10: Histogram from a sample of integers. Each bin corresponds to a single integer.
+Figure&nbsp;3.11: Histogram from a sample of integers. Each bin corresponds to a single integer.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>When the discrete values take higher values, like in <a href="#fig-dist_histogram_1" class="quarto-xref">Figure&nbsp;<span>3.11</span></a>, bins are still associated with integers but many integers are binned together.</p>
+<p>When the discrete values take higher values, like in <a href="#fig-dist_histogram_1" class="quarto-xref">Figure&nbsp;<span>3.12</span></a>, bins are still associated with integers but many integers are binned together.</p>
 <div id="cell-fig-dist_histogram_1" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Poisson(<span class="dv">100</span>).rvs((<span class="dv">1</span>, <span class="dv">500</span>), random_state<span class="op">=</span>rng))</span>
 <span id="cb25-2"><a href="#cb25-2"></a>azp.plot_dist(d_values, kind<span class="op">=</span><span class="st">"hist"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -955,7 +960,7 @@ Figure&nbsp;3.10: Histogram from a sample of integers. Each bin corresponds to a
 <img src="Distributions_files/figure-html/fig-dist_histogram_1-output-1.png" width="611" height="279" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dist_histogram_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.11: Histogram from a sample of integers. Bins group together many integers.
+Figure&nbsp;3.12: Histogram from a sample of integers. Bins group together many integers.
 </figcaption>
 </figure>
 </div>
@@ -972,7 +977,7 @@ Figure&nbsp;3.11: Histogram from a sample of integers. Bins group together many 
 <img src="Distributions_files/figure-html/fig-dist_histogram_2-output-1.png" width="611" height="279" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dist_histogram_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.12: Histogram from a sample of integers, with bins automatically computed by Matplotlib, not ArviZ.
+Figure&nbsp;3.13: Histogram from a sample of integers, with bins automatically computed by Matplotlib, not ArviZ.
 </figcaption>
 </figure>
 </div>
@@ -984,7 +989,7 @@ Figure&nbsp;3.12: Histogram from a sample of integers, with bins automatically c
 <p><a href="https://en.wikipedia.org/wiki/Kernel_density_estimation">Kernel density estimation</a> (KDE) is a non-parametric way to estimate the probability density function from a sample. Intuitively you can think of it as the smooth version of a histogram. Conceptually you place a <em>kernel function</em> like a Gaussian <em>on top</em> of a data point, then you sum all the Gaussians, generally evaluated over a grid and not over the data points. Results are normalized so the total area under the curve is one. The following video shows a step-by-step animation of a KDE being built. You can see a version with border corrections and without them. Border corrections avoid adding a positive density outside the range of the data.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../videos/kde.mp4"></video></div>
 <p>The following block of code shows a very simple example of a KDE.</p>
-<div id="70318a3a" class="cell" data-execution_count="22">
+<div id="728d0bdd" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># synthetic data, 7 points</span></span>
 <span id="cb27-2"><a href="#cb27-2"></a>data <span class="op">=</span> np.array([<span class="fl">7.9</span>, <span class="fl">6.5</span>, <span class="fl">7.4</span>, <span class="fl">8.3</span>, <span class="fl">5.1</span>, <span class="fl">5.4</span>, <span class="fl">7.2</span>])</span>
 <span id="cb27-3"><a href="#cb27-3"></a>n_obs <span class="op">=</span> <span class="bu">len</span>(data)</span>
@@ -1020,7 +1025,7 @@ Figure&nbsp;3.12: Histogram from a sample of integers, with bins automatically c
 <img src="Distributions_files/figure-html/fig-dist_kde_0-output-1.png" width="611" height="279" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dist_kde_0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.13: KDE from a sample of floats. By default, ArviZ computes a KDE.
+Figure&nbsp;3.14: KDE from a sample of floats. By default, ArviZ computes a KDE.
 </figcaption>
 </figure>
 </div>
@@ -1041,7 +1046,7 @@ Figure&nbsp;3.13: KDE from a sample of floats. By default, ArviZ computes a KDE.
 <img src="Distributions_files/figure-html/fig-dist_ecdf-output-1.png" width="611" height="279" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dist_ecdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.14: Empirical cumulative distribution function
+Figure&nbsp;3.15: Empirical cumulative distribution function
 </figcaption>
 </figure>
 </div>
@@ -1053,7 +1058,7 @@ Figure&nbsp;3.14: Empirical cumulative distribution function
 <p>A quantile dot plot <span class="citation" data-cites="wilkinson_1999 kay_2016">(<a href="References.html#ref-wilkinson_1999" role="doc-biblioref">Wilkinson 1999</a>; <a href="References.html#ref-kay_2016" role="doc-biblioref">Kay et al. 2016</a>)</span> displays the distribution of a sample in terms of its quantiles. Reading the median or other quantiles from quantile dot plots is generally easy, we just need to count the number of dots.</p>
 <p>The following video shows a step-by-step animation of a quantile dot plot being built.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video4" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../videos/dotplot.mp4"></video></div>
-<p>From <a href="#fig-dist_qdot" class="quarto-xref">Figure&nbsp;<span>3.15</span></a> we can easily see that 30% of the data is below 1. We do this by noticing that we have a total of 10 dots and 3 of them are below 1.</p>
+<p>From <a href="#fig-dist_qdot" class="quarto-xref">Figure&nbsp;<span>3.16</span></a> we can easily see that 30% of the data is below 1. We do this by noticing that we have a total of 10 dots and 3 of them are below 1.</p>
 <div id="cell-fig-dist_qdot" class="cell" data-execution_count="25">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Normal(<span class="dv">2</span>, <span class="dv">2</span>).rvs((<span class="dv">4</span>, <span class="dv">1000</span>), random_state<span class="op">=</span><span class="dv">123</span>))</span>
 <span id="cb30-2"><a href="#cb30-2"></a>azp.plot_dist(</span>
@@ -1068,7 +1073,7 @@ Figure&nbsp;3.14: Empirical cumulative distribution function
 <img src="Distributions_files/figure-html/fig-dist_qdot-output-1.png" width="611" height="279" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dist_qdot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3.15: Quantile dot plot
+Figure&nbsp;3.16: Quantile dot plot
 </figcaption>
 </figure>
 </div>
