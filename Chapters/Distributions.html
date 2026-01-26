@@ -239,6 +239,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Uncertainty Displays Using Quantile Dotplots or CDFs Improve Transit Decision-Making;,citation_author=Michael Fernandes;,citation_author=Logan Walls;,citation_author=Sean Munson;,citation_author=Jessica Hullman;,citation_author=Matthew Kay;,citation_publication_date=2018-04;,citation_cover_date=2018-04;,citation_year=2018;,citation_fulltext_html_url=https://doi.org/10.1145/3173574.3173718;,citation_doi=10.1145/3173574.3173718;,citation_isbn=978-1-4503-5620-6;,citation_conference_title=Proceedings of the 2018 CHI Conference on Human Factors in Computing Systems;,citation_conference=Association for Computing Machinery;,citation_series_title=CHI ’18;">
 <meta name="citation_reference" content="citation_title=The book of statistical proofs;,citation_author=Joram Soch;,citation_author=Thomas J Faulkenberry;,citation_author=Kenneth Petrykowski;,citation_author=Carsten Allefeld;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_fulltext_html_url=https://statproofbook.github.io/;,citation_doi=10.5281/ZENODO.4305949;">
 <meta name="citation_reference" content="citation_title=Predictive assessment and comparison of bayesian survival models for cancer recurrence;,citation_author=Saku Suorsa;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2601.01662;">
+<meta name="citation_reference" content="citation_title=Statistical Rethinking: A Bayesian Course with Examples in R and STAN;,citation_author=Richard McElreath;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_isbn=978-0-367-13991-9;">
 </head>
 
 <body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -577,12 +578,14 @@ window.Quarto = {
   <li><a href="#probability-mass-and-density-functions" id="toc-probability-mass-and-density-functions" class="nav-link" data-scroll-target="#probability-mass-and-density-functions"><span class="header-section-number">3.2</span> Probability mass and density functions</a></li>
   <li><a href="#cumulative-distribution-functions" id="toc-cumulative-distribution-functions" class="nav-link" data-scroll-target="#cumulative-distribution-functions"><span class="header-section-number">3.3</span> Cumulative distribution functions</a></li>
   <li><a href="#inverse-cumulative-distribution-functions" id="toc-inverse-cumulative-distribution-functions" class="nav-link" data-scroll-target="#inverse-cumulative-distribution-functions"><span class="header-section-number">3.4</span> Inverse cumulative distribution functions</a></li>
-  <li><a href="#sec-dist" id="toc-sec-dist" class="nav-link" data-scroll-target="#sec-dist"><span class="header-section-number">3.5</span> Distributions in ArviZ</a>
+  <li><a href="#point-estimates" id="toc-point-estimates" class="nav-link" data-scroll-target="#point-estimates"><span class="header-section-number">3.5</span> Point estimates</a></li>
+  <li><a href="#credible-intervals" id="toc-credible-intervals" class="nav-link" data-scroll-target="#credible-intervals"><span class="header-section-number">3.6</span> Credible intervals</a></li>
+  <li><a href="#sec-dist" id="toc-sec-dist" class="nav-link" data-scroll-target="#sec-dist"><span class="header-section-number">3.7</span> Distributions in ArviZ</a>
   <ul class="collapse">
-  <li><a href="#histograms" id="toc-histograms" class="nav-link" data-scroll-target="#histograms"><span class="header-section-number">3.5.1</span> Histograms</a></li>
-  <li><a href="#kde" id="toc-kde" class="nav-link" data-scroll-target="#kde"><span class="header-section-number">3.5.2</span> KDE</a></li>
-  <li><a href="#ecdf" id="toc-ecdf" class="nav-link" data-scroll-target="#ecdf"><span class="header-section-number">3.5.3</span> ECDF</a></li>
-  <li><a href="#quantile-dot-plots" id="toc-quantile-dot-plots" class="nav-link" data-scroll-target="#quantile-dot-plots"><span class="header-section-number">3.5.4</span> Quantile dot plots</a></li>
+  <li><a href="#histograms" id="toc-histograms" class="nav-link" data-scroll-target="#histograms"><span class="header-section-number">3.7.1</span> Histograms</a></li>
+  <li><a href="#kde" id="toc-kde" class="nav-link" data-scroll-target="#kde"><span class="header-section-number">3.7.2</span> KDE</a></li>
+  <li><a href="#ecdf" id="toc-ecdf" class="nav-link" data-scroll-target="#ecdf"><span class="header-section-number">3.7.3</span> ECDF</a></li>
+  <li><a href="#quantile-dot-plots" id="toc-quantile-dot-plots" class="nav-link" data-scroll-target="#quantile-dot-plots"><span class="header-section-number">3.7.4</span> Quantile dot plots</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -611,7 +614,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">January 24, 2026</p>
+      <p class="date-modified">January 26, 2026</p>
     </div>
   </div>
     
@@ -774,14 +777,14 @@ Figure&nbsp;3.7: CDF of a normal distribution
 </div>
 </div>
 <p>The CDF is usually easier to read than the PDF, as we already saw y-axis for a PDF is a density that has no intrinsic meaning, and to get probability from a PDF we need to evaluate areas. Instead for a CDF the y-axis is a probability. For the PMF/PDF it is easier to get the mode (the highest value for the point/curve), and for the CDF it is easier to get the median (the value of <span class="math inline">\(x\)</span> for which <span class="math inline">\(y=0.5\)</span>), or other quantiles. From the CDF it is also easier to quickly get quantities like <em>the probability of getting a temperature equal or lower than 35 degrees</em>. It is the value of the CDF at 35. From <a href="#fig-normal_cdf" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> we can see that it is roughly 0.9 or 90%, if you want more accuracy you could use a matplotlib/ArviZ style with a grid (like <code>arviz-darkgrid</code>) or use the <code>cdf()</code> function.</p>
-<div id="49048596" class="cell" data-execution_count="9">
+<div id="641d51f5" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>pz.Normal(<span class="dv">30</span>, <span class="dv">4</span>).cdf(<span class="dv">35</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>0.894350157794624</code></pre>
 </div>
 </div>
 <p>From the CDF we can also easily get the probability of a range of values. For example, the probability of the temperature being between 25 and 35 degrees is the difference between the CDF at 35 and the CDF at 25. From <a href="#fig-normal_cdf" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> we can get that it is roughly 0.9 or 90%. Again even when you can get a good estimate just by looking at the graph you can use the <code>cdf()</code> function to get a more accurate estimate. But the fact that you can get a good estimate by looking at the graph is a good feature.</p>
-<div id="6e532475" class="cell" data-execution_count="10">
+<div id="981c91aa" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>np.diff(pz.Normal(<span class="dv">30</span>, <span class="dv">4</span>).cdf([<span class="dv">25</span>, <span class="dv">35</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>array([0.78870032])</code></pre>
@@ -822,8 +825,96 @@ Figure&nbsp;3.9: PPF of a normal distribution
 </div>
 </div>
 </section>
-<section id="sec-dist" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="sec-dist"><span class="header-section-number">3.5</span> Distributions in ArviZ</h2>
+<section id="point-estimates" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="point-estimates"><span class="header-section-number">3.5</span> Point estimates</h2>
+<p>Sometimes, rather than visualizing distributions, we summarize them using a few numbers. This is useful when dealing with many distributions, when only a brief summary is needed, or when the distributions are high-dimensional and hard to plot.</p>
+<p>To summarize a distribution we usually use some measure of central tendency and some measure of dispersion. Common measures of central tendency include the <code>mean</code>, <code>median</code>, and <code>mode</code>. <span class="quarto-unresolved-ref">?fig-point-estimates</span> shows these three measures for a <code>Gamma</code> distribution.</p>
+<div id="cell-point-estimates" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>dist <span class="op">=</span> pz.Gamma(<span class="dv">3</span>, <span class="dv">2</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>mean <span class="op">=</span> dist.mean()</span>
+<span id="cb14-3"><a href="#cb14-3"></a>median <span class="op">=</span> dist.median()</span>
+<span id="cb14-4"><a href="#cb14-4"></a>mode <span class="op">=</span> dist.mode()</span>
+<span id="cb14-5"><a href="#cb14-5"></a>ax <span class="op">=</span> dist.plot_pdf(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">3</span>), legend<span class="op">=</span><span class="st">"title"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="cf">for</span> idx, (stat, value) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(</span>
+<span id="cb14-7"><a href="#cb14-7"></a>    [<span class="ss">f"mean    = </span><span class="sc">{</span>mean<span class="sc">:.2f}</span><span class="ss">"</span>, <span class="ss">f"median = </span><span class="sc">{</span>median<span class="sc">:.2f}</span><span class="ss">"</span>, <span class="ss">f"mode    = </span><span class="sc">{</span>mode<span class="sc">:.2f}</span><span class="ss">"</span>], [mean, median, mode]</span>
+<span id="cb14-8"><a href="#cb14-8"></a>)):</span>
+<span id="cb14-9"><a href="#cb14-9"></a>    ax.axvline(value, label<span class="op">=</span>stat, color<span class="op">=</span><span class="ss">f"C</span><span class="sc">{</span>idx<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>, ls<span class="op">=</span><span class="st">"--"</span>)</span>
+<span id="cb14-10"><a href="#cb14-10"></a>ax.legend()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="point-estimates" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Distributions_files/figure-html/point-estimates-output-1.png" width="1011" height="311" class="figure-img"></p>
+<figcaption>A gamma distribution with its mean, median, and mode.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The mean is the average value of the distribution, the median is the value that divides the distribution into two equal halves, and the mode is the value with the highest probability density. In symmetric distributions like the <code>Normal</code>, these three measures are equal. But in skewed distributions like the <code>Gamma</code>, they can be quite different. The mean is probably the most commonly used measure of central tendency, but it can be sensitive to outliers. The median is more robust to outliers and is often preferred in skewed distributions. The mode is useful when we are interested in the most probable value of the distribution, the mode is usually less common than the other too. In practice, the choice of which measure to use depends on the context and the specific characteristics of the distribution being analyzed.</p>
+<p>In ArviZ we can compute these point estimates from samples using the <code>azp.mean()</code>, <code>azp.median()</code>, and <code>azp.mode()</code> functions.</p>
+<div id="abbad86e" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>pois_data <span class="op">=</span> dist.rvs(<span class="dv">50_000</span>, random_state<span class="op">=</span>rng)</span>
+<span id="cb15-2"><a href="#cb15-2"></a>azp.mean(pois_data), azp.median(pois_data), azp.mode(pois_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>(array(1.5), array(1.3), array(1.1))</code></pre>
+</div>
+</div>
+<p>Point estimates also show in other places in ArviZ, for example in the <code>plot_dist()</code> or when calling <code>summary()</code>, these functions has a <code>point_estimate</code> argument to choose which point estimate to use. The default value is controlled globally by:</p>
+<div id="84047814" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>azp.rcParams[<span class="st">"stats.point_estimate"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>'mean'</code></pre>
+</div>
+</div>
+</section>
+<section id="credible-intervals" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="credible-intervals"><span class="header-section-number">3.6</span> Credible intervals</h2>
+<p>To describe the uncertainty in our estimates, we usually want to complement point estimates with some measure of dispersion. A common approach is to use the standard deviation or the variance. The standard deviation is usually preferred over the variance because it is in the same units as the original data. However, both measures can be misleading for skewed distributions or distributions with heavy tails. Hence, other measures of dispersion are often preferred like the median absolute deviation <a href="https://en.wikipedia.org/wiki/Median_absolute_deviation">MAD</a> or the interquartile range <a href="https://en.wikipedia.org/wiki/Interquartile_range">IQR</a>.</p>
+<p>One issue with using a single number to summarize uncertainty is that it does not provide information about the shape of the distribution. For example two distributions can have the same standard deviation but very different shapes. Or for bounded distributions like the <code>Gamma</code>, the standard deviation can be misleading as it does not take into account that negative values are not allowed.</p>
+<p>One popular way to summarize the uncertainty in a distribution is to use intervals. For example, we may want to report that 90% of the values lie within a certain range. In Bayesian statistics, these often called <code>credible intervals</code>. In principle we can defined infinite intervals containing a given mass. Then we need to add some other constraint to build useful intervals. Two common types of credible intervals are the <code>equal-tailed interval</code> (ETI) and the <code>highest-density interval</code> (HDI).</p>
+<ul>
+<li><p>ETI: The interval that contains a given percentage of the distribution, with equal probability in both tails. For example, a 90% equal-tailed interval has 90% of the distribution between the lower and upper bounds, with 5% of the distribution in each tail.</p></li>
+<li><p>HDI: The interval that contains a given mass and where all points inside the interval have a higher density than any point outside the interval. Alternatively, we can think of it as the shortest interval containing a given portion of the probability density.</p></li>
+</ul>
+<p>For some distributions like asymmetric ones, the HDI is usually preferred over the ETI because it better represents the most credible values of the distribution.</p>
+<div id="cell-credible-intervals" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">3</span>), sharex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb19-2"><a href="#cb19-2"></a>dist <span class="op">=</span> pz.Gamma(<span class="dv">3</span>, <span class="dv">2</span>)</span>
+<span id="cb19-3"><a href="#cb19-3"></a>dist.plot_pdf(ax<span class="op">=</span>ax[<span class="dv">0</span>], legend<span class="op">=</span><span class="st">"title"</span>, pointinterval<span class="op">=</span><span class="va">True</span>, interval<span class="op">=</span><span class="st">"hdi"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4"></a>dist.plot_pdf(ax<span class="op">=</span>ax[<span class="dv">1</span>], legend<span class="op">=</span><span class="va">None</span>, pointinterval<span class="op">=</span><span class="va">True</span>, interval<span class="op">=</span><span class="st">"eti"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="credible-intervals" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Distributions_files/figure-html/credible-intervals-output-1.png" width="1011" height="311" class="figure-img"></p>
+<figcaption>HDI (top) and ETI (bottom) credible intervals for a Gamma distribution. The thin line of the interval shows the 89% interval and the thick line shows the 50% interval.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In ArviZ we can compute credible intervals from samples using the <code>azp.hdi()</code> and <code>azp.eti()</code> functions.</p>
+<div id="0b4c686c" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>azp.hdi(pois_data), azp.eti(pois_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>(array([0.24145828, 2.67576132]), array([0.42987465, 3.07525881]))</code></pre>
+</div>
+</div>
+<p>These, as well as other functions, have a <code>ci_prob</code> argument to choose the mass of the credible interval. The default value is globally controlled by:</p>
+<div id="61e2cffc" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>azp.rcParams[<span class="st">"stats.ci_prob"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>0.89</code></pre>
+</div>
+</div>
+<p>Common choices for the mass of credible intervals are 95%, 90%, and 50%. ArviZ default is just a friendly reminder that no value is inherently better than the others; the key is to be consistent and transparent about your choice <span class="citation" data-cites="mcelreath_2020">(<a href="References.html#ref-mcelreath_2020" role="doc-biblioref">McElreath 2020</a>)</span>. One practical advantage of using 89% as a default is that it requires fewer samples to estimate reliably than, for example, 95% intervals. In <a href="MCMC_diagnostics.html" class="quarto-xref"><span>Chapter 4</span></a> we discuss how the reliability of estimates like credible intervals depends on the number of samples used.</p>
+<p>Credible intervals also show in other places in ArviZ, for example in the <code>plot_dist()</code> or when calling <code>summary()</code>.</p>
+</section>
+<section id="sec-dist" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="sec-dist"><span class="header-section-number">3.7</span> Distributions in ArviZ</h2>
 <p>The PMF/PDF, CDF, and PPF are convenient ways to represent distributions for which we know the analytical form. But in practice, we often work with distributions that we don’t know their analytical form. Instead, we have a set of samples from the distribution. A clear example is a posterior distribution, computed using an MCMC method. For those cases, we still want useful visualization that we can use for ourselves or to show others. Some common methods are:</p>
 <ul>
 <li>Histograms</li>
@@ -832,14 +923,14 @@ Figure&nbsp;3.9: PPF of a normal distribution
 <li>Quantile dot plots</li>
 </ul>
 <p>We will discuss these methods in the next subsections with special emphasis on how they are implemented in ArviZ.</p>
-<section id="histograms" class="level3" data-number="3.5.1">
-<h3 data-number="3.5.1" class="anchored" data-anchor-id="histograms"><span class="header-section-number">3.5.1</span> Histograms</h3>
+<section id="histograms" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1" class="anchored" data-anchor-id="histograms"><span class="header-section-number">3.7.1</span> Histograms</h3>
 <p><a href="https://en.wikipedia.org/wiki/Histogram">Histograms</a> are a very simple and effective way to represent a distribution. The basic idea is to divide the range of the data into a set of bins and count how many data points fall into each bin. Then we use as many bars as bins, with the height of the bars being proportional to the counts. The following video shows a step-by-step animation of a histogram being built.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../videos/histogram.mp4"></video></div>
 <p>Histograms can be used to represent both discrete and continuous random variables. Discrete variables are usually represented using integers. <!-- When ArviZ is asked to plot integer data it will use histograms as the default method.  --> Arguably the most important parameter of a histogram is the number of bins. Too few bins and we will miss details, too many and we will plot noise. You can pick the number of bins with a bit of trial and error, especially when you have good idea of what you want to show. However, there are many methods to compute the number of bins automatically from the data, like the <a href="https://en.wikipedia.org/wiki/Freedman-Diaconis_rule">Freedman–Diaconis rule</a> or the <a href="https://en.wikipedia.org/wiki/Histogram#Number_of_bins_and_width">Sturges’ rule</a>. By default, ArviZ computes the number of bins using both rules and then picks the one that gives the largest number of bins. This is the same approach used by <code>np.histogram(., bins="auto)</code> and <code>plt.hist(., bins="auto)</code>. Additionally, when the data is of type integers, ArviZ will preserve that structure and will associate bins to integers, instead of floats. If the number of unique integers is relatively small then, it will associate one bin to each integer. For example, in the following figure each <em>bar</em> is associated with an integer in the interval [0, 9].</p>
-<div id="cell-fig-dist_histogram_0" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Poisson(<span class="dv">3</span>).rvs((<span class="dv">1</span>, <span class="dv">500</span>), random_state<span class="op">=</span>rng))</span>
-<span id="cb14-2"><a href="#cb14-2"></a>azp.plot_dist(d_values, kind<span class="op">=</span><span class="st">"hist"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cell-fig-dist_histogram_0" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Poisson(<span class="dv">3</span>).rvs((<span class="dv">1</span>, <span class="dv">500</span>), random_state<span class="op">=</span>rng))</span>
+<span id="cb24-2"><a href="#cb24-2"></a>azp.plot_dist(d_values, kind<span class="op">=</span><span class="st">"hist"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-dist_histogram_0" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -854,9 +945,9 @@ Figure&nbsp;3.10: Histogram from a sample of integers. Each bin corresponds to a
 </div>
 </div>
 <p>When the discrete values take higher values, like in <a href="#fig-dist_histogram_1" class="quarto-xref">Figure&nbsp;<span>3.11</span></a>, bins are still associated with integers but many integers are binned together.</p>
-<div id="cell-fig-dist_histogram_1" class="cell" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Poisson(<span class="dv">100</span>).rvs((<span class="dv">1</span>, <span class="dv">500</span>), random_state<span class="op">=</span>rng))</span>
-<span id="cb15-2"><a href="#cb15-2"></a>azp.plot_dist(d_values, kind<span class="op">=</span><span class="st">"hist"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cell-fig-dist_histogram_1" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Poisson(<span class="dv">100</span>).rvs((<span class="dv">1</span>, <span class="dv">500</span>), random_state<span class="op">=</span>rng))</span>
+<span id="cb25-2"><a href="#cb25-2"></a>azp.plot_dist(d_values, kind<span class="op">=</span><span class="st">"hist"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-dist_histogram_1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -871,9 +962,9 @@ Figure&nbsp;3.11: Histogram from a sample of integers. Bins group together many 
 </div>
 </div>
 <p>If you don’t like the default binning criteria of ArviZ, you can change it by passing the <code>bins</code> argument using the <code>hist_kwargs</code>.</p>
-<div id="cell-fig-dist_histogram_2" class="cell" data-execution_count="15">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Poisson(<span class="dv">100</span>).rvs((<span class="dv">1</span>, <span class="dv">500</span>), random_state<span class="op">=</span>rng))</span>
-<span id="cb16-2"><a href="#cb16-2"></a>azp.plot_dist(d_values, kind<span class="op">=</span><span class="st">"hist"</span>, stats<span class="op">=</span>{<span class="st">"density"</span>:{<span class="st">"bins"</span>:<span class="dv">20</span>}})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cell-fig-dist_histogram_2" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Poisson(<span class="dv">100</span>).rvs((<span class="dv">1</span>, <span class="dv">500</span>), random_state<span class="op">=</span>rng))</span>
+<span id="cb26-2"><a href="#cb26-2"></a>azp.plot_dist(d_values, kind<span class="op">=</span><span class="st">"hist"</span>, stats<span class="op">=</span>{<span class="st">"density"</span>:{<span class="st">"bins"</span>:<span class="dv">20</span>}})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-dist_histogram_2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -888,40 +979,40 @@ Figure&nbsp;3.12: Histogram from a sample of integers, with bins automatically c
 </div>
 </div>
 </section>
-<section id="kde" class="level3" data-number="3.5.2">
-<h3 data-number="3.5.2" class="anchored" data-anchor-id="kde"><span class="header-section-number">3.5.2</span> KDE</h3>
+<section id="kde" class="level3" data-number="3.7.2">
+<h3 data-number="3.7.2" class="anchored" data-anchor-id="kde"><span class="header-section-number">3.7.2</span> KDE</h3>
 <p><a href="https://en.wikipedia.org/wiki/Kernel_density_estimation">Kernel density estimation</a> (KDE) is a non-parametric way to estimate the probability density function from a sample. Intuitively you can think of it as the smooth version of a histogram. Conceptually you place a <em>kernel function</em> like a Gaussian <em>on top</em> of a data point, then you sum all the Gaussians, generally evaluated over a grid and not over the data points. Results are normalized so the total area under the curve is one. The following video shows a step-by-step animation of a KDE being built. You can see a version with border corrections and without them. Border corrections avoid adding a positive density outside the range of the data.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../videos/kde.mp4"></video></div>
 <p>The following block of code shows a very simple example of a KDE.</p>
-<div id="1ffeae3e" class="cell" data-execution_count="16">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># synthetic data, 7 points</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>data <span class="op">=</span> np.array([<span class="fl">7.9</span>, <span class="fl">6.5</span>, <span class="fl">7.4</span>, <span class="fl">8.3</span>, <span class="fl">5.1</span>, <span class="fl">5.4</span>, <span class="fl">7.2</span>])</span>
-<span id="cb17-3"><a href="#cb17-3"></a>n_obs <span class="op">=</span> <span class="bu">len</span>(data)</span>
-<span id="cb17-4"><a href="#cb17-4"></a><span class="co"># compute the KDE</span></span>
-<span id="cb17-5"><a href="#cb17-5"></a>bandwidth <span class="op">=</span> <span class="fl">0.4</span></span>
-<span id="cb17-6"><a href="#cb17-6"></a>grid <span class="op">=</span> np.linspace(data.<span class="bu">min</span>() <span class="op">-</span> bandwidth <span class="op">*</span> <span class="dv">3</span>, data.<span class="bu">max</span>() <span class="op">+</span> bandwidth <span class="op">*</span> <span class="dv">3</span>, <span class="dv">200</span>)</span>
-<span id="cb17-7"><a href="#cb17-7"></a>kernels <span class="op">=</span> np.transpose([pz.Normal(x_i, bandwidth).pdf(grid) <span class="cf">for</span> x_i <span class="kw">in</span> data])</span>
-<span id="cb17-8"><a href="#cb17-8"></a>kernels <span class="op">*=</span> <span class="dv">1</span> <span class="op">/</span> n_obs  <span class="co"># normalize the results</span></span>
-<span id="cb17-9"><a href="#cb17-9"></a></span>
-<span id="cb17-10"><a href="#cb17-10"></a><span class="co"># plot the results</span></span>
-<span id="cb17-11"><a href="#cb17-11"></a>_, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">4</span>))</span>
-<span id="cb17-12"><a href="#cb17-12"></a>ax.plot(grid, kernels, <span class="st">"k--"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb17-13"><a href="#cb17-13"></a>ax.plot(data, np.zeros(n_obs), <span class="st">"C1o"</span>)</span>
-<span id="cb17-14"><a href="#cb17-14"></a>ax.plot(grid, kernels.<span class="bu">sum</span>(<span class="dv">1</span>))</span>
-<span id="cb17-15"><a href="#cb17-15"></a>ax.<span class="bu">set</span>(xticks<span class="op">=</span>[], yticks<span class="op">=</span>[])<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="70318a3a" class="cell" data-execution_count="22">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># synthetic data, 7 points</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a>data <span class="op">=</span> np.array([<span class="fl">7.9</span>, <span class="fl">6.5</span>, <span class="fl">7.4</span>, <span class="fl">8.3</span>, <span class="fl">5.1</span>, <span class="fl">5.4</span>, <span class="fl">7.2</span>])</span>
+<span id="cb27-3"><a href="#cb27-3"></a>n_obs <span class="op">=</span> <span class="bu">len</span>(data)</span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="co"># compute the KDE</span></span>
+<span id="cb27-5"><a href="#cb27-5"></a>bandwidth <span class="op">=</span> <span class="fl">0.4</span></span>
+<span id="cb27-6"><a href="#cb27-6"></a>grid <span class="op">=</span> np.linspace(data.<span class="bu">min</span>() <span class="op">-</span> bandwidth <span class="op">*</span> <span class="dv">3</span>, data.<span class="bu">max</span>() <span class="op">+</span> bandwidth <span class="op">*</span> <span class="dv">3</span>, <span class="dv">200</span>)</span>
+<span id="cb27-7"><a href="#cb27-7"></a>kernels <span class="op">=</span> np.transpose([pz.Normal(x_i, bandwidth).pdf(grid) <span class="cf">for</span> x_i <span class="kw">in</span> data])</span>
+<span id="cb27-8"><a href="#cb27-8"></a>kernels <span class="op">*=</span> <span class="dv">1</span> <span class="op">/</span> n_obs  <span class="co"># normalize the results</span></span>
+<span id="cb27-9"><a href="#cb27-9"></a></span>
+<span id="cb27-10"><a href="#cb27-10"></a><span class="co"># plot the results</span></span>
+<span id="cb27-11"><a href="#cb27-11"></a>_, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">4</span>))</span>
+<span id="cb27-12"><a href="#cb27-12"></a>ax.plot(grid, kernels, <span class="st">"k--"</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb27-13"><a href="#cb27-13"></a>ax.plot(data, np.zeros(n_obs), <span class="st">"C1o"</span>)</span>
+<span id="cb27-14"><a href="#cb27-14"></a>ax.plot(grid, kernels.<span class="bu">sum</span>(<span class="dv">1</span>))</span>
+<span id="cb27-15"><a href="#cb27-15"></a>ax.<span class="bu">set</span>(xticks<span class="op">=</span>[], yticks<span class="op">=</span>[])<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Distributions_files/figure-html/cell-17-output-1.png" width="911" height="411" class="figure-img"></p>
+<p><img src="Distributions_files/figure-html/cell-23-output-1.png" width="911" height="411" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The most important parameter of a KDE is the <em>bandwidth</em> which controls the degree of smoothness of the resulting curve. It is analogous to the number of bins for the histograms. ArviZ’s default method to compute the bandwidth works well for a wide range of distributions including multimodal ones. Compared to other KDEs in the Python ecosystem, the KDE implemented in ArviZ automatically handles the boundaries of a distribution. ArviZ will assign a density of zero to any point outside the range of the data.</p>
 <p>The following example shows a KDE computed from a sample from a <code>Gamma</code> distribution. Notice that ArviZ computes a KDE instead of a histogram, and notice that there is no density for negative values.</p>
-<div id="cell-fig-dist_KDE_0" class="cell" data-execution_count="17">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>c_values <span class="op">=</span> azp.convert_to_dataset(pz.Gamma(<span class="dv">2</span>, <span class="dv">3</span>).rvs((<span class="dv">1</span>,<span class="dv">1000</span>), random_state<span class="op">=</span>rng))</span>
-<span id="cb18-2"><a href="#cb18-2"></a>azp.plot_dist(c_values)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cell-fig-dist_KDE_0" class="cell" data-execution_count="23">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>c_values <span class="op">=</span> azp.convert_to_dataset(pz.Gamma(<span class="dv">2</span>, <span class="dv">3</span>).rvs((<span class="dv">1</span>,<span class="dv">1000</span>), random_state<span class="op">=</span>rng))</span>
+<span id="cb28-2"><a href="#cb28-2"></a>azp.plot_dist(c_values)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-dist_kde_0" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -936,13 +1027,13 @@ Figure&nbsp;3.13: KDE from a sample of floats. By default, ArviZ computes a KDE.
 </div>
 </div>
 </section>
-<section id="ecdf" class="level3" data-number="3.5.3">
-<h3 data-number="3.5.3" class="anchored" data-anchor-id="ecdf"><span class="header-section-number">3.5.3</span> ECDF</h3>
+<section id="ecdf" class="level3" data-number="3.7.3">
+<h3 data-number="3.7.3" class="anchored" data-anchor-id="ecdf"><span class="header-section-number">3.7.3</span> ECDF</h3>
 <p>Both histograms and KDEs are ways to approximate the PMF/PDF of a distribution from a sample. But sometimes we may want to approximate the CDF instead. The <code>empirical cumulative distribution function</code> (ECDF) is a non-parametric way to estimate the CDF. It is a step function that jumps up by 1/N at each observed data point, where N is the total number of data points. The following video shows a step-by-step animation of an ECDF being built.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video3" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../videos/ecdf.mp4"></video></div>
 <p>The following block of code shows a very simple example of an ECDF.</p>
-<div id="cell-fig-dist_ecdf" class="cell" data-execution_count="18">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>azp.plot_dist(c_values, kind<span class="op">=</span><span class="st">"ecdf"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cell-fig-dist_ecdf" class="cell" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a>azp.plot_dist(c_values, kind<span class="op">=</span><span class="st">"ecdf"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-dist_ecdf" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -957,19 +1048,19 @@ Figure&nbsp;3.14: Empirical cumulative distribution function
 </div>
 </div>
 </section>
-<section id="quantile-dot-plots" class="level3" data-number="3.5.4">
-<h3 data-number="3.5.4" class="anchored" data-anchor-id="quantile-dot-plots"><span class="header-section-number">3.5.4</span> Quantile dot plots</h3>
+<section id="quantile-dot-plots" class="level3" data-number="3.7.4">
+<h3 data-number="3.7.4" class="anchored" data-anchor-id="quantile-dot-plots"><span class="header-section-number">3.7.4</span> Quantile dot plots</h3>
 <p>A quantile dot plot <span class="citation" data-cites="wilkinson_1999 kay_2016">(<a href="References.html#ref-wilkinson_1999" role="doc-biblioref">Wilkinson 1999</a>; <a href="References.html#ref-kay_2016" role="doc-biblioref">Kay et al. 2016</a>)</span> displays the distribution of a sample in terms of its quantiles. Reading the median or other quantiles from quantile dot plots is generally easy, we just need to count the number of dots.</p>
 <p>The following video shows a step-by-step animation of a quantile dot plot being built.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video4" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../videos/dotplot.mp4"></video></div>
 <p>From <a href="#fig-dist_qdot" class="quarto-xref">Figure&nbsp;<span>3.15</span></a> we can easily see that 30% of the data is below 1. We do this by noticing that we have a total of 10 dots and 3 of them are below 1.</p>
-<div id="cell-fig-dist_qdot" class="cell" data-execution_count="19">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Normal(<span class="dv">2</span>, <span class="dv">2</span>).rvs((<span class="dv">4</span>, <span class="dv">1000</span>), random_state<span class="op">=</span><span class="dv">123</span>))</span>
-<span id="cb20-2"><a href="#cb20-2"></a>azp.plot_dist(</span>
-<span id="cb20-3"><a href="#cb20-3"></a>    d_values,</span>
-<span id="cb20-4"><a href="#cb20-4"></a>    kind<span class="op">=</span><span class="st">"dot"</span>,</span>
-<span id="cb20-5"><a href="#cb20-5"></a>    stats<span class="op">=</span>{<span class="st">"dist"</span>: {<span class="st">"nquantiles"</span>: <span class="dv">10</span>}},</span>
-<span id="cb20-6"><a href="#cb20-6"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cell-fig-dist_qdot" class="cell" data-execution_count="25">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>d_values <span class="op">=</span> azp.convert_to_dataset(pz.Normal(<span class="dv">2</span>, <span class="dv">2</span>).rvs((<span class="dv">4</span>, <span class="dv">1000</span>), random_state<span class="op">=</span><span class="dv">123</span>))</span>
+<span id="cb30-2"><a href="#cb30-2"></a>azp.plot_dist(</span>
+<span id="cb30-3"><a href="#cb30-3"></a>    d_values,</span>
+<span id="cb30-4"><a href="#cb30-4"></a>    kind<span class="op">=</span><span class="st">"dot"</span>,</span>
+<span id="cb30-5"><a href="#cb30-5"></a>    stats<span class="op">=</span>{<span class="st">"dist"</span>: {<span class="st">"nquantiles"</span>: <span class="dv">10</span>}},</span>
+<span id="cb30-6"><a href="#cb30-6"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-dist_qdot" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -992,6 +1083,9 @@ Fernandes, Michael, Logan Walls, Sean Munson, Jessica Hullman, and Matthew Kay. 
 </div>
 <div id="ref-kay_2016" class="csl-entry" role="listitem">
 Kay, Matthew, Tara Kola, Jessica R. Hullman, and Sean A. Munson. 2016. <span>“When (Ish) Is <span>My</span> <span>Bus</span>? <span>User</span>-Centered <span>Visualizations</span> of <span>Uncertainty</span> in <span>Everyday</span>, <span>Mobile</span> <span>Predictive</span> <span>Systems</span>.”</span> In <em>Proceedings of the 2016 <span>CHI</span> <span>Conference</span> on <span>Human</span> <span>Factors</span> in <span>Computing</span> <span>Systems</span></em>, 5092–5103. <span>CHI</span> ’16. New York, NY, USA: Association for Computing Machinery. <a href="https://doi.org/10.1145/2858036.2858558">https://doi.org/10.1145/2858036.2858558</a>.
+</div>
+<div id="ref-mcelreath_2020" class="csl-entry" role="listitem">
+McElreath, Richard. 2020. <em>Statistical <span>Rethinking</span>: <span>A</span> <span>Bayesian</span> <span>Course</span> with <span>Examples</span> in <span>R</span> and <span>STAN</span></em>. Boca Raton: Chapman; Hall/CRC.
 </div>
 <div id="ref-wilkinson_1999" class="csl-entry" role="listitem">
 Wilkinson, Leland. 1999. <span>“Dot <span>Plots</span>.”</span> <em>The American Statistician</em> 53 (3): 276–81. <a href="https://doi.org/10.1080/00031305.1999.10474474">https://doi.org/10.1080/00031305.1999.10474474</a>.
