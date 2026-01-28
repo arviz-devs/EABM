@@ -616,7 +616,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">January 26, 2026</p>
+      <p class="date-modified">January 28, 2026</p>
     </div>
   </div>
     
@@ -635,7 +635,7 @@ window.Quarto = {
 <section id="loading-and-preparing-the-data" class="level3" data-number="9.1.1">
 <h3 data-number="9.1.1" class="anchored" data-anchor-id="loading-and-preparing-the-data"><span class="header-section-number">9.1.1</span> Loading and preparing the data</h3>
 <p>We start by loading the roaches dataset and examining its basic structure.</p>
-<div id="6b017ca6" class="cell" data-execution_count="2">
+<div id="3c84f5ad" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2"></a></span>
 <span id="cb1-3"><a href="#cb1-3"></a>roaches <span class="op">=</span> pd.read_csv(<span class="st">"../data/roaches.csv"</span>, index_col<span class="op">=</span><span class="dv">0</span>)</span>
@@ -746,7 +746,7 @@ window.Quarto = {
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Bambi</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="928e1c37" class="cell" data-execution_count="3">
+<div id="73ade416" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> bambi <span class="im">as</span> bmb</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
 <span id="cb2-3"><a href="#cb2-3"></a>model <span class="op">=</span> bmb.Model(</span>
@@ -775,7 +775,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="6e229927" class="cell" data-execution_count="5">
+<div id="ea330e6c" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>azp.summary(idata.posterior.ds, var_names<span class="op">=</span>[<span class="st">'roach1'</span>, <span class="st">'treatment'</span>, <span class="st">'senior'</span>, <span class="st">'Intercept'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
@@ -855,11 +855,11 @@ window.Quarto = {
 <section id="initial-psis-loo-cv-evaluation" class="level3" data-number="9.1.3">
 <h3 data-number="9.1.3" class="anchored" data-anchor-id="initial-psis-loo-cv-evaluation"><span class="header-section-number">9.1.3</span> Initial PSIS-LOO-CV evaluation</h3>
 <p>With the posterior draws in hand, we compute the PSIS-LOO-CV estimate of the model’s predictive performance.</p>
-<div id="6be6fccd" class="cell" data-execution_count="6">
+<div id="4d447ba2" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>loo_result <span class="op">=</span> azp.loo(idata, pointwise<span class="op">=</span><span class="va">True</span>, var_name<span class="op">=</span><span class="st">"y"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2"></a>loo_result</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:1149: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/arviz_stats/loo/helper_loo.py:1143: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -906,7 +906,7 @@ y_i \sim \text{Poisson}(\lambda_i), \quad \lambda_i = \exp(\eta_i),
 \log p(y_i \mid \theta) = y_i \log(\lambda_i) - \lambda_i - \log(y_i!).
 \]</span></p>
 <p>We start by converting our data into <code>DataArrays</code> with properly labeled dimensions to use xarray’s dimension-aware operations for the computations.</p>
-<div id="e22b530b" class="cell" data-execution_count="7">
+<div id="69d45a37" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="im">from</span> scipy.special <span class="im">import</span> gammaln</span>
 <span id="cb8-3"><a href="#cb8-3"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
@@ -931,7 +931,7 @@ y_i \sim \text{Poisson}(\lambda_i), \quad \lambda_i = \exp(\eta_i),
 <span id="cb8-22"><a href="#cb8-22"></a>alpha_prior_scale <span class="op">=</span> <span class="fl">5.0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>First, we construct an array of unconstrained parameters from the posterior draws. All of the parameters are unconstrained in this model, so we can simply concatenate the posterior draws along the <code>uparam</code> dimension.</p>
-<div id="c7d5687c" class="cell" data-execution_count="8">
+<div id="05d86109" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>posterior <span class="op">=</span> idata.posterior</span>
 <span id="cb9-2"><a href="#cb9-2"></a>upars <span class="op">=</span> xr.concat([</span>
 <span id="cb9-3"><a href="#cb9-3"></a>    posterior.ds[<span class="st">'roach1'</span>].expand_dims({<span class="st">'uparam'</span>: [<span class="st">'roach1'</span>]}),</span>
@@ -941,7 +941,7 @@ y_i \sim \text{Poisson}(\lambda_i), \quad \lambda_i = \exp(\eta_i),
 <span id="cb9-7"><a href="#cb9-7"></a>], dim<span class="op">=</span><span class="st">'uparam'</span>).transpose(<span class="st">'chain'</span>, <span class="st">'draw'</span>, <span class="st">'uparam'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can now define the log posterior function and the leave-one-out log likelihood function. The log posterior function computes the log posterior probability for a given set of unconstrained parameters, and the log likelihood function computes the log likelihood for a given set of unconstrained parameters and a given observation.</p>
-<div id="bea9e465" class="cell" data-execution_count="9">
+<div id="132580df" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">def</span> log_prob_upars_fn(upars, design_matrix, y_da, offset_da, factorial_term,</span>
 <span id="cb10-2"><a href="#cb10-2"></a>                       coef_names, beta_prior_scale, alpha_prior_scale):</span>
 <span id="cb10-3"><a href="#cb10-3"></a>    <span class="co">"""Compute log posterior for unconstrained parameters."""</span></span>
@@ -970,7 +970,7 @@ y_i \sim \text{Poisson}(\lambda_i), \quad \lambda_i = \exp(\eta_i),
 <span id="cb10-26"><a href="#cb10-26"></a>    <span class="cf">return</span> log_lik_i</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now we bind the data dependencies to these functions using <code>functools.partial</code>. This creates new functions where all the data parameters are fixed, leaving only the unconstrained parameters (and observation index for the likelihood function) as free parameters.</p>
-<div id="e4827113" class="cell" data-execution_count="10">
+<div id="49c48ee5" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>log_prob_upars <span class="op">=</span> partial(</span>
 <span id="cb11-2"><a href="#cb11-2"></a>    log_prob_upars_fn,</span>
 <span id="cb11-3"><a href="#cb11-3"></a>    design_matrix<span class="op">=</span>design_matrix,</span>
@@ -1005,7 +1005,7 @@ y_i \sim \text{Poisson}(\lambda_i), \quad \lambda_i = \exp(\eta_i),
 g_{\text{split,loo}}(\theta) \propto p(\theta \mid y) + |\mathbf{J}_{T_w}|^{-1}\, p(T_w^{-1}(\theta) \mid y),
 \]</span></p>
 <p>so each fold mixes the full-data posterior with the transformed draws from the denominator adaptation.</p>
-<div id="92bfbab5" class="cell" data-execution_count="11">
+<div id="370aef94" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>loo_mm_result <span class="op">=</span> azp.loo_moment_match(</span>
 <span id="cb12-2"><a href="#cb12-2"></a>    idata,</span>
 <span id="cb12-3"><a href="#cb12-3"></a>    loo_result,</span>
