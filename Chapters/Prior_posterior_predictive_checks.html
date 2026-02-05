@@ -619,7 +619,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 3, 2026</p>
+      <p class="date-modified">February 5, 2026</p>
     </div>
   </div>
     
@@ -666,7 +666,7 @@ p(y^\ast) = \int_{\Theta} p(y^\ast \mid \theta) \; p(\theta) \; d\theta
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="91ca40b8" class="cell" data-execution_count="2">
+<div id="71c6d961" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model: </span>
 <span id="cb1-2"><a href="#cb1-2"></a>    <span class="co"># Priors for unknown model parameters</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>    mu <span class="op">=</span> pm.Normal(<span class="st">'mu'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
@@ -742,7 +742,7 @@ p(y^\ast) = \int_{\Theta} p(y^\ast \mid \theta) \; p(\theta) \; d\theta
 <div id="fig-prior_pred_check_wide" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_pred_check_wide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-prior_pred_check_wide-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-prior_pred_check_wide-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior_pred_check_wide-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.1: The prior predictive check for the model of heights. We can see that the bulk of the samples are outside the reference values.
@@ -758,7 +758,7 @@ Figure&nbsp;5.1: The prior predictive check for the model of heights. We can see
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="1f051339" class="cell" data-execution_count="5">
+<div id="ad8142e1" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model: </span>
 <span id="cb4-2"><a href="#cb4-2"></a>    <span class="co"># Priors for unknown model parameters</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a>    mu <span class="op">=</span> pm.Normal(<span class="st">'mu'</span>, mu<span class="op">=</span><span class="dv">160</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
@@ -834,7 +834,7 @@ Figure&nbsp;5.1: The prior predictive check for the model of heights. We can see
 <div id="fig-prior_pred_check_narrow" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_pred_check_narrow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-prior_pred_check_narrow-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-prior_pred_check_narrow-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior_pred_check_narrow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.2: The prior predictive check for the model of heights with a more narrower prior than <a href="#fig-prior_pred_check_wide" class="quarto-xref">Figure&nbsp;<span>5.1</span></a>. Predictions are closer to our domain knowledge about human heights.
@@ -852,7 +852,7 @@ Figure&nbsp;5.2: The prior predictive check for the model of heights with a more
 <div id="fig-prior_pred_check_narrow_ecdf" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-prior_pred_check_narrow_ecdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-prior_pred_check_narrow_ecdf-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-prior_pred_check_narrow_ecdf-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-prior_pred_check_narrow_ecdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.3: The prior predictive check for the model of heights. Same as <a href="#fig-prior_pred_check_narrow" class="quarto-xref">Figure&nbsp;<span>5.2</span></a> but using empirical CDFs instead of KDEs.
@@ -891,7 +891,7 @@ p(\tilde y) = \int_{\Theta} p(\tilde y \mid \theta) \; p(\theta \mid y) \; d\the
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="77b6fb02" class="cell" data-execution_count="9">
+<div id="87d21cb8" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> model: </span>
 <span id="cb8-2"><a href="#cb8-2"></a>    dt <span class="op">=</span> pm.sample(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>}, random_seed<span class="op">=</span>SEED)</span>
 <span id="cb8-3"><a href="#cb8-3"></a>    pm.sample_posterior_predictive(dt, random_seed<span class="op">=</span>SEED, extend_inferencedata<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -977,7 +977,7 @@ p(\tilde y) = \int_{\Theta} p(\tilde y \mid \theta) \; p(\theta \mid y) \; d\the
 <div id="fig-post_pred" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_pred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_pred-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_pred-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_pred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.4: Posterior predictive check for the model of heights.
@@ -1005,7 +1005,7 @@ Figure&nbsp;5.4: Posterior predictive check for the model of heights.
 <div id="fig-post_pred_check_stats" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_pred_check_stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_pred_check_stats-output-1.png" width="1811" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_pred_check_stats-output-1.png" width="1358" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_pred_check_stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.5: Posterior predictive check for the model of heights using summary statistics.
@@ -1050,7 +1050,7 @@ F_Y(y) = \mathrm{Pr}(Y \leq y).
 <div id="fig-post_pred_uniform_cdf" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_pred_uniform_cdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_pred_uniform_cdf-output-1.png" width="898" height="434" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_pred_uniform_cdf-output-1.png" width="674" height="325" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_pred_uniform_cdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.6: The CDF of the standard Uniform distribution.
@@ -1066,7 +1066,7 @@ Figure&nbsp;5.6: The CDF of the standard Uniform distribution.
 <div id="fig-post_ppc_pit_ecdf" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_ppc_pit_ecdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_ppc_pit_ecdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.7: Posterior predictive check for the model of heights using marginal Bayesian p-values, also know as u-values.
@@ -1110,7 +1110,7 @@ Figure&nbsp;5.7: Posterior predictive check for the model of heights using margi
 <div id="fig-post_ppc_pit_ecdf_alt_0" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_ppc_pit_ecdf_alt_0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_0-output-1.png" width="1451" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_0-output-1.png" width="1088" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_ppc_pit_ecdf_alt_0-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.8: Posterior predictive check with KDEs showing four alternative scenarios.
@@ -1129,7 +1129,7 @@ Figure&nbsp;5.8: Posterior predictive check with KDEs showing four alternative s
 <div id="fig-post_ppc_pit_ecdf_alt_1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_ppc_pit_ecdf_alt_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_1-output-1.png" width="1451" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_1-output-1.png" width="1088" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_ppc_pit_ecdf_alt_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.9: Posterior predictive check with ECDFs showing four alternative scenarios.
@@ -1148,7 +1148,7 @@ Figure&nbsp;5.9: Posterior predictive check with ECDFs showing four alternative 
 <div id="fig-post_ppc_pit_ecdf_alt_2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_ppc_pit_ecdf_alt_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_2-output-1.png" width="1451" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_2-output-1.png" width="1088" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_ppc_pit_ecdf_alt_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.10: Posterior predictive check with PIT-ECDFs showing four alternative scenarios.
@@ -1173,7 +1173,7 @@ Figure&nbsp;5.10: Posterior predictive check with PIT-ECDFs showing four alterna
 <div id="fig-post_ppc_pit_coverage" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_ppc_pit_coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_coverage-output-1.png" width="1451" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_coverage-output-1.png" width="1088" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_ppc_pit_coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.11: Coverage check showing four alternative scenarios.
@@ -1207,7 +1207,7 @@ p(\tilde y_i \leq y_i \mid y_{-i})
 <div id="fig-post_loo_pit" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_loo_pit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_loo_pit-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_loo_pit-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_loo_pit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.12: Posterior predictive check with LOO-PIT-ECDF.
@@ -1232,7 +1232,7 @@ Figure&nbsp;5.12: Posterior predictive check with LOO-PIT-ECDF.
 <p>Here we are going to discuss the rootograms presented by <span class="citation" data-cites="Säilynoja_2025">Säilynoja et al. (<a href="References.html#ref-Säilynoja_2025" role="doc-biblioref">2025</a>)</span>. These rootograms emphasises the discreteness of the data and and predictions by using points. The uncertainty in the predictions is encoded using intervals. Instead of square-rooting the data, it set the y-axis on the square root scale, this makes easier to interpret the data, because we can directly read the frecuencies from the y-axis (instead of reading the square roots) while keeping the advantage of being able to discriminate details at lower frecuencies.</p>
 <p>To illustrate rootograms we are going to use the Horseshoe crabs dataset <span class="citation" data-cites="Brockmann_1996">(<a href="References.html#ref-Brockmann_1996" role="doc-biblioref">Brockmann 1996</a>)</span>. Very briefly, horseshoe crabs arrive at the beach in pairs for their spawning ritual. Solitary males gather around the nesting couples and vying to fertilize the eggs. These individuals, known as satellite males, often congregate near certain nesting pairs while disregarding others. We used Bambi to create two models a poisson model and a hurdle-negative binomial model for the number of male satellites as a function of the carapace width and color of the female.</p>
 <p>We are going to omit the modelling details, and just upload prefitted models.</p>
-<div id="094fc6ac" class="cell" data-execution_count="20">
+<div id="11a3c785" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>crabs_poisson <span class="op">=</span> azp.load_arviz_data(<span class="st">'crabs_poisson'</span>)</span>
 <span id="cb19-2"><a href="#cb19-2"></a>crabs_hurdle_nb <span class="op">=</span> azp.load_arviz_data(<span class="st">'crabs_hurdle_nb'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1244,7 +1244,7 @@ Figure&nbsp;5.12: Posterior predictive check with LOO-PIT-ECDF.
 <div id="fig-ppc_rootogram_crab_poisson" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ppc_rootogram_crab_poisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_rootogram_crab_poisson-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_rootogram_crab_poisson-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ppc_rootogram_crab_poisson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.13: Rootogram showing the uncertainty in the predictions for a Poisson model.
@@ -1261,7 +1261,7 @@ Figure&nbsp;5.13: Rootogram showing the uncertainty in the predictions for a Poi
 <div id="fig-ppc_rootogram_crab_hurdle_nb" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ppc_rootogram_crab_hurdle_nb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_rootogram_crab_hurdle_nb-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_rootogram_crab_hurdle_nb-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ppc_rootogram_crab_hurdle_nb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.14: Rootogram showing the uncertainty in the predictions for a Hurdle Negative Binomial model.
@@ -1285,7 +1285,7 @@ Figure&nbsp;5.14: Rootogram showing the uncertainty in the predictions for a Hur
 <div id="fig-ppc_pava" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ppc_pava-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ppc_pava-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.15: PAV-adjusted calibration plot for a logistic regression model.
@@ -1306,7 +1306,7 @@ Figure&nbsp;5.15: PAV-adjusted calibration plot for a logistic regression model.
 <div id="fig-ppc_pava_cat" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ppc_pava_cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava_cat-output-1.png" width="1811" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava_cat-output-1.png" width="1358" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ppc_pava_cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.16: PAV-adjusted calibration plot for a categorical regression model.
@@ -1326,7 +1326,7 @@ Figure&nbsp;5.16: PAV-adjusted calibration plot for a categorical regression mod
 <div id="fig-ppc_pava_ord" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ppc_pava_ord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava_ord-output-1.png" width="1451" height="430" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava_ord-output-1.png" width="1088" height="322" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ppc_pava_ord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.17: PAV-adjusted calibration plot for an ordinal regression model.
@@ -1349,7 +1349,7 @@ Figure&nbsp;5.17: PAV-adjusted calibration plot for an ordinal regression model.
 <div id="fig-ppc_censored" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ppc_censored-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_censored-output-1.png" width="611" height="279" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_censored-output-1.png" width="458" height="209" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ppc_censored-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.18: Posterior predictive check for survival/censored data using Kaplan-Meier curves.
