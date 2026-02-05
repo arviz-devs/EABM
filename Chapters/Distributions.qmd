@@ -9,7 +9,7 @@ import preliz as pz
 import matplotlib.pyplot as plt
 rng = np.random.default_rng(365)
 azp.style.use("arviz-variat")
-plt.rcParams["figure.dpi"] = 100
+plt.rcParams["figure.dpi"] = 75
 ```
 
 ## Random variables

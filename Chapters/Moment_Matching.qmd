@@ -11,7 +11,7 @@ from pathlib import Path
 import arviz.preview as azp
 azp.style.use("arviz-variat")
 
-plt.rcParams["figure.dpi"] = 100
+plt.rcParams["figure.dpi"] = 75
 SEED = 4711
 ```
 

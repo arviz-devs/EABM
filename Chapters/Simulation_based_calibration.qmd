@@ -7,7 +7,7 @@
 import arviz.preview as azp
 import matplotlib.pyplot as plt
 azp.style.use("arviz-variat")
-plt.rcParams["figure.dpi"] = 100
+plt.rcParams["figure.dpi"] = 75
 ```
 
 

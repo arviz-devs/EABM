@@ -11,7 +11,7 @@ import pymc as pm
 import matplotlib.pyplot as plt
 rng = np.random.default_rng(793)
 azp.style.use("arviz-variat")
-plt.rcParams["figure.dpi"] = 100
+plt.rcParams["figure.dpi"] = 75
 ```
 
 Specification of the prior distribution for a Bayesian model is key, but it is often difficult even for statistical experts. Having to choose a prior distribution is portrayed both as a burden and as a blessing. We choose to affirm that is a necessity, if you are not choosing your priors someone else is doing it for you [@mikkola_2024]. Letting others decide for you is not always a bad idea. Default priors provided by tools like [Bambi](https://github.com/bambinos/bambi) or [brms](http://paulbuerkner.com/brms/) can be very useful in many problems, but it's advantageous to be able to specify custom priors when needed.

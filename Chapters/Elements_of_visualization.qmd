@@ -8,7 +8,7 @@ import numpy as np
 import preliz as pz
 import matplotlib.pyplot as plt
 azp.style.use("arviz-variat")
-plt.rcParams["figure.dpi"] = 100
+plt.rcParams["figure.dpi"] = 75
 ```
 Visualizations occupy a central place in modern statistics. Visualizations help us identify patterns, detect anomalies, formulate hypotheses, and gain an intuitive understanding of the data [@wilke_2019; @healy_2019; @unwin_2024]. These are tasks usually associated with the exploratory data analysis (EDA) phase [@tukey_1977; @downey_2025]. But visualizations are also essential for other tasks like understanding model behaviour, diagnostic computational issues, validating assumptions and communicating results.
 

@@ -10,7 +10,7 @@ import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
 azp.style.use("arviz-variat")
-plt.rcParams["figure.dpi"] = 100
+plt.rcParams["figure.dpi"] = 75
 ```
 
 ## Information criteria for hierarchical and multi-likelihood models

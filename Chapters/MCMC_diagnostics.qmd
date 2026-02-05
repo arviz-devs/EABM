@@ -9,7 +9,7 @@ import preliz as pz
 import matplotlib.pyplot as plt
 rng = np.random.default_rng(793)
 azp.style.use("arviz-variat")
-plt.rcParams["figure.dpi"] = 100
+plt.rcParams["figure.dpi"] = 75
 ```
 
 The Achilles heel of computing posterior distributions is, more often than not, the computation of the denominator of Bayes's theorem. Markov Chain Monte Carlo Methods (MCMC), such as Metropolis, Hamiltonian Monte Carlo (and its variants like NUTS) are clever mathematical and computational devices that let us circumvent this problem. Check @brooks_2011 for a thorough treatment of Bayesian inference and MCMC techniques. The main idea is based on sampling values of the parameters of interest from an easy-to-sample distribution and then applying a rule, known as the Metropolis acceptance criterion, to decide if you accept or not that proposal. By applying this rule we ensure that even when we propose samples from an arbitrary distribution we end up getting samples from the correct posterior distribution. The better performance of NUTS over Metropolis can be explained by the fact that the former uses a clever way to propose values. 

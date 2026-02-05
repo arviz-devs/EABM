@@ -11,9 +11,9 @@ import pandas as pd
 import pymc as pm
 import pymc_bart as pmb
 import matplotlib.pyplot as plt
-plt.rcParams["figure.dpi"] = 100
-seed = 793
 azp.style.use("arviz-variat")
+plt.rcParams["figure.dpi"] = 75
+seed = 793
 ```
 
 Variable selection refers to the process of identifying the most relevant variables in a model from a larger set of predictors. When performing this process we usually assume that variables contribute unevenly to the outcome and we want to identify the most important ones. Sometimes we also care about the order in which variables are included in the model [@piironen_2020; @tadesse_2022].

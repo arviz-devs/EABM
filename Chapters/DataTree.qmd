@@ -12,7 +12,7 @@ import xarray as xr
 xr.set_options(display_expand_data=False, display_expand_attrs=False)
 np.random.seed(19)
 azp.style.use("arviz-variat")
-plt.rcParams["figure.dpi"] = 100
+plt.rcParams["figure.dpi"] = 75
 ```
 
 
