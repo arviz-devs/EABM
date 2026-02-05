@@ -662,11 +662,11 @@ p(y^\ast) = \int_{\Theta} p(y^\ast \mid \theta) \; p(\theta) \; d\theta
 \]</span></p>
 <p>where <span class="math inline">\(y^\ast\)</span> represents unobserved but potentially observable data. Notice that to compute <span class="math inline">\(y^\ast\)</span> we are evaluating the likelihood over all possible values ​​of the prior. Thus we are effectively marginalizing out the values of <span class="math inline">\(\theta\)</span>, the parameters.</p>
 <p>To exemplify a prior predictive check, let’s try with a super simple example. Let’s say we want to model the height of humans. We know that the heights are positive numbers, so we should use a distribution that assigns zero mass to negative values. But we also know that at least for adults using a normal distribution could be a good approximation. So we create the following model, without too much thought, and then draw 500 samples from the prior predictive distribution.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="ppl">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
-<div class="tab-content">
+<div class="tab-content" data-group="ppl">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="71c6d961" class="cell" data-execution_count="2">
+<div id="18917a41" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model: </span>
 <span id="cb1-2"><a href="#cb1-2"></a>    <span class="co"># Priors for unknown model parameters</span></span>
 <span id="cb1-3"><a href="#cb1-3"></a>    mu <span class="op">=</span> pm.Normal(<span class="st">'mu'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
@@ -754,11 +754,11 @@ Figure&nbsp;5.1: The prior predictive check for the model of heights. We can see
 <p>We can see that our model is bananas the bulk of the prior predictive distribution is outside of our reference values and the model is predicting values below 0. This is a clear indication that the model is not a good representation of our prior knowledge.</p>
 <p>In many cases, data will be informative enough to overcome poorly selected priors, but this isn’t guaranteed. To address this, we can tighten our priors. While there’s no universal rule for doing so, a good guideline is to choose priors that concentrate most of the prior predictive distribution’s mass within a plausible range—such as between our reference values.</p>
 <p>Such priors are often called weakly informative priors. Though not strictly defined, these priors produce a prior predictive distribution with little to no probability mass in unrealistic or impossible regions. For example, a normal distribution with a mean of 160 and a standard deviation of 10 assigns negligible weight to negative values while still accommodating a wide range of plausible heights.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="ppl">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
-<div class="tab-content">
+<div class="tab-content" data-group="ppl">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="ad8142e1" class="cell" data-execution_count="5">
+<div id="056ca4ad" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model: </span>
 <span id="cb4-2"><a href="#cb4-2"></a>    <span class="co"># Priors for unknown model parameters</span></span>
 <span id="cb4-3"><a href="#cb4-3"></a>    mu <span class="op">=</span> pm.Normal(<span class="st">'mu'</span>, mu<span class="op">=</span><span class="dv">160</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
@@ -887,11 +887,11 @@ p(\tilde y) = \int_{\Theta} p(\tilde y \mid \theta) \; p(\theta \mid y) \; d\the
 <p>where <span class="math inline">\(\tilde y\)</span> represents new observations, according to our model. The data generated is predictive since it is the data that the model expects to see.</p>
 <p>Notice that what we are doing is marginalizing the likelihood by integrating all possible values ​​of the posterior. Therefore, from the perspective of our model, we are describing the marginal distribution of data, that is, regardless of the values of the parameters.</p>
 <p>Continuing with our height example, we can generate synthetic data from the posterior predictive distribution.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="ppl">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
-<div class="tab-content">
+<div class="tab-content" data-group="ppl">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="87d21cb8" class="cell" data-execution_count="9">
+<div id="56a1de43" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> model: </span>
 <span id="cb8-2"><a href="#cb8-2"></a>    dt <span class="op">=</span> pm.sample(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>}, random_seed<span class="op">=</span>SEED)</span>
 <span id="cb8-3"><a href="#cb8-3"></a>    pm.sample_posterior_predictive(dt, random_seed<span class="op">=</span>SEED, extend_inferencedata<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1000,12 +1000,13 @@ Figure&nbsp;5.4: Posterior predictive check for the model of heights.
 <span id="cb11-5"><a href="#cb11-5"></a>                  (azp.plot_ppc_tstat, {<span class="st">"t_stat"</span>:<span class="st">"iqr"</span>}),                   </span>
 <span id="cb11-6"><a href="#cb11-6"></a>                 ],</span>
 <span id="cb11-7"><a href="#cb11-7"></a>                group<span class="op">=</span><span class="st">"posterior_predictive"</span>,</span>
-<span id="cb11-8"><a href="#cb11-8"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-8"><a href="#cb11-8"></a>                figure_kwargs<span class="op">=</span>{<span class="st">"figsize"</span>:(<span class="dv">9</span>, <span class="dv">3</span>)}</span>
+<span id="cb11-9"><a href="#cb11-9"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-post_pred_check_stats" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_pred_check_stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_pred_check_stats-output-1.png" width="1358" height="209" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_pred_check_stats-output-1.png" width="683" height="233" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_pred_check_stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.5: Posterior predictive check for the model of heights using summary statistics.
@@ -1104,8 +1105,7 @@ Figure&nbsp;5.7: Posterior predictive check for the model of heights using margi
 <span id="cb14-17"><a href="#cb14-17"></a>azp.plot_ppc_dist(dt_i,</span>
 <span id="cb14-18"><a href="#cb14-18"></a>                  kind<span class="op">=</span><span class="st">"kde"</span>,  </span>
 <span id="cb14-19"><a href="#cb14-19"></a>                  visuals<span class="op">=</span>{<span class="st">"remove_axis"</span>:<span class="va">False</span>},</span>
-<span id="cb14-20"><a href="#cb14-20"></a>                  figure_kwargs<span class="op">=</span>{<span class="st">"sharey"</span>:<span class="va">True</span>},             </span>
-<span id="cb14-21"><a href="#cb14-21"></a>                 )<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-20"><a href="#cb14-20"></a>                 )<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-post_ppc_pit_ecdf_alt_0" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1123,13 +1123,13 @@ Figure&nbsp;5.8: Posterior predictive check with KDEs showing four alternative s
 <div id="cell-fig-post_ppc_pit_ecdf_alt_1" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>azp.plot_ppc_dist(dt_i,</span>
 <span id="cb15-2"><a href="#cb15-2"></a>                  kind<span class="op">=</span><span class="st">"ecdf"</span>,</span>
-<span id="cb15-3"><a href="#cb15-3"></a>                  figure_kwargs<span class="op">=</span>{<span class="st">"sharey"</span>:<span class="va">True</span>},        </span>
+<span id="cb15-3"><a href="#cb15-3"></a>                  figure_kwargs<span class="op">=</span>{<span class="st">"sharey"</span>:<span class="va">True</span>, <span class="st">"figsize"</span>:(<span class="dv">9</span>, <span class="dv">3</span>)},         </span>
 <span id="cb15-4"><a href="#cb15-4"></a>                 )<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-post_ppc_pit_ecdf_alt_1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_ppc_pit_ecdf_alt_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_1-output-1.png" width="1088" height="209" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_1-output-1.png" width="683" height="233" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_ppc_pit_ecdf_alt_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.9: Posterior predictive check with ECDFs showing four alternative scenarios.
@@ -1142,13 +1142,13 @@ Figure&nbsp;5.9: Posterior predictive check with ECDFs showing four alternative 
 <div id="cell-fig-post_ppc_pit_ecdf_alt_2" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>azp.plot_ppc_pit(dt_i,</span>
 <span id="cb16-2"><a href="#cb16-2"></a>                 visuals<span class="op">=</span>{<span class="st">"ylabel"</span>:<span class="va">False</span>},</span>
-<span id="cb16-3"><a href="#cb16-3"></a>                 figure_kwargs<span class="op">=</span>{<span class="st">"sharey"</span>:<span class="va">True</span>},        </span>
+<span id="cb16-3"><a href="#cb16-3"></a>                 figure_kwargs<span class="op">=</span>{<span class="st">"sharey"</span>:<span class="va">True</span>, <span class="st">"figsize"</span>:(<span class="dv">9</span>, <span class="dv">3</span>)},   </span>
 <span id="cb16-4"><a href="#cb16-4"></a>                 )<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-post_ppc_pit_ecdf_alt_2" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_ppc_pit_ecdf_alt_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_2-output-1.png" width="1088" height="209" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_ecdf_alt_2-output-1.png" width="683" height="233" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_ppc_pit_ecdf_alt_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.10: Posterior predictive check with PIT-ECDFs showing four alternative scenarios.
@@ -1167,13 +1167,13 @@ Figure&nbsp;5.10: Posterior predictive check with PIT-ECDFs showing four alterna
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>azp.plot_ppc_pit(dt_i,</span>
 <span id="cb17-2"><a href="#cb17-2"></a>                 coverage<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb17-3"><a href="#cb17-3"></a>                 visuals<span class="op">=</span>{<span class="st">"ylabel"</span>:<span class="va">False</span>},</span>
-<span id="cb17-4"><a href="#cb17-4"></a>                 figure_kwargs<span class="op">=</span>{<span class="st">"sharey"</span>:<span class="va">True</span>},</span>
+<span id="cb17-4"><a href="#cb17-4"></a>                 figure_kwargs<span class="op">=</span>{<span class="st">"sharey"</span>:<span class="va">True</span>, <span class="st">"figsize"</span>:(<span class="dv">9</span>, <span class="dv">3</span>)},</span>
 <span id="cb17-5"><a href="#cb17-5"></a>                 )<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-post_ppc_pit_coverage" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-post_ppc_pit_coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_coverage-output-1.png" width="1088" height="209" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-post_ppc_pit_coverage-output-1.png" width="683" height="233" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-post_ppc_pit_coverage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.11: Coverage check showing four alternative scenarios.
@@ -1232,7 +1232,7 @@ Figure&nbsp;5.12: Posterior predictive check with LOO-PIT-ECDF.
 <p>Here we are going to discuss the rootograms presented by <span class="citation" data-cites="Säilynoja_2025">Säilynoja et al. (<a href="References.html#ref-Säilynoja_2025" role="doc-biblioref">2025</a>)</span>. These rootograms emphasises the discreteness of the data and and predictions by using points. The uncertainty in the predictions is encoded using intervals. Instead of square-rooting the data, it set the y-axis on the square root scale, this makes easier to interpret the data, because we can directly read the frecuencies from the y-axis (instead of reading the square roots) while keeping the advantage of being able to discriminate details at lower frecuencies.</p>
 <p>To illustrate rootograms we are going to use the Horseshoe crabs dataset <span class="citation" data-cites="Brockmann_1996">(<a href="References.html#ref-Brockmann_1996" role="doc-biblioref">Brockmann 1996</a>)</span>. Very briefly, horseshoe crabs arrive at the beach in pairs for their spawning ritual. Solitary males gather around the nesting couples and vying to fertilize the eggs. These individuals, known as satellite males, often congregate near certain nesting pairs while disregarding others. We used Bambi to create two models a poisson model and a hurdle-negative binomial model for the number of male satellites as a function of the carapace width and color of the female.</p>
 <p>We are going to omit the modelling details, and just upload prefitted models.</p>
-<div id="11a3c785" class="cell" data-execution_count="20">
+<div id="af41ddde" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>crabs_poisson <span class="op">=</span> azp.load_arviz_data(<span class="st">'crabs_poisson'</span>)</span>
 <span id="cb19-2"><a href="#cb19-2"></a>crabs_hurdle_nb <span class="op">=</span> azp.load_arviz_data(<span class="st">'crabs_hurdle_nb'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1301,12 +1301,16 @@ Figure&nbsp;5.15: PAV-adjusted calibration plot for a logistic regression model.
 <p>A <a href="https://en.wikipedia.org/wiki/Categorical_variable">categorical</a> variable can take on one of a limited, and usually fixed, number of possible values. For categorical data, we can use the same approach used for binary data if we follow a “one vs others” strategy. That is, we select one category and we compare it to all the other categories. This will give as many plots as categories, which can be fine when the number of categories is relatively low, but unwieldy otherwise. In those other cases, we can first use a confusion matrix or some scalar miscallibration summary per category to help us filter out the cases that we want to inspect visually <span class="citation" data-cites="Säilynoja_2025">(<a href="References.html#ref-Säilynoja_2025" role="doc-biblioref">Säilynoja et al. 2025</a>)</span>.</p>
 <p>We can use <code>plot_ppc_pava</code> for categorical data, but not directly. We need to tell it that we have categorical data by passing <code>data_type="categorical"</code>.</p>
 <div id="cell-fig-ppc_pava_cat" class="cell" data-execution_count="25">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>azp.plot_ppc_pava(dt_cat, data_type<span class="op">=</span><span class="st">"categorical"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>azp.plot_ppc_pava(</span>
+<span id="cb23-2"><a href="#cb23-2"></a>    dt_cat,</span>
+<span id="cb23-3"><a href="#cb23-3"></a>    data_type<span class="op">=</span><span class="st">"categorical"</span>,</span>
+<span id="cb23-4"><a href="#cb23-4"></a>    figure_kwargs<span class="op">=</span>{<span class="st">"figsize"</span>:(<span class="dv">9</span>, <span class="dv">3</span>)},</span>
+<span id="cb23-5"><a href="#cb23-5"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-ppc_pava_cat" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ppc_pava_cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava_cat-output-1.png" width="1358" height="209" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava_cat-output-1.png" width="691" height="233" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ppc_pava_cat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.16: PAV-adjusted calibration plot for a categorical regression model.
@@ -1321,12 +1325,16 @@ Figure&nbsp;5.16: PAV-adjusted calibration plot for a categorical regression mod
 <p><a href="https://en.wikipedia.org/wiki/Ordinal_data">Ordinal data</a> is a categorical, statistical data type where the variables have natural, ordered categories and the distances between the categories are not known. For ordinal data, we must account for the order when evaluating the calibration. Then we can compute the cumulative conditional event probabilities <span class="citation" data-cites="Säilynoja_2025">(<a href="References.html#ref-Säilynoja_2025" role="doc-biblioref">Säilynoja et al. 2025</a>)</span>, which will get us one plot less than the number of categories.</p>
 <p>With ordinal data, we can not directly use <code>plot_ppc_pava</code>; we have to pass <code>data_type="ordinal"</code>.</p>
 <div id="cell-fig-ppc_pava_ord" class="cell" data-execution_count="27">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>azp.plot_ppc_pava(dt_ord, data_type<span class="op">=</span><span class="st">"ordinal"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>azp.plot_ppc_pava(</span>
+<span id="cb24-2"><a href="#cb24-2"></a>    dt_ord,</span>
+<span id="cb24-3"><a href="#cb24-3"></a>    data_type<span class="op">=</span><span class="st">"ordinal"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4"></a>    figure_kwargs<span class="op">=</span>{<span class="st">"figsize"</span>:(<span class="dv">10</span>, <span class="dv">4</span>)},</span>
+<span id="cb24-5"><a href="#cb24-5"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-ppc_pava_ord" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ppc_pava_ord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava_ord-output-1.png" width="1088" height="322" class="figure-img">
+<img src="Prior_posterior_predictive_checks_files/figure-html/fig-ppc_pava_ord-output-1.png" width="773" height="308" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ppc_pava_ord-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5.17: PAV-adjusted calibration plot for an ordinal regression model.

@@ -657,7 +657,7 @@ window.Quarto = {
 <p><span class="math display">\[
 \Pr(y_i = 1 \mid \beta) = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta), \qquad \beta \sim \mathcal{N}(0, I_3).
 \]</span></p>
-<div id="1377c09e" class="cell" data-execution_count="2">
+<div id="9a834354" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -672,11 +672,11 @@ window.Quarto = {
 <span id="cb1-12"><a href="#cb1-12"></a>y <span class="op">=</span> wells[<span class="st">"switch"</span>].values</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can fit the model using PyMC or CmdStanPy where posterior draws are stored in a <code>DataTree</code> object.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="ppl">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
-<div class="tab-content">
+<div class="tab-content" data-group="ppl">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="d8288496" class="cell" data-execution_count="3">
+<div id="c4dc697f" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
@@ -712,7 +712,7 @@ window.Quarto = {
 \log p(y_i \mid \beta_s, X_i) = y_i \log \pi_{is} + (1 - y_i) \log (1 - \pi_{is}), \qquad \pi_{is} = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta_s).
 \]</span></p>
 <p>A direct approach is to store the design matrix in the <code>constant_data</code> group so that the helper can directly compute the log-likelihood for whichever subset <code>loo_subsample()</code> hands to it.</p>
-<div id="414b143b" class="cell" data-execution_count="5">
+<div id="6d6a5f0e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="im">from</span> scipy.special <span class="im">import</span> expit</span>
 <span id="cb4-3"><a href="#cb4-3"></a></span>
@@ -734,7 +734,7 @@ window.Quarto = {
 \]</span></p>
 <p>The approximation reduces the computational burden to a single evaluation per observation while retaining the shrinkage induced by the posterior mean. Inserting <span class="math inline">\(\tilde\pi_i^{\text{plpd}}\)</span> into the difference estimator converts the exact correction to a subsample average that only requires re-evaluating the full posterior draws on <span class="math inline">\(m\)</span> observations.</p>
 <p>Here we use the <code>method="plpd"</code> argument to <code>loo_subsample()</code> to use the PLPD surrogate.</p>
-<div id="de8c9c03" class="cell" data-execution_count="6">
+<div id="68d25df7" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>loo_plpd <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb5-2"><a href="#cb5-2"></a>    data<span class="op">=</span>data,</span>
 <span id="cb5-3"><a href="#cb5-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
@@ -773,7 +773,7 @@ Pareto k diagnostic values:
 \tilde\pi_i^{\text{lpd}} = \log \left( \frac{1}{S} \sum_{s=1}^S p(y_i \mid X_i, \beta_s) \right),
 \]</span></p>
 <p>where <span class="math inline">\(\beta_s\)</span> are the draws stored in <code>data.posterior</code>. The additional sum over draws raises the cost and often reduces the approximation error. The same subsample size and random seed ensure that the estimator reuses the indices chosen for the PLPD computation, which makes comparisons straightforward.</p>
-<div id="08ef02df" class="cell" data-execution_count="7">
+<div id="3618af7b" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>loo_lpd <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb7-2"><a href="#cb7-2"></a>    data<span class="op">=</span>data,</span>
 <span id="cb7-3"><a href="#cb7-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
@@ -807,7 +807,7 @@ Pareto k diagnostic values:
 <section id="incremental-sampling-updates" class="level2" data-number="8.5">
 <h2 data-number="8.5" class="anchored" data-anchor-id="incremental-sampling-updates"><span class="header-section-number">8.5</span> Incremental sampling updates</h2>
 <p><span class="citation" data-cites="magnusson_2020">Magnusson et al. (<a href="References.html#ref-magnusson_2020" role="doc-biblioref">2020</a>)</span> recommend increasing <span class="math inline">\(m\)</span> until the subsampling uncertainty is negligible for the task at hand. The <code>update_subsample()</code> routine efficiently extends an existing subsample without discarding work already done. Here we add 200 additional observations (from 100 to 300 total in the subsample) by using the previous subsample as a starting point.</p>
-<div id="d774cf80" class="cell" data-execution_count="8">
+<div id="1c26e4b9" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>loo_update <span class="op">=</span> azp.update_subsample(</span>
 <span id="cb9-2"><a href="#cb9-2"></a>    loo_plpd,</span>
 <span id="cb9-3"><a href="#cb9-3"></a>    data,</span>
@@ -852,11 +852,11 @@ q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
 \]</span></p>
 <p>Draws from <span class="math inline">\(q(\theta \mid y)\)</span> can be obtained efficiently by sampling from the fitted normal distribution.</p>
 <p>The following fits the wells model using a Laplace approximation via <code>pymc_extras.fit_laplace</code>, which returns draws from the approximate posterior along with the mode and covariance estimates.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="ppl">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
-<div class="tab-content">
+<div class="tab-content" data-group="ppl">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="e6691d54" class="cell" data-execution_count="9">
+<div id="3d7ce516" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="im">from</span> pymc_extras <span class="im">import</span> fit_laplace</span>
 <span id="cb11-3"><a href="#cb11-3"></a></span>
@@ -879,7 +879,7 @@ q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
 </div>
 </div>
 <p>The <code>fit_laplace</code> function stores the posterior mode in the <code>fit</code> group as <code>mean_vector</code> and the covariance in <code>covariance_matrix</code>. Posterior draws are stored in the <code>posterior</code> group as usual. We convert the result to a <code>DataTree</code> and attach the observed data and design matrix for use with <code>loo_approximate_posterior()</code>.</p>
-<div id="154852e5" class="cell" data-execution_count="11">
+<div id="ec47c6a7" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>data_laplace <span class="op">=</span> azp.convert_to_datatree(idata_laplace)</span>
 <span id="cb13-2"><a href="#cb13-2"></a></span>
 <span id="cb13-3"><a href="#cb13-3"></a>data_laplace[<span class="st">"observed_data"</span>] <span class="op">=</span> xr.Dataset({</span>
@@ -894,7 +894,7 @@ q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
 r(\theta_s) \propto \frac{1}{p(y_i \mid \theta_s)} \frac{p(\theta_s \mid y)}{q(\theta_s \mid y)}.
 \]</span></p>
 <p>For the Laplace approximation, <span class="math inline">\(\log q(\theta_s \mid y)\)</span> is the log density of the fitted normal distribution, while <span class="math inline">\(\log p(\theta_s \mid y)\)</span> is the log prior plus the log likelihood. We require both of these quantities to be able to compute the importance ratios.</p>
-<div id="4d316ed2" class="cell" data-execution_count="13">
+<div id="6bf8c471" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> multivariate_normal</span>
 <span id="cb14-2"><a href="#cb14-2"></a></span>
 <span id="cb14-3"><a href="#cb14-3"></a>beta_samples <span class="op">=</span> data_laplace.posterior[<span class="st">"beta"</span>]</span>
@@ -935,7 +935,7 @@ r(\theta_s) \propto \frac{1}{p(y_i \mid \theta_s)} \frac{p(\theta_s \mid y)}{q(\
 <section id="running-loo-cv-with-approximate-posterior" class="level3" data-number="8.6.2">
 <h3 data-number="8.6.2" class="anchored" data-anchor-id="running-loo-cv-with-approximate-posterior"><span class="header-section-number">8.6.2</span> Running LOO-CV with approximate posterior</h3>
 <p>With <code>log_p</code> and <code>log_q</code> in hand, we can compute LOO-CV using the approximate posterior. The <code>loo_approximate_posterior()</code> function adjusts the importance ratios to account for the discrepancy between the true posterior and the Laplace approximation.</p>
-<div id="1e690180" class="cell" data-execution_count="14">
+<div id="6d9196e6" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>loo_ap <span class="op">=</span> azp.loo_approximate_posterior(</span>
 <span id="cb15-2"><a href="#cb15-2"></a>    data<span class="op">=</span>data_laplace,</span>
 <span id="cb15-3"><a href="#cb15-3"></a>    log_p<span class="op">=</span>log_p_da,</span>
@@ -968,7 +968,7 @@ Pareto k diagnostic values:
 <h2 data-number="8.7" class="anchored" data-anchor-id="combining-approximate-posterior-with-subsampling"><span class="header-section-number">8.7</span> Combining approximate posterior with subsampling</h2>
 <p>The approximate posterior correction can be combined with subsampling to further reduce computational cost.</p>
 <p>When using <code>loo_subsample()</code> with an approximate posterior, we simply pass <code>log_p</code> and <code>log_q</code> along with the subsample specification. The difference estimator then corrects for both the approximation error and the subsampling uncertainty.</p>
-<div id="5a5f6fe6" class="cell" data-execution_count="15">
+<div id="6c5b3ae8" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>loo_ap_ss <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb17-2"><a href="#cb17-2"></a>    data<span class="op">=</span>data_laplace,</span>
 <span id="cb17-3"><a href="#cb17-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
@@ -1006,11 +1006,11 @@ Pareto k diagnostic values:
 <section id="comparing-models-with-subsampled-loo" class="level2" data-number="8.8">
 <h2 data-number="8.8" class="anchored" data-anchor-id="comparing-models-with-subsampled-loo"><span class="header-section-number">8.8</span> Comparing models with subsampled LOO</h2>
 <p>We can compare models that are estimated via subsampling just like we would for regular LOO using the <code>compare()</code> function. We will fit a second model using <code>log(arsenic)</code> instead of <code>arsenic</code> as a predictor and compare the two models.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="ppl">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
-<div class="tab-content">
+<div class="tab-content" data-group="ppl">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="32b355ea" class="cell" data-execution_count="16">
+<div id="e1ffef96" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>X_log <span class="op">=</span> X.copy()</span>
 <span id="cb19-2"><a href="#cb19-2"></a>X_log[:, <span class="dv">2</span>] <span class="op">=</span> np.log(X[:, <span class="dv">2</span>])</span>
 <span id="cb19-3"><a href="#cb19-3"></a></span>
@@ -1040,7 +1040,7 @@ Pareto k diagnostic values:
 <section id="comparison-with-different-subsamples" class="level3" data-number="8.8.1">
 <h3 data-number="8.8.1" class="anchored" data-anchor-id="comparison-with-different-subsamples"><span class="header-section-number">8.8.1</span> Comparison with different subsamples</h3>
 <p>We first compute subsampled LOO for the second model using a <em>different</em> random seed than the first model. This means the two models will be evaluated on different subsets of observations.</p>
-<div id="2a90e188" class="cell" data-execution_count="18">
+<div id="cb4faabe" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>loo_ss_2_diff <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb21-2"><a href="#cb21-2"></a>    data<span class="op">=</span>data2,</span>
 <span id="cb21-3"><a href="#cb21-3"></a>    observations<span class="op">=</span><span class="dv">100</span>,</span>
@@ -1071,7 +1071,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>Now we compare the models using different subsamples.</p>
-<div id="3b624e1f" class="cell" data-execution_count="19">
+<div id="c158dd7a" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>comparison_diff <span class="op">=</span> azp.compare({</span>
 <span id="cb23-2"><a href="#cb23-2"></a>    <span class="st">"model1_arsenic"</span>: loo_plpd,</span>
 <span id="cb23-3"><a href="#cb23-3"></a>    <span class="st">"model2_log_arsenic"</span>: loo_ss_2_diff,</span>
@@ -1150,7 +1150,7 @@ Pareto k diagnostic values:
 <section id="comparison-with-the-same-subsample" class="level3" data-number="8.8.2">
 <h3 data-number="8.8.2" class="anchored" data-anchor-id="comparison-with-the-same-subsample"><span class="header-section-number">8.8.2</span> Comparison with the same subsample</h3>
 <p>To properly compare models, we reuse the exact same observations by passing the first LOO subsample object to the second <code>loo_subsample()</code> call. This ensures both models are evaluated on the same subset of observations, which is critical for accurate model comparison.</p>
-<div id="4c59e58c" class="cell" data-execution_count="20">
+<div id="295fc385" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>loo_ss_2 <span class="op">=</span> azp.loo_subsample(</span>
 <span id="cb25-2"><a href="#cb25-2"></a>    data<span class="op">=</span>data2,</span>
 <span id="cb25-3"><a href="#cb25-3"></a>    observations<span class="op">=</span>loo_plpd.loo_subsample_observations,</span>
@@ -1180,7 +1180,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>Now we compare the models using the same subsample.</p>
-<div id="9e2d39c5" class="cell" data-execution_count="21">
+<div id="733ea593" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>comparison_same <span class="op">=</span> azp.compare({</span>
 <span id="cb27-2"><a href="#cb27-2"></a>    <span class="st">"model1_arsenic"</span>: loo_plpd,</span>
 <span id="cb27-3"><a href="#cb27-3"></a>    <span class="st">"model2_log_arsenic"</span>: loo_ss_2,</span>
@@ -1245,7 +1245,7 @@ Pareto k diagnostic values:
 <h2 data-number="8.9" class="anchored" data-anchor-id="comparing-full-loo-to-subsampled-loo"><span class="header-section-number">8.9</span> Comparing full LOO to subsampled LOO</h2>
 <p>We can also compare a subsampled LOO object to a full LOO object that was computed on all <span class="math inline">\(N = 3020\)</span> observations.</p>
 <p>The following computes full PSIS-LOO-CV for the first model using the <code>loo()</code> function.</p>
-<div id="147e86df" class="cell" data-execution_count="22">
+<div id="f0f45b98" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>loo_full <span class="op">=</span> azp.loo(data, var_name<span class="op">=</span><span class="st">"y"</span>, pointwise<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb28-2"><a href="#cb28-2"></a>loo_full</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
@@ -1264,7 +1264,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>When comparing a full LOO calculation to a subsampled calculation, the <code>compare()</code> function automatically uses only the observations included in both calculations.</p>
-<div id="251f018c" class="cell" data-execution_count="23">
+<div id="28d5d33b" class="cell" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>comparison_mixed <span class="op">=</span> azp.compare({</span>
 <span id="cb30-2"><a href="#cb30-2"></a>    <span class="st">"model1_full_loo"</span>: loo_full,</span>
 <span id="cb30-3"><a href="#cb30-3"></a>    <span class="st">"model2_subsampled_loo"</span>: loo_ss_2</span>
