@@ -101,9 +101,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7bf12d62aa84b4fa538b342f1416a45b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-691c43ad62c52d8f2a4cfbd07224d002.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-7bf12d62aa84b4fa538b342f1416a45b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ff9041bda4e6ceae406f27db3fd57b1e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-e5ae0e5a532b1437dd815277929017bb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-ff9041bda4e6ceae406f27db3fd57b1e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -612,7 +612,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 8, 2026</p>
+      <p class="date-modified">February 13, 2026</p>
     </div>
   </div>
     
@@ -647,14 +647,14 @@ window.Quarto = {
 <p>Once we fit a BART model we can count the number of times each covariate is used in the posterior distribution of trees. This count can be used as a measure of the importance of the covariate. We will call this the “variable inclusion” measure, or VI for short, and is normalized to sum to 1. One heuristic is to start with a model with a single covariate and then add covariates in decreasing order of VI. This is fast as we only need to evaluate as many models as covariates we have. This is the default heuristic in PyMC-BART. Then to evaluate the quality of each submodel we compute the predictions from it and compare the predictions with those from the reference model. Currently, PyMC-BART uses the R², but other metrics could be used. For the submodels the predictions are computed by <em>pruning</em> the trees in the posterior distribution of the reference model. That is we remove the trees the branches that do not use the covariates in the submodel. In this way, we approximate the posterior distribution of the submodel and we can compute the predictions without the need to refit each submodel.</p>
 <p>Let’s see one example. We have a <a href="https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset">record</a> of the number of rented bikes in a city and other variables like temperature, hour of the day etc. We want to model the relationship between temperature and the number of rented bikes.</p>
 <p>Let’s first load the data and define the variables.</p>
-<div id="b99c40e8" class="cell" data-execution_count="2">
+<div id="66317d05" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>bikes <span class="op">=</span> pd.read_csv(<span class="st">"../data/bikes.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2"></a></span>
 <span id="cb1-3"><a href="#cb1-3"></a>Y <span class="op">=</span> bikes.pop(<span class="st">"count"</span>)</span>
 <span id="cb1-4"><a href="#cb1-4"></a>X <span class="op">=</span> bikes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now we define the BART model using PyMC-BART, for details on how to define BART models, please check the <a href="https://www.pymc.io/projects/bart/en/latest/">PyMC-BART documentation</a></p>
-<div id="45bb77c8" class="cell" data-execution_count="3">
+<div id="ade9fc39" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb2-2"><a href="#cb2-2"></a>    α <span class="op">=</span> pm.HalfNormal(<span class="st">"α"</span>, <span class="dv">2</span>)</span>
 <span id="cb2-3"><a href="#cb2-3"></a>    μ_ <span class="op">=</span> pmb.BART(<span class="st">"μ_"</span>, X, np.log(Y))</span>
@@ -670,7 +670,7 @@ CompoundStep
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"745a25f7b2034b349e51b6cff9836b39","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"a1b85133d2494425b3abf5876bae9b4a","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 <div class="cell-output cell-output-display">
@@ -681,7 +681,7 @@ CompoundStep
 </div>
 </div>
 <p>We can now compute the variable importance and plot the results. The dashed lines represent the mean R² for the predictions from the reference model against themselves, the band captures the uncertainty. Then from left to right, we add covariates in decreasing order of VI. The first submodel is the one with only <code>hour</code>, the second is <code>hour + temperature</code>, the third is <code>hour + temperature + month</code> and so on.</p>
-<div id="601bb016" class="cell" data-execution_count="4">
+<div id="79efc183" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>vi_results <span class="op">=</span> pmb.compute_variable_importance(idata_bart, μ_, X)<span class="op">;</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a>ax <span class="op">=</span> pmb.plot_variable_importance(vi_results, plot_kwargs<span class="op">=</span>{<span class="st">"rotation"</span>: <span class="dv">45</span>}, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>))</span>
 <span id="cb5-3"><a href="#cb5-3"></a>ax.set_ylim(<span class="fl">0.5</span>, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -698,7 +698,7 @@ CompoundStep
 <section id="partial-dependence-plot" class="level3" data-number="11.2.1">
 <h3 data-number="11.2.1" class="anchored" data-anchor-id="partial-dependence-plot"><span class="header-section-number">11.2.1</span> Partial dependence plot</h3>
 <p>Strictly speaking when we say we <em>prune</em> the trees we are actually computing the partial dependence, that is, we are computing the expected value of the outcome for a subset of the covariates while averaging over the complement of that subset. With PyMC-BART we can visually inspect the partial dependence when excluding all but one covariate. As in the following figure:</p>
-<div id="4522bb77" class="cell" data-execution_count="5">
+<div id="3c93ada9" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>axes <span class="op">=</span> pmb.plot_pdp(μ_, X<span class="op">=</span>X, Y<span class="op">=</span>Y, grid<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">3</span>), func<span class="op">=</span>np.exp, var_discrete<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">2</span>], xs_interval<span class="op">=</span><span class="st">"insample"</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -724,12 +724,12 @@ CompoundStep
 <p>In the proposed approach <span class="math inline">\(\log q(\tilde{y} \mid \theta_\perp)\)</span> is the log-likelihood of our model evaluated with respect to samples from the posterior predictive distribution <span class="math inline">\(\tilde{y}\sim p(\tilde{y}\mid\theta)\)</span>. Thus to minimize the KL divergence we can maximize the model’s log-likelihood with respect to the posterior predictive samples from the reference model. This is the optimization problem we need to solve to find the posterior distribution of the submodel.</p>
 <p>Let’s use Kulprit to perform variable selection on the same dataset we used for PyMC-BART.</p>
 <p>The first thing we need to do is to define the model using Bambi. We need to set <code>idata_kwargs={'log_likelihood': True}</code> as we will later need to compute the ELPD of the reference models and submodels.</p>
-<div id="61b1be40" class="cell" data-execution_count="7">
+<div id="5b200b99" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>model <span class="op">=</span> bmb.Model(<span class="st">"count ~"</span> <span class="op">+</span>  <span class="st">" + "</span>.join([c <span class="cf">for</span> c <span class="kw">in</span> bikes.columns <span class="cf">if</span> c<span class="op">!=</span><span class="st">"count"</span>]), data<span class="op">=</span>bikes, family<span class="op">=</span><span class="st">"negativebinomial"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2"></a>idata <span class="op">=</span> model.fit(idata_kwargs<span class="op">=</span>{<span class="st">'log_likelihood'</span>: <span class="va">True</span>}, random_seed<span class="op">=</span>seed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>To use Kulprit we first instantiate the <code>ProjectionPredictive</code> class and then call the <code>project</code> method, which is the one doing all the hard work.</p>
-<div id="5acefae6" class="cell" data-execution_count="9">
+<div id="e00e0ebb" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>ppi <span class="op">=</span> kpt.ProjectionPredictive(model, idata)</span>
 <span id="cb8-2"><a href="#cb8-2"></a>ppi.project()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
@@ -741,7 +741,7 @@ For more options and details see https://pytensor.readthedocs.io/en/latest/troub
 </div>
 </div>
 <p>Once this is finished we can inspect the <code>ppi</code> object manually, but a figure is usually a better idea. By default, the <code>compare</code> function plots all the models, including the intercept-only model, i.e.&nbsp;a model without any covariate. In the following block of code, we are asking to omit this model.</p>
-<div id="40bda115" class="cell" data-execution_count="10">
+<div id="2c7d5b30" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>kpt.plot_compare(ppi.compare(min_model_size<span class="op">=</span><span class="dv">1</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -754,19 +754,19 @@ For more options and details see https://pytensor.readthedocs.io/en/latest/troub
 <p>We can see that this figure is very similar to the one generated with <code>pmb.plot_variable_importance</code> and its interpretation is also similar. One important difference is that <code>plot_compare</code> uses the ELPD to compare the models.</p>
 <p>We can see that for Kulprit the most relevant variable is <code>hour</code>, followed by <code>temperature</code> and then <code>humidity</code>, after that adding more variables does not improve the model. The order agrees with PyMC-BART but Kulprit considers 3 variables as relevant instead of 2. This is most likely because the effect of <code>hour</code> is non-linear and thus difficult to capture with a simple linear model. Let’s put this idea to the test.</p>
 <p>Instead of using the variable <code>hour</code>, let’s apply a transformation first.</p>
-<div id="8b12dd0f" class="cell" data-execution_count="11">
+<div id="cad35e60" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>bikes <span class="op">=</span> pd.read_csv(<span class="st">"../data/bikes.csv"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2"></a>bikes[<span class="st">"hour_sin"</span>] <span class="op">=</span> np.sin(bikes.hour <span class="op">*</span> np.pi <span class="op">/</span> <span class="dv">12</span>)</span>
 <span id="cb11-3"><a href="#cb11-3"></a>bikes[<span class="st">"hour_cos"</span>] <span class="op">=</span> np.cos(bikes.hour <span class="op">*</span> np.pi <span class="op">/</span> <span class="dv">12</span>)</span>
 <span id="cb11-4"><a href="#cb11-4"></a>bikes.drop(columns<span class="op">=</span><span class="st">"hour"</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now we can repeat the process, first we fit the model with the transformed variables</p>
-<div id="60654f09" class="cell" data-execution_count="12">
+<div id="b6dbb36a" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>model <span class="op">=</span> bmb.Model(<span class="st">"count ~"</span> <span class="op">+</span>  <span class="st">" + "</span>.join([c <span class="cf">for</span> c <span class="kw">in</span> bikes.columns <span class="cf">if</span> c<span class="op">!=</span><span class="st">"count"</span>]), data<span class="op">=</span>bikes, family<span class="op">=</span><span class="st">"negativebinomial"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2"></a>idata <span class="op">=</span> model.fit(idata_kwargs<span class="op">=</span>{<span class="st">'log_likelihood'</span>: <span class="va">True</span>}, random_seed<span class="op">=</span>seed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>and then we use Kulprit to perform variable selection.</p>
-<div id="b748cb5b" class="cell" data-execution_count="14">
+<div id="97542222" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>ppi <span class="op">=</span> kpt.ProjectionPredictive(model, idata)</span>
 <span id="cb13-2"><a href="#cb13-2"></a>ppi.project()</span>
 <span id="cb13-3"><a href="#cb13-3"></a>kpt.plot_compare(ppi.compare(min_model_size<span class="op">=</span><span class="dv">1</span>))<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -783,7 +783,7 @@ For more options and details see https://pytensor.readthedocs.io/en/latest/troub
 <section id="combining-pymc-bart-and-kulprit" class="level2" data-number="11.4">
 <h2 data-number="11.4" class="anchored" data-anchor-id="combining-pymc-bart-and-kulprit"><span class="header-section-number">11.4</span> Combining PyMC-BART and Kulprit</h2>
 <p>Both methods are not necessarily competitors and there is room for collaboration. When this is useful is still open to research but we can think of some scenarios where this could be useful. For instance, we could use PyMC-BART to find the most relevant variables, according to the variable inclusion metric, and then use Kulprit to perform the projection and evaluation of those selected submodels. We could also use the posterior predictive samples from PyMC-BART instead of a GLM. The second option is not currently supported in Kulprit, but the first one is straightforward as the method project has a <code>user_terms</code> argument that allows us to specify the submodels that we want to project. Notice that if we provide the <code>user_terms</code> there is no search done, Kulprit will project and evaluate just the submodels we specify.</p>
-<div id="e7f81ee4" class="cell" data-execution_count="15">
+<div id="1f3a0821" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>terms <span class="op">=</span> [[<span class="st">"hour_cos"</span>, <span class="st">"hour_sin"</span>],</span>
 <span id="cb14-2"><a href="#cb14-2"></a>         [<span class="st">"hour_cos"</span>, <span class="st">"hour_sin"</span>, <span class="st">"temperature"</span>],</span>
 <span id="cb14-3"><a href="#cb14-3"></a>         [<span class="st">"hour_cos"</span>, <span class="st">"hour_sin"</span>, <span class="st">"temperature"</span>, <span class="st">"humidity"</span>],</span>
@@ -794,7 +794,7 @@ For more options and details see https://pytensor.readthedocs.io/en/latest/troub
 <span id="cb14-8"><a href="#cb14-8"></a>ppi.project(user_terms<span class="op">=</span>terms)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In the previous code block we have manually specfified the terms, but we can also ask PyMC-BART to return a list for us.</p>
-<div id="ef4f2f04" class="cell" data-execution_count="16">
+<div id="b614bd73" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>pmb.vi_to_kulprit(vi_results)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>[[],
@@ -802,7 +802,7 @@ For more options and details see https://pytensor.readthedocs.io/en/latest/troub
  ['hour', 'temperature'],
  ['hour', 'temperature', 'humidity'],
  ['hour', 'temperature', 'humidity', 'month'],
- ['hour', 'temperature', 'humidity', 'month', 'weekday']]</code></pre>
+ ['hour', 'temperature', 'humidity', 'month', 'windspeed']]</code></pre>
 </div>
 </div>
 
@@ -828,7 +828,7 @@ Tadesse, Mahlet G., and Marina Vannucci, eds. 2022. <em>Handbook of <span>Bayesi
 
 </main> <!-- /main -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state":{"745a25f7b2034b349e51b6cff9836b39":{"model_module":"@jupyter-widgets/output","model_module_version":"1.0.0","model_name":"OutputModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/output","_model_module_version":"1.0.0","_model_name":"OutputModel","_view_count":null,"_view_module":"@jupyter-widgets/output","_view_module_version":"1.0.0","_view_name":"OutputView","layout":"IPY_MODEL_e2edfb6b72a84b78b97d2895d77166e7","msg_id":"","outputs":[{"data":{"text/html":"<pre style=\"white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\">                                                                                                                   \n <span style=\"font-weight: bold\"> Progress                  </span> <span style=\"font-weight: bold\"> Draws </span> <span style=\"font-weight: bold\"> Divergences </span> <span style=\"font-weight: bold\"> Step size </span> <span style=\"font-weight: bold\"> Grad evals </span> <span style=\"font-weight: bold\"> Sampling Speed </span> <span style=\"font-weight: bold\"> Elapsed </span> <span style=\"font-weight: bold\"> Remaining </span> \n ───────────────────────────────────────────────────────────────────────────────────────────────────────────────── \n  <span style=\"color: #1f77b4; text-decoration-color: #1f77b4\">━━━━━━━━━━━━━━━━━━━━━━━━━</span>   2000    0             0.976       1            39.98 draws/s    0:00:49   0:00:00    \n  <span style=\"color: #1f77b4; text-decoration-color: #1f77b4\">━━━━━━━━━━━━━━━━━━━━━━━━━</span>   2000    0             1.045       3            39.39 draws/s    0:00:50   0:00:00    \n                                                                                                                   \n</pre>\n","text/plain":"                                                                                                                   \n \u001b[1m \u001b[0m\u001b[1mProgress                 \u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mDraws\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mDivergences\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mStep size\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mGrad evals\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mSampling Speed\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mElapsed\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mRemaining\u001b[0m\u001b[1m \u001b[0m \n ───────────────────────────────────────────────────────────────────────────────────────────────────────────────── \n  \u001b[38;2;31;119;180m━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m   2000    0             0.976       1            39.98 draws/s    0:00:49   0:00:00    \n  \u001b[38;2;31;119;180m━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m   2000    0             1.045       3            39.39 draws/s    0:00:50   0:00:00    \n                                                                                                                   \n"},"metadata":{},"output_type":"display_data"}],"tabbable":null,"tooltip":null}},"e2edfb6b72a84b78b97d2895d77166e7":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}}},"version_major":2,"version_minor":0}
+{"state":{"4a0225eb921d430781ab76feb4e14736":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":null}},"a1b85133d2494425b3abf5876bae9b4a":{"model_module":"@jupyter-widgets/output","model_module_version":"1.0.0","model_name":"OutputModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/output","_model_module_version":"1.0.0","_model_name":"OutputModel","_view_count":null,"_view_module":"@jupyter-widgets/output","_view_module_version":"1.0.0","_view_name":"OutputView","layout":"IPY_MODEL_4a0225eb921d430781ab76feb4e14736","msg_id":"","outputs":[{"data":{"text/html":"<pre style=\"white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace\">                                                                                                                   \n <span style=\"font-weight: bold\"> Progress                  </span> <span style=\"font-weight: bold\"> Draws </span> <span style=\"font-weight: bold\"> Divergences </span> <span style=\"font-weight: bold\"> Step size </span> <span style=\"font-weight: bold\"> Grad evals </span> <span style=\"font-weight: bold\"> Sampling Speed </span> <span style=\"font-weight: bold\"> Elapsed </span> <span style=\"font-weight: bold\"> Remaining </span> \n ───────────────────────────────────────────────────────────────────────────────────────────────────────────────── \n  <span style=\"color: #1f77b4; text-decoration-color: #1f77b4\">━━━━━━━━━━━━━━━━━━━━━━━━━</span>   2000    0             1.373       3            39.13 draws/s    0:00:51   0:00:00    \n  <span style=\"color: #1f77b4; text-decoration-color: #1f77b4\">━━━━━━━━━━━━━━━━━━━━━━━━━</span>   2000    0             0.952       1            39.60 draws/s    0:00:50   0:00:00    \n                                                                                                                   \n</pre>\n","text/plain":"                                                                                                                   \n \u001b[1m \u001b[0m\u001b[1mProgress                 \u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mDraws\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mDivergences\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mStep size\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mGrad evals\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mSampling Speed\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mElapsed\u001b[0m\u001b[1m \u001b[0m \u001b[1m \u001b[0m\u001b[1mRemaining\u001b[0m\u001b[1m \u001b[0m \n ───────────────────────────────────────────────────────────────────────────────────────────────────────────────── \n  \u001b[38;2;31;119;180m━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m   2000    0             1.373       3            39.13 draws/s    0:00:51   0:00:00    \n  \u001b[38;2;31;119;180m━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m   2000    0             0.952       1            39.60 draws/s    0:00:50   0:00:00    \n                                                                                                                   \n"},"metadata":{},"output_type":"display_data"}],"tabbable":null,"tooltip":null}}},"version_major":2,"version_minor":0}
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
