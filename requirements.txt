@@ -1,6 +1,4 @@
-arviz-base==1.0.0
-arviz-stats==1.0.0
-arviz-plots==1.0.0
+arviz==1.0.0
 bambi>=0.16.0
 kulprit ==0.5.0
 preliz==0.24.0

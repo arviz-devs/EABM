@@ -6,7 +6,6 @@
 #| warning: false
 import arviz as az
 import numpy as np
-import preliz as pz
 import matplotlib.pyplot as plt
 import xarray as xr
 xr.set_options(display_expand_data=False, display_expand_attrs=False)
