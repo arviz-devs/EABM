@@ -3,13 +3,13 @@
 ```{python}
 #| echo: false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import numpy as np
 import pandas as pd
 import preliz as pz
 import pymc as pm
 import matplotlib.pyplot as plt
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 SEED = 3592
 np.random.seed(SEED)
@@ -186,7 +186,7 @@ import os
 
 if not os.path.exists("../models/prerun/sensitivity_00.nc"):
     dt_bf_00.to_netcdf("../models/prerun/sensitivity_00.nc")
-dt_bf_00 = azp.convert_to_datatree("../models/prerun/sensitivity_00.nc")
+dt_bf_00 = az.convert_to_datatree("../models/prerun/sensitivity_00.nc")
 ```
 
 
@@ -196,7 +196,7 @@ We can now use the `psense_summary` function from ArviZ to perform a numerical s
 For the $\beta$ coefficient `wrist` we can see that we may have prior-sensitivity (CJS>0.05) and likelihood-sensitivity (CJS>0.05). Thus, we may have a case of prior-data conflict for the `wrist` variable. 
 
 ```{python}
-azp.psense_summary(dt_bf_00, var_names=["~μ"], round_to=2)
+az.psense_summary(dt_bf_00, var_names=["~μ"], round_to=2)
 ```
 
 We can also evaluate the effect of power-scaling visually with the function `plot_psense_dist`. This function displays the posterior marginal for 3 values of $\alpha$. By default 0.8 (red), 1 (black) and 1.25 (blue). `plot_psense_dist` allow as to choose different representations including KDEs and ECDFs. From @fig-posterior-sensitivity_bf_00 we can see that the posterior is sensitive to both prior and likelihood power-scaling, and that it shifts right (towards zero) as the prior is strengthened, and left (away from zero) as the likelihood is strengthened.
@@ -206,7 +206,7 @@ We can also evaluate the effect of power-scaling visually with the function `plo
 #| label: fig-posterior-sensitivity_bf_00
 #| fig-cap: "Posterior density estimates depending on amount of power-scaling (alpha). Overlapping lines indicate low sensitivity. Wider gaps between lines indicate greater sensitivity."
 
-azp.plot_psense_dist(dt_bf_00, 
+az.plot_psense_dist(dt_bf_00, 
                      var_names=["β"], 
                      coords={"covariates": ["wrist"]},
                      kind="ecdf",
@@ -219,7 +219,7 @@ We can also use the `plot_psense_quantities` function to display quantities of i
 #| label: fig-quantities_bf_00
 #| fig-cap: "Posterior quantities of βwrist as a function of power-scaling of the prior and the likelihood. Dashed lines are ± 2 Monte Carlo standard errors (MCSE) of the base posterior quantity"
 
-azp.plot_psense_quantities(dt_bf_00,
+az.plot_psense_quantities(dt_bf_00,
                            var_names=["β"],
                            coords={"covariates": ["wrist"]})
 ```
@@ -262,14 +262,14 @@ import os
 
 if not os.path.exists("../models/prerun/sensitivity_01.nc"):
     dt_bf_01.to_netcdf("../models/prerun/sensitivity_01.nc")
-dt_bf_01 = azp.convert_to_datatree("../models/prerun/sensitivity_01.nc")
+dt_bf_01 = az.convert_to_datatree("../models/prerun/sensitivity_01.nc")
 ```
 
 
 Now we can perform the sensitivity analysis again. We can see that we managed to remove the warning!
 
 ```{python}
-azp.psense_summary(dt_bf_01, var_names=["~μ"])
+az.psense_summary(dt_bf_01, var_names=["~μ"])
 ```
 
 We can see that after changing the prior, the posterior mean for `wrist` changes from -1.45 to -1.86, indicating that the base prior was indeed unintentionally informative and in conflict with the data, pulling the estimate towards zero. 
@@ -280,7 +280,7 @@ As previously, we can also evaluate the effect of power-scaling visually with th
 #| label: fig-posterior-sensitivity_bf_01
 #| fig-cap: "Posterior density estimates depending on amount of power-scaling (alpha). Overlapping lines indicate low sensitivity. Wider gaps between lines indicate greater sensitivity."
 
-azp.plot_psense_dist(dt_bf_01, 
+az.plot_psense_dist(dt_bf_01, 
                      var_names=["β"], 
                      coords={"covariates": ["wrist"]},
                      kind="ecdf",
@@ -292,7 +292,7 @@ In terms or the mean for `βwrist`, we can see that there is no longer prior or 
 #| label: fig-quantities_bf_01
 #| fig-cap: "Posterior quantities of βwrist as a function of power-scaling of the prior (purple line and circle markers) and the likelihood (green line and square markers). Dashed lines are ± 2 Monte Carlo standard errors (MCSE) of the base posterior quantity"
 
-azp.plot_psense_quantities(dt_bf_01, var_names=["β"], coords={"covariates": ["wrist"]})
+az.plot_psense_quantities(dt_bf_01, var_names=["β"], coords={"covariates": ["wrist"]})
 ```
 
 Overall, the power-scaling sensitivity analysis on the adjusted prior shows that there is no longer prior sensitivity, and there is appropriate likelihood sensitivity.
@@ -319,7 +319,7 @@ We are going to start by computing predictions at `new_data`, as you may already
 
 We can ask ArviZ, to compute the Bayesian R² for us, we need to specify which variables represent the posterior mean (or location parameter) and standard deviation (or variance).
 ```{python}
-r2_da = azp.ndarray_to_dataarray(azp.bayesian_r2(dt_bf_01, pred_mean="μ", scale="σ", summary=False).reshape(4, 2000), var_name="r2")
+r2_da = az.ndarray_to_dataarray(az.bayesian_r2(dt_bf_01, pred_mean="μ", scale="σ", summary=False).reshape(4, 2000), var_name="r2")
 dt_bf_01.posterior["r2"] = r2_da
 ```
 
@@ -332,7 +332,7 @@ dt_bf_01.posterior["log_score"] = dt_bf_01.log_likelihood.sum("y_dim_0")["y"]
 Once we have added the derived quantities we just need to call `psense_summary` (or the others `psense_*` functions) as usual:
 
 ```{python}
-azp.psense_summary(dt_bf_01, var_names=["r2", "log_score"])
+az.psense_summary(dt_bf_01, var_names=["r2", "log_score"])
 ```
 
 We see no signs of data-conflict or likelihood noninformativity, we can visually check this as we did before, but given these values we should expect the distributions of the derived quantities to very similar across the different priors.
@@ -391,7 +391,7 @@ import os
 
 if not os.path.exists("../models/prerun/sensitivity_02.nc"):
     dt_bt.to_netcdf("../models/prerun/sensitivity_02.nc")
-dt_bt = azp.convert_to_datatree("../models/prerun/sensitivity_02.nc")
+dt_bt = az.convert_to_datatree("../models/prerun/sensitivity_02.nc")
 ```
 
 
@@ -401,7 +401,7 @@ From the power-scaling sensitivity analysis perspective the key element in the p
 Let's compute sensitivity diagnostics for all variables except `~b_Intercept`, if we want to check the sensitivity of all of them we can do it. The key point with hierarchical models is to not power-scale the lower level priors. 
 
 ```{python}
-azp.psense_summary(dt_bt, var_names=["~b_Intercept"])
+az.psense_summary(dt_bt, var_names=["~b_Intercept"])
 ```
 We see that everything looks fine. If you like to get potentials issues you could try running the model again with a prior like `σ = pm.HalfNormal('σ', sigma=1)`.
 

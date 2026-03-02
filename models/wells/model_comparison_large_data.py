@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pymc as pm
 import xarray as xr
-import arviz.preview as azp
+import arviz as az
 from pymc_extras import fit_laplace
 import lzma
 from pathlib import Path
@@ -46,7 +46,7 @@ with pm.Model():
         idata_kwargs={"log_likelihood": True}
     )
 
-data = azp.convert_to_datatree(idata)
+data = az.convert_to_datatree(idata)
 data["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
 data.to_netcdf("models/prerun/model_comparison_large_data_00.nc")
 compress("models/prerun/model_comparison_large_data_00.nc")
@@ -66,7 +66,7 @@ with pm.Model() as model_laplace:
 idata_laplace.to_netcdf("models/prerun/model_comparison_large_data_01.nc")
 compress("models/prerun/model_comparison_large_data_01.nc")
 
-data_laplace = azp.convert_to_datatree(idata_laplace)
+data_laplace = az.convert_to_datatree(idata_laplace)
 data_laplace["observed_data"] = xr.Dataset({
     "y": (["obs_id"], y, {"obs_id": range(len(y))})
 })
@@ -91,7 +91,7 @@ with pm.Model():
         idata_kwargs={"log_likelihood": True}
     )
 
-data2 = azp.convert_to_datatree(idata2)
+data2 = az.convert_to_datatree(idata2)
 data2["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X_log)})
 data2.to_netcdf("models/prerun/model_comparison_large_data_03.nc")
 compress("models/prerun/model_comparison_large_data_03.nc")

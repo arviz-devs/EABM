@@ -3,7 +3,7 @@
 ```{python}
 #| echo: false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import bambi as bmb
 import kulprit as kpt
 import numpy as np
@@ -11,7 +11,7 @@ import pandas as pd
 import pymc as pm
 import pymc_bart as pmb
 import matplotlib.pyplot as plt
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 seed = 793
 ```

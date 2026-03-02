@@ -3,12 +3,12 @@
 ```{python}
 #| echo : false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import numpy as np
 import preliz as pz
 import matplotlib.pyplot as plt
 rng = np.random.default_rng(365)
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 ```
 
@@ -162,17 +162,17 @@ The mean is the average value of the distribution, the median is the value that 
 
 The mean is probably the most commonly used measure of central tendency, but it can be sensitive to outliers. The median is more robust to outliers and is often preferred in skewed distributions. The mode is useful when we are interested in the most probable value of the distribution. The mode is usually less common than the other too. In practice, the choice of which measure to use depends on the context and the specific characteristics of the distribution being analyzed.
 
-In ArviZ, we can compute these point estimates from samples using the `azp.mean()`, `azp.median()`, and `azp.mode()` functions. 
+In ArviZ, we can compute these point estimates from samples using the `az.mean()`, `az.median()`, and `az.mode()` functions. 
 
 ```{python}
 pois_data = dist.rvs(50_000, random_state=rng)
-azp.mean(pois_data), azp.median(pois_data), azp.mode(pois_data)
+az.mean(pois_data), az.median(pois_data), az.mode(pois_data)
 ```
 
 Point estimates also show in other places in ArviZ, for example, in the `plot_dist()` or when calling `summary()`. Some functions have a `point_estimate` argument to choose which point estimate to use. The default value is controlled globally by:
 
 ```{python}
-azp.rcParams["stats.point_estimate"]
+az.rcParams["stats.point_estimate"]
 ```
 
 ## Credible intervals
@@ -200,16 +200,16 @@ dist.plot_pdf(ax=ax[0], legend="title", pointinterval=True, interval="hdi")
 dist.plot_pdf(ax=ax[1], legend=None, pointinterval=True, interval="eti");
 ```
 
-In ArviZ we can compute credible intervals from samples using the `azp.hdi()` and `azp.eti()` functions. 
+In ArviZ we can compute credible intervals from samples using the `az.hdi()` and `az.eti()` functions. 
 
 ```{python}
-azp.hdi(pois_data), azp.eti(pois_data)
+az.hdi(pois_data), az.eti(pois_data)
 ``` 
 
 These, as well as other functions, have a `ci_prob` argument to choose the mass of the credible interval. The default value is globally controlled by:
 
 ```{python}
-azp.rcParams["stats.ci_prob"]
+az.rcParams["stats.ci_prob"]
 ```
 
 Common choices for the mass of credible intervals are 95%, 90%, and 50%. ArviZ default is just a friendly reminder that no value is inherently better than the others; the key is to be consistent and transparent about your choice [@mcelreath_2020]. One practical advantage of using 89% as a default is that it requires fewer samples to estimate reliably than, for example, 95% intervals. In @sec-mcmc-diagnostics we discuss how the reliability of estimates like credible intervals depends on the number of samples used.
@@ -240,8 +240,8 @@ Arguably the most important parameter of a histogram is the number of bins. Too 
 ```{python}
 #| label: fig-dist_histogram_0
 #| fig-cap: "Histogram from a sample of integers. Each bin corresponds to a single integer."
-d_values = azp.convert_to_dataset(pz.Poisson(3).rvs((1, 500), random_state=rng))
-azp.plot_dist(d_values, kind="hist");
+d_values = az.convert_to_dataset(pz.Poisson(3).rvs((1, 500), random_state=rng))
+az.plot_dist(d_values, kind="hist");
 ```
 
 When the discrete values take higher values, like in @fig-dist_histogram_1, bins are still associated with integers but many integers are binned together.
@@ -249,8 +249,8 @@ When the discrete values take higher values, like in @fig-dist_histogram_1, bins
 ```{python}
 #| label: fig-dist_histogram_1
 #| fig-cap: "Histogram from a sample of integers. Bins group together many integers."
-d_values = azp.convert_to_dataset(pz.Poisson(100).rvs((1, 500), random_state=rng))
-azp.plot_dist(d_values, kind="hist");
+d_values = az.convert_to_dataset(pz.Poisson(100).rvs((1, 500), random_state=rng))
+az.plot_dist(d_values, kind="hist");
 ```
 
 If you don't like the default binning criteria of ArviZ, you can change it by passing the `bins` argument using the `hist_kwargs`.
@@ -258,8 +258,8 @@ If you don't like the default binning criteria of ArviZ, you can change it by pa
 ```{python}
 #| label: fig-dist_histogram_2
 #| fig-cap: "Histogram from a sample of integers, with bins automatically computed by Matplotlib, not ArviZ."
-d_values = azp.convert_to_dataset(pz.Poisson(100).rvs((1, 500), random_state=rng))
-azp.plot_dist(d_values, kind="hist", stats={"density":{"bins":20}})
+d_values = az.convert_to_dataset(pz.Poisson(100).rvs((1, 500), random_state=rng))
+az.plot_dist(d_values, kind="hist", stats={"density":{"bins":20}})
 ```
 
 ### KDE
@@ -295,8 +295,8 @@ The following example shows a KDE computed from a sample from a `Gamma` distribu
 ```{python}
 #| label: fig-dist_KDE_0
 #| fig-cap: "KDE from a sample of floats. By default, ArviZ computes a KDE."
-c_values = azp.convert_to_dataset(pz.Gamma(2, 3).rvs((1,1000), random_state=rng))
-azp.plot_dist(c_values);
+c_values = az.convert_to_dataset(pz.Gamma(2, 3).rvs((1,1000), random_state=rng))
+az.plot_dist(c_values);
 ```
 
 ### ECDF
@@ -311,7 +311,7 @@ The following block of code shows a very simple example of an ECDF.
 ```{python}
 #| label: fig-dist_ecdf
 #| fig-cap: "Empirical cumulative distribution function"
-azp.plot_dist(c_values, kind="ecdf");
+az.plot_dist(c_values, kind="ecdf");
 ```
 
 ### Quantile dot plots
@@ -328,8 +328,8 @@ From @fig-dist_qdot we can easily see that 30% of the data is below 1. We do thi
 ```{python}
 #| label: fig-dist_qdot
 #| fig-cap: "Quantile dot plot"
-d_values = azp.convert_to_dataset(pz.Normal(2, 2).rvs((4, 1000), random_state=123))
-azp.plot_dist(
+d_values = az.convert_to_dataset(pz.Normal(2, 2).rvs((4, 1000), random_state=123))
+az.plot_dist(
     d_values,
     kind="dot",
     stats={"dist": {"nquantiles": 10}},

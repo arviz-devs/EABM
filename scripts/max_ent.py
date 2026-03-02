@@ -4,7 +4,7 @@ from scipy.stats import entropy
 import matplotlib.pyplot as plt
 import arviz_plots as azp
 
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 
 cons = [[{"type": "eq", "fun": lambda x: np.sum(x) - 1}],
         [{"type": "eq", "fun": lambda x: np.sum(x) - 1},

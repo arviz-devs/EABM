@@ -7,8 +7,8 @@ import numpy as np
 import lzma
 from pathlib import Path
 
-import arviz.preview as azp
-azp.style.use("arviz-variat")
+import arviz as az
+az.style.use("arviz-variat")
 
 SEED = 4711
 
@@ -92,7 +92,7 @@ with pm.Model():
         idata_kwargs={'log_likelihood': True}
     )
 
-data = azp.convert_to_datatree(idata)
+data = az.convert_to_datatree(idata)
 data["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
 ```
 
@@ -107,7 +107,7 @@ data["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
 #| echo: false
 import xarray as xr
 
-data = azp.convert_to_datatree("../models/prerun/model_comparison_large_data_00.nc")
+data = az.convert_to_datatree("../models/prerun/model_comparison_large_data_00.nc")
 ```
 
 ### Constructing the log-likelihood helper
@@ -151,7 +151,7 @@ The approximation reduces the computational burden to a single evaluation per ob
 Here we use the `method="plpd"` argument to `loo_subsample()` to use the PLPD surrogate.
 
 ```{python}
-loo_plpd = azp.loo_subsample(
+loo_plpd = az.loo_subsample(
     data=data,
     observations=100,
     var_name="y",
@@ -178,7 +178,7 @@ $$
 where $\beta_s$ are the draws stored in `data.posterior`. The additional sum over draws raises the cost and often reduces the approximation error. The same subsample size and random seed ensure that the estimator reuses the indices chosen for the PLPD computation, which makes comparisons straightforward.
 
 ```{python}
-loo_lpd = azp.loo_subsample(
+loo_lpd = az.loo_subsample(
     data=data,
     observations=100,
     var_name="y",
@@ -199,7 +199,7 @@ For well‑identified models with tight posteriors, PLPD can match or even sligh
 @magnusson_2020 recommend increasing $m$ until the subsampling uncertainty is negligible for the task at hand. The `update_subsample()` routine efficiently extends an existing subsample without discarding work already done. Here we add 200 additional observations (from 100 to 300 total in the subsample) by using the previous subsample as a starting point.
 
 ```{python}
-loo_update = azp.update_subsample(
+loo_update = az.update_subsample(
     loo_plpd,
     data,
     observations=200,
@@ -265,14 +265,14 @@ with pm.Model() as model_laplace:
 
 ```{python}
 #| echo: false
-idata_laplace = azp.convert_to_datatree("../models/prerun/model_comparison_large_data_01.nc")
+idata_laplace = az.convert_to_datatree("../models/prerun/model_comparison_large_data_01.nc")
 ```
 
 The `fit_laplace` function stores the posterior mode in the `fit` group as `mean_vector` and the covariance in `covariance_matrix`. Posterior draws are stored in the `posterior` group as usual. We convert the result to a `DataTree` and attach the observed data and design matrix for use with `loo_approximate_posterior()`.
 
 ```{python}
 #| eval: false
-data_laplace = azp.convert_to_datatree(idata_laplace)
+data_laplace = az.convert_to_datatree(idata_laplace)
 
 data_laplace["observed_data"] = xr.Dataset({
     "y": (["obs_id"], y, {"obs_id": range(len(y))})
@@ -282,7 +282,7 @@ data_laplace["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
 
 ```{python}
 #| echo: false
-data_laplace = azp.convert_to_datatree("../models/prerun/model_comparison_large_data_02.nc")
+data_laplace = az.convert_to_datatree("../models/prerun/model_comparison_large_data_02.nc")
 ```
 
 ### Computing log density corrections
@@ -339,7 +339,7 @@ The log prior uses the standard normal density $\mathcal{N}(0, I_3)$ specified i
 With `log_p` and `log_q` in hand, we can compute LOO-CV using the approximate posterior. The `loo_approximate_posterior()` function adjusts the importance ratios to account for the discrepancy between the true posterior and the Laplace approximation.
 
 ```{python}
-loo_ap = azp.loo_approximate_posterior(
+loo_ap = az.loo_approximate_posterior(
     data=data_laplace,
     log_p=log_p_da,
     log_q=log_q_da,
@@ -359,7 +359,7 @@ The approximate posterior correction can be combined with subsampling to further
 When using `loo_subsample()` with an approximate posterior, we simply pass `log_p` and `log_q` along with the subsample specification. The difference estimator then corrects for both the approximation error and the subsampling uncertainty.
 
 ```{python}
-loo_ap_ss = azp.loo_subsample(
+loo_ap_ss = az.loo_subsample(
     data=data_laplace,
     observations=100,
     var_name="y",
@@ -405,7 +405,7 @@ with pm.Model():
         idata_kwargs={'log_likelihood': True}
     )
 
-data2 = azp.convert_to_datatree(idata2)
+data2 = az.convert_to_datatree(idata2)
 data2["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X_log)})
 ```
 
@@ -421,7 +421,7 @@ data2["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X_log)})
 X_log = X.copy()
 X_log[:, 2] = np.log(X[:, 2])
 
-data2 = azp.convert_to_datatree("../models/prerun/model_comparison_large_data_03.nc")
+data2 = az.convert_to_datatree("../models/prerun/model_comparison_large_data_03.nc")
 ```
 
 ### Comparison with different subsamples
@@ -429,7 +429,7 @@ data2 = azp.convert_to_datatree("../models/prerun/model_comparison_large_data_03
 We first compute subsampled LOO for the second model using a *different* random seed than the first model. This means the two models will be evaluated on different subsets of observations.
 
 ```{python}
-loo_ss_2_diff = azp.loo_subsample(
+loo_ss_2_diff = az.loo_subsample(
     data=data2,
     observations=100,
     var_name="y",
@@ -446,7 +446,7 @@ loo_ss_2_diff
 Now we compare the models using different subsamples.
 
 ```{python}
-comparison_diff = azp.compare({
+comparison_diff = az.compare({
     "model1_arsenic": loo_plpd,
     "model2_log_arsenic": loo_ss_2_diff,
 }).round(1)
@@ -467,7 +467,7 @@ When using different subsamples, notice we get a warning message indicating that
 To properly compare models, we reuse the exact same observations by passing the first LOO subsample object to the second `loo_subsample()` call. This ensures both models are evaluated on the same subset of observations, which is critical for accurate model comparison.
 
 ```{python}
-loo_ss_2 = azp.loo_subsample(
+loo_ss_2 = az.loo_subsample(
     data=data2,
     observations=loo_plpd.loo_subsample_observations,
     var_name="y",
@@ -483,7 +483,7 @@ loo_ss_2
 Now we compare the models using the same subsample.
 
 ```{python}
-comparison_same = azp.compare({
+comparison_same = az.compare({
     "model1_arsenic": loo_plpd,
     "model2_log_arsenic": loo_ss_2,
 }).round(1)
@@ -502,14 +502,14 @@ We can also compare a subsampled LOO object to a full LOO object that was comput
 The following computes full PSIS-LOO-CV for the first model using the `loo()` function.
 
 ```{python}
-loo_full = azp.loo(data, var_name="y", pointwise=True)
+loo_full = az.loo(data, var_name="y", pointwise=True)
 loo_full
 ```
 
 When comparing a full LOO calculation to a subsampled calculation, the `compare()` function automatically uses only the observations included in both calculations.
 
 ```{python}
-comparison_mixed = azp.compare({
+comparison_mixed = az.compare({
     "model1_full_loo": loo_full,
     "model2_subsampled_loo": loo_ss_2
 }).round(1)

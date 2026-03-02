@@ -4,7 +4,7 @@ import preliz as pz
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 fig, ax = plt.subplots(1, 1, figsize=(8, 2.5))
 
 grid = np.linspace(0, 1, 500)

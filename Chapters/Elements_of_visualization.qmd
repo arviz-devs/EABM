@@ -3,11 +3,11 @@
 ```{python}
 #| echo : false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import numpy as np
 import preliz as pz
 import matplotlib.pyplot as plt
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 ```
 Visualizations occupy a central place in modern statistics. Visualizations help us identify patterns, detect anomalies, formulate hypotheses, and gain an intuitive understanding of the data [@wilke_2019; @healy_2019; @unwin_2024]. These are tasks usually associated with the exploratory data analysis (EDA) phase [@tukey_1977; @downey_2025]. But visualizations are also essential for other tasks like understanding model behaviour, diagnostic computational issues, validating assumptions and communicating results.
@@ -101,7 +101,7 @@ Matplotlib allows users to easily switch between plotting styles by defining sty
 #| code-fold: true
 #| label: fig-style_variat
 #| fig-cap: "arviz-variat style use a color-blind friendly palette"
-azp.style.use('arviz-variat')
+az.style.use('arviz-variat')
 x = np.linspace(0, 1, 100)
 dist = pz.Beta(2, 5).pdf(x)
 
@@ -117,7 +117,7 @@ plt.ylabel('f(x)', rotation=0, labelpad=15);
 #| code-fold: true
 #| label: fig-style_cetrino
 #| fig-cap: "arviz-cetrino style use a color-blind friendly palette"
-azp.style.use('arviz-cetrino')
+az.style.use('arviz-cetrino')
 x = np.linspace(0, 1, 100)
 dist = pz.Beta(2, 5).pdf(x)
 
@@ -133,7 +133,7 @@ plt.ylabel('f(x)', rotation=0, labelpad=15);
 #| code-fold: true
 #| label: fig-style_tenui
 #| fig-cap: "arviz-tenui style use a color-blind friendly palette"
-azp.style.use('arviz-tenui')
+az.style.use('arviz-tenui')
 x = np.linspace(0, 1, 100)
 dist = pz.Beta(2, 5).pdf(x)
 
@@ -149,7 +149,7 @@ plt.ylabel('f(x)', rotation=0, labelpad=15);
 #| code-fold: true
 #| label: fig-style_tumma
 #| fig-cap: "arviz-tumma style use a color-blind friendly palette"
-azp.style.use('arviz-tumma')
+az.style.use('arviz-tumma')
 x = np.linspace(0, 1, 100)
 dist = pz.Beta(2, 5).pdf(x)
 
@@ -165,7 +165,7 @@ plt.ylabel('f(x)', rotation=0, labelpad=15);
 #| code-fold: true
 #| label: fig-style_vibrant
 #| fig-cap: "arviz-vibrant style use a color-blind friendly palette"
-azp.style.use('arviz-vibrant')
+az.style.use('arviz-vibrant')
 x = np.linspace(0, 1, 100)
 dist = pz.Beta(2, 5).pdf(x)
 

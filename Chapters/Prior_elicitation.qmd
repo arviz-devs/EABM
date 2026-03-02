@@ -3,14 +3,14 @@
 ```{python}
 #| echo : false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import numpy as np
 import pandas as pd
 import preliz as pz
 import pymc as pm
 import matplotlib.pyplot as plt
 rng = np.random.default_rng(793)
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 ```
 
@@ -221,8 +221,8 @@ Now we can plot the prior predictive distribution and compare it with the refere
 
 
 ```{python}
-pc = azp.plot_ppc_dist(idata, group="prior_predictive", kind="ecdf")
-azp.add_lines(pc, refs)
+pc = az.plot_ppc_dist(idata, group="prior_predictive", kind="ecdf")
+az.add_lines(pc, refs)
 ```
 
 
@@ -243,8 +243,8 @@ We can plot the prior predictive distribution and compare it with the reference 
 
 
 ```{python}
-pc = azp.plot_ppc_dist(idata, group="prior_predictive", kind="ecdf")
-azp.add_lines(pc, refs)
+pc = az.plot_ppc_dist(idata, group="prior_predictive", kind="ecdf")
+az.add_lines(pc, refs)
 ```
 
 The new priors still generate some values that are too wide, but at least the bulk of the model predictions are in the right range. So, without too much effort and extra information, we were able to move from a very vague prior to a weakly informative prior. If we decided this prior is still very vague we can add more domain-knowledge.
@@ -328,8 +328,8 @@ Now we can plot the prior predictive distribution, the target distribution and c
 
 
 ```{python}
-pc = azp.plot_ppc_dist(idata, group="prior_predictive", kind="ecdf")
-azp.add_lines(pc, list(refs.values()))
+pc = az.plot_ppc_dist(idata, group="prior_predictive", kind="ecdf")
+az.add_lines(pc, list(refs.values()))
 ```
 
 ### OK, but what's under the hood?

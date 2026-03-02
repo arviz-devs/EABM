@@ -3,7 +3,7 @@ import numpy as np
 import preliz as pz
 import matplotlib.pyplot as plt
 
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 
 grid = np.linspace(0, 1, 500)
 prior = pz.Beta(4, 8).pdf(grid)

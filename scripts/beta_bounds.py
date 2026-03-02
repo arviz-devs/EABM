@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import arviz_plots as azp
 
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 
 def one_iter(lower, upper, mode, mass=0.99, plot=True):
 

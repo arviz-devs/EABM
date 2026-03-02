@@ -4,12 +4,12 @@
 ```{python}
 #| echo: false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import numpy as np
 import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 ```
 
@@ -98,9 +98,9 @@ $$
 
 ```{python}
 #| echo : false
-base_idata = azp.convert_to_datatree("../models/laliga/base_model.nc")
-budget_idata = azp.convert_to_datatree("../models/laliga/budget_model.nc")
-nofield_idata = azp.convert_to_datatree("../models/laliga/nofield_model.nc")
+base_idata = az.convert_to_datatree("../models/laliga/base_model.nc")
+budget_idata = az.convert_to_datatree("../models/laliga/budget_model.nc")
+nofield_idata = az.convert_to_datatree("../models/laliga/nofield_model.nc")
 
 model_dict = {"base": base_idata, "budget": budget_idata, "nofield": nofield_idata}
 ```
@@ -121,7 +121,7 @@ Even though we know that the predictive task is ambiguous, we will start trying 
 
 ```{python}
 #| error: true
-azp.loo(base_idata)
+az.loo(base_idata)
 ```
 
 As expected, ArviZ has no way of knowing what predictive task we have in mind so it raises an error. 
@@ -140,15 +140,15 @@ with $i$ being both the match indicator ($m$, which varies with $i$) and the fie
 We can tell ArviZ to use these values using the argument `var_name`.
 
 ```{python}
-azp.loo(base_idata, var_name="home_goals")
+az.loo(base_idata, var_name="home_goals")
 ```
 
 ```{python}
-azp.compare(model_dict, var_name="home_goals")
+az.compare(model_dict, var_name="home_goals")
 ```
 
 ```{python}
-azp.compare(model_dict, var_name="away_goals")
+az.compare(model_dict, var_name="away_goals")
 ```
 
 ### Predicting the outcome of a match
@@ -177,11 +177,11 @@ base_idata = match_lik(base_idata)
 budget_idata = match_lik(budget_idata)
 nofield_idata = match_lik(nofield_idata)
 
-azp.loo(base_idata, var_name="matches")
+az.loo(base_idata, var_name="matches")
 ```
 
 ```{python}
-azp.compare(model_dict, var_name="matches")
+az.compare(model_dict, var_name="matches")
 ```
 
 ### Predicting the goals scored per match and per team
@@ -214,11 +214,11 @@ base_idata = goals_lik(base_idata)
 budget_idata = goals_lik(budget_idata)
 nofield_idata = goals_lik(nofield_idata)
 
-azp.loo(base_idata, var_name="goals")
+az.loo(base_idata, var_name="goals")
 ```
 
 ```{python}
-azp.compare(model_dict, var_name="goals")
+az.compare(model_dict, var_name="goals")
 ```
 
 ### Predicting team level performance
@@ -252,12 +252,12 @@ nofield_idata = team_lik(nofield_idata)
 ```
 
 ```{python}
-azp.loo(base_idata, var_name="teams_match")
+az.loo(base_idata, var_name="teams_match")
 ```
 
 TODO: it would probably be best to run reloo for the three models for this case and include that on figshare too.
 
 ```{python}
-azp.compare(model_dict, var_name="teams_match")
+az.compare(model_dict, var_name="teams_match")
 ```
 

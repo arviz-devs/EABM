@@ -4,9 +4,9 @@
 ```{python}
 #| echo : false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import matplotlib.pyplot as plt
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 ```
 
@@ -178,14 +178,14 @@ sbc_results = sbc.simulations
 
 ```{python}
 #| echo: false
-sbc_results = azp.convert_to_datatree("../models/prerun/sbc_00.nc")
+sbc_results = az.convert_to_datatree("../models/prerun/sbc_00.nc")
 ```
 
 To assess the calibration of the inference, we inspect the uniformity of the PIT values of the posterior samples with respect to the prior samples. To do that we can simply call the  `plot_ecdf_pit` function from the `ArviZ` package. 
 
 
 ```{python}
-azp.plot_ecdf_pit(sbc_results,
+az.plot_ecdf_pit(sbc_results,
               visuals={"xlabel":False},
 );
 ```

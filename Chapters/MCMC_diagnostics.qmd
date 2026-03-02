@@ -3,12 +3,12 @@
 ```{python}
 #| echo : false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import numpy as np
 import preliz as pz
 import matplotlib.pyplot as plt
 rng = np.random.default_rng(793)
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 ```
 
@@ -59,7 +59,7 @@ for i in pz.DiscreteUniform(0, 900).rvs(4, random_state=rng):
     stuck.append((i, i+50))
     bad_sample1[0,i:i+50] = pz.Beta(i, 150).rvs(50, random_state=rng)
 
-sample = azp.convert_to_dataset({"good_sample":good_sample,
+sample = az.convert_to_dataset({"good_sample":good_sample,
           "bad_sample_0":bad_sample0,
           "bad_sample_1":bad_sample1})
 ```
@@ -74,13 +74,13 @@ After reading this chapter a good exercise is to come back here and modify these
 
 A trace plot is created by drawing the sampled values at each iteration step. Ideally, we should expect to see a very noisy plot, some people call it a caterpillar. The reason is that draws should be uncorrelated from each other, the value of a draw should not provide any hint about the previous or next draw. Also, the draws from the first iterations should be indistinguishable from the ones coming from the last iterations the middle iterations, or any other region. The ideal scenario is the lack of any clear pattern as we can see at the right panel of @fig-tracedistplot_good_sample.
 
-In ArviZ by calling the function `azp.plot_trace_dist(.)` we get a trace plot on the right and on the left a KDE @fig-tracedistplot_good_sample is an example of this. 
+In ArviZ by calling the function `az.plot_trace_dist(.)` we get a trace plot on the right and on the left a KDE @fig-tracedistplot_good_sample is an example of this. 
 
 
 ```{python}
 #| label: fig-tracedistplot_good_sample
 #| fig-cap: "Trace plot and Kernel Density Estimate (KDE) of a sample without issues"
-azp.plot_trace_dist(sample, var_names="good_sample", compact=False);
+az.plot_trace_dist(sample, var_names="good_sample", compact=False);
 ```
 
 As discussed in @sec-dist, there are many methods to represent distributions. We can use the argument `kind` to define other methods:
@@ -92,12 +92,12 @@ As discussed in @sec-dist, there are many methods to represent distributions. We
 
 Instead of a KDE we use other visualizations like ECDFs, histograms or quantile dot plots, this is specified with the `kind` argument. Inspecting the KDE, ECDF, histogram, or quantile dot plot may also help to spot differences between chains, ideally, distributions should overlap. Overlayed KDEs and ECDFs are usually easy to interpret than overlayed histograms or quantile dot plots.
 
-Alternatively, if we just want the trace without the density representation we can use the function `azp.plot_trace(.)`
+Alternatively, if we just want the trace without the density representation we can use the function `az.plot_trace(.)`
 
 ```{python}
 #| label: fig-traceplot_good_sample
 #| fig-cap: "Trace plot of a sample without issues"
-azp.plot_trace(sample, var_names="good_sample");
+az.plot_trace(sample, var_names="good_sample");
 ```
 
 Now let's see an example of a bad sample. @fig-traceplot_bad_sample_0 shows two problems. On the one hand, each chain is visiting a different region of the parameter space. We can see this from the trace plot itself and the KDE. On the other hand, even within each region, the sampler is having trouble properly exploring the space, notice how it keeps _moving up_, instead of being **stationary**.
@@ -106,7 +106,7 @@ Now let's see an example of a bad sample. @fig-traceplot_bad_sample_0 shows two 
 #| label: fig-traceplot_bad_sample_0
 #| code-fold: true
 #| fig-cap: "Trace plot of 4 chains that has not converged"
-azp.plot_trace_dist(sample, var_names="bad_sample_0", compact=False);
+az.plot_trace_dist(sample, var_names="bad_sample_0", compact=False);
 ```
 
 Finally from @fig-traceplot_bad_sample_1, we can see another common scenario. While the overall trace appears acceptable, there are specific regions where the sampler gets stuck. To highlight these problematic areas, we’ve added gray bands across the trace. In the first region, the issue is less apparent because the stuck chain is overlapped by others. In contrast, the second and third regions make the issue easier to spot, though we still need to inspect the trace closely to see the problem.
@@ -114,9 +114,9 @@ Finally from @fig-traceplot_bad_sample_1, we can see another common scenario. Wh
 #| label: fig-traceplot_bad_sample_1
 #| code-fold: true
 #| fig-cap: "Trace plot showing a sampler being stuck in 3 regions (see gray bands). Because of the overlap, it's not easy to spot the problem for the first region."
-pc = azp.plot_trace_dist(sample, var_names="bad_sample_1", compact=False)
+pc = az.plot_trace_dist(sample, var_names="bad_sample_1", compact=False)
 pc.coords = {"column": "trace"}
-azp.add_bands(pc, stuck)
+az.add_bands(pc, stuck)
 ```
 
 
@@ -145,16 +145,16 @@ The following figures shows fractional rank plots for `good_sample`, `bad_sample
 #| label: fig-rank_plot_good
 #| code-fold: true
 #| fig-cap: "Rank plot for `good_sample`"
-azp.plot_rank(sample, var_names=["good_sample"]);
+az.plot_rank(sample, var_names=["good_sample"]);
 ```
 
-For `good_sample` we can see that ranks looks relative flat and deviations are within the envelope. In sharp contrast `bad_sample_0` looks awful, deviations are very large as chains belong to different distributions. The envelopes computation does not take into account autocorrelation, so it is recommend to thin the draws as discussed in @sec-thinning. `plot_rank` does this automatically. To disable thinning we can do `azp.plot_rank(., thin=False)`, as we did for @fig-rank_plot_bad_sample_0. 
+For `good_sample` we can see that ranks looks relative flat and deviations are within the envelope. In sharp contrast `bad_sample_0` looks awful, deviations are very large as chains belong to different distributions. The envelopes computation does not take into account autocorrelation, so it is recommend to thin the draws as discussed in @sec-thinning. `plot_rank` does this automatically. To disable thinning we can do `az.plot_rank(., thin=False)`, as we did for @fig-rank_plot_bad_sample_0. 
 
 ```{python}
 #| label: fig-rank_plot_bad_sample_0
 #| code-fold: true
 #| fig-cap: "Rank plot for `bad_sample_0`"
-azp.plot_rank(sample, var_names=["bad_sample_0"], thin=False);
+az.plot_rank(sample, var_names=["bad_sample_0"], thin=False);
 ```
 
 Finally, `bad_sample_1` also shows problems, see how chain 0 (blue) get out of the envelope. Notice also how the envelope and lines looks very "squared-shaped" compared with those from @fig-rank_plot_good. This is indicating a relatively low ESS (high thinning). This is a consequence of the chain 0 (blue) being stuck in some regions as shown in @fig-traceplot_bad_sample_1.
@@ -164,7 +164,7 @@ Finally, `bad_sample_1` also shows problems, see how chain 0 (blue) get out of t
 #| label: fig-rank_plot_bad_sample_1
 #| code-fold: true
 #| fig-cap: "Rank plot for `bad_sample_1`"
-azp.plot_rank(sample, var_names=["bad_sample_1"]);
+az.plot_rank(sample, var_names=["bad_sample_1"]);
 ```
 
 
@@ -180,10 +180,10 @@ $\hat R$ is a numerical diagnostic that answers the question Did the chains mix 
 
 Ideally, we should get $\hat R = 1$, in practice $\hat R \lessapprox 1.01$ are considered safe and in the first modeling phases, even higher values like $\hat R \approx 1.1$ may be fine.
 
-Using ArviZ we can get the $\hat R$ with `azp.rhat(⋅)`, `azp.summary(⋅)` and `azp.plot_forest(⋅, r_hat=True)`
+Using ArviZ we can get the $\hat R$ with `az.rhat(⋅)`, `az.summary(⋅)` and `az.plot_forest(⋅, r_hat=True)`
 
 ```{python}
-azp.rhat(sample)
+az.rhat(sample)
 ```
 
 ### Effective Sample Size (ESS)
@@ -290,7 +290,7 @@ for k, rho in enumerate(rhos):
     auto_error = []
 
     for i in range(50, size, 10):
-        auto_error.append(azp.ess(auto_samples[:, :i]) / 500)
+        auto_error.append(az.ess(auto_samples[:, :i]) / 500)
 
     ax.plot(range(50, size, 10), auto_error, color=plt.cm.viridis_r(k / N))
 
@@ -314,10 +314,10 @@ ax.plot(1, 0, ">k", transform=ax.get_yaxis_transform(), clip_on=False)
 ax.plot(48, 1, "^k", transform=ax.get_xaxis_transform(), clip_on=False)
 ```
 
-With ArviZ we can get `azp.ess(⋅)`, `azp.summary(⋅)` and `azp.plot_forest(⋅, ess=True)`
+With ArviZ we can get `az.ess(⋅)`, `az.summary(⋅)` and `az.plot_forest(⋅, ess=True)`
 
 ```{python}
-azp.ess(sample)
+az.ess(sample)
 ```
 
 One way to use the ESS is as a minimum requirement for trustworthy MCMC samples.  It is recommended the ESS to be larger than 100 per chain. That is, for 4 chains we want a minimum of 400 effective samples. 
@@ -326,31 +326,31 @@ One way to use the ESS is as a minimum requirement for trustworthy MCMC samples.
 The ESS can also be used as a metric of the efficiency of MCMC sampling methods. For instance, we may want to measure the ESS per sample (ESS/n), a sampler that generates an ESS/n closer to 1 is more efficient than a sampler that generates values closer to 0. Other common metrics are the ESS per second, and the ESS per likelihood evaluation. 
 :::
 
-We see that `azp.summary(⋅)` returns two ESS values, `ess_bulk` and `ess_tail`. This is because different regions of the parameter space may have different ESS values since not all regions are sampled with the same efficiency. Intuitively, one may think that when sampling a distribution like a Gaussian it is easier to obtain better sample quality around the mean than around the tails, simply because we have more samples from that region. For some models, it could be the other way around, but the take-home message remains, not all regions are necessarily sampled with the same efficiency
+We see that `az.summary(⋅)` returns two ESS values, `ess_bulk` and `ess_tail`. This is because different regions of the parameter space may have different ESS values since not all regions are sampled with the same efficiency. Intuitively, one may think that when sampling a distribution like a Gaussian it is easier to obtain better sample quality around the mean than around the tails, simply because we have more samples from that region. For some models, it could be the other way around, but the take-home message remains, not all regions are necessarily sampled with the same efficiency
 
 ```{python}
-azp.summary(sample, kind="diagnostics")
+az.summary(sample, kind="diagnostics")
 ```
 
 If we are going to use the MCMC samples to calculate central values such as means or medians then we have to make sure that the `ess_bulk` is sufficiently large, however, if we want to calculate intervals such as an HDI 94% we have to make sure that `ess_tail` be appropriate.
 
-ArviZ offers several functions linked to the ESS. For example, if we want to evaluate the performance of the sampler for several regions at the same time we can use `azp.plot_ess`.
+ArviZ offers several functions linked to the ESS. For example, if we want to evaluate the performance of the sampler for several regions at the same time we can use `az.plot_ess`.
 
 ```{python}
-azp.plot_ess(
+az.plot_ess(
     sample,
     col_wrap=1,
 )
 ```
 
-A simple way to increase the ESS is to increase the number of samples, but it could be the case that the ESS grows very slowly with the number of samples, so even if we increased the number of samples 10 times we could still be very far from our target value. One way to estimate "how many more samples do we need" is to use `azp.plot_ess_evolution(.)`. This graph shows us how the ESS changed with each iteration, which allows us to make predictions. 
+A simple way to increase the ESS is to increase the number of samples, but it could be the case that the ESS grows very slowly with the number of samples, so even if we increased the number of samples 10 times we could still be very far from our target value. One way to estimate "how many more samples do we need" is to use `az.plot_ess_evolution(.)`. This graph shows us how the ESS changed with each iteration, which allows us to make predictions. 
 
 From @fig-ess_evolution we can see that the ESS grows linearly with the number of samples for `good_sample`, and it does not grow at all for `bad_sample_0`. In the latter case, this is an indication that there is virtually no hope of improving the ESS simply by increasing the number of draws.
 
 ```{python}
 #| label: fig-ess_evolution
 #| fig-cap: "ESS evolution plot for `good_sample` and `bad_sample_0`."
-azp.plot_ess_evolution(
+az.plot_ess_evolution(
     sample,
     var_names=["good_sample", "bad_sample_0"],
     col_wrap=1,
@@ -362,10 +362,10 @@ azp.plot_ess_evolution(
 An advantage of the ESS is that it is scale-free, it does not matter if one parameter varies between 0.1 and 0.2 and another between -2000 and 0, an ESS of 400 has the same meaning for both parameters. In models with many parameters, we can quickly identify which parameters are most problematic. However, when reporting results it is not very informative to know whether the ESS was 1372 or 1501. Instead, we would like to know the order of the errors we are making when approximating the posterior. This information is given by the **Monte Carlo standard error** (MCSE). Like the ESS, the MCSE takes into account the autocorrelation of the samples. This error should be below the desired precision in our results. That is, if for a parameter the MCSE is 0.1, it does not make sense to report that the mean of that parameter is 3.15. Since the correct value could easily be between 3.4 and 2.8.
 
 
-With ArviZ we can get the MCSE with `azp.mcse(⋅)` or `azp.summary(⋅)`.
+With ArviZ we can get the MCSE with `az.mcse(⋅)` or `az.summary(⋅)`.
 
 ```{python}
-azp.mcse(sample)
+az.mcse(sample)
 ```
 
 ### Thinning  {#sec-thinning}
@@ -380,7 +380,7 @@ To determine an appropriate thinning factor, we can use the effective sample siz
 In ArviZ we have the `thin` function, which allows us to perform thinning automatically.
 
 ```{python}
-azp.thin(sample)
+az.thin(sample)
 ```
 
 Additionally, if needed, we can specify the thinning factor manually by passing an integer to the argument `factor`.
@@ -392,8 +392,8 @@ Due to its internal workings, algorithms like NUTS offer some specific tests tha
 To exemplify this we are going to load two InferenceData from pre-calculated models. The details of how these data were generated are not relevant at the moment. We will only say that they are two models that are mathematically equivalent but parameterized in different ways. In this case, the parameterization affects the efficiency of the sampler. The `centered` model is sampled more efficiently than the `non_centered` model.
 
 ```{python}
-idata_cm = azp.load_arviz_data("centered_eight")
-idata_ncm = azp.load_arviz_data("non_centered_eight")
+idata_cm = az.load_arviz_data("centered_eight")
+idata_ncm = az.load_arviz_data("non_centered_eight")
 ```
 
 ### Transition energy vs marginal energy
@@ -409,13 +409,13 @@ If the transition energy distribution is similar to the marginal energy distribu
 ```{python}
 #| label: fig-energy_plot_cm
 #| fig-cap: "Energy plot for `centered_eight` model." 
-azp.plot_energy(idata_cm)
+az.plot_energy(idata_cm)
 ```
 
 ```{python}
 #| label: fig-energy_plot_ncm
 #| fig-cap: "Energy plot for `non_centered_eight` model." 
-azp.plot_energy(idata_ncm)
+az.plot_energy(idata_ncm)
 ```
 
 ### Divergences
@@ -428,13 +428,13 @@ The following example shows two things; the `non_centered` model shows several d
 ```{python}
 #| echo : false
 # remove once we add plot_pair to new ArviZ
-idata_cm = azp.load_arviz_data("centered_eight")
-idata_ncm = azp.load_arviz_data("non_centered_eight")
+idata_cm = az.load_arviz_data("centered_eight")
+idata_ncm = az.load_arviz_data("non_centered_eight")
 ```
 
 ```{python}
 for data in [idata_cm, idata_ncm]:
-    azp.plot_pair(
+    az.plot_pair(
         data,
         var_names=["tau", "theta"],
         coords={"school": "Choate"},
@@ -442,14 +442,14 @@ for data in [idata_cm, idata_ncm]:
     )
 ```
 
-Another plot that can be useful to diagnose divergences is `azp.plot_parallel()`, which shows the samples in parallel coordinates. A parallel coordinates plot is a way to visualize high-dimensional data by plotting each dimension as a vertical line and connecting the points across dimensions with lines. 
+Another plot that can be useful to diagnose divergences is `az.plot_parallel()`, which shows the samples in parallel coordinates. A parallel coordinates plot is a way to visualize high-dimensional data by plotting each dimension as a vertical line and connecting the points across dimensions with lines. 
 
 From @fig-parallel_plot we can see that the `centered` model has divergences in the region where `tau` takes small values.
 
 ```{python}
 #| label: fig-parallel_plot
 #| fig-cap: "Parallel coordinates plot for `centereed` model."
-azp.plot_parallel(
+az.plot_parallel(
     idata_cm,
     var_names=['theta', 'tau'],
     figure_kwargs={"figsize": (9, 4)},

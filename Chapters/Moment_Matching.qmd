@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 import lzma
 from pathlib import Path
 
-import arviz.preview as azp
-azp.style.use("arviz-variat")
+import arviz as az
+az.style.use("arviz-variat")
 
 plt.rcParams["figure.dpi"] = 75
 SEED = 4711
@@ -81,7 +81,7 @@ idata = model.fit(
 #| echo: false
 import xarray as xr
 
-idata = azp.convert_to_datatree("../models/prerun/moment_matching_00.nc")
+idata = az.convert_to_datatree("../models/prerun/moment_matching_00.nc")
 
 # Rename __obs__ to obs_id to avoid dimension name conflict in moment matching
 idata['log_likelihood'] = xr.DataTree(idata['log_likelihood'].ds.rename({'__obs__': 'obs_id'}))
@@ -89,7 +89,7 @@ idata['observed_data'] = xr.DataTree(idata['observed_data'].ds.rename({'__obs__'
 ```
 
 ```{python}
-azp.summary(idata.posterior.ds, var_names=['roach1', 'treatment', 'senior', 'Intercept'])
+az.summary(idata.posterior.ds, var_names=['roach1', 'treatment', 'senior', 'Intercept'])
 ```
 
 ### Initial PSIS-LOO-CV evaluation
@@ -97,7 +97,7 @@ azp.summary(idata.posterior.ds, var_names=['roach1', 'treatment', 'senior', 'Int
 With the posterior draws in hand, we compute the PSIS-LOO-CV estimate of the model's predictive performance.
 
 ```{python}
-loo_result = azp.loo(idata, pointwise=True, var_name="y")
+loo_result = az.loo(idata, pointwise=True, var_name="y")
 loo_result
 ```
 
@@ -251,7 +251,7 @@ so each fold mixes the full-data posterior with the transformed draws from the d
 
 ```{python}
 #| warning: false
-loo_mm_result = azp.loo_moment_match(
+loo_mm_result = az.loo_moment_match(
     idata,
     loo_result,
     log_prob_upars_fn=log_prob_upars,

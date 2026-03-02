@@ -6,7 +6,7 @@ from flexitext import flexitext
 import arviz_plots as azp
 
 
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 
 _, ax = plt.subplots(1, 1, figsize=(12, 4))
 

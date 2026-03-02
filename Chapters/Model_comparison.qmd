@@ -4,12 +4,12 @@
 ```{python}
 #| echo : false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import numpy as np
 import preliz as pz
 import pymc as pm
 import matplotlib.pyplot as plt
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 SEED = 3592
 ```
@@ -281,8 +281,8 @@ When we combine all these ideas we get a method called Pareto-Smooth Importance 
 Since the name and even acronym are too long and not that easy to pronounce, in ArviZ, we usually refer to this and related methods as LOO. For example to compute the ELPD, estimated using PSIS-LOO_CV, we call the `loo` function, we  just need to pass DataTree object containing a `log-likelihood` group.
 
 ```{python}
-dt_rugby = azp.load_arviz_data('rugby')
-elpd = azp.loo(dt_rugby, var_name="home_points")
+dt_rugby = az.load_arviz_data('rugby')
+elpd = az.loo(dt_rugby, var_name="home_points")
 elpd
 ```
 
@@ -326,18 +326,18 @@ import os
 
 if not os.path.exists("../models/prerun/model_comparison_00.nc"):
     idata_n.to_netcdf("../models/prerun/model_comparison_00.nc")
-idata_n = azp.convert_to_datatree("../models/prerun/model_comparison_00.nc")
+idata_n = az.convert_to_datatree("../models/prerun/model_comparison_00.nc")
 
 
 if not os.path.exists("../models/prerun/model_comparison_01.nc"):
     idata_t.to_netcdf("../models/prerun/model_comparison_01.nc")
-idata_t = azp.convert_to_datatree("../models/prerun/model_comparison_01.nc")
+idata_t = az.convert_to_datatree("../models/prerun/model_comparison_01.nc")
 ```
 
 
 
 ```{python}
-cmp_df = azp.compare({'model_n':idata_n, 'model_t':idata_t})
+cmp_df = az.compare({'model_n':idata_n, 'model_t':idata_t})
 cmp_df
 ```
 
@@ -353,10 +353,10 @@ In the rows we have the compared models and in the columns we have
 * warning: a warning about whether there is at least one high k value
 * scale: the scale on which the ELPD is calculated
 
-We can obtain similar information, but graphically, using the `azp.plot_compare` function
+We can obtain similar information, but graphically, using the `az.plot_compare` function
 
 ```{python}
-azp.plot_compare(cmp_df);
+az.plot_compare(cmp_df);
 ```
 
 * The open circles represent the ELPD values ​​and black lines the standard error.
@@ -377,7 +377,7 @@ It is possible to visualize the values ​​of $k$, using `plot_khat`
 
 ```{python}
 # coming soon
-#azp.plot_khat(elpd, threshold=0.7);
+#az.plot_khat(elpd, threshold=0.7);
 ```
 
 While the main function of LOO is to compare models, the values ​​of $k$ can be useful even if we only have only one model. For example, we could have extra knowledge that tells us why these observations are influential, perhaps there was a problem in data collection and the values ​​are incorrect. Or perhaps the values ​​are correct but from the perspective of our model they are influential, "strange", "surprising".
@@ -739,19 +739,19 @@ In contrast, sometimes we are interested in absolute metrics. Some common absolu
 From the PSIS procedure, we obtain a set of weights. The `loo` function utilizes these weights to estimate the ELPD we should have obtained if we have performed leave-one-out cross-validation. Furthermore, these weights can be used to estimate other quantities, such as the mean, standard deviation, and quantiles, as if we had performed leave-one-out cross-validation. For example, to compute the 25th and 75th percentiles we use:
 
 ```{python}
-azp.loo_expectations(dt_rugby, kind="quantile", probs=[0.25, 0.75])
+az.loo_expectations(dt_rugby, kind="quantile", probs=[0.25, 0.75])
 ```
 
 Similarly we may be interested in computing estimates of leave-one-out predictive metrics given a set of predictions and observations. For instance to compute the root mean square error we can do: 
 
 ```{python}
-azp.loo_metrics(dt_rugby, kind="rmse", var_name="home_points")
+az.loo_metrics(dt_rugby, kind="rmse", var_name="home_points")
 ```
 
 Anoth
 
 ```{python}
-azp.loo_r2(dt_rugby, var_name="home_points")
+az.loo_r2(dt_rugby, var_name="home_points")
 ```
 
 Notice that for `loo_metrics` and `loo_r2` if we have more than one variable we must specify the variable that we care using the `var_names` argument, like in the previous examples.
@@ -770,7 +770,7 @@ That is, we are evaluating the model's ability to predict an observation when we
 ```{python}
 #| label: fig-loo_pit
 #| fig-cap: "LOO-PIT plot for the rugby model"
-azp.plot_loo_pit(dt_rugby, var_names="home_points")
+az.plot_loo_pit(dt_rugby, var_names="home_points")
 ```
 
 ## Other information criteria
@@ -883,14 +883,14 @@ import os
 
 if not os.path.exists("../models/prerun/model_comparison_02.nc"):
     idata_uni.to_netcdf("../models/prerun/model_comparison_02.nc")
-idata_uni = azp.convert_to_datatree("../models/prerun/model_comparison_02.nc")
+idata_uni = az.convert_to_datatree("../models/prerun/model_comparison_02.nc")
 ```
 
 
-And now we call `azp.plot_bf`
+And now we call `az.plot_bf`
 
 ``` {python}
-azp.plot_bf(idata_uni, var_names="a", ref_val=0.5);
+az.plot_bf(idata_uni, var_names="a", ref_val=0.5);
 ```
 
 In the previous Figure we can see one KDE for the prior (black) and one for the posterior (gray). The two black dots show that we evaluated both distributions at the value 0.5. We can see that the Bayes factor in favor of the null hypothesis, `BF_01`, is $\approx 8$, which we can interpret as *moderate evidence* in favor of the null hypothesis.
@@ -925,12 +925,12 @@ import os
 
 if not os.path.exists("../models/prerun/model_comparison_03.nc"):
     idata_conc.to_netcdf("../models/prerun/model_comparison_03.nc")
-idata_conc = azp.convert_to_datatree("../models/prerun/model_comparison_03.nc")
+idata_conc = az.convert_to_datatree("../models/prerun/model_comparison_03.nc")
 ```
 
 
 ```{python}
-azp.plot_bf(idata_conc, var_names=["a"], ref_val=0.5);
+az.plot_bf(idata_conc, var_names=["a"], ref_val=0.5);
 ```
 
 We can see that the `BF_01` is $\approx 1.6$, which we can interpret as *anecdotal evidence* in favor of the null hypothesis (see the Jeffreys' scale, discussed earlier). 

@@ -3,7 +3,7 @@ import numpy as np
 import preliz as pz
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 
 np.random.seed(123)
 

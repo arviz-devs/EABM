@@ -3,12 +3,12 @@
 ```{python}
 #| echo: false
 #| warning: false
-import arviz.preview as azp
+import arviz as az
 import numpy as np
 import preliz as pz
 #import pymc as pm
 import matplotlib.pyplot as plt
-azp.style.use("arviz-variat")
+az.style.use("arviz-variat")
 plt.rcParams["figure.dpi"] = 75
 SEED = 3592
 np.random.seed(SEED)
@@ -126,7 +126,7 @@ prior_samples = model.sample(
 )
 
 # Convert to ArviZ
-dt = azp.from_cmdstanpy(
+dt = az.from_cmdstanpy(
     prior=prior_samples,
     prior_predictive="y_prior_pred",
     observed_data={"y": y},
@@ -140,7 +140,7 @@ import os
 
 if not os.path.exists("../models/prerun/prior_predictive_00.nc"):
     dt.to_netcdf("../models/prerun/prior_predictive_00.nc")
-dt = azp.convert_to_datatree("../models/prerun/prior_predictive_00.nc")
+dt = az.convert_to_datatree("../models/prerun/prior_predictive_00.nc")
 ```
 
 The figure below displays samples from the prior predictive distribution (shown as solid blue lines). To aid interpretation, we have included two reference values: the average length/height of a newborn (approximately 50 cm) and the average height of adult males in the Netherlands (around 182 cm). Reference values are meaningful benchmarks derived from domain knowledge—not from the observed data—and help assess whether predictions are on a reasonable scale. While there are no strict rules for selecting reference values, different analysts might choose different benchmarks based on context
@@ -148,8 +148,8 @@ The figure below displays samples from the prior predictive distribution (shown 
 ```{python}
 #| label: fig-prior_pred_check_wide
 #| fig-cap: "The prior predictive check for the model of heights. We can see that the bulk of the samples are outside the reference values."
-pc = azp.plot_ppc_dist(dt, group="prior_predictive")
-azp.add_lines(pc, values=(50, 182))
+pc = az.plot_ppc_dist(dt, group="prior_predictive")
+az.add_lines(pc, values=(50, 182))
 ```
 
 We can see that our model is bananas the bulk of the prior predictive distribution is outside of our reference values and the model is predicting values below 0. This is a clear indication that the model is not a good representation of our prior knowledge. 
@@ -224,7 +224,7 @@ prior_samples = model.sample(
 )
 
 # Convert to ArviZ
-dt = azp.from_cmdstanpy(
+dt = az.from_cmdstanpy(
     prior=prior_samples,
     prior_predictive="y_prior_pred",
     observed_data={"y": y},
@@ -238,7 +238,7 @@ import os
 
 if not os.path.exists("../models/prerun/prior_predictive_01.nc"):
     dt.to_netcdf("../models/prerun/prior_predictive_01.nc")
-dt = azp.convert_to_datatree("../models/prerun/prior_predictive_01.nc")
+dt = az.convert_to_datatree("../models/prerun/prior_predictive_01.nc")
 ```
 
 
@@ -247,8 +247,8 @@ We repeat the prior predictive checks with the new prior predictive distribution
 ```{python}
 #| label: fig-prior_pred_check_narrow
 #| fig-cap: "The prior predictive check for the model of heights with a more narrower prior than @fig-prior_pred_check_wide. Predictions are closer to our domain knowledge about human heights."
-pc = azp.plot_ppc_dist(dt, group="prior_predictive")
-azp.add_lines(pc, values=(50, 182))
+pc = az.plot_ppc_dist(dt, group="prior_predictive")
+az.add_lines(pc, values=(50, 182))
 ```
 
 You are free to pick other priors and other reference values and make new prior predictive checks. Maybe you can use the historical record for the taller and shorter persons in the world as reference values.
@@ -258,8 +258,8 @@ When plotting many distributions, where each one spans a narrow range of values 
 ```{python}
 #| label: fig-prior_pred_check_narrow_ecdf
 #| fig-cap: "The prior predictive check for the model of heights. Same as @fig-prior_pred_check_narrow but using empirical CDFs instead of KDEs."
-pc = azp.plot_ppc_dist(dt, group="prior_predictive", kind="ecdf")
-azp.add_lines(pc, values=(50, 182))
+pc = az.plot_ppc_dist(dt, group="prior_predictive", kind="ecdf")
+az.add_lines(pc, values=(50, 182))
 ```
 
 ### A final note about priors
@@ -372,7 +372,7 @@ prior_samples = model.sample(
 posterior = model.sample(data=stan_data)
 
 # Convert to ArviZ
-dt = azp.from_cmdstanpy(
+dt = az.from_cmdstanpy(
     posterior=posterior,
     prior=prior_samples,
     prior_predictive={"y":"y_prior_pred"},
@@ -389,7 +389,7 @@ import os
 
 if not os.path.exists("../models/prerun/prior_predictive_02.nc"):
     dt.to_netcdf("../models/prerun/prior_predictive_02.nc")
-dt = azp.convert_to_datatree("../models/prerun/prior_predictive_02.nc")
+dt = az.convert_to_datatree("../models/prerun/prior_predictive_02.nc")
 ```
 
 
@@ -398,7 +398,7 @@ And then we use ArviZ to render the comparison. We can see that the model is doi
 ```{python}
 #| label: fig-post_pred
 #| fig-cap: "Posterior predictive check for the model of heights."
-azp.plot_ppc_dist(dt, num_samples=200);
+az.plot_ppc_dist(dt, num_samples=200);
 ```
 
 Other common visualizations to compare observed and predictive values are empirical CDFs, histograms and less often quantile dotplots. Like with other types of visualizations, you may want to try different options, to be sure visualizations are not misleading and you may also want to adapt the visualization to your audience.
@@ -414,11 +414,11 @@ The following figure shows a comparison in terms of the mean, median and interqu
 ```{python}
 #| label: fig-post_pred_check_stats
 #| fig-cap: "Posterior predictive check for the model of heights using summary statistics."
-pc = azp.combine_plots(dt,
+pc = az.combine_plots(dt,
                  plots=[
-                  (azp.plot_ppc_tstat, {"t_stat":"median"}),
-                  (azp.plot_ppc_tstat, {"t_stat":"mad"}),
-                  (azp.plot_ppc_tstat, {"t_stat":"iqr"}),                   
+                  (az.plot_ppc_tstat, {"t_stat":"median"}),
+                  (az.plot_ppc_tstat, {"t_stat":"mad"}),
+                  (az.plot_ppc_tstat, {"t_stat":"iqr"}),                   
                  ],
                 group="posterior_predictive",
                 figure_kwargs={"figsize":(9, 3)}
@@ -485,7 +485,7 @@ The disadvantage of such visualization is that all the "action" is close to the 
 ```{python}
 #| label: fig-post_ppc_pit_ecdf
 #| fig-cap: "Posterior predictive check for the model of heights using marginal Bayesian p-values, also know as u-values."
-azp.plot_ppc_pit(dt);
+az.plot_ppc_pit(dt);
 ```
 
 In ArviZ, we use the simultaneous confidence bands described by @sailynoja_2022. The simultaneous confidence bands take into account the probability of observing deviations of the entire curve, as opposed to independent pointwise deviations. The band or envelope has an oval shape because the probability of observing a deviation is null at 0 and 1, all ECDFs must start at 0 and end at 1, and is higher in the middle of the curve.
@@ -514,12 +514,12 @@ for i, (mu, sigma) in enumerate([
                                 ]):
     predictions[f"y{i}"] =  pz.Normal(mu, sigma).rvs((4, 500, 100))
 
-dt_i = azp.from_dict({
+dt_i = az.from_dict({
     "posterior_predictive":predictions,
     "observed_data": {f"y{i}": observed for i in range(len(predictions))}
 })
 
-azp.plot_ppc_dist(dt_i,
+az.plot_ppc_dist(dt_i,
                   kind="kde",  
                   visuals={"remove_axis":False},
                  );
@@ -532,7 +532,7 @@ Then we show the ECDFs of the observed data and the predictions.
 ```{python}
 #| label: fig-post_ppc_pit_ecdf_alt_1
 #| fig-cap: "Posterior predictive check with ECDFs showing four alternative scenarios."
-azp.plot_ppc_dist(dt_i,
+az.plot_ppc_dist(dt_i,
                   kind="ecdf",
                   figure_kwargs={"sharey":True, "figsize":(9, 3)},         
                  );
@@ -543,7 +543,7 @@ Finally, we show the PIT-ECDFs.
 ```{python}
 #| label: fig-post_ppc_pit_ecdf_alt_2
 #| fig-cap: "Posterior predictive check with PIT-ECDFs showing four alternative scenarios."
-azp.plot_ppc_pit(dt_i,
+az.plot_ppc_pit(dt_i,
                  visuals={"ylabel":False},
                  figure_kwargs={"sharey":True, "figsize":(9, 3)},   
                  );
@@ -560,7 +560,7 @@ Using ArviZ we can visualize the ETI coverage by setting ``coverage=True`` in th
 ```{python}
 #| label: fig-post_ppc_pit_coverage
 #| fig-cap: "Coverage check showing four alternative scenarios."
-azp.plot_ppc_pit(dt_i,
+az.plot_ppc_pit(dt_i,
                  coverage=True,
                  visuals={"ylabel":False},
                  figure_kwargs={"sharey":True, "figsize":(9, 3)},
@@ -595,7 +595,7 @@ In principle computing this will be too costly, as we need to compute the poster
 ```{python}
 #| label: fig-post_loo_pit
 #| fig-cap: "Posterior predictive check with LOO-PIT-ECDF."
-azp.plot_loo_pit(dt);
+az.plot_loo_pit(dt);
 ```
 
 ### Hypothetical Outcome Plots
@@ -620,8 +620,8 @@ To illustrate rootograms we are going to use the Horseshoe crabs dataset [@Brock
 We are going to omit the modelling details, and just upload prefitted models.
 
 ```{python}
-crabs_poisson = azp.load_arviz_data('crabs_poisson')
-crabs_hurdle_nb = azp.load_arviz_data('crabs_hurdle_nb')
+crabs_poisson = az.load_arviz_data('crabs_poisson')
+crabs_hurdle_nb = az.load_arviz_data('crabs_hurdle_nb')
 ```
 
 Let's first check the Poisson model. We can see that the overall fit is not that bad, but the zeros are underpredicted, and counts 1 to 4 are overpredicted. Most
@@ -630,7 +630,7 @@ counts from 6 onward are also underpredicted. This pattern is an indication of o
 ```{python}
 #| label: fig-ppc_rootogram_crab_poisson
 #| fig-cap: "Rootogram showing the uncertainty in the predictions for a Poisson model."
-pc = azp.plot_ppc_rootogram(crabs_poisson)
+pc = az.plot_ppc_rootogram(crabs_poisson)
 pc.viz.plot["satellite"].item().set_xlim(-0.5, 20)
 ```
 
@@ -639,7 +639,7 @@ Now we will check the fit for the hurdle model. As expected for a hurdle model w
 ```{python}
 #| label: fig-ppc_rootogram_crab_hurdle_nb
 #| fig-cap: "Rootogram showing the uncertainty in the predictions for a Hurdle Negative Binomial model."
-pc = azp.plot_ppc_rootogram(crabs_hurdle_nb)
+pc = az.plot_ppc_rootogram(crabs_hurdle_nb)
 pc.viz.plot["satellite"].item().set_xlim(-0.5, 20)
 ```
 
@@ -656,9 +656,9 @@ A more robust and simple to use method, that does not rely on binning the data h
 ```{python}
 #| label: fig-ppc_pava
 #| fig-cap: "PAV-adjusted calibration plot for a logistic regression model."
-dt = azp.load_arviz_data('anes')
+dt = az.load_arviz_data('anes')
 
-azp.plot_ppc_pava(dt)
+az.plot_ppc_pava(dt)
 ```
 
 The y-axis of @fig-ppc_pava is labeled as CEP, short for "conditional event probabilities." A CEP represents the probability that an event occurs, given that the classifier assigned a particular predicted probability. These probabilities are computed using the pool adjacent violators algorithm [@Ayer_1955], also known as the PAV-adjusted method—hence the name of the corresponding function in ArviZ. This algorithm ensures that CEPs are monotonic: they either increase or remain constant as the predicted probabilities increase, but never decrease. This monotonicity assumption is reasonable for calibrated models, where higher predicted probabilities should correspond to higher actual event probabilities. 
@@ -673,13 +673,13 @@ We can use `plot_ppc_pava` for categorical data, but not directly. We need to te
 
 ```{python}
 #| echo: false
-dt_cat = azp.convert_to_datatree("../models/prerun/dt_cat.nc")
+dt_cat = az.convert_to_datatree("../models/prerun/dt_cat.nc")
 ```
 
 ```{python}
 #| label: fig-ppc_pava_cat
 #| fig-cap: "PAV-adjusted calibration plot for a categorical regression model."
-azp.plot_ppc_pava(
+az.plot_ppc_pava(
     dt_cat,
     data_type="categorical",
     figure_kwargs={"figsize":(9, 3)},
@@ -696,13 +696,13 @@ With ordinal data, we can not directly use `plot_ppc_pava`; we have to pass `dat
 
 ```{python}
 #| echo: false
-dt_ord = azp.convert_to_datatree("../models/prerun/dt_ord.nc")
+dt_ord = az.convert_to_datatree("../models/prerun/dt_ord.nc")
 ```
 
 ```{python}
 #| label: fig-ppc_pava_ord
 #| fig-cap: "PAV-adjusted calibration plot for an ordinal regression model."
-azp.plot_ppc_pava(
+az.plot_ppc_pava(
     dt_ord,
     data_type="ordinal",
     figure_kwargs={"figsize":(10, 4)},
@@ -722,8 +722,8 @@ The following example is from a model of cat adoption. We record how many months
 ```{python}
 #| label: fig-ppc_censored
 #| fig-cap: "Posterior predictive check for survival/censored data using Kaplan-Meier curves."
-dt_cens = azp.load_arviz_data('censored_cats')
-azp.plot_ppc_censored(dt_cens)
+dt_cens = az.load_arviz_data('censored_cats')
+az.plot_ppc_censored(dt_cens)
 ```
 
 To keep predictions within a meaningful range ArviZ limits the predictive data relative to the maximum observed duration, preventing the survival curves from extending too far beyond the observed data. You can change this with the argument `extrapolation_factor`, which defaults to 1.2, meaning up to a 20% larger that the maximum observation. For more recommendations on how to perform predictive assessment for survival model you can read [@suorsa_2026].
