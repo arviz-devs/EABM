@@ -92,7 +92,7 @@ If we want to get the number of schools we can write:
 len(dt.observed_data.school)
 ```
 
-Notice that we do not need to first obtain the NumPy array and then compute the length. When working with DataTree/Sets/Arrays, you may feel tempted to reduce them to NumPy arrays, as you are more familiar with those. But for many problems that is not needed and for many other that is not even recommended as you may loose the benefit of working with labeled array-like structures.
+Notice that we do not need to first obtain the NumPy array and then compute the length. When working with DataTree/Sets/Arrays, you may feel tempted to reduce them to NumPy arrays, as you are more familiar with those. But for many problems that is not needed and for many other that is not even recommended as you may lose the benefit of working with labeled array-like structures.
 
 ### Get a subset of chains
 
