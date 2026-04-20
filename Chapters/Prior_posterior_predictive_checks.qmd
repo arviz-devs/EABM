@@ -470,17 +470,20 @@ $$
 F_Y(y) = \mathrm{Pr}(Y \leq y).
 $$
 
-Thus, we can see the computation of the marginal p-value as an application of the Probability Integral Transform.
+Thus, we can see the computation of the marginal p-value as an application of the Probability Integral Transform. In practice we may not know the CDF, but as long as we have samples from a distribution, like the posterior predictive, we can compute the empirical CDF (ECDF). 
 
-In practice we don't have the CDF, but this is no problem as we have samples from the posterior predictive and hence we can compute the empirical CDF (ECDF). The CDF of the standard Uniform distribution is a diagonal line that goes from (0, 0) to (1,1), as shown in @fig-post_pred_uniform_cdf. Deviations from this line may indicate problems with the model. This is a very simple to interpret visualization. 
-
+The CDF of the standard Uniform distribution is a diagonal line that goes from (0, 0) to (1,1), as shown in @fig-post_pred_uniform_cdf. 
 ```{python}
 #| label: fig-post_pred_uniform_cdf
 #| fig-cap: "The CDF of the standard Uniform distribution."
 pz.Uniform(0, 1).plot_cdf()
 ```
 
-The disadvantage of such visualization is that all the "action" is close to the diagonal line and most of the plot is just blank space. A simple trick to improve the *data-ink* ratio is to render the difference between the observed and expected cumulative distribution functions, the $\Delta$-ECDF, as shown in @fig-post_ppc_pit_ecdf. The last ingredient to improve this visual diagnostic is to add a confidence band. Due to finite sample size we should expect deviations from uniformity, so a confidence band gives us an idea of how much deviation is expected by chance. 
+We can compute the ECDF from our samples and compare it to this line. Deviations from this line may indicate problems with the model. This is a very simple to interpret visualization. That's the basic idea, but there are a few additional ingredients that can make this visualization more informative and easier to interpret.
+
+The disadvantage of visualization like @fig-post_pred_uniform_cdf is that all the "action" is close to the diagonal and then most of the plot is just blank space. A simple *trick* to improve the *data-ink* ratio is to render the difference between the observed and expected cumulative distribution functions, the $\Delta$-ECDF, as shown in @fig-post_ppc_pit_ecdf. This makes deviations from uniformity more visible, as they will appear as peaks and valleys in the plot. 
+
+Another potential issue with this visualization is that it can be difficult to interpret the magnitude of the deviations from uniformity. Due to finite sample size we should expect deviations from uniformity even if the model is good, so how can we know if a deviation from uniformity is larger than expected? One way to address this issue is to add a uniformity test to the visualization. This test can help us determine when a deviation from uniformity is larger than expected, and it can also help us identify which points contribute the most to the rejection of the null hypothesis of uniformity.
 
 ```{python}
 #| label: fig-post_ppc_pit_ecdf
@@ -488,9 +491,9 @@ The disadvantage of such visualization is that all the "action" is close to the 
 az.plot_ppc_pit(dt);
 ```
 
-In ArviZ, we use the simultaneous confidence bands described by @sailynoja_2022. The simultaneous confidence bands take into account the probability of observing deviations of the entire curve, as opposed to independent pointwise deviations. The band or envelope has an oval shape because the probability of observing a deviation is null at 0 and 1, all ECDFs must start at 0 and end at 1, and is higher in the middle of the curve.
+In ArviZ, we use the uniformity test develop by @tesso_2026. This test returns two results: a p-value for the null hypothesis of uniformity and if the p-value is below a certain threshold (default is 0.05) it also returns the points that contribute the most to the rejection of the null hypothesis (the deviations from uniformity that are larger than expected).
 
-To build intuition on how to interpret the PIT-ECDF plots we are going to explore four common patterns using synthetic data. The following three figures show four different scenarios, where the observed data follows a standard normal distribution ($\mu=0, \sigma^2=1$). In each case, we compare the observed data to predictions where:
+To build intuition for PIT-ECDF plots, we will look at four simple examples using synthetic data. In all cases, the observed data come from a standard normal distribution ($\mu = 0, \sigma^2 = 1$). For each example, we compare the observed data to predictions where:
 
 * The mean of the predictions is shifted to the right. The model is overpredicting the data.
 * The mean of the predictions is shifted to the left. The model is underpredicting the data.
@@ -498,11 +501,17 @@ To build intuition on how to interpret the PIT-ECDF plots we are going to explor
 * The predictions have a narrower spread. The predictions are too certain.
 
 
-First we show the KDEs of the observed data and the predictions.
+Each row in @fig-post_ppc_pit_ecdf_alt_0 corresponds to one of these scenarios. The columns show complementary diagnostics:
+
+* Left column. We inspect how KDEs of the observed and predicted distributions compare.
+* Middle column. We inspect how ECDFs of the observed and predicted distributions compare.
+* Right column. We inspect how PIT–ECDFs deviate from the expected uniform distribution.
+
+The first two columns help build intuition because they remain in the original data space, but they are relatively insensitive to subtle miscalibration. In contrast, the PIT-ECDF directly targets calibration: even small deviations from uniformity become visible, making it a more sensitive diagnostic.
 
 ```{python}
 #| label: fig-post_ppc_pit_ecdf_alt_0
-#| fig-cap: "Posterior predictive check with KDEs showing four alternative scenarios."
+#| fig-cap: "Posterior predictive check with KDEs, ECDFs, and PIT-ECDFs showing four alternative scenarios."
 observed = pz.Normal(0, 1).rvs(500)
 
 predictions = {}
@@ -519,41 +528,24 @@ dt_i = az.from_dict({
     "observed_data": {f"y{i}": observed for i in range(len(predictions))}
 })
 
-az.plot_ppc_dist(dt_i,
-                  kind="kde",  
-                  visuals={"remove_axis":False},
-                 );
+
+pc = az.combine_plots(
+    dt_i,
+    [
+        (az.plot_ppc_dist, {}),
+        (az.plot_ppc_dist, {"kind":"ecdf"}),
+        (az.plot_ppc_pit, {}),
+    ],
+    group="posterior_predictive",
+)
 ```
 
-
-Then we show the ECDFs of the observed data and the predictions.
-
-
-```{python}
-#| label: fig-post_ppc_pit_ecdf_alt_1
-#| fig-cap: "Posterior predictive check with ECDFs showing four alternative scenarios."
-az.plot_ppc_dist(dt_i,
-                  kind="ecdf",
-                  figure_kwargs={"sharey":True, "figsize":(9, 3)},         
-                 );
-```
-
-Finally, we show the PIT-ECDFs.
-
-```{python}
-#| label: fig-post_ppc_pit_ecdf_alt_2
-#| fig-cap: "Posterior predictive check with PIT-ECDFs showing four alternative scenarios."
-az.plot_ppc_pit(dt_i,
-                 visuals={"ylabel":False},
-                 figure_kwargs={"sharey":True, "figsize":(9, 3)},   
-                 );
-```
 
 ### Coverage
 
 The coverage is the proportion of true values that fall within a given prediction interval. For a well-calibrated model, the coverage should match the intended interval width. For example, a 95% credible interval should contain the true value 95% of the time.
 
-For equal-tailed intervals (ETI), the coverage can be obtained by transforming the PIT values, we just need to replace the PIT with two times the absolute difference between the PIT values and 0.5. As with the PIT-ECDFs we saw in the previous section, for a well calibrated model, we should expect the coverage to be uniform and within the confidence envelope.
+For equal-tailed intervals (ETI), the coverage can be obtained by transforming the PIT values, we just need to replace the PIT with two times the absolute difference between the PIT values and 0.5. As with the PIT-ECDFs we saw in the previous section, for a well calibrated model, we should expect the coverage to be uniform.
 
 Using ArviZ we can visualize the ETI coverage by setting ``coverage=True`` in the `plot_ppc_pit` function.
 
