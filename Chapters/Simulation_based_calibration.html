@@ -101,9 +101,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-ff9041bda4e6ceae406f27db3fd57b1e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-e5ae0e5a532b1437dd815277929017bb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-ff9041bda4e6ceae406f27db3fd57b1e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-a59734170fbb569a7de8d2cde8689902.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-06efa47294e5a4b40460ae195afbf2dd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-a59734170fbb569a7de8d2cde8689902.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -240,6 +240,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=The book of statistical proofs;,citation_author=Joram Soch;,citation_author=Thomas J Faulkenberry;,citation_author=Kenneth Petrykowski;,citation_author=Carsten Allefeld;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_fulltext_html_url=https://statproofbook.github.io/;,citation_doi=10.5281/ZENODO.4305949;">
 <meta name="citation_reference" content="citation_title=Predictive assessment and comparison of bayesian survival models for cancer recurrence;,citation_author=Saku Suorsa;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2601.01662;">
 <meta name="citation_reference" content="citation_title=Statistical Rethinking: A Bayesian Course with Examples in R and STAN;,citation_author=Richard McElreath;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://doi.org/10.1201/9780429029608;,citation_isbn=978-0-367-13991-9;">
+<meta name="citation_reference" content="citation_title=LOO-PIT predictive model checking;,citation_author=Herman Tesso;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2603.02928;">
 </head>
 
 <body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -610,7 +611,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 15, 2026</p>
+      <p class="date-modified">May 6, 2026</p>
     </div>
   </div>
     
@@ -714,7 +715,7 @@ p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{margin
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="f0093609" class="cell" data-execution_count="2">
+<div id="e82e9995" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> simuk <span class="im">as</span> sim</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -742,8 +743,8 @@ p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{margin
 </div>
 </div>
 <p>To assess the calibration of the inference, we inspect the uniformity of the PIT values of the posterior samples with respect to the prior samples. To do that we can simply call the <code>plot_ecdf_pit</code> function from the <code>ArviZ</code> package.</p>
-<div id="e68382be" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>azp.plot_ecdf_pit(sbc_results,</span>
+<div id="92f72975" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>az.plot_ecdf_pit(sbc_results,</span>
 <span id="cb3-2"><a href="#cb3-2"></a>              visuals<span class="op">=</span>{<span class="st">"xlabel"</span>:<span class="va">False</span>},</span>
 <span id="cb3-3"><a href="#cb3-3"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">

@@ -101,9 +101,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-ff9041bda4e6ceae406f27db3fd57b1e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-e5ae0e5a532b1437dd815277929017bb.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-ff9041bda4e6ceae406f27db3fd57b1e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-a59734170fbb569a7de8d2cde8689902.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-06efa47294e5a4b40460ae195afbf2dd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-a59734170fbb569a7de8d2cde8689902.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -211,6 +211,7 @@ div.csl-indent {
 <meta name="citation_reference" content="citation_title=The book of statistical proofs;,citation_author=Joram Soch;,citation_author=Thomas J Faulkenberry;,citation_author=Kenneth Petrykowski;,citation_author=Carsten Allefeld;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_fulltext_html_url=https://statproofbook.github.io/;,citation_doi=10.5281/ZENODO.4305949;">
 <meta name="citation_reference" content="citation_title=Predictive assessment and comparison of bayesian survival models for cancer recurrence;,citation_author=Saku Suorsa;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2601.01662;">
 <meta name="citation_reference" content="citation_title=Statistical Rethinking: A Bayesian Course with Examples in R and STAN;,citation_author=Richard McElreath;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://doi.org/10.1201/9780429029608;,citation_isbn=978-0-367-13991-9;">
+<meta name="citation_reference" content="citation_title=LOO-PIT predictive model checking;,citation_author=Herman Tesso;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2603.02928;">
 </head>
 
 <body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -580,7 +581,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 15, 2026</p>
+      <p class="date-modified">May 6, 2026</p>
     </div>
   </div>
     
@@ -709,7 +710,7 @@ Figure&nbsp;1.7: non-uniformly perceptual maps like jet can be very misleading
 <div id="cell-fig-style_variat" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>azp.style.use(<span class="st">'arviz-variat'</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>az.style.use(<span class="st">'arviz-variat'</span>)</span>
 <span id="cb1-2"><a href="#cb1-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
 <span id="cb1-3"><a href="#cb1-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
 <span id="cb1-4"><a href="#cb1-4"></a></span>
@@ -719,11 +720,17 @@ Figure&nbsp;1.7: non-uniformly perceptual maps like jet can be very misleading
 <span id="cb1-8"><a href="#cb1-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
 <span id="cb1-9"><a href="#cb1-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor/link/numba/dispatch/basic.py:214: UserWarning: Numba will use object mode to run XlogY0's perform method. Set `pytensor.config.compiler_verbose = True` to see more details.
+  warnings.warn(
+/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor/tensor/xlogx.py:47: RuntimeWarning: divide by zero encountered in log
+  return x * np.log(y)</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div id="fig-style_variat" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-style_variat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Elements_of_visualization_files/figure-html/fig-style_variat-output-1.png" width="823" height="423" class="figure-img">
+<img src="Elements_of_visualization_files/figure-html/fig-style_variat-output-2.png" width="823" height="423" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-style_variat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1.8: arviz-variat style use a color-blind friendly palette
@@ -737,15 +744,15 @@ Figure&nbsp;1.8: arviz-variat style use a color-blind friendly palette
 <div id="cell-fig-style_cetrino" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>azp.style.use(<span class="st">'arviz-cetrino'</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
-<span id="cb2-3"><a href="#cb2-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
-<span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">2</span>))</span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
-<span id="cb2-7"><a href="#cb2-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb2-8"><a href="#cb2-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
-<span id="cb2-9"><a href="#cb2-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>az.style.use(<span class="st">'arviz-cetrino'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb3-3"><a href="#cb3-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">2</span>))</span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb3-7"><a href="#cb3-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb3-8"><a href="#cb3-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb3-9"><a href="#cb3-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-style_cetrino" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -765,15 +772,15 @@ Figure&nbsp;1.9: arviz-cetrino style use a color-blind friendly palette
 <div id="cell-fig-style_tenui" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>azp.style.use(<span class="st">'arviz-tenui'</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
-<span id="cb3-3"><a href="#cb3-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
-<span id="cb3-4"><a href="#cb3-4"></a></span>
-<span id="cb3-5"><a href="#cb3-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">2</span>))</span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
-<span id="cb3-7"><a href="#cb3-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb3-8"><a href="#cb3-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
-<span id="cb3-9"><a href="#cb3-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>az.style.use(<span class="st">'arviz-tenui'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
+<span id="cb4-4"><a href="#cb4-4"></a></span>
+<span id="cb4-5"><a href="#cb4-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">2</span>))</span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb4-7"><a href="#cb4-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb4-9"><a href="#cb4-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-style_tenui" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -793,15 +800,15 @@ Figure&nbsp;1.10: arviz-tenui style use a color-blind friendly palette
 <div id="cell-fig-style_tumma" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>azp.style.use(<span class="st">'arviz-tumma'</span>)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
-<span id="cb4-4"><a href="#cb4-4"></a></span>
-<span id="cb4-5"><a href="#cb4-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">2</span>))</span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
-<span id="cb4-7"><a href="#cb4-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb4-8"><a href="#cb4-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
-<span id="cb4-9"><a href="#cb4-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>az.style.use(<span class="st">'arviz-tumma'</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">2</span>))</span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb5-8"><a href="#cb5-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb5-9"><a href="#cb5-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-style_tumma" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -821,15 +828,15 @@ Figure&nbsp;1.11: arviz-tumma style use a color-blind friendly palette
 <div id="cell-fig-style_vibrant" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>azp.style.use(<span class="st">'arviz-vibrant'</span>)</span>
-<span id="cb5-2"><a href="#cb5-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
-<span id="cb5-3"><a href="#cb5-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
-<span id="cb5-4"><a href="#cb5-4"></a></span>
-<span id="cb5-5"><a href="#cb5-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">2</span>))</span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
-<span id="cb5-7"><a href="#cb5-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb5-8"><a href="#cb5-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
-<span id="cb5-9"><a href="#cb5-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>az.style.use(<span class="st">'arviz-vibrant'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2"></a>x <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb6-3"><a href="#cb6-3"></a>dist <span class="op">=</span> pz.Beta(<span class="dv">2</span>, <span class="dv">5</span>).pdf(x)</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">2</span>))</span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    plt.plot(x, dist <span class="op">-</span> i, <span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, label<span class="op">=</span><span class="ss">f'C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb6-8"><a href="#cb6-8"></a>plt.xlabel(<span class="st">'x'</span>)</span>
+<span id="cb6-9"><a href="#cb6-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-style_vibrant" class="quarto-float quarto-figure quarto-figure-center anchored">
