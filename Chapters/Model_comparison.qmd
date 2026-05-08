@@ -370,19 +370,21 @@ The simplest way to use information criteria is to choose a single model. Simply
 
 Then we see a table titled “Pareto k diagnostic values”. Earlier we said that we use a method involving a Pareto distribution to regularize the estimation of the importance weights. One of the parameters of that fit is called $k$, and its estimate is often written as $\hat{k}$. Because we compute a Pareto adjustment per observation, we obtain one $\hat{k}$ value per observation. This parameter is useful because it tells us two related things: when an observation is "very influential" and when the LOO approximation may be failing for that observation.
 
-As a general rule, if $\hat{k}$ is less than 0.7 there are no problems; if it is between 0.7 and 1 it is very likely that we are in trouble; and if it is greater than 1, we are doomed. The cut-off value 0.7 is not fixed, it can in principle be lower, and it depends on the total number of posterior draws (2000 in this example). But when the number of draws is about 2000, the recommended threshold is close to 0.7. In practice, it is common to use at least 2000 posterior draws. Increasing the number of samples from the posterior may reduce the value of $\hat{k}$ and thus remove some of these warnings, but in general the number needed will be too large to be practically useful.
+As a general rule, if $\hat{k}$ is less than 0.7 there are no problems; if it is between 0.7 and 1 it is very likely that we are in trouble; and if it is greater than 1, we are doomed. The cut-off value 0.7 is not really fixed, it is computed as $\min\left(1 - \frac{1}{\log_{10}(S)}, 0.7\right))$, where $S$ is the number of posterior draws. When the number of draws is about 2000 (like in our example), the recommended threshold is very close to 0.7. ArviZ can compute the threshold automatically.
+
+The number of samples not only affect the threshold,it can actually help to reduce the value of $\hat{k}$ and thus remove some of these warnings. This is specially true for values close to the threshold, and when the number of samples is not yet "too large" (given our budget). Otherwise, the number needed will be too large to be practically useful.
 
 It is possible to visualize the values ​​of $k$, using `plot_khat`
 
 
 ```{python}
 # coming soon
-#az.plot_khat(elpd, threshold=0.7);
+az.plot_khat(elpd);
 ```
 
-While the main function of LOO is to compare models, the values ​​of $k$ can be useful even if we only have only one model. For example, we could have extra knowledge that tells us why these observations are influential, perhaps there was a problem in data collection and the values ​​are incorrect. Or perhaps the values ​​are correct but from the perspective of our model they are influential, "strange", "surprising".
+While the main function of LOO is to compare models, the values ​​of $k$ can be useful even if we only have one model. For example, we could have extra knowledge that tells us why these observations are influential, perhaps there was a problem in data collection and the values ​​are incorrect. Or perhaps the values ​​are correct but from the perspective of our model they are influential.
 
- If $k > 0.7$, the value of `p_loo` can give us some more information, where $p$ is the total number of parameters in a model.
+If $k > 0.7$, the value of `p_loo` can give us some more information, where $p$ is the total number of parameters in a model.
 
 * If $p_{\text{loo}} << p$ then the model must be misspecified. This should also be seen in post-hoc predictive testing. One solution is to use an overdispersed model (such as changing a Poisson for a NegativeBinomial or for a ZeroInflatedPoisson or HurdlePoisson, or changing a Normal for a Student's T, etc.). Or it is likely that the model needs more structure or complexity, perhaps we need a non-linear term, etc.
 
