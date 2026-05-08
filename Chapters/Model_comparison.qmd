@@ -278,7 +278,7 @@ When we combine all these ideas we get a method called Pareto-Smooth Importance 
 
 ## PSIS-LOO-CV in Arviz
 
-Since the name and even acronym are too long and not that easy to pronounce, in ArviZ, we usually refer to this and related methods as LOO. For example to compute the ELPD, estimated using PSIS-LOO_CV, we call the `loo` function, we  just need to pass DataTree object containing a `log-likelihood` group.
+Since the name and even acronym are too long and not that easy to pronounce, in ArviZ, we usually refer to this and related methods as LOO. For instance, to compute the ELPD using the PSIS-LOO-CV method, we call the `loo` function. This function's first argument needs to be a DataTree object with a `log-likelihood` group.
 
 ```{python}
 dt_rugby = az.load_arviz_data('rugby')
@@ -289,14 +289,22 @@ elpd
 We can see that we get the estimated ELPD value using LOO and its standard error. `p_loo` can be roughly interpreted as the effective number of parameters. For some models this number should be close to the actual number of parameters, for models with regularization, like hierarchical models, it should be less than the actual number of parameters.
 After all this introduction, actually computing LOO may seem somewhat disappointing.
 
-To compare two or more models, we can use the `compare` function, which accepts a dictionary where the keys are the names of the models and the values are `DataTree` objects.
+### A simple example
+
+Let's see how to use ArviZ to compare two models. We start by simulating some data from a Student's T distribution (df=$\nu$=4), which has heavier tails than a Normal distribution. 
+
+
+```{python}
+target = pz.StudentT(nu=4, mu=0, sigma=1).rvs(200, random_state=SEED)
+```
+
+We then fit two models, one with a Normal likelihood and another with a Student's T likelihood.
 
 ::: {.panel-tabset group="ppl"}
 ## PyMC
 
 ```{python}
 #| eval: false
-target = pz.StudentT(nu=4, mu=0, sigma=1).rvs(200, random_state=SEED)
 
 with pm.Model() as model_n:
     μ = pm.Normal("μ", 0, 1)
@@ -314,8 +322,100 @@ with pm.Model() as model_t:
 
 ## CmdStanPy
 
-``` {.python}
-## coming soon
+```{.python}
+normal_model = """
+data {
+  int<lower=0> N;
+  vector[N] y;
+}
+parameters {
+  real mu;
+  real<lower=0> sigma;
+}
+model {
+  mu    ~ normal(0, 1);
+  sigma ~ normal(0, 1);
+  y     ~ normal(mu, sigma);
+}
+generated quantities {
+  vector[N] log_lik;
+  for (n in 1:N)
+    log_lik[n] = normal_lpdf(y[n] | mu, sigma);
+}
+"""
+
+student_model = """
+data {
+  int<lower=0> N;
+  vector[N] y;
+}
+parameters {
+  real mu;
+  real<lower=0> sigma;
+  real<lower=0> nu;
+}
+model {
+  mu    ~ normal(0, 1);
+  sigma ~ normal(0, 1);
+  nu    ~ exponential(1.0 / 30);
+  y     ~ student_t(nu, mu, sigma);
+}
+generated quantities {
+  vector[N] log_lik;
+  for (n in 1:N)
+    log_lik[n] = student_t_lpdf(y[n] | nu, mu, sigma);
+}
+"""
+
+stan_data = {"N": len(target), "y": target.tolist()}
+
+# Normal model
+
+## Write the normal model to a file
+with open("./normal_model.stan", "w") as f:
+    print(normal_model, file=f)
+
+## Compile the model
+model_n = CmdStanModel(stan_file="./normal_model.stan")
+
+## Sample from the posterior
+fit_n   = model_n.sample(
+    data=stan_data,
+    seed=SEED,
+    show_progress=False,
+)
+
+## Convert the fit to an ArviZ DataTree object
+idata_n = az.from_cmdstanpy(
+    posterior=fit_n,
+    log_likelihood="log_lik",
+    observed_data={"y": target},
+)
+
+
+# Student's T model
+
+## Write the student model to a file
+with open("./student_model.stan", "w") as f:
+    print(student_model, file=f)
+
+## Compile the model
+model_t = CmdStanModel(stan_file="./student_model.stan")
+
+## Sample from the posterior
+fit_t   = model_t.sample(
+    data=stan_data,
+    seed=SEED,
+    show_progress=False,
+)
+
+## Convert the fit to an ArviZ DataTree object
+idata_t = az.from_cmdstanpy(
+    posterior=fit_t,
+    log_likelihood="log_lik",
+    observed_data={"y": target},
+)
+
 ```
 :::
 
@@ -333,6 +433,8 @@ if not os.path.exists("../models/prerun/model_comparison_01.nc"):
     idata_t.to_netcdf("../models/prerun/model_comparison_01.nc")
 idata_t = az.convert_to_datatree("../models/prerun/model_comparison_01.nc")
 ```
+
+To compare two or more models, we can use the `compare` function, which accepts a dictionary where the keys are the names of the models and the values are `DataTree` objects.
 
 
 
@@ -874,7 +976,43 @@ with pm.Model() as model_uni:
 ## CmdStanPy
 
 ``` {.python}
-## coming soon
+y = np.repeat([1, 0], [50, 50])  # 50 heads, 50 tails
+
+model_00 = """
+data {
+  int<lower=0> N;
+  array[N] int<lower=0,upper=1> y;
+}
+parameters {
+  real<lower=0,upper=1> a;
+}
+model {
+  a  ~ beta(1, 1);
+  y  ~ bernoulli(a);
+}
+generated quantities {
+  real a_prior = beta_rng(1, 1);
+}
+"""
+
+stan_data = {"N": len(y), "y": y.tolist()}
+
+
+with open("./model_00.stan", "w") as f:
+    print(model_00, file=f)
+
+model_00 = CmdStanModel(stan_file="./model_00.stan")
+
+fit = model_00.sample(
+    data=stan_data,
+    seed=42,
+)
+
+idata_uni = az.from_cmdstanpy(
+    posterior=fit,
+    prior=fit,
+    observed_data={"y": y},
+)
 ```
 :::
 
@@ -917,7 +1055,42 @@ with pm.Model() as model_conc:
 ## CmdStanPy
 
 ``` {.python}
-## coming soon
+model_01 = """
+data {
+  int<lower=0> N;
+  array[N] int<lower=0,upper=1> y;
+}
+parameters {
+  real<lower=0,upper=1> a;
+}
+model {
+  a  ~ beta(30, 30);
+  y  ~ bernoulli(a);
+}
+generated quantities {
+  real a_prior = beta_rng(30, 30);
+}
+"""
+
+stan_data = {"N": len(y), "y": y.tolist()}
+
+
+with open("./model_01.stan", "w") as f:
+    print(model_01, file=f)
+
+## Compile the model
+model_01 = CmdStanModel(stan_file="./model_01.stan")
+
+fit = model_01.sample(
+    data=stan_data,
+    seed=42,
+)
+
+idata_conc = az.from_cmdstanpy(
+    posterior=fit,
+    prior=fit,
+    observed_data={"y": y},
+)
 ```
 :::
 
