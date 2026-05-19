@@ -101,9 +101,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a59734170fbb569a7de8d2cde8689902.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-06efa47294e5a4b40460ae195afbf2dd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-a59734170fbb569a7de8d2cde8689902.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-38221dd67912a8d268c991a667888358.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-be7a07c707d4d3acecc219ff9b48e327.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-38221dd67912a8d268c991a667888358.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -581,7 +581,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 9, 2026</p>
+      <p class="date-modified">May 19, 2026</p>
     </div>
   </div>
     
@@ -721,10 +721,12 @@ Figure&nbsp;1.7: non-uniformly perceptual maps like jet can be very misleading
 <span id="cb1-9"><a href="#cb1-9"></a>plt.ylabel(<span class="st">'f(x)'</span>, rotation<span class="op">=</span><span class="dv">0</span>, labelpad<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor/link/numba/dispatch/basic.py:214: UserWarning: Numba will use object mode to run XlogY0's perform method. Set `pytensor.config.compiler_verbose = True` to see more details.
-  warnings.warn(
-/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor/tensor/xlogx.py:47: RuntimeWarning: divide by zero encountered in log
-  return x * np.log(y)</code></pre>
+<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/beta.py:106: FutureWarning: pytensor.tensor.xlogx.xlogy0 is deprecated. Use pytensor.tensor.special.xlogy(x, y) instead.
+  (xlogy0((alpha - 1), x) + xlogy0((beta - 1), 1 - x))
+/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/beta.py:106: FutureWarning: pytensor.tensor.xlogx.xlogy0 is deprecated. Use pytensor.tensor.special.xlogy(x, y) instead.
+  (xlogy0((alpha - 1), x) + xlogy0((beta - 1), 1 - x))
+/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/beta.py:107: FutureWarning: pytensor.tensor.xlogx.xlogy0 is deprecated. Use pytensor.tensor.special.xlogy(x, y) instead.
+  - (xlogy0((alpha + beta - 1), 1) + betaln(alpha, beta)),</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div id="fig-style_variat" class="quarto-float quarto-figure quarto-figure-center anchored">
