@@ -37,26 +37,37 @@ With so many options we can feel overwhelmed. Which ones we should use will depe
 
 ## Prior predictive checks
 
-The idea behind prior predictive checks is very general and simple: if a model is good it should be able generate data resembling our prior knowledge. We call these checks, prior predictive because we are generating synthetic data before we have seen the actual data.
 
+The idea behind prior predictive checks is simple: if a Bayesian model is reasonable, it should be capable of generating data consistent with our prior knowledge. These are called *prior predictive* checks because the synthetic data is generated before observing the actual data.
+
+Consider a Bayesian model consisting of a data model
+
+$$
+p(y \mid \theta)
+$$
+
+and a prior
+
+$$
+p(\theta).
+$$
+
+The prior predictive distribution is obtained by combining these two components:
+
+$$
+p(y) = \int p(y \mid \theta)\, p(\theta)\, d\theta.
+$$
 
 The general algorithm for prior predictive checks is:
 
-1. Draw $N$ realizations from a prior distribution.
-2. For each draw, simulate new data from the likelihood.
-3. Plot the results.
-4. Use domain knowledge to assess whether simulated values reflect prior knowledge.
-5. If simulated values do not reflect prior knowledge, change the prior distribution, likelihood, or both and repeat the simulation from step 1.
-6. If simulated values reflect prior knowledge, compute the posterior.
+1. Draw $\theta^{(1)}, \ldots, \theta^{(N)} \sim p(\theta)$.
+2. For each draw $\theta^{(i)}$, simulate data $y^{(i)} \sim p(y \mid \theta^{(i)})$.
+3. Plot the simulated data.
+4. Use domain knowledge to assess whether the simulated data reflect prior knowledge.
+5. If the simulated data do not reflect prior knowledge, modify the prior distribution, the data model, or both, and repeat from step 1.
+6. If the simulated data reflect prior knowledge, compute the posterior.
 
-Notice that in step 4 we use domain knowledge, NOT observed data!
-
-In steps 1 and 2 what we are doing is approximating this integral:
-$$
-p(y^\ast) = \int_{\Theta} p(y^\ast \mid \theta) \; p(\theta) \; d\theta
-$$
-
-where $y^\ast$ represents unobserved but potentially observable data. Notice that to compute $y^\ast$ we are evaluating the likelihood over all possible values ​​of the prior. Thus we are effectively marginalizing out the values of $\theta$, the parameters. 
+Notice that in step 4 we use domain knowledge, **not observed data**.
 
 To exemplify a prior predictive check, let's try with a super simple example. Let's say we want to model the height of humans. We know that the heights are positive numbers, so we should use a distribution that assigns zero mass to negative values. But we also know that at least for adults using a normal distribution could be a good approximation. So we create the following model, without too much thought, and then draw 500 samples from the prior predictive distribution.
 
@@ -273,27 +284,36 @@ Finally, one benefit that’s often underappreciated is that running prior predi
 
 ## Posterior predictive checks
 
-The idea behind posterior predictive checks is very general and simple: if a model is good it should be able generate data resembling the observed data [@Gelman_2013]. We call these checks, *posterior predictive* because we are generating synthetic data after seeing the data.
+The idea behind posterior predictive checks is simple: if a Bayesian model is reasonable, it should be capable of generating data resembling the observed data [@Gelman_2013]. These are called *posterior predictive* checks because the synthetic data is generated after observing actual data.
+
+The posterior predictive distribution is obtained by combining the data model
+
+$$
+p(\tilde y \mid \theta)
+$$
+
+with the posterior distribution
+
+$$
+p(\theta \mid y).
+$$
+
+The posterior predictive distribution is
+
+$$
+p(\tilde y \mid y) = \int p(\tilde y \mid \theta)\, p(\theta \mid y)\, d\theta.
+$$
 
 The general algorithm for posterior predictive checks is:
 
-1. Draw $N$ realizations from the posterior distribution.
-2. For each draw, simulate new data from the likelihood.
-3. Plot the results.
-4. Use observed data to assess whether simulated values agree with observed values.
-5. If simulated values do not agree with observations, change the prior distribution, likelihood, or both and repeat the simulation from step 1.
-6. If simulated values reflect prior knowledge, compute the posterior.
+1. Draw $\theta^{(1)}, \ldots, \theta^{(N)} \sim p(\theta \mid y)$.
+2. For each draw $\theta^{(i)}$, simulate data $\tilde y^{(i)} \sim p(\tilde y \mid \theta^{(i)})$.
+3. Plot the simulated data.
+4. Compare the simulated data with the observed data.
+5. If the simulated data do not adequately reproduce the observed data, modify the prior distribution, the data model, or both, and repeat the analysis.
+6. If the simulated data adequately reproduce the observed data, proceed with model interpretation and inference.
 
-Notice that in contrast with prior predictive checks, we use observations here. Of course, we can also include domain knowledge to assess whether the simulated values are reasonable, but because we are using observations we do more stringent evaluations. 
-
-In steps 1 and 2 what we are doing is approximating this integral:
-$$
-p(\tilde y) = \int_{\Theta} p(\tilde y \mid \theta) \; p(\theta \mid y) \; d\theta
-$$
-
-where $\tilde y$ represents new observations, according to our model. The data generated is predictive since it is the data that the model expects to see.
-
-Notice that what we are doing is marginalizing the likelihood by integrating all possible values ​​of the posterior. Therefore, from the perspective of our model, we are describing the marginal distribution of data, that is, regardless of the values of the parameters. 
+Notice that, unlike prior predictive checks, posterior predictive checks compare simulated data with the observed data. Domain knowledge remains useful, but the observed data provide a much more stringent assessment of model adequacy.
 
 Continuing with our height example, we can generate synthetic data from the posterior predictive distribution.
 
