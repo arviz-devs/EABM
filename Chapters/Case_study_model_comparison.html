@@ -81,9 +81,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-38221dd67912a8d268c991a667888358.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-be7a07c707d4d3acecc219ff9b48e327.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-38221dd67912a8d268c991a667888358.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3abd07ee6114effc90a1b69d675e2d9a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-4341fb9735f309b1e9e4bf71aa4c8c5a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-3abd07ee6114effc90a1b69d675e2d9a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -598,7 +598,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 19, 2026</p>
+      <p class="date-modified">July 4, 2026</p>
     </div>
   </div>
     
@@ -692,7 +692,7 @@ defs &amp;= defs_* - \text{mean}(defs_*) + budget_{def} \log{\mathbf{b}} \qquad 
 </ul>
 <p>There are even more examples of predictive tasks where this particular model can be of use. However, it is important to keep in mind that this model predicts the number of goals scored. Its results can be used to estimate probabilities of victory and other derived quantities, but calculating the likelihood of these derived quantities may not be straightforward. And as you can see above, there isn’t <em>one</em> unique predictive task: it all depends on the specific question you’re interested in. As often in statistics, the answer to these questions lies <em>outside</em> the model, <em>you</em> must tell the model what to do, not the other way around.</p>
 <p>Even though we know that the predictive task is ambiguous, we will start trying to calculate <code>az.loo</code> with <code>idata_base</code> and then work on the examples above and a couple more to show how would this kind of tasks be performed with ArviZ. But before that, let’s see what ArviZ says when you naively ask it for the LOO of a multi-likelihood model:</p>
-<div id="c7edc237" class="cell" data-execution_count="3">
+<div id="9b12947f" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>az.loo(base_idata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <div class="ansi-escaped-output">
@@ -701,7 +701,7 @@ defs &amp;= defs_* - \text{mean}(defs_*) + budget_{def} \log{\mathbf{b}} \qquad 
 <span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[3]</span><span class="ansi-green-fg">, line 1</span>
 <span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">1</span> az.loo(base_idata)
 
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/loo.py:167</span>, in <span class="ansi-cyan-fg">loo</span><span class="ansi-blue-fg">(data, pointwise, var_name, reff, log_lik_fn, log_weights, pareto_k, log_jacobian, mixture)</span>
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/loo.py:167</span>, in <span class="ansi-cyan-fg">loo</span><span class="ansi-blue-fg">(data, pointwise, var_name, reff, log_lik_fn, log_weights, pareto_k, log_jacobian, mixture)</span>
 <span class="ansi-green-fg">     22</span> <span style="font-weight:bold;color:rgb(0,135,0)">def</span><span style="color:rgb(188,188,188)"> </span><span class="ansi-blue-fg">loo</span>(
 <span class="ansi-green-fg">     23</span>     data,
 <span class="ansi-green-fg">     24</span>     pointwise=<span style="font-weight:bold;color:rgb(0,135,0)">None</span>,
@@ -716,14 +716,14 @@ defs &amp;= defs_* - \text{mean}(defs_*) + budget_{def} \log{\mathbf{b}} \qquad 
 <span class="ansi-green-fg">    168</span>     pointwise = rcParams[<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">stats.ic_pointwise</span><span class="ansi-yellow-fg">"</span>] <span style="font-weight:bold;color:rgb(0,135,0)">if</span> pointwise <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span> pointwise
 <span class="ansi-green-fg">    170</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> reff <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
 
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:176</span>, in <span class="ansi-cyan-fg">_prepare_loo_inputs</span><span class="ansi-blue-fg">(data, var_name, thin_factor, log_lik_fn)</span>
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:176</span>, in <span class="ansi-cyan-fg">_prepare_loo_inputs</span><span class="ansi-blue-fg">(data, var_name, thin_factor, log_lik_fn)</span>
 <span class="ansi-green-fg">    173</span> sample_dims = [<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">chain</span><span class="ansi-yellow-fg">"</span>, <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">draw</span><span class="ansi-yellow-fg">"</span>]
 <span class="ansi-green-fg">    175</span> <span style="font-weight:bold;color:rgb(0,135,0)">if</span> log_lik_fn <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
 <span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">176</span>     log_likelihood = <span class="ansi-black-fg ansi-yellow-bg">get_log_likelihood</span><span class="ansi-black-fg ansi-yellow-bg">(</span><span class="ansi-black-fg ansi-yellow-bg">data</span><span class="ansi-black-fg ansi-yellow-bg">,</span><span class="ansi-black-fg ansi-yellow-bg"> </span><span class="ansi-black-fg ansi-yellow-bg">var_name</span><span class="ansi-black-fg ansi-yellow-bg">=</span><span class="ansi-black-fg ansi-yellow-bg">var_name</span><span class="ansi-black-fg ansi-yellow-bg">)</span>
 <span class="ansi-green-fg">    177</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> var_name <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span> <span style="font-weight:bold;color:rgb(175,0,255)">and</span> log_likelihood.name <span style="font-weight:bold;color:rgb(175,0,255)">is</span> <span style="font-weight:bold;color:rgb(175,0,255)">not</span> <span style="font-weight:bold;color:rgb(0,135,0)">None</span>:
 <span class="ansi-green-fg">    178</span>         var_name = log_likelihood.name
 
-<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/utils.py:89</span>, in <span class="ansi-cyan-fg">get_log_likelihood</span><span class="ansi-blue-fg">(idata, var_name)</span>
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/utils.py:89</span>, in <span class="ansi-cyan-fg">get_log_likelihood</span><span class="ansi-blue-fg">(idata, var_name)</span>
 <span class="ansi-green-fg">     87</span>     var_names = <span style="color:rgb(0,135,0)">list</span>(idata.log_likelihood.data_vars)
 <span class="ansi-green-fg">     88</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> <span style="color:rgb(0,135,0)">len</span>(var_names) &gt; <span class="ansi-green-fg">1</span>:
 <span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">89</span>         <span style="font-weight:bold;color:rgb(0,135,0)">raise</span> <span style="font-weight:bold;color:rgb(215,95,95)">TypeError</span>(
@@ -745,7 +745,7 @@ defs &amp;= defs_* - \text{mean}(defs_*) + budget_{def} \log{\mathbf{b}} \qquad 
 <p><span class="math display">\[ p(y_i|\theta) = p(y_{i,h}|\theta_{i,h}) = \text{Poiss}(y_{i,h}; \theta_{i,h}) \]</span></p>
 <p>with <span class="math inline">\(i\)</span> being both the match indicator (<span class="math inline">\(m\)</span>, which varies with <span class="math inline">\(i\)</span>) and the field indicator (<span class="math inline">\(f\)</span>, here always fixed at <span class="math inline">\(h\)</span>). These are precisely the values stored in the <code>home_goals</code> of the <code>log_likelihood</code> group of <code>idata_base</code>.</p>
 <p>We can tell ArviZ to use these values using the argument <code>var_name</code>.</p>
-<div id="adfe5fb1" class="cell" data-execution_count="4">
+<div id="23cd99dd" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>az.loo(base_idata, var_name<span class="op">=</span><span class="st">"home_goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>Computed from 8000 posterior samples and 380 observations log-likelihood matrix.
@@ -762,7 +762,7 @@ Pareto k diagnostic values:
     (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-<div id="eb6d6710" class="cell" data-execution_count="5">
+<div id="cfacc652" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>az.compare(model_dict, var_name<span class="op">=</span><span class="st">"home_goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
@@ -773,48 +773,56 @@ Pareto k diagnostic values:
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">rank</th>
-<th data-quarto-table-cell-role="th">elpd</th>
-<th data-quarto-table-cell-role="th">p</th>
 <th data-quarto-table-cell-role="th">elpd_diff</th>
-<th data-quarto-table-cell-role="th">weight</th>
-<th data-quarto-table-cell-role="th">se</th>
 <th data-quarto-table-cell-role="th">dse</th>
-<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">p_worse</th>
+<th data-quarto-table-cell-role="th">diag_diff</th>
+<th data-quarto-table-cell-role="th">diag_elpd</th>
+<th data-quarto-table-cell-role="th">p</th>
+<th data-quarto-table-cell-role="th">elpd</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">weight</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
-<td>-570.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>NaN</td>
+<td></td>
+<td></td>
 <td>10.8</td>
-<td>0.0</td>
-<td>0.73</td>
+<td>-570.0</td>
 <td>13.0</td>
-<td>0.0</td>
-<td>False</td>
+<td>0.73</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
-<td>-570.0</td>
-<td>15.7</td>
 <td>-2.0</td>
-<td>0.27</td>
-<td>13.0</td>
 <td>2.8</td>
-<td>False</td>
+<td>0.72</td>
+<td>|elpd_diff| &lt; 4</td>
+<td></td>
+<td>15.7</td>
+<td>-570.0</td>
+<td>13.0</td>
+<td>0.27</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
-<td>-570.0</td>
-<td>15.9</td>
 <td>-7.0</td>
-<td>0.00</td>
-<td>15.0</td>
 <td>4.4</td>
-<td>False</td>
+<td>0.95</td>
+<td></td>
+<td></td>
+<td>15.9</td>
+<td>-570.0</td>
+<td>15.0</td>
+<td>0.00</td>
 </tr>
 </tbody>
 </table>
@@ -822,7 +830,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 </div>
-<div id="b61c21c9" class="cell" data-execution_count="6">
+<div id="33dfd415" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>az.compare(model_dict, var_name<span class="op">=</span><span class="st">"away_goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
@@ -833,48 +841,56 @@ Pareto k diagnostic values:
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">rank</th>
-<th data-quarto-table-cell-role="th">elpd</th>
-<th data-quarto-table-cell-role="th">p</th>
 <th data-quarto-table-cell-role="th">elpd_diff</th>
-<th data-quarto-table-cell-role="th">weight</th>
-<th data-quarto-table-cell-role="th">se</th>
 <th data-quarto-table-cell-role="th">dse</th>
-<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">p_worse</th>
+<th data-quarto-table-cell-role="th">diag_diff</th>
+<th data-quarto-table-cell-role="th">diag_elpd</th>
+<th data-quarto-table-cell-role="th">p</th>
+<th data-quarto-table-cell-role="th">elpd</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">weight</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
-<td>-480.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>NaN</td>
+<td></td>
+<td></td>
 <td>6.9</td>
-<td>0.0</td>
-<td>1.0</td>
+<td>-480.0</td>
 <td>12.0</td>
-<td>0.0</td>
-<td>False</td>
+<td>1.0</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
-<td>-480.0</td>
-<td>10.3</td>
 <td>-3.0</td>
-<td>0.0</td>
-<td>12.0</td>
 <td>1.9</td>
-<td>False</td>
+<td>0.91</td>
+<td>|elpd_diff| &lt; 4</td>
+<td></td>
+<td>10.3</td>
+<td>-480.0</td>
+<td>12.0</td>
+<td>0.0</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
-<td>-490.0</td>
-<td>10.3</td>
 <td>-9.0</td>
-<td>0.0</td>
-<td>9.5</td>
 <td>3.4</td>
-<td>False</td>
+<td>0.99</td>
+<td></td>
+<td></td>
+<td>10.3</td>
+<td>-490.0</td>
+<td>9.5</td>
+<td>0.0</td>
 </tr>
 </tbody>
 </table>
@@ -894,7 +910,7 @@ p(y_i|\theta) = p(y_{i,h}|\theta_{i,h})p(y_{i,a}|\theta_{i,a}) =
 \]</span></p>
 <p>with <span class="math inline">\(i\)</span> being equal to the match indicator <span class="math inline">\(m\)</span>. Therefore, we have <span class="math inline">\(M\)</span> observations like in the previous example, but each observation has two components.</p>
 <p>We can calculate the product as a sum of logarithms and store the result in a new variable inside the <code>log_likelihood</code> group.</p>
-<div id="26f15270" class="cell" data-execution_count="7">
+<div id="b5dff07e" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">def</span> match_lik(idata):</span>
 <span id="cb6-2"><a href="#cb6-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood</span>
 <span id="cb6-3"><a href="#cb6-3"></a>    log_lik[<span class="st">"matches"</span>] <span class="op">=</span> log_lik.home_goals <span class="op">+</span> log_lik.away_goals</span>
@@ -920,7 +936,7 @@ Pareto k diagnostic values:
     (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-<div id="96d17257" class="cell" data-execution_count="8">
+<div id="723533a1" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>az.compare(model_dict, var_name<span class="op">=</span><span class="st">"matches"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
@@ -931,48 +947,56 @@ Pareto k diagnostic values:
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">rank</th>
-<th data-quarto-table-cell-role="th">elpd</th>
-<th data-quarto-table-cell-role="th">p</th>
 <th data-quarto-table-cell-role="th">elpd_diff</th>
-<th data-quarto-table-cell-role="th">weight</th>
-<th data-quarto-table-cell-role="th">se</th>
 <th data-quarto-table-cell-role="th">dse</th>
-<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">p_worse</th>
+<th data-quarto-table-cell-role="th">diag_diff</th>
+<th data-quarto-table-cell-role="th">diag_elpd</th>
+<th data-quarto-table-cell-role="th">p</th>
+<th data-quarto-table-cell-role="th">elpd</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">weight</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
-<td>-1050.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>NaN</td>
+<td></td>
+<td></td>
 <td>17.7</td>
-<td>0.0</td>
-<td>0.86</td>
+<td>-1050.0</td>
 <td>17.0</td>
-<td>0.0</td>
-<td>False</td>
+<td>0.86</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
-<td>-1050.0</td>
-<td>25.9</td>
 <td>-4.0</td>
-<td>0.14</td>
-<td>17.0</td>
 <td>3.4</td>
-<td>False</td>
+<td>0.89</td>
+<td></td>
+<td></td>
+<td>25.9</td>
+<td>-1050.0</td>
+<td>17.0</td>
+<td>0.14</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
-<td>-1060.0</td>
-<td>26.1</td>
 <td>-20.0</td>
-<td>0.00</td>
-<td>18.0</td>
 <td>5.5</td>
-<td>False</td>
+<td>1.00</td>
+<td></td>
+<td></td>
+<td>26.1</td>
+<td>-1060.0</td>
+<td>18.0</td>
+<td>0.00</td>
 </tr>
 </tbody>
 </table>
@@ -994,7 +1018,7 @@ p(y_i|\theta) = p(y_{i}|\theta_{i}) =
 <p><span class="math display">\[\big\{(1,h), (2,h), \dots, (M-1,h), (M,h), (1,a), (2,a), \dots, (M-1,a), (M,a)\big\}\]</span></p>
 <p>Therefore, unlike in previous cases, we have <span class="math inline">\(2M\)</span> observations.</p>
 <p>We can obtain the pointwise log likelihood corresponding to this case by concatenating the pointwise log likelihoods of <code>home_goals</code> and <code>away_goals</code>. Then, like in the previous case, store the result in a new variable inside the <code>log_likelihood</code> group.</p>
-<div id="c98c2553" class="cell" data-execution_count="9">
+<div id="34153d5c" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">def</span> goals_lik(idata):</span>
 <span id="cb9-2"><a href="#cb9-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood</span>
 <span id="cb9-3"><a href="#cb9-3"></a>    log_lik[<span class="st">"goals"</span>] <span class="op">=</span> xr.concat((log_lik.home_goals, log_lik.away_goals), <span class="st">"match"</span>).rename({<span class="st">"match"</span>: <span class="st">"goal"</span>})</span>
@@ -1020,7 +1044,7 @@ Pareto k diagnostic values:
     (1, Inf)   (very bad)    0    0.0%</code></pre>
 </div>
 </div>
-<div id="861eef94" class="cell" data-execution_count="10">
+<div id="90d2b015" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>az.compare(model_dict, var_name<span class="op">=</span><span class="st">"goals"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
@@ -1031,48 +1055,56 @@ Pareto k diagnostic values:
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">rank</th>
-<th data-quarto-table-cell-role="th">elpd</th>
-<th data-quarto-table-cell-role="th">p</th>
 <th data-quarto-table-cell-role="th">elpd_diff</th>
-<th data-quarto-table-cell-role="th">weight</th>
-<th data-quarto-table-cell-role="th">se</th>
 <th data-quarto-table-cell-role="th">dse</th>
-<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">p_worse</th>
+<th data-quarto-table-cell-role="th">diag_diff</th>
+<th data-quarto-table-cell-role="th">diag_elpd</th>
+<th data-quarto-table-cell-role="th">p</th>
+<th data-quarto-table-cell-role="th">elpd</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">weight</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
-<td>-1050.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>NaN</td>
+<td></td>
+<td></td>
 <td>17.8</td>
-<td>0.0</td>
-<td>0.86</td>
+<td>-1050.0</td>
 <td>18.0</td>
-<td>0.0</td>
-<td>False</td>
+<td>0.86</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
-<td>-1050.0</td>
-<td>25.9</td>
 <td>-4.0</td>
-<td>0.14</td>
-<td>18.0</td>
 <td>3.4</td>
-<td>False</td>
+<td>0.89</td>
+<td></td>
+<td></td>
+<td>25.9</td>
+<td>-1050.0</td>
+<td>18.0</td>
+<td>0.14</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
-<td>-1060.0</td>
-<td>26.1</td>
 <td>-20.0</td>
-<td>0.00</td>
-<td>18.0</td>
 <td>5.5</td>
-<td>False</td>
+<td>1.00</td>
+<td></td>
+<td></td>
+<td>26.1</td>
+<td>-1060.0</td>
+<td>18.0</td>
+<td>0.00</td>
 </tr>
 </tbody>
 </table>
@@ -1088,7 +1120,7 @@ Pareto k diagnostic values:
 <p>In this situation, we could describe the cross validation as excluding a team. When we exclude a team, we will exclude all the matches played by the team, not only the goals scored by the team but the whole match. Here is the illustration:</p>
 <p><img src="../img/cv_team.png" class="img-fluid"></p>
 <p>In the first column, we are excluding “Levante U.D.” which in the rows shown only appears once. In the second one, we are excluding “Athletic Club” which appears two times. This goes on following the order of appearance in the away team column.</p>
-<div id="221fba63" class="cell" data-execution_count="11">
+<div id="b047307a" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">def</span> team_lik(idata):</span>
 <span id="cb12-2"><a href="#cb12-2"></a>    log_lik <span class="op">=</span> idata.log_likelihood.to_dataset()</span>
 <span id="cb12-3"><a href="#cb12-3"></a>    const <span class="op">=</span> idata.constant_data.to_dataset()</span>
@@ -1105,10 +1137,10 @@ Pareto k diagnostic values:
 <span id="cb12-14"><a href="#cb12-14"></a>budget_idata <span class="op">=</span> team_lik(budget_idata)</span>
 <span id="cb12-15"><a href="#cb12-15"></a>nofield_idata <span class="op">=</span> team_lik(nofield_idata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="21068560" class="cell" data-execution_count="12">
+<div id="341076e4" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>az.loo(base_idata, var_name<span class="op">=</span><span class="st">"teams_match"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="12">
@@ -1129,14 +1161,14 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>TODO: it would probably be best to run reloo for the three models for this case and include that on figshare too.</p>
-<div id="1b94c083" class="cell" data-execution_count="13">
+<div id="d3db3d80" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>az.compare(model_dict, var_name<span class="op">=</span><span class="st">"teams_match"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(
-/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(
-/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="13">
@@ -1148,48 +1180,56 @@ Pareto k diagnostic values:
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">rank</th>
-<th data-quarto-table-cell-role="th">elpd</th>
-<th data-quarto-table-cell-role="th">p</th>
 <th data-quarto-table-cell-role="th">elpd_diff</th>
-<th data-quarto-table-cell-role="th">weight</th>
-<th data-quarto-table-cell-role="th">se</th>
 <th data-quarto-table-cell-role="th">dse</th>
-<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">p_worse</th>
+<th data-quarto-table-cell-role="th">diag_diff</th>
+<th data-quarto-table-cell-role="th">diag_elpd</th>
+<th data-quarto-table-cell-role="th">p</th>
+<th data-quarto-table-cell-role="th">elpd</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">weight</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">budget</th>
 <td>0</td>
-<td>-2100.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>NaN</td>
+<td></td>
+<td>6 k̂ &gt; 0.70</td>
 <td>36.7</td>
-<td>0.0</td>
-<td>0.82</td>
+<td>-2100.0</td>
 <td>23.0</td>
-<td>0.0</td>
-<td>True</td>
+<td>0.82</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">base</th>
 <td>1</td>
-<td>-2110.0</td>
-<td>53.3</td>
 <td>-10.0</td>
-<td>0.15</td>
-<td>20.0</td>
 <td>6.9</td>
-<td>True</td>
+<td>0.96</td>
+<td>N &lt; 100</td>
+<td>19 k̂ &gt; 0.70</td>
+<td>53.3</td>
+<td>-2110.0</td>
+<td>20.0</td>
+<td>0.15</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">nofield</th>
 <td>2</td>
-<td>-2130.0</td>
-<td>51.6</td>
 <td>-30.0</td>
-<td>0.03</td>
-<td>20.0</td>
 <td>9.5</td>
-<td>True</td>
+<td>1.00</td>
+<td>N &lt; 100</td>
+<td>16 k̂ &gt; 0.70</td>
+<td>51.6</td>
+<td>-2130.0</td>
+<td>20.0</td>
+<td>0.03</td>
 </tr>
 </tbody>
 </table>

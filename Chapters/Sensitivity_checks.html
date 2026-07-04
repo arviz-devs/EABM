@@ -101,9 +101,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-38221dd67912a8d268c991a667888358.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-be7a07c707d4d3acecc219ff9b48e327.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-38221dd67912a8d268c991a667888358.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3abd07ee6114effc90a1b69d675e2d9a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-4341fb9735f309b1e9e4bf71aa4c8c5a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-3abd07ee6114effc90a1b69d675e2d9a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -626,7 +626,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 19, 2026</p>
+      <p class="date-modified">July 4, 2026</p>
     </div>
   </div>
     
@@ -648,25 +648,11 @@ window.Quarto = {
 <h3 data-number="6.1.1" class="anchored" data-anchor-id="power-scaling"><span class="header-section-number">6.1.1</span> Power-scaling</h3>
 <p>A key idea of the method is the concept of power-scaling. By power-scaling we mean raising a distribution to a power <span class="math inline">\(\alpha\)</span>. Why is this interesting? Because by power-scaling a distribution we can “stretch” it or “compress” it. <a href="#fig-beta-normal-power-scaling" class="quarto-xref">Figure&nbsp;<span>6.1</span></a> shows the effect of power-scaling on a Beta and a Normal distribution. Power-scaling is a very general transformation that work for any distribution, except for the uniform distribution. Notice this restriction also applies to a Beta(1, 1), which is uniform. This is a minor restriction, because the uniform distribution is hardly a useful prior, unless we are dealing with a very special case.</p>
 <div id="cell-fig-beta-normal-power-scaling" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/beta.py:106: FutureWarning: pytensor.tensor.xlogx.xlogy0 is deprecated. Use pytensor.tensor.special.xlogy(x, y) instead.
-  (xlogy0((alpha - 1), x) + xlogy0((beta - 1), 1 - x))
-/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/beta.py:106: FutureWarning: pytensor.tensor.xlogx.xlogy0 is deprecated. Use pytensor.tensor.special.xlogy(x, y) instead.
-  (xlogy0((alpha - 1), x) + xlogy0((beta - 1), 1 - x))
-/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/beta.py:107: FutureWarning: pytensor.tensor.xlogx.xlogy0 is deprecated. Use pytensor.tensor.special.xlogy(x, y) instead.
-  - (xlogy0((alpha + beta - 1), 1) + betaln(alpha, beta)),
-/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/beta.py:106: FutureWarning: pytensor.tensor.xlogx.xlogy0 is deprecated. Use pytensor.tensor.special.xlogy(x, y) instead.
-  (xlogy0((alpha - 1), x) + xlogy0((beta - 1), 1 - x))
-/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/beta.py:106: FutureWarning: pytensor.tensor.xlogx.xlogy0 is deprecated. Use pytensor.tensor.special.xlogy(x, y) instead.
-  (xlogy0((alpha - 1), x) + xlogy0((beta - 1), 1 - x))
-/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/beta.py:107: FutureWarning: pytensor.tensor.xlogx.xlogy0 is deprecated. Use pytensor.tensor.special.xlogy(x, y) instead.
-  - (xlogy0((alpha + beta - 1), 1) + betaln(alpha, beta)),</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <div id="fig-beta-normal-power-scaling" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-beta-normal-power-scaling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Sensitivity_checks_files/figure-html/fig-beta-normal-power-scaling-output-2.png" width="880" height="331" class="figure-img">
+<img src="Sensitivity_checks_files/figure-html/fig-beta-normal-power-scaling-output-1.png" width="879" height="331" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-beta-normal-power-scaling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;6.1: The effect of power-scaling on Beta and Normal distributions. α values larger than 1 ‘compress’ the distribution while values of α below 1 ‘stretch’ the distribution.
@@ -727,10 +713,10 @@ w_{\alpha} = p(\theta)^{\alpha-1}
 <h2 data-number="6.2" class="anchored" data-anchor-id="body-fat-example"><span class="header-section-number">6.2</span> Body fat example</h2>
 <p>Let’s see an example of prior-data conflict in a linear regression model. We will use the bodyfat data set <span class="citation" data-cites="johnson_1996">(<a href="References.html#ref-johnson_1996" role="doc-biblioref">Johnson 1996</a>)</span>. The aim of the analysis is to predict an expensive and cumbersome water immersion measurement of body fat percentage (observed variable named <code>siri</code>) from a set of thirteen easier to measure characteristics, including age, height, weight, and circumferences of various body parts.</p>
 <p>Let’s start by loading the data and creating a <code>siri</code> variable for the response and a <code>body_fat</code> variable for the predictors. We center the predictors.</p>
-<div id="a3817731" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>body_fat <span class="op">=</span> pd.read_csv(<span class="st">"../data/body_fat.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2"></a>siri <span class="op">=</span> body_fat.pop(<span class="st">"siri"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3"></a>body_fat <span class="op">=</span> body_fat <span class="op">-</span> body_fat.mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="96efc7cd" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a>body_fat <span class="op">=</span> pd.read_csv(<span class="st">"../data/body_fat.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>siri <span class="op">=</span> body_fat.pop(<span class="st">"siri"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>body_fat <span class="op">=</span> body_fat <span class="op">-</span> body_fat.mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We are going to start by assuming that a resonable prior for all coefficients is Normal(0, 1). With that in mind, we will fit the following linear regression model:</p>
 <p><span class="math display">\[
@@ -747,26 +733,26 @@ w_{\alpha} = p(\theta)^{\alpha-1}
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="4497143b" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="cf">with</span> pm.Model(coords<span class="op">=</span>{<span class="st">"covariates"</span>: body_fat.columns}) <span class="im">as</span> model_bf_00:</span>
-<span id="cb3-2"><a href="#cb3-2"></a>    β_0 <span class="op">=</span> pm.StudentT(<span class="st">"β_0"</span>, nu<span class="op">=</span><span class="dv">3</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
-<span id="cb3-3"><a href="#cb3-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">1</span>, dims<span class="op">=</span><span class="st">"covariates"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4"></a>    σ <span class="op">=</span> pm.HalfStudentT(<span class="st">"σ"</span>, nu<span class="op">=</span><span class="dv">3</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
-<span id="cb3-5"><a href="#cb3-5"></a>    μ <span class="op">=</span> pm.Deterministic(<span class="st">"μ"</span>, β_0 <span class="op">+</span> β <span class="op">@</span> body_fat.T)</span>
-<span id="cb3-6"><a href="#cb3-6"></a>    y <span class="op">=</span> pm.Normal(<span class="st">"y"</span>, μ, σ, observed<span class="op">=</span>siri)</span>
-<span id="cb3-7"><a href="#cb3-7"></a>    dt_bf_00 <span class="op">=</span> pm.sample(random_seed<span class="op">=</span>SEED,</span>
-<span id="cb3-8"><a href="#cb3-8"></a>                            idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>, <span class="st">"log_prior"</span>: <span class="va">True</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="b8c2db78" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="cf">with</span> pm.Model(coords<span class="op">=</span>{<span class="st">"covariates"</span>: body_fat.columns}) <span class="im">as</span> model_bf_00:</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    β_0 <span class="op">=</span> pm.StudentT(<span class="st">"β_0"</span>, nu<span class="op">=</span><span class="dv">3</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="dv">1</span>, dims<span class="op">=</span><span class="st">"covariates"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    σ <span class="op">=</span> pm.HalfStudentT(<span class="st">"σ"</span>, nu<span class="op">=</span><span class="dv">3</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    μ <span class="op">=</span> pm.Deterministic(<span class="st">"μ"</span>, β_0 <span class="op">+</span> β <span class="op">@</span> body_fat.T)</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    y <span class="op">=</span> pm.Normal(<span class="st">"y"</span>, μ, σ, observed<span class="op">=</span>siri)</span>
+<span id="cb2-7"><a href="#cb2-7"></a>    dt_bf_00 <span class="op">=</span> pm.sample(random_seed<span class="op">=</span>SEED,</span>
+<span id="cb2-8"><a href="#cb2-8"></a>                            idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>, <span class="st">"log_prior"</span>: <span class="va">True</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">## coming soon</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">## coming soon</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p>We can now use the <code>psense_summary</code> function from ArviZ to perform a numerical sensitivity analysis. This function returns a four-column DataFrame. The first column is the name of the variables, the second is the value of CJS when power-scaling the prior, then the value of CJS when power-scaling the likelihood and the last one is a textual description of the results.</p>
 <p>For the <span class="math inline">\(\beta\)</span> coefficient <code>wrist</code> we can see that we may have prior-sensitivity (CJS&gt;0.05) and likelihood-sensitivity (CJS&gt;0.05). Thus, we may have a case of prior-data conflict for the <code>wrist</code> variable.</p>
-<div id="47079de7" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>az.psense_summary(dt_bf_00, var_names<span class="op">=</span>[<span class="st">"~μ"</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="f414a0db" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>az.psense_summary(dt_bf_00, var_names<span class="op">=</span>[<span class="st">"~μ"</span>], round_to<span class="op">=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>We detected potential issues. For more information on how to interpret the results, please check
 https://arviz-devs.github.io/EABM/Chapters/Sensitivity_checks.html#interpreting-sensitivity-diagnostics-summary
@@ -884,11 +870,11 @@ or read original paper https://doi.org/10.1007/s11222-023-10366-5</code></pre>
 </div>
 <p>We can also evaluate the effect of power-scaling visually with the function <code>plot_psense_dist</code>. This function displays the posterior marginal for 3 values of <span class="math inline">\(\alpha\)</span>. By default 0.8 (red), 1 (black) and 1.25 (blue). <code>plot_psense_dist</code> allow as to choose different representations including KDEs and ECDFs. From <a href="#fig-posterior-sensitivity_bf_00" class="quarto-xref">Figure&nbsp;<span>6.3</span></a> we can see that the posterior is sensitive to both prior and likelihood power-scaling, and that it shifts right (towards zero) as the prior is strengthened, and left (away from zero) as the likelihood is strengthened.</p>
 <div id="cell-fig-posterior-sensitivity_bf_00" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>az.plot_psense_dist(dt_bf_00, </span>
-<span id="cb7-2"><a href="#cb7-2"></a>                     var_names<span class="op">=</span>[<span class="st">"β"</span>], </span>
-<span id="cb7-3"><a href="#cb7-3"></a>                     coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]},</span>
-<span id="cb7-4"><a href="#cb7-4"></a>                     kind<span class="op">=</span><span class="st">"ecdf"</span>,</span>
-<span id="cb7-5"><a href="#cb7-5"></a>                     )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>az.plot_psense_dist(dt_bf_00, </span>
+<span id="cb6-2"><a href="#cb6-2"></a>                     var_names<span class="op">=</span>[<span class="st">"β"</span>], </span>
+<span id="cb6-3"><a href="#cb6-3"></a>                     coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]},</span>
+<span id="cb6-4"><a href="#cb6-4"></a>                     kind<span class="op">=</span><span class="st">"ecdf"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>                     )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-posterior-sensitivity_bf_00" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -904,9 +890,9 @@ Figure&nbsp;6.3: Posterior density estimates depending on amount of power-scalin
 </div>
 <p>We can also use the <code>plot_psense_quantities</code> function to display quantities of interest like the mean, median, standard deviation, etc. We can then evaluate how much the quantities of interest change when we perturb the prior and likelihood. To get a reference for the relative effect size of the perturbations the function also shows the ±2 Monte Carlo standard errors (MCSE) of the base posterior quantity. From <a href="#fig-quantities_bf_00" class="quarto-xref">Figure&nbsp;<span>6.4</span></a> we can see that power-scaling the prior and likelihood pulls the posterior mean in opposite directions. This suggests there might be a potential mismatch or conflict between the prior and the likelihood.</p>
 <div id="cell-fig-quantities_bf_00" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>az.plot_psense_quantities(dt_bf_00,</span>
-<span id="cb8-2"><a href="#cb8-2"></a>                           var_names<span class="op">=</span>[<span class="st">"β"</span>],</span>
-<span id="cb8-3"><a href="#cb8-3"></a>                           coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>az.plot_psense_quantities(dt_bf_00,</span>
+<span id="cb7-2"><a href="#cb7-2"></a>                           var_names<span class="op">=</span>[<span class="st">"β"</span>],</span>
+<span id="cb7-3"><a href="#cb7-3"></a>                           coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-quantities_bf_00" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -928,27 +914,27 @@ Figure&nbsp;6.4: Posterior quantities of βwrist as a function of power-scaling 
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="b95c3e30" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="cf">with</span> pm.Model(coords<span class="op">=</span>{<span class="st">"covariates"</span>: body_fat.columns}) <span class="im">as</span> model_bf_01:</span>
-<span id="cb9-2"><a href="#cb9-2"></a>    β_0 <span class="op">=</span> pm.StudentT(<span class="st">"β_0"</span>, nu<span class="op">=</span><span class="dv">3</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
-<span id="cb9-3"><a href="#cb9-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="fl">2.5</span> <span class="op">*</span> siri.std() <span class="op">/</span> body_fat.std(), dims<span class="op">=</span><span class="st">"covariates"</span>)</span>
-<span id="cb9-4"><a href="#cb9-4"></a>    σ <span class="op">=</span> pm.HalfStudentT(<span class="st">"σ"</span>, nu<span class="op">=</span><span class="dv">3</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
-<span id="cb9-5"><a href="#cb9-5"></a>    μ <span class="op">=</span> pm.Deterministic(<span class="st">"μ"</span>, β_0 <span class="op">+</span> β <span class="op">@</span> body_fat.T)</span>
-<span id="cb9-6"><a href="#cb9-6"></a>    y <span class="op">=</span> pm.Normal(<span class="st">"y"</span>, μ, σ, observed<span class="op">=</span>siri)</span>
-<span id="cb9-7"><a href="#cb9-7"></a>    dt_bf_01 <span class="op">=</span> pm.sample(tune<span class="op">=</span><span class="dv">1000</span>,</span>
-<span id="cb9-8"><a href="#cb9-8"></a>                      draws<span class="op">=</span><span class="dv">2000</span>, random_seed<span class="op">=</span>SEED,</span>
-<span id="cb9-9"><a href="#cb9-9"></a>                      idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>, <span class="st">"log_prior"</span>: <span class="va">True</span>})</span>
-<span id="cb9-10"><a href="#cb9-10"></a>    pm.sample_posterior_predictive(dt_bf_01, extend_inferencedata<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="abca2e39" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> pm.Model(coords<span class="op">=</span>{<span class="st">"covariates"</span>: body_fat.columns}) <span class="im">as</span> model_bf_01:</span>
+<span id="cb8-2"><a href="#cb8-2"></a>    β_0 <span class="op">=</span> pm.StudentT(<span class="st">"β_0"</span>, nu<span class="op">=</span><span class="dv">3</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    β <span class="op">=</span> pm.Normal(<span class="st">"β"</span>, <span class="dv">0</span>, <span class="fl">2.5</span> <span class="op">*</span> siri.std() <span class="op">/</span> body_fat.std(), dims<span class="op">=</span><span class="st">"covariates"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a>    σ <span class="op">=</span> pm.HalfStudentT(<span class="st">"σ"</span>, nu<span class="op">=</span><span class="dv">3</span>, sigma<span class="op">=</span><span class="fl">9.2</span>)</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    μ <span class="op">=</span> pm.Deterministic(<span class="st">"μ"</span>, β_0 <span class="op">+</span> β <span class="op">@</span> body_fat.T)</span>
+<span id="cb8-6"><a href="#cb8-6"></a>    y <span class="op">=</span> pm.Normal(<span class="st">"y"</span>, μ, σ, observed<span class="op">=</span>siri)</span>
+<span id="cb8-7"><a href="#cb8-7"></a>    dt_bf_01 <span class="op">=</span> pm.sample(tune<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb8-8"><a href="#cb8-8"></a>                      draws<span class="op">=</span><span class="dv">2000</span>, random_seed<span class="op">=</span>SEED,</span>
+<span id="cb8-9"><a href="#cb8-9"></a>                      idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>: <span class="va">True</span>, <span class="st">"log_prior"</span>: <span class="va">True</span>})</span>
+<span id="cb8-10"><a href="#cb8-10"></a>    pm.sample_posterior_predictive(dt_bf_01, extend_inferencedata<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">## coming soon</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">## coming soon</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p>Now we can perform the sensitivity analysis again. We can see that we managed to remove the warning!</p>
-<div id="031941c8" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>az.psense_summary(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"~μ"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="09aea90b" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>az.psense_summary(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"~μ"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 
@@ -1062,11 +1048,11 @@ Figure&nbsp;6.4: Posterior quantities of βwrist as a function of power-scaling 
 <p>We can see that after changing the prior, the posterior mean for <code>wrist</code> changes from -1.45 to -1.86, indicating that the base prior was indeed unintentionally informative and in conflict with the data, pulling the estimate towards zero.</p>
 <p>As previously, we can also evaluate the effect of power-scaling visually with the function <code>plot_psense_dist</code>. From <a href="#fig-posterior-sensitivity_bf_01" class="quarto-xref">Figure&nbsp;<span>6.5</span></a> we can see a better overlap between the posterior distributions, compared to the original prior.</p>
 <div id="cell-fig-posterior-sensitivity_bf_01" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>az.plot_psense_dist(dt_bf_01, </span>
-<span id="cb12-2"><a href="#cb12-2"></a>                     var_names<span class="op">=</span>[<span class="st">"β"</span>], </span>
-<span id="cb12-3"><a href="#cb12-3"></a>                     coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]},</span>
-<span id="cb12-4"><a href="#cb12-4"></a>                     kind<span class="op">=</span><span class="st">"ecdf"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5"></a>                     )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>az.plot_psense_dist(dt_bf_01, </span>
+<span id="cb11-2"><a href="#cb11-2"></a>                     var_names<span class="op">=</span>[<span class="st">"β"</span>], </span>
+<span id="cb11-3"><a href="#cb11-3"></a>                     coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]},</span>
+<span id="cb11-4"><a href="#cb11-4"></a>                     kind<span class="op">=</span><span class="st">"ecdf"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5"></a>                     )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-posterior-sensitivity_bf_01" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1082,7 +1068,7 @@ Figure&nbsp;6.5: Posterior density estimates depending on amount of power-scalin
 </div>
 <p>In terms or the mean for <code>βwrist</code>, we can see that there is no longer prior or likelihood sensitivity, indicating no prior-data conflict. For the standard deviation, likelihood sensitivity remains, indicating that the likelihood is informative.</p>
 <div id="cell-fig-quantities_bf_01" class="cell" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>az.plot_psense_quantities(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"β"</span>], coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>az.plot_psense_quantities(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"β"</span>], coords<span class="op">=</span>{<span class="st">"covariates"</span>: [<span class="st">"wrist"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-quantities_bf_01" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1116,17 +1102,17 @@ Figure&nbsp;6.6: Posterior quantities of βwrist as a function of power-scaling 
 </ul>
 <p>We are going to start by computing predictions at <code>new_data</code>, as you may already know how to do this from other examples. To do that we need to create a new DataFrame with the values of the predictors we want to use for prediction. In this case, we will use the median, min, and max values of each covariate. For your particular use case, you may want to use different values, like quantiles of any other specific values of interest.</p>
 <p>We can ask ArviZ, to compute the Bayesian R² for us, we need to specify which variables represent the posterior mean (or location parameter) and standard deviation (or variance).</p>
-<div id="3b93c0ba" class="cell" data-execution_count="15">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>r2_da <span class="op">=</span> az.ndarray_to_dataarray(az.bayesian_r2(dt_bf_01, pred_mean<span class="op">=</span><span class="st">"μ"</span>, scale<span class="op">=</span><span class="st">"σ"</span>, summary<span class="op">=</span><span class="va">False</span>).reshape(<span class="dv">4</span>, <span class="dv">2000</span>), var_name<span class="op">=</span><span class="st">"r2"</span>)</span>
-<span id="cb14-2"><a href="#cb14-2"></a>dt_bf_01.posterior[<span class="st">"r2"</span>] <span class="op">=</span> r2_da</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="a0e95763" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>r2_da <span class="op">=</span> az.ndarray_to_dataarray(az.bayesian_r2(dt_bf_01, pred_mean<span class="op">=</span><span class="st">"μ"</span>, scale<span class="op">=</span><span class="st">"σ"</span>, summary<span class="op">=</span><span class="va">False</span>).reshape(<span class="dv">4</span>, <span class="dv">2000</span>), var_name<span class="op">=</span><span class="st">"r2"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2"></a>dt_bf_01.posterior[<span class="st">"r2"</span>] <span class="op">=</span> r2_da</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>To compute the joint log-likelihood we just sum the poin-twise log-likelihood evaluations along the observations. In other words we compute one log-likelihood value per MCMC step.</p>
-<div id="6f50d04e" class="cell" data-execution_count="16">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>dt_bf_01.posterior[<span class="st">"log_score"</span>] <span class="op">=</span> dt_bf_01.log_likelihood.<span class="bu">sum</span>(<span class="st">"y_dim_0"</span>)[<span class="st">"y"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="b8d7b55a" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>dt_bf_01.posterior[<span class="st">"log_score"</span>] <span class="op">=</span> dt_bf_01.log_likelihood.<span class="bu">sum</span>(<span class="st">"y_dim_0"</span>)[<span class="st">"y"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Once we have added the derived quantities we just need to call <code>psense_summary</code> (or the others <code>psense_*</code> functions) as usual:</p>
-<div id="97a5df1f" class="cell" data-execution_count="17">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>az.psense_summary(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"r2"</span>, <span class="st">"log_score"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="596a7d70" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>az.psense_summary(dt_bf_01, var_names<span class="op">=</span>[<span class="st">"r2"</span>, <span class="st">"log_score"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <div>
 
@@ -1166,47 +1152,47 @@ Figure&nbsp;6.6: Posterior quantities of βwrist as a function of power-scaling 
 <h2 data-number="6.4" class="anchored" data-anchor-id="bacteria-treatment"><span class="header-section-number">6.4</span> Bacteria treatment</h2>
 <p>Now we discuss and example of power-scaling sensitivity analysis for hierarchical models. The main motivation for this example is to show that for certain models we should selectively power-scaled the priors. To illustrate this, consider two forms of prior, a non-hierarchical prior with two independent parameters <span class="math inline">\(p(\theta)\)</span> and <span class="math inline">\(p(\phi)\)</span> and a hierarchical prior of the form <span class="math inline">\(p(\theta \mid \psi) p(\psi)\)</span>. In the first case, the appropriate power-scaling for the prior is <span class="math inline">\(p(\theta)^{\alpha} p(\phi)^{\alpha}\)</span>. This is what we did in the previous example. In the second case, for the hierarchical model, we only want to power-scale the top level prior, that is, <span class="math inline">\(p(\theta) p(\phi)^{\alpha}\)</span>.</p>
 <p>For this example we are going to use the bacteria data set <span class="citation" data-cites="venables_2002">(<a href="References.html#ref-venables_2002" role="doc-biblioref">Venables and Ripley 2002</a>)</span>.</p>
-<div id="e9c17cb7" class="cell" data-execution_count="18">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>bacteria <span class="op">=</span> pd.read_csv(<span class="st">"../data/bacteria.csv"</span>)</span>
-<span id="cb17-2"><a href="#cb17-2"></a>bacteria[<span class="st">"y"</span>] <span class="op">=</span> bacteria[<span class="st">"y"</span>].astype(<span class="st">"category"</span>).cat.codes</span>
-<span id="cb17-3"><a href="#cb17-3"></a>bacteria[<span class="st">"ID"</span>] <span class="op">=</span> bacteria[<span class="st">"ID"</span>].astype(<span class="st">"category"</span>).cat.codes</span>
-<span id="cb17-4"><a href="#cb17-4"></a>bacteria[<span class="st">"trtDrugP"</span>] <span class="op">=</span> bacteria[<span class="st">"trt"</span>] <span class="op">==</span> <span class="st">"drug+"</span></span>
-<span id="cb17-5"><a href="#cb17-5"></a>bacteria[<span class="st">"trtDrug"</span>] <span class="op">=</span> bacteria[<span class="st">"trt"</span>] <span class="op">==</span> <span class="st">"drug"</span></span>
-<span id="cb17-6"><a href="#cb17-6"></a>K <span class="op">=</span> <span class="bu">len</span>(bacteria[<span class="st">"ID"</span>].unique())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="a4509e3b" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>bacteria <span class="op">=</span> pd.read_csv(<span class="st">"../data/bacteria.csv"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2"></a>bacteria[<span class="st">"y"</span>] <span class="op">=</span> bacteria[<span class="st">"y"</span>].astype(<span class="st">"category"</span>).cat.codes</span>
+<span id="cb16-3"><a href="#cb16-3"></a>bacteria[<span class="st">"ID"</span>] <span class="op">=</span> bacteria[<span class="st">"ID"</span>].astype(<span class="st">"category"</span>).cat.codes</span>
+<span id="cb16-4"><a href="#cb16-4"></a>bacteria[<span class="st">"trtDrugP"</span>] <span class="op">=</span> bacteria[<span class="st">"trt"</span>] <span class="op">==</span> <span class="st">"drug+"</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>bacteria[<span class="st">"trtDrug"</span>] <span class="op">=</span> bacteria[<span class="st">"trt"</span>] <span class="op">==</span> <span class="st">"drug"</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a>K <span class="op">=</span> <span class="bu">len</span>(bacteria[<span class="st">"ID"</span>].unique())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Let’s start by fitting a hierarchical model. The model is as follows:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="ppl">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="8dfed7d5" class="cell" data-execution_count="19">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_bt:</span>
-<span id="cb18-2"><a href="#cb18-2"></a>    μ <span class="op">=</span> pm.Normal(<span class="st">'μ'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb18-3"><a href="#cb18-3"></a>    β_week <span class="op">=</span> pm.Normal(<span class="st">'β_week'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb18-4"><a href="#cb18-4"></a>    β_trtDrug <span class="op">=</span> pm.Normal(<span class="st">'β_trtDrug'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb18-5"><a href="#cb18-5"></a>    β_trtDrugP <span class="op">=</span> pm.Normal(<span class="st">'β_trtDrugP'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)    </span>
-<span id="cb18-6"><a href="#cb18-6"></a></span>
-<span id="cb18-7"><a href="#cb18-7"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">'σ'</span>, sigma<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb18-8"><a href="#cb18-8"></a>    b_Intercept <span class="op">=</span> pm.Normal(<span class="st">'b_Intercept'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span>σ, shape<span class="op">=</span>K)</span>
-<span id="cb18-9"><a href="#cb18-9"></a></span>
-<span id="cb18-10"><a href="#cb18-10"></a>    theta <span class="op">=</span> μ <span class="op">+</span> b_Intercept[bacteria.ID] <span class="op">+</span> β_week <span class="op">*</span> bacteria.week <span class="op">+</span> β_trtDrug <span class="op">*</span> bacteria.trtDrug <span class="op">+</span> β_trtDrugP <span class="op">*</span> bacteria.trtDrugP</span>
-<span id="cb18-11"><a href="#cb18-11"></a>    </span>
-<span id="cb18-12"><a href="#cb18-12"></a>    y_obs <span class="op">=</span> pm.Bernoulli(<span class="st">'y_obs'</span>, logit_p<span class="op">=</span>theta, observed<span class="op">=</span>bacteria.y)</span>
-<span id="cb18-13"><a href="#cb18-13"></a>    </span>
-<span id="cb18-14"><a href="#cb18-14"></a>    dt_bt <span class="op">=</span> pm.sample()</span>
-<span id="cb18-15"><a href="#cb18-15"></a>    pm.compute_log_prior(dt_bt, var_names<span class="op">=</span>[<span class="st">"μ"</span>, <span class="st">"β_week"</span>, <span class="st">"β_trtDrug"</span>, <span class="st">"β_trtDrugP"</span>, <span class="st">"σ"</span>])</span>
-<span id="cb18-16"><a href="#cb18-16"></a>    pm.compute_log_likelihood(dt_bt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="75638e83" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_bt:</span>
+<span id="cb17-2"><a href="#cb17-2"></a>    μ <span class="op">=</span> pm.Normal(<span class="st">'μ'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    β_week <span class="op">=</span> pm.Normal(<span class="st">'β_week'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    β_trtDrug <span class="op">=</span> pm.Normal(<span class="st">'β_trtDrug'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    β_trtDrugP <span class="op">=</span> pm.Normal(<span class="st">'β_trtDrugP'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">10</span>)    </span>
+<span id="cb17-6"><a href="#cb17-6"></a></span>
+<span id="cb17-7"><a href="#cb17-7"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">'σ'</span>, sigma<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    b_Intercept <span class="op">=</span> pm.Normal(<span class="st">'b_Intercept'</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span>σ, shape<span class="op">=</span>K)</span>
+<span id="cb17-9"><a href="#cb17-9"></a></span>
+<span id="cb17-10"><a href="#cb17-10"></a>    theta <span class="op">=</span> μ <span class="op">+</span> b_Intercept[bacteria.ID] <span class="op">+</span> β_week <span class="op">*</span> bacteria.week <span class="op">+</span> β_trtDrug <span class="op">*</span> bacteria.trtDrug <span class="op">+</span> β_trtDrugP <span class="op">*</span> bacteria.trtDrugP</span>
+<span id="cb17-11"><a href="#cb17-11"></a>    </span>
+<span id="cb17-12"><a href="#cb17-12"></a>    y_obs <span class="op">=</span> pm.Bernoulli(<span class="st">'y_obs'</span>, logit_p<span class="op">=</span>theta, observed<span class="op">=</span>bacteria.y)</span>
+<span id="cb17-13"><a href="#cb17-13"></a>    </span>
+<span id="cb17-14"><a href="#cb17-14"></a>    dt_bt <span class="op">=</span> pm.sample()</span>
+<span id="cb17-15"><a href="#cb17-15"></a>    pm.compute_log_prior(dt_bt, var_names<span class="op">=</span>[<span class="st">"μ"</span>, <span class="st">"β_week"</span>, <span class="st">"β_trtDrug"</span>, <span class="st">"β_trtDrugP"</span>, <span class="st">"σ"</span>])</span>
+<span id="cb17-16"><a href="#cb17-16"></a>    pm.compute_log_likelihood(dt_bt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co">## coming soon</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co">## coming soon</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p>From the power-scaling sensitivity analysis perspective the key element in the previous code-block is that we are specifying the variables we want to use for the prior-powerscaling <code>var_names=["μ", "β_week", "β_trtDrug", "β_trtDrugP", "σ"]</code> i.e.&nbsp;we are omitting the <code>b_Intercept</code> variable. This is because we are only interested in power-scaling the top level prior. There are two way to specify the variables for power-scaling, the first is to use the <code>var_names</code> argument when computing the log_prior and/or log_likelihood, as we just did. The second is to use the <code>prior_varnames</code> and <code>likelihood_varnames</code> arguments in the <code>psense</code>-related functions.</p>
 <p>Let’s compute sensitivity diagnostics for all variables except <code>~b_Intercept</code>, if we want to check the sensitivity of all of them we can do it. The key point with hierarchical models is to not power-scale the lower level priors.</p>
-<div id="209565c8" class="cell" data-execution_count="21">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>az.psense_summary(dt_bt, var_names<span class="op">=</span>[<span class="st">"~b_Intercept"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="8354b18e" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>az.psense_summary(dt_bt, var_names<span class="op">=</span>[<span class="st">"~b_Intercept"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <div>
 

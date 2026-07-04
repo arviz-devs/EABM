@@ -101,9 +101,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-38221dd67912a8d268c991a667888358.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-be7a07c707d4d3acecc219ff9b48e327.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-38221dd67912a8d268c991a667888358.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3abd07ee6114effc90a1b69d675e2d9a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-4341fb9735f309b1e9e4bf71aa4c8c5a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-3abd07ee6114effc90a1b69d675e2d9a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -657,7 +657,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 19, 2026</p>
+      <p class="date-modified">July 4, 2026</p>
     </div>
   </div>
     
@@ -726,17 +726,11 @@ H(p) = - \mathbb{E}[\log{p}] = -\sum_i^N p_i \log{p_i}
 <span id="cb1-6"><a href="#cb1-6"></a>    ax.set_title(<span class="ss">f"Entropy=</span><span class="sc">{</span>dist<span class="sc">.</span>entropy()<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
 <span id="cb1-7"><a href="#cb1-7"></a>    ax.set_ylim(<span class="op">-</span><span class="fl">0.05</span>, <span class="fl">1.05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/bernoulli.py:38: FutureWarning: pytensor.tensor.xlogx.xlogx is deprecated. Use pytensor.tensor.special.xlogy(x, x) instead.
-  return -xlogx(p) - xlogx(q)
-/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/pytensor_distributions/bernoulli.py:38: FutureWarning: pytensor.tensor.xlogx.xlogx is deprecated. Use pytensor.tensor.special.xlogy(x, x) instead.
-  return -xlogx(p) - xlogx(q)</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <div id="fig-entropy_bernoulli" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-entropy_bernoulli-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Model_comparison_files/figure-html/fig-entropy_bernoulli-output-2.png" width="458" height="383" class="figure-img">
+<img src="Model_comparison_files/figure-html/fig-entropy_bernoulli-output-1.png" width="458" height="383" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-entropy_bernoulli-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;7.1: Entropy of a Bernoulli distribution as a function of the probability of success
@@ -851,21 +845,21 @@ w_i = \frac{f(x_i)}{g(x_i)}
 </ul>
 <p>Once the weights <span class="math inline">\(w_i\)</span> are obtained, we can use them to estimate properties of <span class="math inline">\(f\)</span>, its density, moments, quantiles, etc.</p>
 <p>In the code-block below <span class="math inline">\(g\)</span> is a Normal distribution and <span class="math inline">\(f\)</span> is a Gamma and we use importance sampling to estimate the PDF of <span class="math inline">\(f\)</span>. This is just a pedagogic example, since we actually have a very direct way to calculate the PDF of a Gamma. But in practice <span class="math inline">\(f\)</span> can be a much more complex object.</p>
-<div id="a871f03a" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>g <span class="op">=</span> pz.Normal(<span class="dv">0</span>, <span class="dv">10</span>)</span>
-<span id="cb3-2"><a href="#cb3-2"></a>samples <span class="op">=</span> g.rvs(<span class="dv">1000</span>, random_state<span class="op">=</span>SEED)</span>
-<span id="cb3-3"><a href="#cb3-3"></a>f <span class="op">=</span> pz.Gamma(mu<span class="op">=</span><span class="dv">4</span>, sigma<span class="op">=</span><span class="fl">1.5</span>)</span>
-<span id="cb3-4"><a href="#cb3-4"></a></span>
-<span id="cb3-5"><a href="#cb3-5"></a>w <span class="op">=</span> f.pdf(samples) <span class="op">/</span> g.pdf(samples)</span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a>ax <span class="op">=</span> f.plot_pdf()</span>
-<span id="cb3-8"><a href="#cb3-8"></a>ax.hist(samples, bins<span class="op">=</span><span class="dv">100</span>, density<span class="op">=</span><span class="va">True</span>, weights<span class="op">=</span>w, </span>
-<span id="cb3-9"><a href="#cb3-9"></a>        alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'C2'</span>, label<span class="op">=</span><span class="st">'Weighted samples'</span>)</span>
-<span id="cb3-10"><a href="#cb3-10"></a>ax.set_xlim(<span class="dv">0</span>, <span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="c57a3a87" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>g <span class="op">=</span> pz.Normal(<span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>samples <span class="op">=</span> g.rvs(<span class="dv">1000</span>, random_state<span class="op">=</span>SEED)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>f <span class="op">=</span> pz.Gamma(mu<span class="op">=</span><span class="dv">4</span>, sigma<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>w <span class="op">=</span> f.pdf(samples) <span class="op">/</span> g.pdf(samples)</span>
+<span id="cb2-6"><a href="#cb2-6"></a></span>
+<span id="cb2-7"><a href="#cb2-7"></a>ax <span class="op">=</span> f.plot_pdf()</span>
+<span id="cb2-8"><a href="#cb2-8"></a>ax.hist(samples, bins<span class="op">=</span><span class="dv">100</span>, density<span class="op">=</span><span class="va">True</span>, weights<span class="op">=</span>w, </span>
+<span id="cb2-9"><a href="#cb2-9"></a>        alpha<span class="op">=</span><span class="fl">0.6</span>, color<span class="op">=</span><span class="st">'C2'</span>, label<span class="op">=</span><span class="st">'Weighted samples'</span>)</span>
+<span id="cb2-10"><a href="#cb2-10"></a>ax.set_xlim(<span class="dv">0</span>, <span class="dv">15</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Model_comparison_files/figure-html/cell-4-output-1.png" width="645" height="325" class="figure-img"></p>
+<p><img src="Model_comparison_files/figure-html/cell-4-output-1.png" width="645" height="326" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -893,12 +887,12 @@ w_i^j \propto \frac{p(\theta^j \mid y_{-i} )}{p(\theta^j \mid y)} \propto \frac{
 <section id="psis-loo-cv-in-arviz" class="level2" data-number="7.6">
 <h2 data-number="7.6" class="anchored" data-anchor-id="psis-loo-cv-in-arviz"><span class="header-section-number">7.6</span> PSIS-LOO-CV in Arviz</h2>
 <p>Since the name and even acronym are too long and not that easy to pronounce, in ArviZ, we usually refer to this and related methods as LOO. For instance, to compute the ELPD using the PSIS-LOO-CV method, we call the <code>loo</code> function. This function’s first argument needs to be a DataTree object with a <code>log-likelihood</code> group.</p>
-<div id="21fee386" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>dt_rugby <span class="op">=</span> az.load_arviz_data(<span class="st">'rugby'</span>)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>elpd <span class="op">=</span> az.loo(dt_rugby, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a>elpd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="1411f53c" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>dt_rugby <span class="op">=</span> az.load_arviz_data(<span class="st">'rugby'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a>elpd <span class="op">=</span> az.loo(dt_rugby, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3"></a>elpd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="4">
@@ -922,129 +916,129 @@ Pareto k diagnostic values:
 <section id="a-simple-example" class="level3" data-number="7.6.1">
 <h3 data-number="7.6.1" class="anchored" data-anchor-id="a-simple-example"><span class="header-section-number">7.6.1</span> A simple example</h3>
 <p>Let’s see how to use ArviZ to compare two models. We start by simulating some data from a Student’s T distribution (df=<span class="math inline">\(\nu\)</span>=4), which has heavier tails than a Normal distribution.</p>
-<div id="68f39363" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>target <span class="op">=</span> pz.StudentT(nu<span class="op">=</span><span class="dv">4</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">1</span>).rvs(<span class="dv">200</span>, random_state<span class="op">=</span>SEED)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="2a628ffc" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>target <span class="op">=</span> pz.StudentT(nu<span class="op">=</span><span class="dv">4</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">1</span>).rvs(<span class="dv">200</span>, random_state<span class="op">=</span>SEED)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We then fit two models, one with a Normal likelihood and another with a Student’s T likelihood.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="ppl">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="e74f676b" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_n:</span>
-<span id="cb8-2"><a href="#cb8-2"></a>    μ <span class="op">=</span> pm.Normal(<span class="st">"μ"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb8-3"><a href="#cb8-3"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, <span class="dv">1</span>)</span>
-<span id="cb8-4"><a href="#cb8-4"></a>    pm.Normal(<span class="st">"y"</span>, μ, σ, observed<span class="op">=</span>target)</span>
-<span id="cb8-5"><a href="#cb8-5"></a>    idata_n <span class="op">=</span> pm.sample(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>:<span class="va">True</span>})</span>
-<span id="cb8-6"><a href="#cb8-6"></a>    </span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_t:</span>
-<span id="cb8-8"><a href="#cb8-8"></a>    μ <span class="op">=</span> pm.Normal(<span class="st">"μ"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb8-9"><a href="#cb8-9"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, <span class="dv">1</span>)</span>
-<span id="cb8-10"><a href="#cb8-10"></a>    ν <span class="op">=</span> pm.Exponential(<span class="st">"ν"</span>, scale<span class="op">=</span><span class="dv">30</span>)</span>
-<span id="cb8-11"><a href="#cb8-11"></a>    pm.StudentT(<span class="st">"y"</span>, nu<span class="op">=</span>ν, mu<span class="op">=</span>μ, sigma<span class="op">=</span>σ, observed<span class="op">=</span>target)</span>
-<span id="cb8-12"><a href="#cb8-12"></a>    idata_t <span class="op">=</span> pm.sample(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>:<span class="va">True</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="48407521" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_n:</span>
+<span id="cb7-2"><a href="#cb7-2"></a>    μ <span class="op">=</span> pm.Normal(<span class="st">"μ"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, <span class="dv">1</span>)</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    pm.Normal(<span class="st">"y"</span>, μ, σ, observed<span class="op">=</span>target)</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    idata_n <span class="op">=</span> pm.sample(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>:<span class="va">True</span>})</span>
+<span id="cb7-6"><a href="#cb7-6"></a>    </span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_t:</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    μ <span class="op">=</span> pm.Normal(<span class="st">"μ"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, <span class="dv">1</span>)</span>
+<span id="cb7-10"><a href="#cb7-10"></a>    ν <span class="op">=</span> pm.Exponential(<span class="st">"ν"</span>, scale<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb7-11"><a href="#cb7-11"></a>    pm.StudentT(<span class="st">"y"</span>, nu<span class="op">=</span>ν, mu<span class="op">=</span>μ, sigma<span class="op">=</span>σ, observed<span class="op">=</span>target)</span>
+<span id="cb7-12"><a href="#cb7-12"></a>    idata_t <span class="op">=</span> pm.sample(idata_kwargs<span class="op">=</span>{<span class="st">"log_likelihood"</span>:<span class="va">True</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>normal_model <span class="op">=</span> <span class="st">"""</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="st">data {</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="st">  int&lt;lower=0&gt; N;</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="st">  vector[N] y;</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="st">}</span></span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="st">parameters {</span></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="st">  real mu;</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="st">  real&lt;lower=0&gt; sigma;</span></span>
-<span id="cb9-9"><a href="#cb9-9"></a><span class="st">}</span></span>
-<span id="cb9-10"><a href="#cb9-10"></a><span class="st">model {</span></span>
-<span id="cb9-11"><a href="#cb9-11"></a><span class="st">  mu    ~ normal(0, 1);</span></span>
-<span id="cb9-12"><a href="#cb9-12"></a><span class="st">  sigma ~ normal(0, 1);</span></span>
-<span id="cb9-13"><a href="#cb9-13"></a><span class="st">  y     ~ normal(mu, sigma);</span></span>
-<span id="cb9-14"><a href="#cb9-14"></a><span class="st">}</span></span>
-<span id="cb9-15"><a href="#cb9-15"></a><span class="st">generated quantities {</span></span>
-<span id="cb9-16"><a href="#cb9-16"></a><span class="st">  vector[N] log_lik;</span></span>
-<span id="cb9-17"><a href="#cb9-17"></a><span class="st">  for (n in 1:N)</span></span>
-<span id="cb9-18"><a href="#cb9-18"></a><span class="st">    log_lik[n] = normal_lpdf(y[n] | mu, sigma);</span></span>
-<span id="cb9-19"><a href="#cb9-19"></a><span class="st">}</span></span>
-<span id="cb9-20"><a href="#cb9-20"></a><span class="st">"""</span></span>
-<span id="cb9-21"><a href="#cb9-21"></a></span>
-<span id="cb9-22"><a href="#cb9-22"></a>student_model <span class="op">=</span> <span class="st">"""</span></span>
-<span id="cb9-23"><a href="#cb9-23"></a><span class="st">data {</span></span>
-<span id="cb9-24"><a href="#cb9-24"></a><span class="st">  int&lt;lower=0&gt; N;</span></span>
-<span id="cb9-25"><a href="#cb9-25"></a><span class="st">  vector[N] y;</span></span>
-<span id="cb9-26"><a href="#cb9-26"></a><span class="st">}</span></span>
-<span id="cb9-27"><a href="#cb9-27"></a><span class="st">parameters {</span></span>
-<span id="cb9-28"><a href="#cb9-28"></a><span class="st">  real mu;</span></span>
-<span id="cb9-29"><a href="#cb9-29"></a><span class="st">  real&lt;lower=0&gt; sigma;</span></span>
-<span id="cb9-30"><a href="#cb9-30"></a><span class="st">  real&lt;lower=0&gt; nu;</span></span>
-<span id="cb9-31"><a href="#cb9-31"></a><span class="st">}</span></span>
-<span id="cb9-32"><a href="#cb9-32"></a><span class="st">model {</span></span>
-<span id="cb9-33"><a href="#cb9-33"></a><span class="st">  mu    ~ normal(0, 1);</span></span>
-<span id="cb9-34"><a href="#cb9-34"></a><span class="st">  sigma ~ normal(0, 1);</span></span>
-<span id="cb9-35"><a href="#cb9-35"></a><span class="st">  nu    ~ exponential(1.0 / 30);</span></span>
-<span id="cb9-36"><a href="#cb9-36"></a><span class="st">  y     ~ student_t(nu, mu, sigma);</span></span>
-<span id="cb9-37"><a href="#cb9-37"></a><span class="st">}</span></span>
-<span id="cb9-38"><a href="#cb9-38"></a><span class="st">generated quantities {</span></span>
-<span id="cb9-39"><a href="#cb9-39"></a><span class="st">  vector[N] log_lik;</span></span>
-<span id="cb9-40"><a href="#cb9-40"></a><span class="st">  for (n in 1:N)</span></span>
-<span id="cb9-41"><a href="#cb9-41"></a><span class="st">    log_lik[n] = student_t_lpdf(y[n] | nu, mu, sigma);</span></span>
-<span id="cb9-42"><a href="#cb9-42"></a><span class="st">}</span></span>
-<span id="cb9-43"><a href="#cb9-43"></a><span class="st">"""</span></span>
-<span id="cb9-44"><a href="#cb9-44"></a></span>
-<span id="cb9-45"><a href="#cb9-45"></a>stan_data <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(target), <span class="st">"y"</span>: target.tolist()}</span>
-<span id="cb9-46"><a href="#cb9-46"></a></span>
-<span id="cb9-47"><a href="#cb9-47"></a><span class="co"># Normal model</span></span>
-<span id="cb9-48"><a href="#cb9-48"></a></span>
-<span id="cb9-49"><a href="#cb9-49"></a><span class="co">## Write the normal model to a file</span></span>
-<span id="cb9-50"><a href="#cb9-50"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"./normal_model.stan"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb9-51"><a href="#cb9-51"></a>    <span class="bu">print</span>(normal_model, <span class="bu">file</span><span class="op">=</span>f)</span>
-<span id="cb9-52"><a href="#cb9-52"></a></span>
-<span id="cb9-53"><a href="#cb9-53"></a><span class="co">## Compile the model</span></span>
-<span id="cb9-54"><a href="#cb9-54"></a>model_n <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">"./normal_model.stan"</span>)</span>
-<span id="cb9-55"><a href="#cb9-55"></a></span>
-<span id="cb9-56"><a href="#cb9-56"></a><span class="co">## Sample from the posterior</span></span>
-<span id="cb9-57"><a href="#cb9-57"></a>fit_n   <span class="op">=</span> model_n.sample(</span>
-<span id="cb9-58"><a href="#cb9-58"></a>    data<span class="op">=</span>stan_data,</span>
-<span id="cb9-59"><a href="#cb9-59"></a>    seed<span class="op">=</span>SEED,</span>
-<span id="cb9-60"><a href="#cb9-60"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb9-61"><a href="#cb9-61"></a>)</span>
-<span id="cb9-62"><a href="#cb9-62"></a></span>
-<span id="cb9-63"><a href="#cb9-63"></a><span class="co">## Convert the fit to an ArviZ DataTree object</span></span>
-<span id="cb9-64"><a href="#cb9-64"></a>idata_n <span class="op">=</span> az.from_cmdstanpy(</span>
-<span id="cb9-65"><a href="#cb9-65"></a>    posterior<span class="op">=</span>fit_n,</span>
-<span id="cb9-66"><a href="#cb9-66"></a>    log_likelihood<span class="op">=</span><span class="st">"log_lik"</span>,</span>
-<span id="cb9-67"><a href="#cb9-67"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: target},</span>
-<span id="cb9-68"><a href="#cb9-68"></a>)</span>
-<span id="cb9-69"><a href="#cb9-69"></a></span>
-<span id="cb9-70"><a href="#cb9-70"></a></span>
-<span id="cb9-71"><a href="#cb9-71"></a><span class="co"># Student's T model</span></span>
-<span id="cb9-72"><a href="#cb9-72"></a></span>
-<span id="cb9-73"><a href="#cb9-73"></a><span class="co">## Write the student model to a file</span></span>
-<span id="cb9-74"><a href="#cb9-74"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"./student_model.stan"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb9-75"><a href="#cb9-75"></a>    <span class="bu">print</span>(student_model, <span class="bu">file</span><span class="op">=</span>f)</span>
-<span id="cb9-76"><a href="#cb9-76"></a></span>
-<span id="cb9-77"><a href="#cb9-77"></a><span class="co">## Compile the model</span></span>
-<span id="cb9-78"><a href="#cb9-78"></a>model_t <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">"./student_model.stan"</span>)</span>
-<span id="cb9-79"><a href="#cb9-79"></a></span>
-<span id="cb9-80"><a href="#cb9-80"></a><span class="co">## Sample from the posterior</span></span>
-<span id="cb9-81"><a href="#cb9-81"></a>fit_t   <span class="op">=</span> model_t.sample(</span>
-<span id="cb9-82"><a href="#cb9-82"></a>    data<span class="op">=</span>stan_data,</span>
-<span id="cb9-83"><a href="#cb9-83"></a>    seed<span class="op">=</span>SEED,</span>
-<span id="cb9-84"><a href="#cb9-84"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb9-85"><a href="#cb9-85"></a>)</span>
-<span id="cb9-86"><a href="#cb9-86"></a></span>
-<span id="cb9-87"><a href="#cb9-87"></a><span class="co">## Convert the fit to an ArviZ DataTree object</span></span>
-<span id="cb9-88"><a href="#cb9-88"></a>idata_t <span class="op">=</span> az.from_cmdstanpy(</span>
-<span id="cb9-89"><a href="#cb9-89"></a>    posterior<span class="op">=</span>fit_t,</span>
-<span id="cb9-90"><a href="#cb9-90"></a>    log_likelihood<span class="op">=</span><span class="st">"log_lik"</span>,</span>
-<span id="cb9-91"><a href="#cb9-91"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: target},</span>
-<span id="cb9-92"><a href="#cb9-92"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>normal_model <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">data {</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  int&lt;lower=0&gt; N;</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  vector[N] y;</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="st">}</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="st">parameters {</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="st">  real mu;</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="st">  real&lt;lower=0&gt; sigma;</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="st">}</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="st">model {</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="st">  mu    ~ normal(0, 1);</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="st">  sigma ~ normal(0, 1);</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="st">  y     ~ normal(mu, sigma);</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="st">}</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="st">generated quantities {</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="st">  vector[N] log_lik;</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="st">  for (n in 1:N)</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="st">    log_lik[n] = normal_lpdf(y[n] | mu, sigma);</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="st">}</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a><span class="st">"""</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a></span>
+<span id="cb8-22"><a href="#cb8-22"></a>student_model <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="st">data {</span></span>
+<span id="cb8-24"><a href="#cb8-24"></a><span class="st">  int&lt;lower=0&gt; N;</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a><span class="st">  vector[N] y;</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a><span class="st">}</span></span>
+<span id="cb8-27"><a href="#cb8-27"></a><span class="st">parameters {</span></span>
+<span id="cb8-28"><a href="#cb8-28"></a><span class="st">  real mu;</span></span>
+<span id="cb8-29"><a href="#cb8-29"></a><span class="st">  real&lt;lower=0&gt; sigma;</span></span>
+<span id="cb8-30"><a href="#cb8-30"></a><span class="st">  real&lt;lower=0&gt; nu;</span></span>
+<span id="cb8-31"><a href="#cb8-31"></a><span class="st">}</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="st">model {</span></span>
+<span id="cb8-33"><a href="#cb8-33"></a><span class="st">  mu    ~ normal(0, 1);</span></span>
+<span id="cb8-34"><a href="#cb8-34"></a><span class="st">  sigma ~ normal(0, 1);</span></span>
+<span id="cb8-35"><a href="#cb8-35"></a><span class="st">  nu    ~ exponential(1.0 / 30);</span></span>
+<span id="cb8-36"><a href="#cb8-36"></a><span class="st">  y     ~ student_t(nu, mu, sigma);</span></span>
+<span id="cb8-37"><a href="#cb8-37"></a><span class="st">}</span></span>
+<span id="cb8-38"><a href="#cb8-38"></a><span class="st">generated quantities {</span></span>
+<span id="cb8-39"><a href="#cb8-39"></a><span class="st">  vector[N] log_lik;</span></span>
+<span id="cb8-40"><a href="#cb8-40"></a><span class="st">  for (n in 1:N)</span></span>
+<span id="cb8-41"><a href="#cb8-41"></a><span class="st">    log_lik[n] = student_t_lpdf(y[n] | nu, mu, sigma);</span></span>
+<span id="cb8-42"><a href="#cb8-42"></a><span class="st">}</span></span>
+<span id="cb8-43"><a href="#cb8-43"></a><span class="st">"""</span></span>
+<span id="cb8-44"><a href="#cb8-44"></a></span>
+<span id="cb8-45"><a href="#cb8-45"></a>stan_data <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(target), <span class="st">"y"</span>: target.tolist()}</span>
+<span id="cb8-46"><a href="#cb8-46"></a></span>
+<span id="cb8-47"><a href="#cb8-47"></a><span class="co"># Normal model</span></span>
+<span id="cb8-48"><a href="#cb8-48"></a></span>
+<span id="cb8-49"><a href="#cb8-49"></a><span class="co">## Write the normal model to a file</span></span>
+<span id="cb8-50"><a href="#cb8-50"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"./normal_model.stan"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb8-51"><a href="#cb8-51"></a>    <span class="bu">print</span>(normal_model, <span class="bu">file</span><span class="op">=</span>f)</span>
+<span id="cb8-52"><a href="#cb8-52"></a></span>
+<span id="cb8-53"><a href="#cb8-53"></a><span class="co">## Compile the model</span></span>
+<span id="cb8-54"><a href="#cb8-54"></a>model_n <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">"./normal_model.stan"</span>)</span>
+<span id="cb8-55"><a href="#cb8-55"></a></span>
+<span id="cb8-56"><a href="#cb8-56"></a><span class="co">## Sample from the posterior</span></span>
+<span id="cb8-57"><a href="#cb8-57"></a>fit_n   <span class="op">=</span> model_n.sample(</span>
+<span id="cb8-58"><a href="#cb8-58"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb8-59"><a href="#cb8-59"></a>    seed<span class="op">=</span>SEED,</span>
+<span id="cb8-60"><a href="#cb8-60"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb8-61"><a href="#cb8-61"></a>)</span>
+<span id="cb8-62"><a href="#cb8-62"></a></span>
+<span id="cb8-63"><a href="#cb8-63"></a><span class="co">## Convert the fit to an ArviZ DataTree object</span></span>
+<span id="cb8-64"><a href="#cb8-64"></a>idata_n <span class="op">=</span> az.from_cmdstanpy(</span>
+<span id="cb8-65"><a href="#cb8-65"></a>    posterior<span class="op">=</span>fit_n,</span>
+<span id="cb8-66"><a href="#cb8-66"></a>    log_likelihood<span class="op">=</span><span class="st">"log_lik"</span>,</span>
+<span id="cb8-67"><a href="#cb8-67"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: target},</span>
+<span id="cb8-68"><a href="#cb8-68"></a>)</span>
+<span id="cb8-69"><a href="#cb8-69"></a></span>
+<span id="cb8-70"><a href="#cb8-70"></a></span>
+<span id="cb8-71"><a href="#cb8-71"></a><span class="co"># Student's T model</span></span>
+<span id="cb8-72"><a href="#cb8-72"></a></span>
+<span id="cb8-73"><a href="#cb8-73"></a><span class="co">## Write the student model to a file</span></span>
+<span id="cb8-74"><a href="#cb8-74"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"./student_model.stan"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb8-75"><a href="#cb8-75"></a>    <span class="bu">print</span>(student_model, <span class="bu">file</span><span class="op">=</span>f)</span>
+<span id="cb8-76"><a href="#cb8-76"></a></span>
+<span id="cb8-77"><a href="#cb8-77"></a><span class="co">## Compile the model</span></span>
+<span id="cb8-78"><a href="#cb8-78"></a>model_t <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">"./student_model.stan"</span>)</span>
+<span id="cb8-79"><a href="#cb8-79"></a></span>
+<span id="cb8-80"><a href="#cb8-80"></a><span class="co">## Sample from the posterior</span></span>
+<span id="cb8-81"><a href="#cb8-81"></a>fit_t   <span class="op">=</span> model_t.sample(</span>
+<span id="cb8-82"><a href="#cb8-82"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb8-83"><a href="#cb8-83"></a>    seed<span class="op">=</span>SEED,</span>
+<span id="cb8-84"><a href="#cb8-84"></a>    show_progress<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb8-85"><a href="#cb8-85"></a>)</span>
+<span id="cb8-86"><a href="#cb8-86"></a></span>
+<span id="cb8-87"><a href="#cb8-87"></a><span class="co">## Convert the fit to an ArviZ DataTree object</span></span>
+<span id="cb8-88"><a href="#cb8-88"></a>idata_t <span class="op">=</span> az.from_cmdstanpy(</span>
+<span id="cb8-89"><a href="#cb8-89"></a>    posterior<span class="op">=</span>fit_t,</span>
+<span id="cb8-90"><a href="#cb8-90"></a>    log_likelihood<span class="op">=</span><span class="st">"log_lik"</span>,</span>
+<span id="cb8-91"><a href="#cb8-91"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: target},</span>
+<span id="cb8-92"><a href="#cb8-92"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p>To compare two or more models, we can use the <code>compare</code> function, which accepts a dictionary where the keys are the names of the models and the values are <code>DataTree</code> objects.</p>
-<div id="b0982948" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>cmp_df <span class="op">=</span> az.compare({<span class="st">'model_n'</span>:idata_n, <span class="st">'model_t'</span>:idata_t})</span>
-<span id="cb10-2"><a href="#cb10-2"></a>cmp_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="6f8ced19" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>cmp_df <span class="op">=</span> az.compare({<span class="st">'model_n'</span>:idata_n, <span class="st">'model_t'</span>:idata_t})</span>
+<span id="cb9-2"><a href="#cb9-2"></a>cmp_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
@@ -1054,37 +1048,43 @@ Pareto k diagnostic values:
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">rank</th>
-<th data-quarto-table-cell-role="th">elpd</th>
-<th data-quarto-table-cell-role="th">p</th>
 <th data-quarto-table-cell-role="th">elpd_diff</th>
-<th data-quarto-table-cell-role="th">weight</th>
-<th data-quarto-table-cell-role="th">se</th>
 <th data-quarto-table-cell-role="th">dse</th>
-<th data-quarto-table-cell-role="th">warning</th>
+<th data-quarto-table-cell-role="th">p_worse</th>
+<th data-quarto-table-cell-role="th">diag_diff</th>
+<th data-quarto-table-cell-role="th">diag_elpd</th>
+<th data-quarto-table-cell-role="th">p</th>
+<th data-quarto-table-cell-role="th">elpd</th>
+<th data-quarto-table-cell-role="th">se</th>
+<th data-quarto-table-cell-role="th">weight</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">model_t</th>
 <td>0</td>
-<td>-340.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>NaN</td>
+<td></td>
+<td></td>
 <td>3.0</td>
-<td>0.0</td>
-<td>1.0</td>
+<td>-340.0</td>
 <td>14.0</td>
-<td>0.0</td>
-<td>False</td>
+<td>1.0</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">model_n</th>
 <td>1</td>
-<td>-350.0</td>
-<td>3.1</td>
 <td>-8.0</td>
-<td>0.0</td>
-<td>15.0</td>
 <td>4.1</td>
-<td>False</td>
+<td>0.98</td>
+<td></td>
+<td></td>
+<td>3.1</td>
+<td>-350.0</td>
+<td>15.0</td>
+<td>0.0</td>
 </tr>
 </tbody>
 </table>
@@ -1105,8 +1105,8 @@ Pareto k diagnostic values:
 <li>scale: the scale on which the ELPD is calculated</li>
 </ul>
 <p>We can obtain similar information, but graphically, using the <code>az.plot_compare</code> function</p>
-<div id="7fe1ef04" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>az.plot_compare(cmp_df)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="02c26812" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>az.plot_compare(cmp_df)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1128,9 +1128,9 @@ Pareto k diagnostic values:
 <p>As a general rule, if <span class="math inline">\(\hat{k}\)</span> is less than 0.7 there are no problems; if it is between 0.7 and 1 it is very likely that we are in trouble; and if it is greater than 1, we are doomed. The cut-off value 0.7 is not really fixed, it is computed as <span class="math inline">\(\min\left(1 - \frac{1}{\log_{10}(S)}, 0.7\right))\)</span>, where <span class="math inline">\(S\)</span> is the number of posterior draws. When the number of draws is about 2000 (like in our example), the recommended threshold is very close to 0.7. ArviZ can compute the threshold automatically.</p>
 <p>The number of samples not only affect the threshold,it can actually help to reduce the value of <span class="math inline">\(\hat{k}\)</span> and thus remove some of these warnings. This is specially true for values close to the threshold, and when the number of samples is not yet “too large” (given our budget). Otherwise, the number needed will be too large to be practically useful.</p>
 <p>It is possible to visualize the values ​​of <span class="math inline">\(k\)</span>, using <code>plot_khat</code></p>
-<div id="764221c7" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># coming soon</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a>az.plot_khat(elpd)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="0e26bcdb" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># coming soon</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>az.plot_khat(elpd)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1416,10 +1416,10 @@ V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
 <section id="loo-expectations-and-metrics" class="level3" data-number="7.9.1">
 <h3 data-number="7.9.1" class="anchored" data-anchor-id="loo-expectations-and-metrics"><span class="header-section-number">7.9.1</span> LOO expectations and metrics</h3>
 <p>From the PSIS procedure, we obtain a set of weights. The <code>loo</code> function utilizes these weights to estimate the ELPD we should have obtained if we have performed leave-one-out cross-validation. Furthermore, these weights can be used to estimate other quantities, such as the mean, standard deviation, and quantiles, as if we had performed leave-one-out cross-validation. For example, to compute the 25th and 75th percentiles we use:</p>
-<div id="67273883" class="cell" data-execution_count="11">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>az.loo_expectations(dt_rugby, kind<span class="op">=</span><span class="st">"quantile"</span>, probs<span class="op">=</span>[<span class="fl">0.25</span>, <span class="fl">0.75</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="c400c64e" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>az.loo_expectations(dt_rugby, kind<span class="op">=</span><span class="st">"quantile"</span>, probs<span class="op">=</span>[<span class="fl">0.25</span>, <span class="fl">0.75</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="10">
@@ -1445,10 +1445,10 @@ V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
 </div>
 </div>
 <p>Similarly we may be interested in computing estimates of leave-one-out predictive metrics given a set of predictions and observations. For instance to compute the root mean square error we can do:</p>
-<div id="d8a2aad0" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>az.loo_metrics(dt_rugby, kind<span class="op">=</span><span class="st">"rmse"</span>, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="38e20cab" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>az.loo_metrics(dt_rugby, kind<span class="op">=</span><span class="st">"rmse"</span>, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="11">
@@ -1456,10 +1456,10 @@ V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
 </div>
 </div>
 <p>Anoth</p>
-<div id="d2ace52d" class="cell" data-execution_count="13">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>az.loo_r2(dt_rugby, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="998c9200" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>az.loo_r2(dt_rugby, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.13/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/arviz_stats/loo/helper_loo.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="12">
@@ -1476,7 +1476,7 @@ p(\tilde y_i \le y_i \mid y_{-i})
 \]</span></p>
 <p>That is, we are evaluating the model’s ability to predict an observation when we remove that observation from the observed data. We can use PSIS-LOO_CV to estimate this from a single model fit.</p>
 <div id="cell-fig-loo_pit" class="cell" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>az.plot_loo_pit(dt_rugby, var_names<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>az.plot_loo_pit(dt_rugby, var_names<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="fig-loo_pit" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1574,59 +1574,59 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="d2b3daed" class="cell" data-execution_count="15">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>y <span class="op">=</span> np.repeat([<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">50</span>, <span class="dv">50</span>])  <span class="co"># 50 heads, 50 tails</span></span>
-<span id="cb23-2"><a href="#cb23-2"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_uni:</span>
-<span id="cb23-3"><a href="#cb23-3"></a>    a <span class="op">=</span> pm.Beta(<span class="st">"a"</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb23-4"><a href="#cb23-4"></a>    yl <span class="op">=</span> pm.Bernoulli(<span class="st">"yl"</span>, a, observed<span class="op">=</span>y)</span>
-<span id="cb23-5"><a href="#cb23-5"></a>    idata_uni <span class="op">=</span> pm.sample(<span class="dv">2000</span>, random_seed<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb23-6"><a href="#cb23-6"></a>    idata_uni.extend(pm.sample_prior_predictive(<span class="dv">8000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="da0f5aa9" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>y <span class="op">=</span> np.repeat([<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">50</span>, <span class="dv">50</span>])  <span class="co"># 50 heads, 50 tails</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_uni:</span>
+<span id="cb22-3"><a href="#cb22-3"></a>    a <span class="op">=</span> pm.Beta(<span class="st">"a"</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb22-4"><a href="#cb22-4"></a>    yl <span class="op">=</span> pm.Bernoulli(<span class="st">"yl"</span>, a, observed<span class="op">=</span>y)</span>
+<span id="cb22-5"><a href="#cb22-5"></a>    idata_uni <span class="op">=</span> pm.sample(<span class="dv">2000</span>, random_seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb22-6"><a href="#cb22-6"></a>    idata_uni.extend(pm.sample_prior_predictive(<span class="dv">8000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>y <span class="op">=</span> np.repeat([<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">50</span>, <span class="dv">50</span>])  <span class="co"># 50 heads, 50 tails</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a></span>
-<span id="cb24-3"><a href="#cb24-3"></a>model_00 <span class="op">=</span> <span class="st">"""</span></span>
-<span id="cb24-4"><a href="#cb24-4"></a><span class="st">data {</span></span>
-<span id="cb24-5"><a href="#cb24-5"></a><span class="st">  int&lt;lower=0&gt; N;</span></span>
-<span id="cb24-6"><a href="#cb24-6"></a><span class="st">  array[N] int&lt;lower=0,upper=1&gt; y;</span></span>
-<span id="cb24-7"><a href="#cb24-7"></a><span class="st">}</span></span>
-<span id="cb24-8"><a href="#cb24-8"></a><span class="st">parameters {</span></span>
-<span id="cb24-9"><a href="#cb24-9"></a><span class="st">  real&lt;lower=0,upper=1&gt; a;</span></span>
-<span id="cb24-10"><a href="#cb24-10"></a><span class="st">}</span></span>
-<span id="cb24-11"><a href="#cb24-11"></a><span class="st">model {</span></span>
-<span id="cb24-12"><a href="#cb24-12"></a><span class="st">  a  ~ beta(1, 1);</span></span>
-<span id="cb24-13"><a href="#cb24-13"></a><span class="st">  y  ~ bernoulli(a);</span></span>
-<span id="cb24-14"><a href="#cb24-14"></a><span class="st">}</span></span>
-<span id="cb24-15"><a href="#cb24-15"></a><span class="st">generated quantities {</span></span>
-<span id="cb24-16"><a href="#cb24-16"></a><span class="st">  real a_prior = beta_rng(1, 1);</span></span>
-<span id="cb24-17"><a href="#cb24-17"></a><span class="st">}</span></span>
-<span id="cb24-18"><a href="#cb24-18"></a><span class="st">"""</span></span>
-<span id="cb24-19"><a href="#cb24-19"></a></span>
-<span id="cb24-20"><a href="#cb24-20"></a>stan_data <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(y), <span class="st">"y"</span>: y.tolist()}</span>
-<span id="cb24-21"><a href="#cb24-21"></a></span>
-<span id="cb24-22"><a href="#cb24-22"></a></span>
-<span id="cb24-23"><a href="#cb24-23"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"./model_00.stan"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb24-24"><a href="#cb24-24"></a>    <span class="bu">print</span>(model_00, <span class="bu">file</span><span class="op">=</span>f)</span>
-<span id="cb24-25"><a href="#cb24-25"></a></span>
-<span id="cb24-26"><a href="#cb24-26"></a>model_00 <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">"./model_00.stan"</span>)</span>
-<span id="cb24-27"><a href="#cb24-27"></a></span>
-<span id="cb24-28"><a href="#cb24-28"></a>fit <span class="op">=</span> model_00.sample(</span>
-<span id="cb24-29"><a href="#cb24-29"></a>    data<span class="op">=</span>stan_data,</span>
-<span id="cb24-30"><a href="#cb24-30"></a>    seed<span class="op">=</span><span class="dv">42</span>,</span>
-<span id="cb24-31"><a href="#cb24-31"></a>)</span>
-<span id="cb24-32"><a href="#cb24-32"></a></span>
-<span id="cb24-33"><a href="#cb24-33"></a>idata_uni <span class="op">=</span> az.from_cmdstanpy(</span>
-<span id="cb24-34"><a href="#cb24-34"></a>    posterior<span class="op">=</span>fit,</span>
-<span id="cb24-35"><a href="#cb24-35"></a>    prior<span class="op">=</span>fit,</span>
-<span id="cb24-36"><a href="#cb24-36"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: y},</span>
-<span id="cb24-37"><a href="#cb24-37"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>y <span class="op">=</span> np.repeat([<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">50</span>, <span class="dv">50</span>])  <span class="co"># 50 heads, 50 tails</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a></span>
+<span id="cb23-3"><a href="#cb23-3"></a>model_00 <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="st">data {</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="st">  int&lt;lower=0&gt; N;</span></span>
+<span id="cb23-6"><a href="#cb23-6"></a><span class="st">  array[N] int&lt;lower=0,upper=1&gt; y;</span></span>
+<span id="cb23-7"><a href="#cb23-7"></a><span class="st">}</span></span>
+<span id="cb23-8"><a href="#cb23-8"></a><span class="st">parameters {</span></span>
+<span id="cb23-9"><a href="#cb23-9"></a><span class="st">  real&lt;lower=0,upper=1&gt; a;</span></span>
+<span id="cb23-10"><a href="#cb23-10"></a><span class="st">}</span></span>
+<span id="cb23-11"><a href="#cb23-11"></a><span class="st">model {</span></span>
+<span id="cb23-12"><a href="#cb23-12"></a><span class="st">  a  ~ beta(1, 1);</span></span>
+<span id="cb23-13"><a href="#cb23-13"></a><span class="st">  y  ~ bernoulli(a);</span></span>
+<span id="cb23-14"><a href="#cb23-14"></a><span class="st">}</span></span>
+<span id="cb23-15"><a href="#cb23-15"></a><span class="st">generated quantities {</span></span>
+<span id="cb23-16"><a href="#cb23-16"></a><span class="st">  real a_prior = beta_rng(1, 1);</span></span>
+<span id="cb23-17"><a href="#cb23-17"></a><span class="st">}</span></span>
+<span id="cb23-18"><a href="#cb23-18"></a><span class="st">"""</span></span>
+<span id="cb23-19"><a href="#cb23-19"></a></span>
+<span id="cb23-20"><a href="#cb23-20"></a>stan_data <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(y), <span class="st">"y"</span>: y.tolist()}</span>
+<span id="cb23-21"><a href="#cb23-21"></a></span>
+<span id="cb23-22"><a href="#cb23-22"></a></span>
+<span id="cb23-23"><a href="#cb23-23"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"./model_00.stan"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb23-24"><a href="#cb23-24"></a>    <span class="bu">print</span>(model_00, <span class="bu">file</span><span class="op">=</span>f)</span>
+<span id="cb23-25"><a href="#cb23-25"></a></span>
+<span id="cb23-26"><a href="#cb23-26"></a>model_00 <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">"./model_00.stan"</span>)</span>
+<span id="cb23-27"><a href="#cb23-27"></a></span>
+<span id="cb23-28"><a href="#cb23-28"></a>fit <span class="op">=</span> model_00.sample(</span>
+<span id="cb23-29"><a href="#cb23-29"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb23-30"><a href="#cb23-30"></a>    seed<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb23-31"><a href="#cb23-31"></a>)</span>
+<span id="cb23-32"><a href="#cb23-32"></a></span>
+<span id="cb23-33"><a href="#cb23-33"></a>idata_uni <span class="op">=</span> az.from_cmdstanpy(</span>
+<span id="cb23-34"><a href="#cb23-34"></a>    posterior<span class="op">=</span>fit,</span>
+<span id="cb23-35"><a href="#cb23-35"></a>    prior<span class="op">=</span>fit,</span>
+<span id="cb23-36"><a href="#cb23-36"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: y},</span>
+<span id="cb23-37"><a href="#cb23-37"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
 <p>And now we call <code>az.plot_bf</code></p>
-<div id="ded51ef0" class="cell" data-execution_count="17">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>az.plot_bf(idata_uni, var_names<span class="op">=</span><span class="st">"a"</span>, ref_val<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cde7da54" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>az.plot_bf(idata_uni, var_names<span class="op">=</span><span class="st">"a"</span>, ref_val<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1642,56 +1642,56 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="3dbe2f39" class="cell" data-execution_count="18">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_conc:</span>
-<span id="cb26-2"><a href="#cb26-2"></a>    a <span class="op">=</span> pm.Beta(<span class="st">"a"</span>, <span class="dv">30</span>, <span class="dv">30</span>)</span>
-<span id="cb26-3"><a href="#cb26-3"></a>    yl <span class="op">=</span> pm.Bernoulli(<span class="st">"yl"</span>, a, observed<span class="op">=</span>y)</span>
-<span id="cb26-4"><a href="#cb26-4"></a>    idata_conc <span class="op">=</span> pm.sample(<span class="dv">2000</span>, random_seed<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb26-5"><a href="#cb26-5"></a>    idata_conc.extend(pm.sample_prior_predictive(<span class="dv">8000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="d71eeb8b" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_conc:</span>
+<span id="cb25-2"><a href="#cb25-2"></a>    a <span class="op">=</span> pm.Beta(<span class="st">"a"</span>, <span class="dv">30</span>, <span class="dv">30</span>)</span>
+<span id="cb25-3"><a href="#cb25-3"></a>    yl <span class="op">=</span> pm.Bernoulli(<span class="st">"yl"</span>, a, observed<span class="op">=</span>y)</span>
+<span id="cb25-4"><a href="#cb25-4"></a>    idata_conc <span class="op">=</span> pm.sample(<span class="dv">2000</span>, random_seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb25-5"><a href="#cb25-5"></a>    idata_conc.extend(pm.sample_prior_predictive(<span class="dv">8000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>model_01 <span class="op">=</span> <span class="st">"""</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a><span class="st">data {</span></span>
-<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  int&lt;lower=0&gt; N;</span></span>
-<span id="cb27-4"><a href="#cb27-4"></a><span class="st">  array[N] int&lt;lower=0,upper=1&gt; y;</span></span>
-<span id="cb27-5"><a href="#cb27-5"></a><span class="st">}</span></span>
-<span id="cb27-6"><a href="#cb27-6"></a><span class="st">parameters {</span></span>
-<span id="cb27-7"><a href="#cb27-7"></a><span class="st">  real&lt;lower=0,upper=1&gt; a;</span></span>
-<span id="cb27-8"><a href="#cb27-8"></a><span class="st">}</span></span>
-<span id="cb27-9"><a href="#cb27-9"></a><span class="st">model {</span></span>
-<span id="cb27-10"><a href="#cb27-10"></a><span class="st">  a  ~ beta(30, 30);</span></span>
-<span id="cb27-11"><a href="#cb27-11"></a><span class="st">  y  ~ bernoulli(a);</span></span>
-<span id="cb27-12"><a href="#cb27-12"></a><span class="st">}</span></span>
-<span id="cb27-13"><a href="#cb27-13"></a><span class="st">generated quantities {</span></span>
-<span id="cb27-14"><a href="#cb27-14"></a><span class="st">  real a_prior = beta_rng(30, 30);</span></span>
-<span id="cb27-15"><a href="#cb27-15"></a><span class="st">}</span></span>
-<span id="cb27-16"><a href="#cb27-16"></a><span class="st">"""</span></span>
-<span id="cb27-17"><a href="#cb27-17"></a></span>
-<span id="cb27-18"><a href="#cb27-18"></a>stan_data <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(y), <span class="st">"y"</span>: y.tolist()}</span>
-<span id="cb27-19"><a href="#cb27-19"></a></span>
-<span id="cb27-20"><a href="#cb27-20"></a></span>
-<span id="cb27-21"><a href="#cb27-21"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"./model_01.stan"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
-<span id="cb27-22"><a href="#cb27-22"></a>    <span class="bu">print</span>(model_01, <span class="bu">file</span><span class="op">=</span>f)</span>
-<span id="cb27-23"><a href="#cb27-23"></a></span>
-<span id="cb27-24"><a href="#cb27-24"></a><span class="co">## Compile the model</span></span>
-<span id="cb27-25"><a href="#cb27-25"></a>model_01 <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">"./model_01.stan"</span>)</span>
-<span id="cb27-26"><a href="#cb27-26"></a></span>
-<span id="cb27-27"><a href="#cb27-27"></a>fit <span class="op">=</span> model_01.sample(</span>
-<span id="cb27-28"><a href="#cb27-28"></a>    data<span class="op">=</span>stan_data,</span>
-<span id="cb27-29"><a href="#cb27-29"></a>    seed<span class="op">=</span><span class="dv">42</span>,</span>
-<span id="cb27-30"><a href="#cb27-30"></a>)</span>
-<span id="cb27-31"><a href="#cb27-31"></a></span>
-<span id="cb27-32"><a href="#cb27-32"></a>idata_conc <span class="op">=</span> az.from_cmdstanpy(</span>
-<span id="cb27-33"><a href="#cb27-33"></a>    posterior<span class="op">=</span>fit,</span>
-<span id="cb27-34"><a href="#cb27-34"></a>    prior<span class="op">=</span>fit,</span>
-<span id="cb27-35"><a href="#cb27-35"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: y},</span>
-<span id="cb27-36"><a href="#cb27-36"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>model_01 <span class="op">=</span> <span class="st">"""</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="st">data {</span></span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="st">  int&lt;lower=0&gt; N;</span></span>
+<span id="cb26-4"><a href="#cb26-4"></a><span class="st">  array[N] int&lt;lower=0,upper=1&gt; y;</span></span>
+<span id="cb26-5"><a href="#cb26-5"></a><span class="st">}</span></span>
+<span id="cb26-6"><a href="#cb26-6"></a><span class="st">parameters {</span></span>
+<span id="cb26-7"><a href="#cb26-7"></a><span class="st">  real&lt;lower=0,upper=1&gt; a;</span></span>
+<span id="cb26-8"><a href="#cb26-8"></a><span class="st">}</span></span>
+<span id="cb26-9"><a href="#cb26-9"></a><span class="st">model {</span></span>
+<span id="cb26-10"><a href="#cb26-10"></a><span class="st">  a  ~ beta(30, 30);</span></span>
+<span id="cb26-11"><a href="#cb26-11"></a><span class="st">  y  ~ bernoulli(a);</span></span>
+<span id="cb26-12"><a href="#cb26-12"></a><span class="st">}</span></span>
+<span id="cb26-13"><a href="#cb26-13"></a><span class="st">generated quantities {</span></span>
+<span id="cb26-14"><a href="#cb26-14"></a><span class="st">  real a_prior = beta_rng(30, 30);</span></span>
+<span id="cb26-15"><a href="#cb26-15"></a><span class="st">}</span></span>
+<span id="cb26-16"><a href="#cb26-16"></a><span class="st">"""</span></span>
+<span id="cb26-17"><a href="#cb26-17"></a></span>
+<span id="cb26-18"><a href="#cb26-18"></a>stan_data <span class="op">=</span> {<span class="st">"N"</span>: <span class="bu">len</span>(y), <span class="st">"y"</span>: y.tolist()}</span>
+<span id="cb26-19"><a href="#cb26-19"></a></span>
+<span id="cb26-20"><a href="#cb26-20"></a></span>
+<span id="cb26-21"><a href="#cb26-21"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"./model_01.stan"</span>, <span class="st">"w"</span>) <span class="im">as</span> f:</span>
+<span id="cb26-22"><a href="#cb26-22"></a>    <span class="bu">print</span>(model_01, <span class="bu">file</span><span class="op">=</span>f)</span>
+<span id="cb26-23"><a href="#cb26-23"></a></span>
+<span id="cb26-24"><a href="#cb26-24"></a><span class="co">## Compile the model</span></span>
+<span id="cb26-25"><a href="#cb26-25"></a>model_01 <span class="op">=</span> CmdStanModel(stan_file<span class="op">=</span><span class="st">"./model_01.stan"</span>)</span>
+<span id="cb26-26"><a href="#cb26-26"></a></span>
+<span id="cb26-27"><a href="#cb26-27"></a>fit <span class="op">=</span> model_01.sample(</span>
+<span id="cb26-28"><a href="#cb26-28"></a>    data<span class="op">=</span>stan_data,</span>
+<span id="cb26-29"><a href="#cb26-29"></a>    seed<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb26-30"><a href="#cb26-30"></a>)</span>
+<span id="cb26-31"><a href="#cb26-31"></a></span>
+<span id="cb26-32"><a href="#cb26-32"></a>idata_conc <span class="op">=</span> az.from_cmdstanpy(</span>
+<span id="cb26-33"><a href="#cb26-33"></a>    posterior<span class="op">=</span>fit,</span>
+<span id="cb26-34"><a href="#cb26-34"></a>    prior<span class="op">=</span>fit,</span>
+<span id="cb26-35"><a href="#cb26-35"></a>    observed_data<span class="op">=</span>{<span class="st">"y"</span>: y},</span>
+<span id="cb26-36"><a href="#cb26-36"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
-<div id="8107c57c" class="cell" data-execution_count="20">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>az.plot_bf(idata_conc, var_names<span class="op">=</span>[<span class="st">"a"</span>], ref_val<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="19c87747" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>az.plot_bf(idata_conc, var_names<span class="op">=</span>[<span class="st">"a"</span>], ref_val<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
