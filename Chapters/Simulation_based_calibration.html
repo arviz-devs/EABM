@@ -241,6 +241,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Predictive assessment and comparison of bayesian survival models for cancer recurrence;,citation_author=Saku Suorsa;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2601.01662;">
 <meta name="citation_reference" content="citation_title=Statistical Rethinking: A Bayesian Course with Examples in R and STAN;,citation_author=Richard McElreath;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://doi.org/10.1201/9780429029608;,citation_isbn=978-0-367-13991-9;">
 <meta name="citation_reference" content="citation_title=LOO-PIT predictive model checking;,citation_author=Herman Tesso;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2603.02928;">
+<meta name="citation_reference" content="citation_title=Bayesian Workflow;,citation_author=Andrew Gelman;,citation_author=Aki Vehtari;,citation_author=Richard McElreath;,citation_author=Daniel Simpson;,citation_author=Charles C. Margossian;,citation_author=Yuling Yao;,citation_author=Lauren Kennedy;,citation_author=Jonah Gabry;,citation_author=Paul-Christian Bürkner;,citation_author=Martin Modrák;,citation_author=Vianey Leos Barajas;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_isbn=978-0-367-49014-0;">
 </head>
 
 <body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -611,7 +612,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">July 4, 2026</p>
+      <p class="date-modified">July 10, 2026</p>
     </div>
   </div>
     
@@ -715,7 +716,7 @@ p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{margin
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="1df6313b" class="cell" data-execution_count="2">
+<div id="ef06eabe" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> simuk <span class="im">as</span> sim</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -743,7 +744,7 @@ p_{\text{SBC}}(y^{\star}, \theta^{\star}, \theta^{\star\star}) = p_{\text{margin
 </div>
 </div>
 <p>To assess the calibration of the inference, we inspect the uniformity of the PIT values of the posterior samples with respect to the prior samples. To do that we can simply call the <code>plot_ecdf_pit</code> function from the <code>ArviZ</code> package.</p>
-<div id="a2197f95" class="cell" data-execution_count="4">
+<div id="234ecd6c" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>az.plot_ecdf_pit(sbc_results,</span>
 <span id="cb3-2"><a href="#cb3-2"></a>              visuals<span class="op">=</span>{<span class="st">"xlabel"</span>:<span class="va">False</span>},</span>
 <span id="cb3-3"><a href="#cb3-3"></a>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
