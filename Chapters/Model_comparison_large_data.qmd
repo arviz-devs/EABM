@@ -82,7 +82,7 @@ We can fit the model using PyMC or CmdStanPy where posterior draws are stored in
 import pymc as pm
 import xarray as xr
 
-with pm.Model():
+with pm.Model() as model:
     beta = pm.Normal("beta", mu=0, sigma=1, shape=3)
     logit_p = pm.math.dot(X, beta)
     pm.Bernoulli("y", logit_p=logit_p, observed=y)
@@ -92,9 +92,9 @@ with pm.Model():
         tune=1000,
         chains=4,
         random_seed=4711,
-        progressbar=True,
-        idata_kwargs={'log_likelihood': True}
+        progressbar=True
     )
+    pm.compute_log_likelihood(idata)
 
 data = az.convert_to_datatree(idata)
 data["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
@@ -109,16 +109,48 @@ data["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
 
 ```{python}
 #| echo: false
+import pymc as pm
 import xarray as xr
+
+with pm.Model() as model:
+    beta = pm.Normal("beta", mu=0, sigma=1, shape=3)
+    logit_p = pm.math.dot(X, beta)
+    pm.Bernoulli("y", logit_p=logit_p, observed=y)
 
 data = az.convert_to_datatree("../models/prerun/model_comparison_large_data_00.nc")
 ```
 
-### Constructing the log-likelihood helper
+## Subsampled PSIS-LOO-CV with the PLPD surrogate
 
-Unlike regular `loo()`, the routine `loo_subsample()` expects a callable with signature `log_lik_fn(observed, data)` depending on the approximation method so that we can compute the log-likelihood for a subset of observations on demand rather than storing the log-likelihood for all observations, which can be computationally expensive for large datasets. 
+As we've discussed previously, a key component of the PSIS-LOO-CV subsampling method is the notion of a fast surrogate for the leave-one-out term $\pi_i$. One such surrogate is the point log predictive density (PLPD) which @magnusson_2020 motivate by replacing the leave-one-out term $\pi_i$ with
 
-This callable signature is the baseline expectation for `loo_subsample()`, and we can always wrap auxiliary parameters with tools such as `functools.partial` so the routine still receives `(observed, data)`.
+$$
+\tilde\pi_i^{\text{plpd}} = \log p(y_i \mid X_i, \hat{\beta}), \quad \hat{\beta} = \mathbb{E}[\beta \mid y].
+$$
+
+The approximation reduces the computational burden to a single evaluation per observation while retaining the shrinkage induced by the posterior mean. Inserting $\tilde\pi_i^{\text{plpd}}$ into the difference estimator converts the exact correction to a subsample average that only requires re-evaluating the full posterior draws on $m$ observations. 
+
+Here we use the `method="plpd"` argument to `loo_subsample()` to use the PLPD surrogate. Computing the surrogate requires the log-likelihood of each observation, so we pass our fitted model through the `model` argument and ArviZ compiles the log-likelihood function it needs directly from the model.
+
+```{python}
+loo_plpd = az.loo_subsample(
+    data=data,
+    observations=100,
+    var_name="y",
+    method="plpd",
+    model=model,
+    pointwise=True,
+    seed=SEED,
+)
+
+loo_plpd
+```
+
+The output inherits from the `ELPDData` interface with an additional column `subsampling_se` isolating the extra Monte Carlo error introduced by drawing only $100$ of the $3020$ observations. In our wells run with $m=100$ we obtained $\widehat{\operatorname{elpd}}_{\text{loo}}\approx-1968.4$ with $\text{SE}\approx15.6$ and $\text{subsampling SE} \approx0.3$. All Pareto‑$k$ values on the subsample were $\le 0.7$.
+
+### Custom log-likelihood functions
+
+If we are working with a framework that does not support automatic extraction, or we want full control over the computations, we can write the log-likelihood function ourselves. `loo_subsample()` accepts a callable with signature `log_lik_fn(observed, data)` so that the log-likelihood can be computed for whichever subset of observations it selects on demand, rather than stored for all observations, which can be expensive for large datasets. We can always wrap auxiliary parameters with tools such as `functools.partial` so the routine still receives `(observed, data)`.
 
 For logistic regression, the per-draw log probability mass function is given by
 
@@ -140,22 +172,10 @@ def log_lik_fn(obs, data):
     return stats.bernoulli.logpmf(obs, prob)
 ```
 
-This log-likelihood helper evaluates the Bernoulli log-pmf for the selected subset and returns log probabilities for each posterior draw. No log-likelihood values are stored permanently, which keeps memory usage modest even when $N$ is large.
-
-## Subsampled PSIS-LOO-CV with the PLPD surrogate
-
-As we've discussed previously, a key component of the PSIS-LOO-CV subsampling method is the notion of a fast surrogate for the leave-one-out term $\pi_i$. One such surrogate is the point log predictive density (PLPD) which @magnusson_2020 motivate by replacing the leave-one-out term $\pi_i$ with
-
-$$
-\tilde\pi_i^{\text{plpd}} = \log p(y_i \mid X_i, \hat{\beta}), \quad \hat{\beta} = \mathbb{E}[\beta \mid y].
-$$
-
-The approximation reduces the computational burden to a single evaluation per observation while retaining the shrinkage induced by the posterior mean. Inserting $\tilde\pi_i^{\text{plpd}}$ into the difference estimator converts the exact correction to a subsample average that only requires re-evaluating the full posterior draws on $m$ observations. 
-
-Here we use the `method="plpd"` argument to `loo_subsample()` to use the PLPD surrogate.
+This log-likelihood helper evaluates the Bernoulli log-pmf for the selected subset and returns log probabilities for each posterior draw. No log-likelihood values are stored permanently, which keeps memory usage modest even when $N$ is large. When passing `log_lik_fn`, we also need `param_names` to tell `loo_subsample()` which posterior variables form the point estimate for the PLPD surrogate.
 
 ```{python}
-loo_plpd = az.loo_subsample(
+loo_plpd_custom = az.loo_subsample(
     data=data,
     observations=100,
     var_name="y",
@@ -166,10 +186,10 @@ loo_plpd = az.loo_subsample(
     seed=SEED,
 )
 
-loo_plpd
+loo_plpd_custom
 ```
 
-The output inherits from the `ELPDData` interface with an additional column `subsampling_se` isolating the extra Monte Carlo error introduced by drawing only $100$ of the $3020$ observations. In our wells run with $m=100$ we obtained $\widehat{\operatorname{elpd}}_{\text{loo}}\approx-1968.4$ with $\text{SE}\approx15.6$ and $\text{subsampling SE} \approx0.3$. All Pareto‑$k$ values on the subsample were $\le 0.7$.
+The estimates are identical to the ones we got by passing the model directly, as they should be. ArviZ builds the equivalent of this function from the model behind the scenes, so both routes run the same computation on the same subsample.
 
 ## Subsampled PSIS-LOO-CV with the LPD surrogate
 
@@ -209,8 +229,7 @@ loo_update = az.update_subsample(
     observations=200,
     var_name="y",
     method="plpd",
-    log_lik_fn=log_lik_fn,
-    param_names=["beta"],
+    model=model,
     seed=SEED,
 )
 
@@ -253,7 +272,6 @@ with pm.Model() as model_laplace:
     pm.Bernoulli("y", logit_p=logit_p, observed=y)
 
     idata_laplace = fit_laplace(
-        chains=4,
         draws=2000,
         random_seed=SEED,
         progressbar=True
@@ -286,6 +304,11 @@ data_laplace["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
 
 ```{python}
 #| echo: false
+with pm.Model() as model_laplace:
+    beta = pm.Normal("beta", mu=0, sigma=1, shape=3)
+    logit_p = pm.math.dot(X, beta)
+    pm.Bernoulli("y", logit_p=logit_p, observed=y)
+
 data_laplace = az.convert_to_datatree("../models/prerun/model_comparison_large_data_02.nc")
 ```
 
@@ -368,8 +391,7 @@ loo_ap_ss = az.loo_subsample(
     observations=100,
     var_name="y",
     method="plpd",
-    log_lik_fn=log_lik_fn,
-    param_names=["beta"],
+    model=model_laplace,
     log_p=log_p_da,
     log_q=log_q_da,
     pointwise=True,
@@ -395,7 +417,7 @@ We can compare models that are estimated via subsampling just like we would for 
 X_log = X.copy()
 X_log[:, 2] = np.log(X[:, 2])
 
-with pm.Model():
+with pm.Model() as model2:
     beta2 = pm.Normal("beta", mu=0, sigma=1, shape=3)
     logit_p2 = pm.math.dot(X_log, beta2)
     pm.Bernoulli("y", logit_p=logit_p2, observed=y)
@@ -405,9 +427,9 @@ with pm.Model():
         tune=1000,
         chains=4,
         random_seed=SEED,
-        progressbar=True,
-        idata_kwargs={'log_likelihood': True}
+        progressbar=True
     )
+    pm.compute_log_likelihood(idata2)
 
 data2 = az.convert_to_datatree(idata2)
 data2["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X_log)})
@@ -425,6 +447,11 @@ data2["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X_log)})
 X_log = X.copy()
 X_log[:, 2] = np.log(X[:, 2])
 
+with pm.Model() as model2:
+    beta2 = pm.Normal("beta", mu=0, sigma=1, shape=3)
+    logit_p2 = pm.math.dot(X_log, beta2)
+    pm.Bernoulli("y", logit_p=logit_p2, observed=y)
+
 data2 = az.convert_to_datatree("../models/prerun/model_comparison_large_data_03.nc")
 ```
 
@@ -438,8 +465,7 @@ loo_ss_2_diff = az.loo_subsample(
     observations=100,
     var_name="y",
     method="plpd",
-    log_lik_fn=log_lik_fn,
-    param_names=["beta"],
+    model=model2,
     pointwise=True,
     seed=315
 )
@@ -476,8 +502,7 @@ loo_ss_2 = az.loo_subsample(
     observations=loo_plpd.loo_subsample_observations,
     var_name="y",
     method="plpd",
-    log_lik_fn=log_lik_fn,
-    param_names=["beta"],
+    model=model2,
     pointwise=True,
 )
 
