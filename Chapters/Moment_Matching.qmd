@@ -103,6 +103,8 @@ idata = model.fit(
     random_seed=SEED,
     idata_kwargs={'log_likelihood': True}
 )
+
+idata = az.convert_to_datatree(idata)
 ```
 
 ## CmdStanPy
@@ -217,7 +219,7 @@ Now we apply importance weighted moment matching to improve the PSIS-LOO-CV esti
 
 ### Automatic moment matching
 
-The easiest option is to pass the fitted model object through the `model` argument. ArviZ extracts everything it needs in the background, and we don't have to write any functions ourselves.
+The easiest option is to pass the fitted model object through the `model` argument, which works with both PyMC and Bambi models. ArviZ extracts everything it needs in the background, and we don't have to write any functions ourselves.
 
 ```{python}
 #| warning: false
