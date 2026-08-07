@@ -74,8 +74,6 @@ with pm.Model(coords=coords) as model:
         random_seed=SEED
     )
     pm.compute_log_likelihood(idata)
-
-idata = az.convert_to_datatree(idata)
 ```
 
 ## Bambi
@@ -103,8 +101,6 @@ idata = model.fit(
     random_seed=SEED,
     idata_kwargs={'log_likelihood': True}
 )
-
-idata = az.convert_to_datatree(idata)
 ```
 
 ## CmdStanPy
