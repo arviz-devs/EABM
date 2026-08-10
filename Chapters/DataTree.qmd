@@ -81,7 +81,7 @@ post = dt["posterior"]  # or post = dt.posterior
 post
 ```
 
-As .copy() was not called, using dt["posterior"] or post is equivalent. Use this to keep your code short yet easy to read. Store the groups you’ll need very often as separate variables to use explicitly, but don’t delete the DataTree parent. You’ll need it for many ArviZ functions to work properly. For example: plot_pair needs data from `sample_stats` group to show divergences, `compare` needs data from both `log_likelihood` and `posterior` groups, etc.
+As `.copy()` was not called, using dt["posterior"] or post is equivalent. Use this to keep your code short yet easy to read. Store the groups you’ll need very often as separate variables to use explicitly, but don’t delete the DataTree parent. You’ll need it for many ArviZ functions to work properly. For example: plot_pair needs data from `sample_stats` group to show divergences, `compare` needs data from both `log_likelihood` and `posterior` groups, etc.
 
 Notice that `post` is still a DataTree. If you want the Dataset most of the time you probably want to do:
 
@@ -138,7 +138,7 @@ Using the `slice` function we can also remove the first 100 draws.
 ```{python}
 posterior.sel(draw=slice(100, None))
 ```
-If we try the same operation with the entire DataTree, that will fail `observed_data`that don't have the `draw` dimension are unaffected. 
+If we try the same operation with the entire DataTree, groups like `observed_data`, lacking the `draw` dimension will remain unchanged.
 
 Alternatively we can filter groups before applying a selection. For instance, if we want to select only the `posterior` and `posterior_predictive` groups, and then slice, we can do:
 
@@ -324,9 +324,9 @@ The code below creates an example dataset and adds it to the dt DataTree.
 ```{python}
 rng = np.random.default_rng(3)
 preds = az.dict_to_dataset(
-        {"obs": rng.normal(size=(4, 500, 2))},
-        dims={"obs": ["new_school"]},
-        coords={"new_school": ["Essex College", "Moordale"]},
+    {"obs": rng.normal(size=(4, 500, 2))},
+    dims={"obs": ["new_school"]},
+    coords={"new_school": ["Essex College", "Moordale"]},
 )
 dt["predictions"] = preds
 dt
