@@ -15,7 +15,7 @@ plt.rcParams["figure.dpi"] = 75
 SEED = 4711
 ```
 
-In this chapter, we demonstrate how to apply importance weighted moment matching (IWMM) to improve PSIS-LOO-CV estimates when influential observations produce high Pareto-$k$ values. We walk through a complete applied example using the `roaches` dataset from @gelman_hill_2007, showing how to specify the required functions and apply moment matching to resolve problematic importance sampling approximations without expensive model refitting. The workflow demonstrates ArviZ's `loo_moment_match()` function with a deliberately misspecified Poisson regression model where multiple observations are flagged as problematic. For theoretical background and details of how moment matching works, we recommend you read @sec-IWMM-theory and references therein.
+In this chapter, we demonstrate how to apply importance weighted moment matching (IWMM) to improve PSIS-LOO-CV estimates when influential observations produce high Pareto-$k$ values. We walk through a complete applied example using the `roaches` dataset from @gelman_hill_2007, first letting ArviZ handle everything automatically from the fitted model, and then building the required functions ourselves. In both cases we resolve problematic importance sampling approximations without expensive model refitting. The workflow demonstrates ArviZ's `loo_moment_match()` function with a deliberately misspecified Poisson regression model where multiple observations are flagged as problematic. For theoretical background and details of how moment matching works, we recommend you read @sec-IWMM-theory and references therein.
 
 ## Roaches data and Poisson regression model
 
@@ -40,9 +40,42 @@ The dataset exhibits substantial overdispersion with mean 25.6 and standard devi
 
 ### Model specification and fitting
 
-We fit a Poisson regression model using Bambi, which provides a high-level interface for Bayesian modeling. The model includes the pre-treatment roach count, treatment indicator, and senior building indicator as predictors, with log exposure as an offset.
+We fit a Poisson regression model with the pre-treatment roach count, treatment indicator, and senior building indicator as predictors, and log exposure as an offset.
 
 ::: {.panel-tabset group="ppl"}
+## PyMC
+
+```{python}
+#| eval: false
+import pymc as pm
+
+coords = {"obs_id": np.arange(len(roaches))}
+
+with pm.Model(coords=coords) as model:
+    roach1 = pm.Normal("roach1", mu=0, sigma=2.5)
+    treatment = pm.Normal("treatment", mu=0, sigma=2.5)
+    senior = pm.Normal("senior", mu=0, sigma=2.5)
+    intercept = pm.Normal("Intercept", mu=0, sigma=5.0)
+
+    eta = (
+        intercept
+        + roach1 * roaches["roach1"]
+        + treatment * roaches["treatment"]
+        + senior * roaches["senior"]
+        + roaches["log_exposure2"]
+    )
+
+    pm.Poisson("y", mu=pm.math.exp(eta), observed=roaches["y"], dims="obs_id")
+
+    idata = pm.sample(
+        draws=1000,
+        tune=1000,
+        chains=4,
+        random_seed=SEED
+    )
+    pm.compute_log_likelihood(idata)
+```
+
 ## Bambi
 
 ```{python}
@@ -72,20 +105,93 @@ idata = model.fit(
 
 ## CmdStanPy
 
-``` {.python}
-# CmdStanPy implementation will be added in future
+```{.python}
+from cmdstanpy import CmdStanModel
+
+stan_code = """
+data {
+  int<lower=0> N;
+  matrix[N, 3] X;
+  array[N] int<lower=0> y;
+  vector[N] log_exposure2;
+}
+parameters {
+  real roach1;
+  real treatment;
+  real senior;
+  real Intercept;
+}
+model {
+  roach1 ~ normal(0, 2.5);
+  treatment ~ normal(0, 2.5);
+  senior ~ normal(0, 2.5);
+  Intercept ~ normal(0, 5);
+  y ~ poisson_log_glm(X, Intercept + log_exposure2, [roach1, treatment, senior]');
+}
+generated quantities {
+  vector[N] log_lik;
+  {
+    vector[N] eta = X * [roach1, treatment, senior]' + Intercept + log_exposure2;
+    for (n in 1:N)
+      log_lik[n] = poisson_log_lpmf(y[n] | eta[n]);
+  }
+}
+"""
+
+with open("roaches_poisson.stan", "w") as f:
+    f.write(stan_code)
+
+stan_data = {
+    "N": len(roaches),
+    "X": roaches[["roach1", "treatment", "senior"]].values,
+    "y": roaches["y"].values,
+    "log_exposure2": roaches["log_exposure2"].values,
+}
+
+stan_model = CmdStanModel(stan_file="roaches_poisson.stan")
+
+fit = stan_model.sample(
+    data=stan_data,
+    chains=4,
+    iter_warmup=1000,
+    iter_sampling=1000,
+    seed=SEED,
+    show_progress=False,
+)
+
+idata = az.from_cmdstanpy(
+    posterior=fit,
+    log_likelihood={"y": "log_lik"},
+    observed_data={"y": roaches["y"].values},
+    coords={"obs_id": np.arange(len(roaches))},
+    dims={"y": ["obs_id"]},
+)
 ```
 :::
 
 ```{python}
 #| echo: false
-import xarray as xr
+import pymc as pm
+
+coords = {"obs_id": np.arange(len(roaches))}
+
+with pm.Model(coords=coords) as model:
+    roach1 = pm.Normal("roach1", mu=0, sigma=2.5)
+    treatment = pm.Normal("treatment", mu=0, sigma=2.5)
+    senior = pm.Normal("senior", mu=0, sigma=2.5)
+    intercept = pm.Normal("Intercept", mu=0, sigma=5.0)
+
+    eta = (
+        intercept
+        + roach1 * roaches["roach1"]
+        + treatment * roaches["treatment"]
+        + senior * roaches["senior"]
+        + roaches["log_exposure2"]
+    )
+
+    pm.Poisson("y", mu=pm.math.exp(eta), observed=roaches["y"], dims="obs_id")
 
 idata = az.convert_to_datatree("../models/prerun/moment_matching_00.nc")
-
-# Rename __obs__ to obs_id to avoid dimension name conflict in moment matching
-idata['log_likelihood'] = xr.DataTree(idata['log_likelihood'].ds.rename({'__obs__': 'obs_id'}))
-idata['observed_data'] = xr.DataTree(idata['observed_data'].ds.rename({'__obs__': 'obs_id'}))
 ```
 
 ```{python}
@@ -101,15 +207,33 @@ loo_result = az.loo(idata, pointwise=True, var_name="y")
 loo_result
 ```
 
-The output shows that 13 observations have Pareto-$k$ values exceeding 0.7, indicating that the importance sampling approximation is unreliable for these cases. For these problematic observations, the most accurate (but computationally expensive) approach would be to refit the model, leaving out each observation in turn. However, this quickly becomes impractical as the number of flagged observations grows. Moment matching offers an efficient solution by improving the reliability of the PSIS-LOO-CV estimates for exactly those cases where brute-force refitting would otherwise be required, reducing computational burden without sacrificing much accuracy.
+The output shows that 17 observations have Pareto-$k$ values exceeding 0.7, so the importance sampling approximation is unreliable for these cases. For these problematic observations, the most accurate (but computationally expensive) approach would be to refit the model, leaving out each observation in turn. However, this quickly becomes impractical as the number of flagged observations grows. Moment matching offers an efficient solution by improving the reliability of the PSIS-LOO-CV estimates for exactly those cases where brute-force refitting would otherwise be required, reducing computational burden without sacrificing much accuracy.
 
 ## Applying moment matching
 
-Now we apply importance weighted moment matching to improve the PSIS-LOO-CV estimates for the problematic observations. ArviZ implements this through the `loo_moment_match()` function, which requires us to provide the unconstrained parameter draws and functions for evaluating the model's log posterior and log likelihood.
+Now we apply importance weighted moment matching to improve the PSIS-LOO-CV estimates for the problematic observations. ArviZ implements this through the `loo_moment_match()` function, which needs the posterior draws in the unconstrained parameter space, plus functions that evaluate the log posterior and the log likelihood of a single left-out observation. We can either pass our fitted model and let ArviZ build all of this for us, or provide the pieces ourselves.
 
-### Function specification and implementation
+### Automatic moment matching
 
-To apply moment matching, we need to provide functions that compute the log posterior $\log p(\theta \mid y)$ and the log likelihood for a single observation $\log p(y_i \mid \theta)$ in the unconstrained parameter space, where all parameters are real-valued without constraints.
+The easiest option is to pass the fitted model object through the `model` argument, which works with both PyMC and Bambi models. ArviZ extracts everything it needs in the background, and we don't have to write any functions ourselves.
+
+```{python}
+#| warning: false
+loo_mm_result = az.loo_moment_match(
+    idata,
+    loo_result,
+    model=model,
+    var_name="y",
+)
+
+loo_mm_result
+```
+
+After moment matching, all 262 observations have Pareto-$k$ values below 0.7. Every one of the 17 problematic cases has been resolved, and we can now trust the PSIS-LOO-CV estimates for the entire dataset. The ELPD estimate also decreases from -5456.03 to -5479.52, telling us the original estimate was too optimistic and `loo()` overestimated the predictive performance of the model. The whole adjustment took a few seconds, compared to the minutes or hours we would have spent refitting the model 17 times.
+
+### Custom moment matching functions
+
+If we are working with a framework that does not support automatic extraction, or we want full control over the computations, we can write the functions ourselves. Unlike standard PSIS, which only evaluates the likelihood, moment matching needs the full-data posterior density $p(\theta^{*(s)} \mid y)$ and the likelihood $p(y_i \mid \theta^{*(s)})$ at each transformed draw $\theta^{*(s)}$. So we need one function that computes the log posterior $\log p(\theta \mid y)$ and another that computes the log likelihood for a single observation $\log p(y_i \mid \theta)$, both in the unconstrained parameter space where all parameters are real-valued.
 
 Our Poisson regression model is
 
@@ -142,104 +266,63 @@ We start by converting our data into `DataArrays` with properly labeled dimensio
 ```{python}
 import xarray as xr
 from scipy.special import gammaln
-from functools import partial
 
-X = roaches[['roach1', 'treatment', 'senior']].values
-y = roaches['y'].values
-log_offset = roaches['log_exposure2'].values
-
-n_obs = len(roaches)
 coef_names = ['roach1', 'treatment', 'senior']
 
 design_matrix = xr.DataArray(
-    X,
+    roaches[coef_names].values,
     dims=['obs_id', 'coef'],
-    coords={'obs_id': range(n_obs), 'coef': coef_names}
+    coords={'coef': coef_names}
 )
-y_da = xr.DataArray(y, dims=['obs_id'], coords={'obs_id': range(n_obs)})
-offset_da = xr.DataArray(log_offset, dims=['obs_id'], coords={'obs_id': range(n_obs)})
-factorial_term = xr.DataArray(gammaln(y + 1), dims=['obs_id'], coords={'obs_id': range(n_obs)})
+y_da = xr.DataArray(roaches['y'].values, dims=['obs_id'])
+offset_da = xr.DataArray(roaches['log_exposure2'].values, dims=['obs_id'])
+factorial_term = xr.DataArray(gammaln(roaches['y'].values + 1), dims=['obs_id'])
 
 beta_prior_scale = 2.5
 alpha_prior_scale = 5.0
 ```
 
-First, we construct an array of unconstrained parameters from the posterior draws. All of the parameters are unconstrained in this model, so we can simply concatenate the posterior draws along the `uparam` dimension.
+First, we construct an array of unconstrained parameters from the posterior draws. All of the parameters are unconstrained in this model, so we can simply stack the posterior draws along a new `uparam` dimension.
 
 ```{python}
-posterior = idata.posterior
-upars = xr.concat([
-    posterior.ds['roach1'].expand_dims({'uparam': ['roach1']}),
-    posterior.ds['treatment'].expand_dims({'uparam': ['treatment']}),
-    posterior.ds['senior'].expand_dims({'uparam': ['senior']}),
-    posterior.ds['Intercept'].expand_dims({'uparam': ['Intercept']})
-], dim='uparam').transpose('chain', 'draw', 'uparam')
+upars = (
+    idata.posterior.ds[['roach1', 'treatment', 'senior', 'Intercept']]
+    .to_dataarray(dim='uparam')
+    .transpose('chain', 'draw', 'uparam')
+)
 ```
 
 We can now define the log posterior function and the leave-one-out log likelihood function. The log posterior function computes the log posterior probability for a given set of unconstrained parameters, and the log likelihood function computes the log likelihood for a given set of unconstrained parameters and a given observation.
 
 ```{python}
-def log_prob_upars_fn(upars, design_matrix, y_da, offset_da, factorial_term,
-                       coef_names, beta_prior_scale, alpha_prior_scale):
+def log_prob_upars(upars):
     """Compute log posterior for unconstrained parameters."""
     beta = upars.sel(uparam=coef_names).rename({'uparam': 'coef'})
     intercept = upars.sel(uparam='Intercept')
 
     lin = xr.dot(design_matrix, beta, dims='coef') + intercept + offset_da
-    exp_lin = xr.ufuncs.exp(lin)
-    log_lik = y_da * lin - exp_lin - factorial_term
+    log_lik = (y_da * lin - np.exp(lin) - factorial_term).sum('obs_id')
 
-    log_prior_beta = (-0.5 * (beta / beta_prior_scale) ** 2).sum('coef')
-    log_prior_intercept = -0.5 * (intercept / alpha_prior_scale) ** 2
-    return log_lik.sum('obs_id') + log_prior_beta + log_prior_intercept
+    log_prior = (
+        (-0.5 * (beta / beta_prior_scale) ** 2).sum('coef')
+        - 0.5 * (intercept / alpha_prior_scale) ** 2
+    )
+    return log_lik + log_prior
 
 
-def log_lik_i_upars_fn(upars, i, design_matrix, y_da, offset_da, factorial_term, coef_names):
+def log_lik_i_upars(upars, i):
     """Compute log likelihood for observation i."""
     beta = upars.sel(uparam=coef_names).rename({'uparam': 'coef'})
     intercept = upars.sel(uparam='Intercept')
 
     features_i = design_matrix.isel(obs_id=i)
     lin_i = (beta * features_i).sum('coef') + intercept + offset_da.isel(obs_id=i)
-
-    exp_lin_i = xr.ufuncs.exp(lin_i)
-    log_lik_i = y_da.isel(obs_id=i) * lin_i - exp_lin_i - factorial_term.isel(obs_id=i)
-    return log_lik_i
+    return y_da.isel(obs_id=i) * lin_i - np.exp(lin_i) - factorial_term.isel(obs_id=i)
 ```
 
-Now we bind the data dependencies to these functions using `functools.partial`. This creates new functions where all the data parameters are fixed, leaving only the unconstrained parameters (and observation index for the likelihood function) as free parameters.
+### Running moment matching with custom functions
 
-```{python}
-log_prob_upars = partial(
-    log_prob_upars_fn,
-    design_matrix=design_matrix,
-    y_da=y_da,
-    offset_da=offset_da,
-    factorial_term=factorial_term,
-    coef_names=coef_names,
-    beta_prior_scale=beta_prior_scale,
-    alpha_prior_scale=alpha_prior_scale
-)
-
-log_lik_i_upars = partial(
-    log_lik_i_upars_fn,
-    design_matrix=design_matrix,
-    y_da=y_da,
-    offset_da=offset_da,
-    factorial_term=factorial_term,
-    coef_names=coef_names
-)
-```
-
-### Computational considerations
-
-While moment matching requires additional density evaluations compared to standard PSIS-LOO-CV, the computational cost remains modest. For each transformed draw $\theta^{*(s)}$, we must evaluate both the full-data posterior density $p(\theta^{*(s)} \mid y)$ and the likelihood $p(y_i \mid \theta^{*(s)})$, rather than just the likelihood as in standard PSIS. Even with multiple transformation iterations, this cost is substantially smaller than refitting the model for each problematic observation.
-
-The key trade-off is between accuracy and computational efficiency. When several observations have high Pareto-$k$ values, moment matching provides reliable estimates at a fraction of the cost of exact PSIS-LOO-CV, making it practical for routine model assessment even with computationally expensive models. In our roaches example with 13 problematic observations, moment matching requires a few additional seconds of computation compared to minutes or hours that would be needed to refit the model 13 times.
-
-### Running moment matching
-
-With the required functions defined, we can now run PSIS-LOO-CV with importance weighted moment matching. We will specify that we want to match the covariance structure of the posterior draws given the complicated structure of the data. 
+With the required functions defined, we can now run PSIS-LOO-CV with importance weighted moment matching, this time passing the unconstrained draws and functions explicitly. We will specify that we want to match the covariance structure of the posterior draws given the complicated structure of the data.
 
 Keep in mind that the `split` argument, which specifies whether to use the split proposal density, is a boolean that defaults to `True`. This is highly recommended in most applied cases. When `split=True`, the split proposal density is
 
@@ -251,7 +334,7 @@ so each fold mixes the full-data posterior with the transformed draws from the d
 
 ```{python}
 #| warning: false
-loo_mm_result = az.loo_moment_match(
+loo_mm_custom = az.loo_moment_match(
     idata,
     loo_result,
     log_prob_upars_fn=log_prob_upars,
@@ -261,10 +344,10 @@ loo_mm_result = az.loo_moment_match(
     cov=True,
 )
 
-loo_mm_result
+loo_mm_custom
 ```
 
-After moment matching, the Pareto-$k$ values improve substantially, with all 262 observations now having Pareto-$k$ values below 0.7. This indicates that moment matching has successfully resolved all problematic importance sampling issues, providing reliable PSIS-LOO-CV estimates for every observation. This represents a complete improvement over the original 13 problematic observations. Notably, the ELPD estimate decreases from -5461.14 to -5477.60 after moment matching, indicating that the original PSIS-LOO-CV estimate was too optimistic and `loo()` overestimated the predictive performance.
+The estimates are identical to the ones we got by passing the model directly, as they should be. ArviZ builds the equivalent of these functions from the model behind the scenes, so both routes run the same algorithm on the same inputs.
 
 ### Interpreting diagnostic quantities
 
@@ -274,11 +357,9 @@ Moment matching also provides per-observation effective sample size estimates in
 
 These diagnostic quantities can be accessed directly from the `loo_mm_result` object as attributes.
 
-## Summary
+## Limitations of moment matching
 
-Importance weighted moment matching provides an efficient solution for improving PSIS-LOO-CV when influential observations lead to unreliable importance sampling approximations. Rather than refitting models, IWMM transforms existing posterior draws to match importance-weighted moments in the unconstrained parameter space. The approach is fully automated, requires no user tuning, and works with arbitrary posterior samples from probabilistic programming frameworks where density evaluation is possible.
-
-The method has important limitations worth keeping in mind:
+Moment matching has some important limitations worth keeping in mind:
 
 - It targets only first and second moments, so improvements depend on whether these moments adequately capture differences between proposal and target distributions
 - When importance weights have large variance, the computation of weighted moments can become unreliable (mitigated through weight regularization or larger sample sizes)
