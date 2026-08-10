@@ -75,7 +75,15 @@ dt.posterior;
 
 The dot notation works at the group level and for Datasets and DataArrays as long as there is no conflict with a method or attribute of these objects. If there is a conflict, you can always use the dictionary-like notation.
 
-Notice that we still get a DataTree. If you want the Dataset you can do, most of the time you probably want to do:
+Usually a good practice is to store the groups you will use very often in a variable. For instance, we can store the posterior group in a variable called `post`:
+```{python}
+post = dt["posterior"]  # or post = dt.posterior
+post
+```
+
+As `.copy()` was not called, using dt["posterior"] or post is equivalent. Use this to keep your code short yet easy to read. Store the groups you’ll need very often as separate variables to use explicitly, but don’t delete the DataTree parent. You’ll need it for many ArviZ functions to work properly. For example: plot_pair needs data from `sample_stats` group to show divergences, `compare` needs data from both `log_likelihood` and `posterior` groups, etc.
+
+Notice that `post` is still a DataTree. If you want the Dataset most of the time you probably want to do:
 
 ```{python}
 posterior = dt["posterior"].ds
@@ -130,13 +138,14 @@ Using the `slice` function we can also remove the first 100 draws.
 ```{python}
 posterior.sel(draw=slice(100, None))
 ```
-If we try the same operation with the entire DataTree, we will get an error. The reason being that some groups don't have the `draw` dimension, for instance the `observed_data` group has only the `school` dimension. What we can do instead is to filter those group that have  `draw` and then perform the selection and slicing.
+If we try the same operation with the entire DataTree, groups like `observed_data`, lacking the `draw` dimension will remain unchanged.
+
+Alternatively we can filter groups before applying a selection. For instance, if we want to select only the `posterior` and `posterior_predictive` groups, and then slice, we can do:
 
 ```{python}
-dt.filter(lambda node: "draw" in node.dims).sel(draw=slice(100, None))
+posterior_groups = {"posterior", "posterior_predictive"}
+dt.filter(lambda node: node.name in posterior_groups).sel(draw=slice(100, None))
 ```
-
-If you check the object you will see that the groups `posterior`, `posterior_predictive`, `log_likelihood`, `sample_stats`, `prior`, and `prior_predictive` have now 400 draws compared to the original 500, while the group `observed_data` remains unaffected.
 
 ### Computing the posterior mean 
 
@@ -182,7 +191,7 @@ To get a subsample we can specify the number of samples we want with the `num_sa
 az.extract(dt, num_samples=100);
 ```
 
-If you need to extract subsets from multiple groups, you should use a random seed. This will ensure that subsamples match. For example, if you do
+If you need to extract subsets from multiple groups, you must use a random seed to ensure subsamples match. For example, if you do
 
 ```{python}
 posterior = az.extract(dt, num_samples=100, random_seed=124)
@@ -310,18 +319,15 @@ dt_complete.dims
 
 ###  Add groups to DataTrees
 
-This will be simplified in the future, but for now, you can add groups to a DataTree by converting the DataTree to a dictionary, adding the new group, and then converting the dictionary back to a DataTree.
+The code below creates an example dataset and adds it to the dt DataTree.
 
 ```{python}
 rng = np.random.default_rng(3)
-ds = az.dict_to_dataset(
+preds = az.dict_to_dataset(
     {"obs": rng.normal(size=(4, 500, 2))},
     dims={"obs": ["new_school"]},
     coords={"new_school": ["Essex College", "Moordale"]},
 )
-dicto = {k:v for k,v in dt.items()}
-dicto["predictions"] = ds
-
-new_dt = xr.DataTree.from_dict(dicto)
-new_dt
+dt["predictions"] = preds
+dt
 ```
