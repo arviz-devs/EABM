@@ -34,8 +34,8 @@ book:
       url: https://github.com/arviz-devs
   favicon: favicon.ico
   site-url: https://arviz-devs.github.io/EABM/
-  open-graph:
-    image: https://arviz-devs.github.io/EABM/social-card.png
+  image: social-card.png
+  open-graph: true
 
   chapters:
     - index.qmd
