@@ -1,5 +1,8 @@
-# Model Comparison (case study) {#sec-model-comparison-case-study}
+---
+image: ../social-card.png
+---
 
+# Model Comparison (case study) {#sec-model-comparison-case-study}
 
 ```{python}
 #| echo: false

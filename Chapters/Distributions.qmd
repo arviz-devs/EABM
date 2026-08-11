@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Random Variables, Distributions, and Uncertainty  {#sec-distributions}
 
 ```{python}

@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Variable Selection {#sec-variable-selection}
 
 ```{python}

@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Model Comparison for Large Data {#sec-model-comparison-large-data}
 
 ```{python}

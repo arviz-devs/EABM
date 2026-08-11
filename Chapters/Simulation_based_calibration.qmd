@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Simulation-based calibration checking {#sec-sbc}
 
 

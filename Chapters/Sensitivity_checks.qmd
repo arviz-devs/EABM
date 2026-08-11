@@ -1,4 +1,6 @@
-
+---
+image: ../social-card.png
+---
 
 ```{python}
 #| echo: false

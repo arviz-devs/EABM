@@ -1,6 +1,8 @@
 project:
   type: book
   output-dir: docs
+  resources:
+    - social-card.png
 
 book:
   title: "Exploratory Analysis of Bayesian Models"

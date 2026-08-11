@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Prior and Posterior predictive checks {#sec-ppc}
 
 ```{python}
