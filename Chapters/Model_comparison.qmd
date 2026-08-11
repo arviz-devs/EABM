@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Model Comparison {#sec-model-comparison}
 
 

@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Prior Elicitation  {#sec-prior-elicitation}
 
 ```{python}

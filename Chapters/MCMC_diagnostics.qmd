@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # MCMC Diagnostics {#sec-mcmc-diagnostics}
 
 ```{python}

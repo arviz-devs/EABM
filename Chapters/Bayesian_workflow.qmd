@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Bayesian Workflow  {#sec-bayesian-workflow}
 
 In the previous sections, we discussed a range of non-inferential tasks essential for a successful Bayesian analysis, such as diagnosing the quality of sampling methods, assessing model assumptions, comparing models, and more. Drawing an analogy to Exploratory Data Analysis (EDA), which is used to understand data, we can view these tasks as part of an *Exploratory Analysis of Bayesian Models*. This involves exploring the models, their relationship with the data, and the resulting outcomes. Recognising the need for tasks beyond pure inference is a cornerstone of modern Bayesian analysis. However, we can take this further by acknowledging that these tasks are interconnected within a broader Bayesian workflow [@gelman_2020;@gelman_2026].

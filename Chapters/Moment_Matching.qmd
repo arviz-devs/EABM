@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Moment matching for improved PSIS-LOO-CV {#sec-moment-matching}
 
 ```{python}

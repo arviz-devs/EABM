@@ -1,3 +1,7 @@
+---
+image: ../social-card.png
+---
+
 # Presentation of Results  {#sec-presentation-results}
 
 For Bayesian analysis, we consider that adopting a Bayesian workflow, rather than just Bayesian inference, is central to reducing most of the typical problems found in Bayesian data analysis [@gelman_2020; @martin_2022]. Such workflow is discussed in detail by [@gelman_2020] and we provide a brief summary of it in @sec-bayesian-workflow. A report of the results of a Bayesian analysis should help reflect such workflow.
