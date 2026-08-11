@@ -33,6 +33,8 @@ book:
     - name: ArviZ-devs
       url: https://github.com/arviz-devs
   favicon: favicon.ico
+  open-graph:
+    image: social-card.png
 
   chapters:
     - index.qmd
