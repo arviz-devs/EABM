@@ -103,8 +103,10 @@ div.csl-indent {
 
 <meta property="og:title" content="Exploratory Analysis of Bayesian Models">
 <meta property="og:description" content="">
-<meta property="og:image" content="social-card.png">
+<meta property="og:image" content="https://arviz-devs.github.io/EABM/social-card.png">
 <meta property="og:site_name" content="Exploratory Analysis of Bayesian Models">
+<meta property="og:image:height" content="630">
+<meta property="og:image:width" content="1200">
 <meta name="citation_title" content="Exploratory Analysis of Bayesian Models">
 <meta name="citation_author" content="Osvaldo A. Martin">
 <meta name="citation_author" content="Oriol Abril-Pla">
@@ -742,7 +744,7 @@ Ghahramani, Zoubin. 2015. <span>“Probabilistic <span>Machine</span> <span>Lear
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/arviz-devs\.github\.io\/EABM\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
