@@ -788,14 +788,14 @@ Figure&nbsp;3.7: CDF of a normal distribution
 </div>
 </div>
 <p>The CDF is usually easier to read than the PDF, as we already saw y-axis for a PDF is a density that has no intrinsic meaning, and to get probability from a PDF we need to evaluate areas. Instead for a CDF the y-axis is a probability. For the PMF/PDF it is easier to get the mode (the highest value for the point/curve), and for the CDF it is easier to get the median (the value of <span class="math inline">\(x\)</span> for which <span class="math inline">\(y=0.5\)</span>), or other quantiles. From the CDF it is also easier to quickly get quantities like <em>the probability of getting a temperature equal or lower than 35 degrees</em>. It is the value of the CDF at 35. From <a href="#fig-normal_cdf" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> we can see that it is roughly 0.9 or 90%, if you want more accuracy you could use a matplotlib/ArviZ style with a grid (like <code>arviz-darkgrid</code>) or use the <code>cdf()</code> function.</p>
-<div id="d06e0f8d" class="cell" data-execution_count="9">
+<div id="005edfde" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>pz.Normal(<span class="dv">30</span>, <span class="dv">4</span>).cdf(<span class="dv">35</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>array(0.89435023)</code></pre>
 </div>
 </div>
 <p>From the CDF we can also easily get the probability of a range of values. For example, the probability of the temperature being between 25 and 35 degrees is the difference between the CDF at 35 and the CDF at 25. From <a href="#fig-normal_cdf" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> we can get that it is roughly 0.9 or 90%. Again even when you can get a good estimate just by looking at the graph you can use the <code>cdf()</code> function to get a more accurate estimate. But the fact that you can get a good estimate by looking at the graph is a good feature.</p>
-<div id="fa12bc14" class="cell" data-execution_count="10">
+<div id="4d98e4c7" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>np.diff(pz.Normal(<span class="dv">30</span>, <span class="dv">4</span>).cdf([<span class="dv">25</span>, <span class="dv">35</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>array([0.78870045])</code></pre>
@@ -870,7 +870,7 @@ Figure&nbsp;3.10: A gamma distribution with dashed lines representing its mean, 
 <p>The mean is the average value of the distribution, the median is the value that divides the distribution into two equal halves, and the mode is the value with the highest probability density. In symmetric distributions like the <code>Normal</code>, these three measures are equal. But in skewed distributions like the <code>Gamma</code>, they can be quite different.</p>
 <p>The mean is probably the most commonly used measure of central tendency, but it can be sensitive to outliers. The median is more robust to outliers and is often preferred in skewed distributions. The mode is useful when we are interested in the most probable value of the distribution. The mode is usually less common than the other too. In practice, the choice of which measure to use depends on the context and the specific characteristics of the distribution being analyzed.</p>
 <p>In ArviZ, we can compute these point estimates from samples using the <code>az.mean()</code>, <code>az.median()</code>, and <code>az.mode()</code> functions.</p>
-<div id="1cd0606a" class="cell" data-execution_count="14">
+<div id="c1131e20" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>pois_data <span class="op">=</span> dist.rvs(<span class="dv">50_000</span>, random_state<span class="op">=</span>rng)</span>
 <span id="cb15-2"><a href="#cb15-2"></a>az.mean(pois_data), az.median(pois_data), az.mode(pois_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
@@ -878,7 +878,7 @@ Figure&nbsp;3.10: A gamma distribution with dashed lines representing its mean, 
 </div>
 </div>
 <p>Point estimates also show in other places in ArviZ, for example, in the <code>plot_dist()</code> or when calling <code>summary()</code>. Some functions have a <code>point_estimate</code> argument to choose which point estimate to use. The default value is controlled globally by:</p>
-<div id="47907000" class="cell" data-execution_count="15">
+<div id="fb5190a6" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>az.rcParams[<span class="st">"stats.point_estimate"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>'mean'</code></pre>
@@ -913,14 +913,14 @@ Figure&nbsp;3.10: A gamma distribution with dashed lines representing its mean, 
 </div>
 </div>
 <p>In ArviZ we can compute credible intervals from samples using the <code>az.hdi()</code> and <code>az.eti()</code> functions.</p>
-<div id="945222b9" class="cell" data-execution_count="17">
+<div id="25338289" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>az.hdi(pois_data), az.eti(pois_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>(array([0.24145828, 2.67576132]), array([0.42987465, 3.07525881]))</code></pre>
 </div>
 </div>
 <p>These, as well as other functions, have a <code>ci_prob</code> argument to choose the mass of the credible interval. The default value is globally controlled by:</p>
-<div id="09e165e7" class="cell" data-execution_count="18">
+<div id="fc515191" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>az.rcParams[<span class="st">"stats.ci_prob"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>0.89</code></pre>
@@ -1000,7 +1000,7 @@ Figure&nbsp;3.13: Histogram from a sample of integers, with bins automatically c
 <p><a href="https://en.wikipedia.org/wiki/Kernel_density_estimation">Kernel density estimation</a> (KDE) is a non-parametric way to estimate the probability density function from a sample. Intuitively you can think of it as the smooth version of a histogram. Conceptually you place a <em>kernel function</em> like a Gaussian <em>on top</em> of a data point, then you sum all the Gaussians, generally evaluated over a grid and not over the data points. Results are normalized so the total area under the curve is one. The following video shows a step-by-step animation of a KDE being built. You can see a version with border corrections and without them. Border corrections avoid adding a positive density outside the range of the data.</p>
 <div class="quarto-video"><video id="video_shortcode_videojs_video2" class="video-js vjs-default-skin vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../videos/kde.mp4"></video></div>
 <p>The following block of code shows a very simple example of a KDE.</p>
-<div id="a98e6137" class="cell" data-execution_count="22">
+<div id="98a3ab81" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># synthetic data, 7 points</span></span>
 <span id="cb27-2"><a href="#cb27-2"></a>data <span class="op">=</span> np.array([<span class="fl">7.9</span>, <span class="fl">6.5</span>, <span class="fl">7.4</span>, <span class="fl">8.3</span>, <span class="fl">5.1</span>, <span class="fl">5.4</span>, <span class="fl">7.2</span>])</span>
 <span id="cb27-3"><a href="#cb27-3"></a>n_obs <span class="op">=</span> <span class="bu">len</span>(data)</span>
