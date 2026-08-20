@@ -72,7 +72,7 @@ X = np.column_stack([
 y = wells["switch"].values
 ```
 
-We can fit the model using PyMC or CmdStanPy where posterior draws are stored in a `DataTree` object.
+We can fit the model using PyMC, Bambi, or CmdStanPy where posterior draws are stored in a `DataTree` object.
 
 ::: {.panel-tabset group="ppl"}
 ## PyMC
@@ -87,23 +87,96 @@ with pm.Model() as model:
     logit_p = pm.math.dot(X, beta)
     pm.Bernoulli("y", logit_p=logit_p, observed=y)
 
-    idata = pm.sample(
+    data = pm.sample(
         draws=1000,
         tune=1000,
         chains=4,
         random_seed=4711,
         progressbar=True
     )
-    pm.compute_log_likelihood(idata)
+    pm.compute_log_likelihood(data)
 
-data = az.convert_to_datatree(idata)
 data["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
+```
+
+## Bambi
+
+```{python}
+#| eval: false
+import bambi as bmb
+
+wells["y"] = wells["switch"]
+
+model = bmb.Model(
+    'y ~ dist100 + arsenic',
+    data=wells,
+    family='bernoulli',
+    priors={
+        'Intercept': bmb.Prior('Normal', mu=0, sigma=1),
+        'dist100': bmb.Prior('Normal', mu=0, sigma=1),
+        'arsenic': bmb.Prior('Normal', mu=0, sigma=1)
+    }
+)
+
+data = model.fit(
+    draws=1000,
+    tune=1000,
+    chains=4,
+    random_seed=4711,
+    idata_kwargs={'log_likelihood': True}
+)
 ```
 
 ## CmdStanPy
 
-``` {.python}
-# CmdStanPy implementation will be added in future
+```{.python}
+from cmdstanpy import CmdStanModel
+
+stan_code = """
+data {
+  int<lower=0> N;
+  matrix[N, 3] X;
+  array[N] int<lower=0, upper=1> y;
+}
+parameters {
+  vector[3] beta;
+}
+model {
+  beta ~ std_normal();
+  y ~ bernoulli_logit_glm(X, 0, beta);
+}
+generated quantities {
+  vector[N] log_lik;
+  {
+    vector[N] eta = X * beta;
+    for (n in 1:N)
+      log_lik[n] = bernoulli_logit_lpmf(y[n] | eta[n]);
+  }
+}
+"""
+
+with open("wells_logistic.stan", "w") as f:
+    f.write(stan_code)
+
+stan_model = CmdStanModel(stan_file="wells_logistic.stan")
+
+fit = stan_model.sample(
+    data={"N": len(y), "X": X, "y": y},
+    chains=4,
+    iter_warmup=1000,
+    iter_sampling=1000,
+    seed=4711,
+    show_progress=False,
+)
+
+data = az.from_cmdstanpy(
+    posterior=fit,
+    log_likelihood={"y": "log_lik"},
+    observed_data={"y": y},
+    coords={"obs_id": np.arange(len(y))},
+    dims={"y": ["obs_id"]},
+)
+data["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
 ```
 :::
 
@@ -161,18 +234,14 @@ $$
 A direct approach is to store the design matrix in the `constant_data` group so that the helper can directly compute the log-likelihood for whichever subset `loo_subsample()` hands to it.
 
 ```{python}
-from scipy import stats
-from scipy.special import expit
-
 def log_lik_fn(obs, data):
     beta = data.posterior["beta"].values
     X = data.constant_data["X"].values
     logit_pred = X @ beta
-    prob = expit(logit_pred)
-    return stats.bernoulli.logpmf(obs, prob)
+    return obs * logit_pred - np.logaddexp(0, logit_pred)
 ```
 
-This log-likelihood helper evaluates the Bernoulli log-pmf for the selected subset and returns log probabilities for each posterior draw. No log-likelihood values are stored permanently, which keeps memory usage modest even when $N$ is large. When passing `log_lik_fn`, we also need `param_names` to tell `loo_subsample()` which posterior variables form the point estimate for the PLPD surrogate.
+This log-likelihood helper evaluates the Bernoulli log-pmf in its logit form, which is numerically stable for extreme probabilities, and returns log probabilities for each posterior draw. No log-likelihood values are stored permanently, which keeps memory usage modest even when $N$ is large. When passing `log_lik_fn`, we also need `param_names` to tell `loo_subsample()` which posterior variables form the point estimate for the PLPD surrogate.
 
 ```{python}
 loo_plpd_custom = az.loo_subsample(
@@ -271,7 +340,7 @@ with pm.Model() as model_laplace:
     logit_p = pm.math.dot(X, beta)
     pm.Bernoulli("y", logit_p=logit_p, observed=y)
 
-    idata_laplace = fit_laplace(
+    data_laplace = fit_laplace(
         draws=2000,
         random_seed=SEED,
         progressbar=True
@@ -287,15 +356,13 @@ with pm.Model() as model_laplace:
 
 ```{python}
 #| echo: false
-idata_laplace = az.convert_to_datatree("../models/prerun/model_comparison_large_data_01.nc")
+data_laplace = az.convert_to_datatree("../models/prerun/model_comparison_large_data_01.nc")
 ```
 
-The `fit_laplace` function stores the posterior mode in the `fit` group as `mean_vector` and the covariance in `covariance_matrix`. Posterior draws are stored in the `posterior` group as usual. We convert the result to a `DataTree` and attach the observed data and design matrix for use with `loo_approximate_posterior()`.
+The `fit_laplace` function stores the posterior mode in the `fit` group as `mean_vector` and the covariance in `covariance_matrix`. Posterior draws are stored in the `posterior` group as usual. We attach the observed data and design matrix for use with `loo_approximate_posterior()`.
 
 ```{python}
 #| eval: false
-data_laplace = az.convert_to_datatree(idata_laplace)
-
 data_laplace["observed_data"] = xr.Dataset({
     "y": (["obs_id"], y, {"obs_id": range(len(y))})
 })
@@ -333,21 +400,14 @@ param_dim = [d for d in beta_samples.dims if d not in ["chain", "draw"]][0]
 beta_renamed = beta_samples.rename({param_dim: "coef"})
 
 logit_pred = xr.dot(X_xr, beta_renamed, dims=["coef"])
-prob = 1 / (1 + xr.ufuncs.exp(-logit_pred))
-log_lik_laplace = y_xr * xr.ufuncs.log(prob) + (1 - y_xr) * xr.ufuncs.log(1 - prob)
+log_lik_laplace = y_xr * logit_pred - np.logaddexp(0, logit_pred)
 
 data_laplace["log_likelihood"] = xr.Dataset({"y": log_lik_laplace})
 
 mean_vals = data_laplace.fit["mean_vector"].values
 cov_matrix = data_laplace.fit["covariance_matrix"].values
 
-# This applies the multivariate normal log density function to each draw along the last axis
-# which is the parameter dimension
-log_q_vals = np.apply_along_axis(
-    lambda b: multivariate_normal.logpdf(b, mean=mean_vals, cov=cov_matrix),
-    axis=-1,
-    arr=beta_renamed.values
-)
+log_q_vals = multivariate_normal.logpdf(beta_renamed.values, mean=mean_vals, cov=cov_matrix)
 log_q_da = xr.DataArray(
     log_q_vals,
     dims=["chain", "draw"],
@@ -355,8 +415,7 @@ log_q_da = xr.DataArray(
 )
 
 log_prior = -0.5 * (beta_renamed ** 2).sum("coef") - 1.5 * np.log(2 * np.pi)
-log_lik_sum = log_lik_laplace.sum("obs_id")
-log_p_da = log_prior + log_lik_sum
+log_p_da = log_prior + log_lik_laplace.sum("obs_id")
 ```
 
 The log prior uses the standard normal density $\mathcal{N}(0, I_3)$ specified in the model. The log likelihood sums over all observations to obtain the joint log density. These quantities are then passed to `loo_approximate_posterior()` to compute corrected LOO estimates.
@@ -422,23 +481,67 @@ with pm.Model() as model2:
     logit_p2 = pm.math.dot(X_log, beta2)
     pm.Bernoulli("y", logit_p=logit_p2, observed=y)
 
-    idata2 = pm.sample(
+    data2 = pm.sample(
         draws=1000,
         tune=1000,
         chains=4,
         random_seed=SEED,
         progressbar=True
     )
-    pm.compute_log_likelihood(idata2)
+    pm.compute_log_likelihood(data2)
 
-data2 = az.convert_to_datatree(idata2)
 data2["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X_log)})
+```
+
+## Bambi
+
+```{python}
+#| eval: false
+wells["log_arsenic"] = np.log(wells["arsenic"])
+
+model2 = bmb.Model(
+    'y ~ dist100 + log_arsenic',
+    data=wells,
+    family='bernoulli',
+    priors={
+        'Intercept': bmb.Prior('Normal', mu=0, sigma=1),
+        'dist100': bmb.Prior('Normal', mu=0, sigma=1),
+        'log_arsenic': bmb.Prior('Normal', mu=0, sigma=1)
+    }
+)
+
+data2 = model2.fit(
+    draws=1000,
+    tune=1000,
+    chains=4,
+    random_seed=SEED,
+    idata_kwargs={'log_likelihood': True}
+)
 ```
 
 ## CmdStanPy
 
-``` {.python}
-# CmdStanPy implementation will be added in future
+```{.python}
+X_log = X.copy()
+X_log[:, 2] = np.log(X[:, 2])
+
+fit2 = stan_model.sample(
+    data={"N": len(y), "X": X_log, "y": y},
+    chains=4,
+    iter_warmup=1000,
+    iter_sampling=1000,
+    seed=SEED,
+    show_progress=False,
+)
+
+data2 = az.from_cmdstanpy(
+    posterior=fit2,
+    log_likelihood={"y": "log_lik"},
+    observed_data={"y": y},
+    coords={"obs_id": np.arange(len(y))},
+    dims={"y": ["obs_id"]},
+)
+data2["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X_log)})
 ```
 :::
 
