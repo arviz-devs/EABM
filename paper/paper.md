@@ -37,11 +37,11 @@ Bayesian statistics has emerged as a highly flexible and powerful technique, wit
 
 # Target Audience
 
-This resource is designed for learners and educators in statistics, data science, and applied fields that use statistics who seek a practical understanding of Bayesian data analysis. Examples use tools written in Python, so readers should be familiar with this programming language to fully take advantage of the material, but readers with a knowledge of high-level languages like R or Julia may also follow the material with little extra guidance. 
+This resource is designed for learners and educators in statistics, data science, and applied fields that use statistics who seek a practical understanding of Bayesian data analysis. Examples use tools written in Python, so readers should be familiar with this programming language to fully take advantage of the material, but readers with knowledge of high-level languages like R or Julia may also follow the material with little extra guidance. 
 
 # Content
 
-The main objective of the material is to provide students with a practical understanding of aspects of Bayesian modeling that are usually given little attention in many courses. The resource uses the ArviZ library [@Kumar:2019;@Martin:2026] and other open source tools, including PreliZ [@Icazatti:2023], PyMC [@pymc:2023], Bambi [@Capretto:2022], and cmdstanpy [@cmdstanpy], among others. However, the focus is on practical statistical ideas, and hence the material could be easily adapted to use a different set of tools, even from other programming languages like R or Julia. Additionally, the content encompasses basic concepts useful for effective Bayesian data analysis and state-of-the-art methods grounded in well-established statistical principles, providing robust, interpretable diagnostics and visualizations [@Vehtari:2017; @Gelman:2019; @Paananen:2020; @Vehtari:2021; @Dimitriadis:2021; @Sailynoja:2022; @Kallioinen:2023; @Sailynoja:2025].  In summary, this educational resource is designed to equip students with the skills and knowledge necessary to effectively and critically apply Bayesian statistics. While this resource has not been used for teaching in its present form. It is based on notes, slides, and material used for teaching Bayesian statistics. The feedback received from students has been taken into account to make it clearer and accessible.
+The main objective of the material is to provide students with a practical understanding of aspects of Bayesian modeling that are usually given little attention in many courses. The resource uses the ArviZ library [@Kumar:2019;@Martin:2026] and other open-source tools, including PreliZ [@Icazatti:2023], PyMC [@pymc:2023], Bambi [@Capretto:2022], and cmdstanpy [@cmdstanpy], among others. However, the focus is on practical statistical ideas, and hence the material could be easily adapted to use a different set of tools, even from other programming languages like R or Julia. Additionally, the content encompasses basic concepts useful for effective Bayesian data analysis and state-of-the-art methods grounded in well-established statistical principles, providing robust, interpretable diagnostics and visualizations [@Vehtari:2017; @Gelman:2019; @Paananen:2020; @Vehtari:2021; @Dimitriadis:2021; @Sailynoja:2022; @Kallioinen:2023; @Sailynoja:2025].  In summary, this educational resource is designed to equip students with the skills and knowledge necessary to effectively and critically apply Bayesian statistics. While this resource has not been used for teaching in its present form, it is based on notes, slides, and material that have been used for teaching Bayesian statistics. The feedback received from students has been taken into account to make it clearer and more accessible.
 
 # Conclusions
 
@@ -49,7 +49,7 @@ By focusing on often neglected topics, this resource equips learners with practi
 
 # Acknowledgments
 
-We thank the many contributors to the open-source software packages used in this material. This work for financially supported by:
+We thank the many contributors to the open-source software packages used in this material. This work was financially supported by:
 
 * Essential Open Source Software Round 4 grant by the Chan Zuckerberg Initiative (CZI)
 * The Research Council of Finland Flagship Programme "Finnish Center for Artificial Intelligence" (FCAI)
