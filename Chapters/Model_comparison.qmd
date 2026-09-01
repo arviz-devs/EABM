@@ -280,6 +280,8 @@ Theory indicates that, under very general conditions, the tail of the distributi
 
 When we combine all these ideas we get a method called Pareto-Smooth Importance Sampling Leave-One-Out Cross Validation [@vehtari_2017; @yao_2018], which is abbreviated as PSIS-LOO-CV. 
 
+For frequently asked questions about PSIS-LOO-CV (and related methods), including practical guidance on interpretation and diagnostics, see the [Stan LOO FAQ](https://mc-stan.org/loo/articles/online-only/faq.html).
+
 ## PSIS-LOO-CV in Arviz
 
 Since the name and even acronym are too long and not that easy to pronounce, in ArviZ, we usually refer to this and related methods as LOO. For instance, to compute the ELPD using the PSIS-LOO-CV method, we call the `loo` function. This function's first argument needs to be a DataTree object with a `log-likelihood` group.
@@ -440,8 +442,6 @@ idata_t = az.convert_to_datatree("../models/prerun/model_comparison_01.nc")
 
 To compare two or more models, we can use the `compare` function, which accepts a dictionary where the keys are the names of the models and the values are `DataTree` objects.
 
-
-
 ```{python}
 cmp_df = az.compare({'model_n':idata_n, 'model_t':idata_t})
 cmp_df
@@ -471,6 +471,11 @@ az.plot_compare(cmp_df);
 
 The simplest way to use information criteria is to choose a single model. Simply choose the model with the highest ELPD value. If we follow this rule we will have to accept that the quadratic model is the best. Even if we take into account the standard errors we can see that they do not overlap. Which gives us some security that the models are indeed *different* from each other. If, instead, the standard errors overlapped, we should provide a more nuanced answer.
 
+### Interpreting ELPD differences
+
+To be able to compare models, we need to understand whether the differences in ELPD are practically meaningful. As a general rule, if the ELPD difference (`elpd_diff`) is less than 4, the difference is considered small and the models have very similar predictive performance [@sivula_2020]. When `elpd_diff` is larger than 4, we should compare it to the standard error of the difference (`dse`). If the difference is several times larger than its standard error, we can be more confident that the models have genuinely different predictive performance.
+
+It is important to remember that even when one model has a higher ELPD, the models may still make very similar predictions for most observations. The ELPD measures the overall quality of the entire predictive distribution, including the tails, and small differences may not be practically relevant.
 
 ### Pareto k and LOO diagnostics
 
@@ -496,6 +501,39 @@ If $k > 0.7$, the value of `p_loo` can give us some more information, where $p$ 
 * If $p_{\text{loo}} < p$ and the observations are relatively few compared to $p$, (say $p>N/5$). It is likely that we have a model that is too flexible and/or priors that are too vague. This can happen for hierarchical models with very few observations per group or for example for splines with many knots or Gaussian processes with very short scale values.
 
 * If $p_{\text{loo}} > p$, then the model has very serious problems. If $p<<N$, then posterior predictive tests should also report problems. If, however, p is relatively large (say $p>N/5$). So post-hoc predictive testing may not reflect problems.
+
+
+### Comparing different observation models
+
+A common question is whether we can compare models with different likelihoods or response distributions using LOO. The answer depends on the types of models being compared:
+
+* **Different continuous likelihoods:** We can compare models with different continuous observation models (e.g., Normal vs. Student-T) as long as the response variable $y$ is exactly the same. If $y$ has been transformed in one model (e.g., log-transformed), the Jacobian of the transformation must be included to make the comparisons valid.
+
+* **Different discrete likelihoods:** We can compare models with different discrete observation models (e.g., Poisson vs. Negative Binomial), since probabilities are not affected by scaling.
+
+* **Continuous vs. discrete models:** We cannot directly compare a continuous model with a discrete model because log-densities and log-probabilities are not on the same scale. To compare them, we would need to discretize the continuous model into probability intervals. See [this case study](https://arviz-devs.github.io/bayesian-workflow/nabiximols/nabiximols.html) for an example of how to do this.
+
+* **Scaling matters:** For continuous models, the scale of $y$ affects log-densities. Comparing a model for $y$ with a model for $\log(y)$ without accounting for the Jacobian will give meaningless results. Always ensure the response variable is on the same scale when comparing continuous models.
+
+
+## Model averaging and stacking {#sec-model-averaging}
+
+When comparing multiple models, we often find that no single model is clearly the best. In such cases, instead of selecting one model, we can combine predictions from several models. This approach, known as **model averaging**, accounts for model uncertainty and often leads to better predictive performance than selecting a single model.
+
+One simple way to perform model averaging is to turn the ELPD values into weights. We can do this by exponentiating the ELPD values and normalizing them to sum to one. A model with higher ELPD receives more weight in the combination. 
+
+However, a more robust approach is **Bayesian stacking** [@yao_2018]. Instead of using weights derived from individual model performance, stacking optimizes the all the weights to maximize the ELPD of the combined predictive distribution. This is done by solving a constrained optimization problem where the weights sum to one and are non-negative. Bayesian stacking has been shown to perform better than simple LOO-weights, especially when models are correlated or when there is substantial uncertainty about which model is best. By default `az.compare` computes the weights using stacking.
+
+Model averaging is particularly useful when:
+
+* Several models have similar ELPD values (differences less than 4).
+* We want to account for model uncertainty in our predictions.
+* The models make different predictions for different observations, and combining them can capture a wider range of patterns.
+
+It is important to note that model averaging does not provide a single "best" model, but rather a weighted combination. This can make interpretation more challenging, but the improved predictive performance often justifies the added complexity.
+
+ArviZ provides a `weight_predictions` function that allows us to combine predictions from multiple models using the computed weights. This function takes a list of 
+datatrees with `posterior_predictive` and `observed_data` and their corresponding weights, and returns a combined predictive distribution that reflects the contributions of each model according to its weight. The weights can be obtained for example from the `az.compare` function.
 
 ## When Pareto k values are too high {#sec-IWMM-theory}
 
@@ -880,7 +918,22 @@ That is, we are evaluating the model's ability to predict an observation when we
 az.plot_loo_pit(dt_rugby, var_names="home_points")
 ```
 
-## Other information criteria
+## When not to use cross-validation (or other model selection methods)
+
+In many cases, there is no need to do model selection at all. The best approach is often to build a rich model that includes all relevant uncertainties, perform model checking, and make adjustments if needed. The followin points are discussed in terms of cross-validation, because that's the method we usually use for model comparison, but they apply to other methods as well. 
+
+* **CV does not directly answer "Is there an effect?"** Using CV to compare a model with an additional term to a model without that term is a form of null hypothesis testing. If CV prefers the simpler model, it does not necessarily mean the effect is exactly zero. It may be that the effect is too small to improve predictions, or that it is correlated with other predictors and does not provide additional information. In such cases, examining the posterior distribution of the relevant coefficient is often more informative.
+
+* **Avoid selection-induced bias with many models.** When comparing a large number of models (e.g., in variable selection), the selection process itself can overfit. The model chosen may appear better than it truly is because we selected it based on its performance in a specific sample. If only a few models are compared, this bias is usually negligible. But with many models, more sophisticated approaches such as projective inference may be needed (See @sec-variable-selection).
+
+* **Simple models with no posterior dependencies.** For simple models where parameters are independent and the model is correctly specified, examining the marginal posterior may be sufficient. Cross-validation introduces additional variability and may not provide substantial benefits.
+
+
+## Other methods for model comparison
+
+As we have already mentioned there are several methods for model comparison we favor PSIS-LOO-CV, but in this section we briefly discuss some other methods that are sometimes used for model comparison.
+
+### Other information criteria
 
 PSIS-LOO-CV and WAIC converge asymptotically and are based on the same set of assumptions, so theoretically they are equivalent. However, in practice PSIS-LOO-CV is more robust and also offers a diagnostic that indicates when it could be failing (thanks to the Pareto adjustment). For this reason, ArviZ only implements PSIS-LOO-CV. We now briefly discuss two other information criteria that are somewhat popular.
 
@@ -889,7 +942,7 @@ Deviance Information Criteria, DIC, if we use the *bayes-o-meter™*, DIC is mor
 Bayesian Information Criterion (BIC) was proposed as a way to correct some of the problems with AIC, and the author provided a Bayesian rationale for it. But BIC is not really Bayesian in the sense that, like AIC, it assumes *flat* priors and uses maximum likelihood estimation. More importantly, BIC differs from AIC and WAIC in its objective. AIC and WAIC aim to reflect which model generalizes better to new data (predictive accuracy), while BIC tries to identify the *correct* model and is therefore more closely related to Bayes factors than to WAIC. In the next section, we discuss Bayes factors and how they differ from PSIS-LOO-CV and WAIC.
 
 
-## Bayes factors
+### Bayes factors
 
 An alternative to cross-validation, approximate cross-validation with LOO and information criteria is Bayes factors. It is common for Bayes factors to show up in the literature as a Bayesian alternative to frequentist hypothesis testing.
 
@@ -931,7 +984,7 @@ Keep in mind that if you get numbers below 1, then the support is for $M_1$, i.e
 It is very important to remember that these rules are just conventions – simple guides at best. Results should always be put in the context of our problems and should be accompanied by enough detail so that others can assess for themselves whether they agree with our conclusions. The proof necessary to ensure something in particle physics, or in court, or to decide to carry out an evacuation in the face of a looming natural catastrophe is not the same.
 
 
-### Some observations
+#### Some observations
  
 We will now briefly discuss some key facts about the marginal likelihood:
 
@@ -950,7 +1003,7 @@ The marginal likelihood (and the Bayes factors derived from it) is generally not
 
 
 
-### Savage–Dickey ratio
+#### Savage–Dickey ratio
 
 There are times when we want to compare a null hypothesis $H_0$ (or null model) against an alternative $H_1$ hypothesis. For example, to answer the question "Is this coin biased?", we could compare the value $\theta = 0.5$ (representing no bias) with the output of a model in which we allow $\theta$ to vary. For this type of comparison, the null model is nested within the alternative, which means that the null is a particular value of the model we are building. In those cases, calculating the Bayes factor is very easy and does not require any special methods. We only need to compare the prior and posterior evaluated at the null value (for example, $\theta = 0.5$) under the alternative model. We can see that this is true from the following expression:
 
