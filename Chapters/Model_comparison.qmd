@@ -484,7 +484,6 @@ It is possible to visualize the values ​​of $k$, using `plot_khat`
 
 
 ```{python}
-# coming soon
 az.plot_khat(elpd);
 ```
 
