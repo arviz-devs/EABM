@@ -28,30 +28,28 @@ decompress("../models/prerun/model_comparison_large_data_00.nc")
 decompress("../models/prerun/model_comparison_large_data_03.nc")
 ```
 
-In this chapter, we demonstrate how to efficiently compare Bayesian models on large datasets using subsampled PSIS-LOO-CV. We apply the methods introduced in @sec-subsampledloo-theory to a real dataset containing thousands of observations, showing how to balance computational efficiency with statistical accuracy. The workflow combines fast surrogate approximations with exact computations on a small subsample, and can be further accelerated using approximate posteriors from variational inference or Laplace approximations. For theoretical background and details of the method, we recommend you read @sec-subsampledloo-theory and references therein.
+When full PSIS-LOO-CV is costly, subsampling lets us estimate predictive accuracy from a smaller set of observations. We will use the wells data to see how this works in ArviZ, first for one model and then for a model comparison. We also show how the same workflow can be combined with a Laplace approximation. The theory behind the method is discussed in @sec-subsampledloo-theory.
 
 ## Workflow for model comparison
 
-The workflow for applying subsampled PSIS-LOO-CV to model comparison is straightforward. We compute cheap surrogates for all observations, then refine our estimates using PSIS-LOO-CV on a small subsample, balancing computational efficiency with statistical accuracy:
+Subsampled model comparison follows six steps.
 
 1. Compute posteriors $p_A(\theta \mid y)$ and $p_B(\theta \mid y)$ for models $A$ and $B$
 2. Calculate $\tilde\pi_i$ for all $n$ observations using an appropriate approximation
 3. Use simple random sampling to select $m$ observations (start with $m \approx 100$)
 4. Calculate $\pi_j$ for the subsample using PSIS-LOO-CV, checking Pareto-$k$ diagnostics for unreliable importance sampling approximations
 5. Estimate $\operatorname{elpd}_A$, $\operatorname{elpd}_B$, and their difference
-6. If subsampling SE is too large relative to the estimated difference, increase $m$ using `update_subsample`
+6. If the subsampling uncertainty in the ELPD difference is too large, use `update_subsample()` to add the same observations to both models
 
-Again, the key advantage is that the same subsample can be reused across all models, making the approach highly efficient for comparing multiple models. The difference $\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B$ and its variance are estimated directly from the common subsample, properly accounting for the correlation between models' predictions. 
-
-This reuse is what makes the difference estimator superior to the Hansen-Hurwitz approach for model comparison tasks. This is also the reason why we recommend using the same subsample for all models, rather than subsampling each model separately.
+Using the same observations for each model is especially important. It lets ArviZ account for the correlation between the models' predictions when estimating $\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B$. Separate subsamples lose this benefit and can make the difference look much more uncertain.
 
 ## Wells data and logistic model
 
 To demonstrate the PSIS-LOO-CV subsampling method, we use data from a household survey in a region of Bangladesh where drinking water was contaminated with arsenic. Households with unsafe arsenic levels in their wells were asked whether they would switch to using a neighbor's safe well. The goal is to predict this binary switching decision using household characteristics.
 
-We focus on a simple logistic regression with two key predictors: the arsenic concentration in the household's well and the distance to the nearest safe well. The dataset contains $n = 3020$ observations. While this is not massive by modern standards, it is large enough that efficient computational methods become valuable. The advantage of this sample size is that individual observations have limited influence on the overall model fit, which helps ensure stable importance sampling computations. The data is available from the R package `loo`.
+We focus on a simple logistic regression with two predictors, the arsenic concentration in the household's well and the distance to the nearest safe well. The dataset contains $n = 3020$ observations. It is small enough to compute full PSIS-LOO for comparison while still providing a useful example of the subsampling workflow.
 
-We model the indicator of switching water wells using a logistic regression with intercept, arsenic concentration, and distance to the nearest safe well in hundreds of metres. The design matrix is $X = [1, \text{dist}/100, \text{arsenic}]$ and the likelihood is given by
+We model the indicator of switching water wells using a logistic regression with intercept, arsenic concentration, and distance to the nearest safe well in hundreds of meters. The design matrix is $X = [1, \text{dist}/100, \text{arsenic}]$ and the likelihood is given by
 
 $$
 \Pr(y_i = 1 \mid \beta) = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta), \qquad \beta \sim \mathcal{N}(0, I_3).
@@ -72,7 +70,7 @@ X = np.column_stack([
 y = wells["switch"].values
 ```
 
-We can fit the model using PyMC, Bambi, or CmdStanPy where posterior draws are stored in a `DataTree` object.
+We can fit the model with PyMC, Bambi, or CmdStanPy and store the posterior draws in a `DataTree` object.
 
 ::: {.panel-tabset group="ppl"}
 ## PyMC
@@ -111,6 +109,7 @@ model = bmb.Model(
     'y ~ dist100 + arsenic',
     data=wells,
     family='bernoulli',
+    center_predictors=False,
     priors={
         'Intercept': bmb.Prior('Normal', mu=0, sigma=1),
         'dist100': bmb.Prior('Normal', mu=0, sigma=1),
@@ -122,9 +121,9 @@ data = model.fit(
     draws=1000,
     tune=1000,
     chains=4,
-    random_seed=4711,
-    idata_kwargs={'log_likelihood': True}
+    random_seed=4711
 )
+model.compute_log_likelihood(data)
 ```
 
 ## CmdStanPy
@@ -193,17 +192,19 @@ with pm.Model() as model:
 data = az.convert_to_datatree("../models/prerun/model_comparison_large_data_00.nc")
 ```
 
+Passing a fitted model directly is supported for PyMC and Bambi. For other backends, we can provide a custom log-likelihood function as shown below.
+
 ## Subsampled PSIS-LOO-CV with the PLPD surrogate
 
-As we've discussed previously, a key component of the PSIS-LOO-CV subsampling method is the notion of a fast surrogate for the leave-one-out term $\pi_i$. One such surrogate is the point log predictive density (PLPD) which @magnusson_2020 motivate by replacing the leave-one-out term $\pi_i$ with
+The point log predictive density (PLPD) is a fast surrogate for each leave-one-out term $\pi_i$. @magnusson_2020 define it as
 
 $$
 \tilde\pi_i^{\text{plpd}} = \log p(y_i \mid X_i, \hat{\beta}), \quad \hat{\beta} = \mathbb{E}[\beta \mid y].
 $$
 
-The approximation reduces the computational burden to a single evaluation per observation while retaining the shrinkage induced by the posterior mean. Inserting $\tilde\pi_i^{\text{plpd}}$ into the difference estimator converts the exact correction to a subsample average that only requires re-evaluating the full posterior draws on $m$ observations. 
+The approximation evaluates each observation once at the posterior mean. ArviZ then computes PSIS-LOO using all posterior draws for the sampled observations and uses those values to correct the surrogate estimate.
 
-Here we use the `method="plpd"` argument to `loo_subsample()` to use the PLPD surrogate. Computing the surrogate requires the log-likelihood of each observation, so we pass our fitted model through the `model` argument and ArviZ compiles the log-likelihood function it needs directly from the model.
+Here we select the PLPD surrogate with `method="plpd"`. By passing the fitted model, ArviZ builds the function used to evaluate the surrogate. The `log_likelihood` group in `data` provides the pointwise log likelihood values used by PSIS-LOO for the selected observations.
 
 ```{python}
 loo_plpd = az.loo_subsample(
@@ -219,19 +220,19 @@ loo_plpd = az.loo_subsample(
 loo_plpd
 ```
 
-The output inherits from the `ELPDData` interface with an additional column `subsampling_se` isolating the extra Monte Carlo error introduced by drawing only $100$ of the $3020$ observations. In our wells run with $m=100$ we obtained $\widehat{\operatorname{elpd}}_{\text{loo}}\approx-1968.4$ with $\text{SE}\approx15.6$ and $\text{subsampling SE} \approx0.3$. All Pareto‑$k$ values on the subsample were $\le 0.7$.
+The result includes `subsampling_se`, which measures the uncertainty added by using only $100$ of the $3020$ observations. In this run we obtained $\widehat{\operatorname{elpd}}_{\text{loo}}\approx-1968.4$ with $\text{SE}\approx15.6$ and $\text{subsampling SE} \approx0.3$. All Pareto-$k$ values in the subsample were below $0.7$.
 
 ### Custom log-likelihood functions
 
-If we are working with a framework that does not support automatic extraction, or we want full control over the computations, we can write the log-likelihood function ourselves. `loo_subsample()` accepts a callable with signature `log_lik_fn(observed, data)` so that the log-likelihood can be computed for whichever subset of observations it selects on demand, rather than stored for all observations, which can be expensive for large datasets. We can always wrap auxiliary parameters with tools such as `functools.partial` so the routine still receives `(observed, data)`.
+If automatic model support is not available, we can write the PLPD function ourselves. `loo_subsample()` calls `log_lik_fn(observed, data)` after replacing the posterior variables listed in `param_names` with their posterior means. The function must return one log likelihood value for each observation.
 
-For logistic regression, the per-draw log probability mass function is given by
+For logistic regression, the PLPD value is
 
 $$
-\log p(y_i \mid \beta_s, X_i) = y_i \log \pi_{is} + (1 - y_i) \log (1 - \pi_{is}), \qquad \pi_{is} = \operatorname{logit}^{-1}(X_i^{\mathsf{T}} \beta_s).
+\log p(y_i \mid \hat{\beta}, X_i) = y_i \eta_i - \log(1 + \exp(\eta_i)), \qquad \eta_i = X_i^{\mathsf{T}}\hat{\beta}.
 $$
 
-A direct approach is to store the design matrix in the `constant_data` group so that the helper can directly compute the log-likelihood for whichever subset `loo_subsample()` hands to it.
+We stored the design matrix in the `constant_data` group, so the function can use it directly.
 
 ```{python}
 def log_lik_fn(obs, data):
@@ -241,7 +242,7 @@ def log_lik_fn(obs, data):
     return obs * logit_pred - np.logaddexp(0, logit_pred)
 ```
 
-This log-likelihood helper evaluates the Bernoulli log-pmf in its logit form, which is numerically stable for extreme probabilities, and returns log probabilities for each posterior draw. No log-likelihood values are stored permanently, which keeps memory usage modest even when $N$ is large. When passing `log_lik_fn`, we also need `param_names` to tell `loo_subsample()` which posterior variables form the point estimate for the PLPD surrogate.
+The function evaluates the Bernoulli log probability from the logits and returns one value for each row of `X`. The stored `log_likelihood` group is still used for the full PSIS-LOO calculations on the subsample. When passing `log_lik_fn`, we use `param_names` to tell ArviZ which posterior variables it needs for the PLPD surrogate.
 
 ```{python}
 loo_plpd_custom = az.loo_subsample(
@@ -258,17 +259,21 @@ loo_plpd_custom = az.loo_subsample(
 loo_plpd_custom
 ```
 
-The estimates are identical to the ones we got by passing the model directly, as they should be. ArviZ builds the equivalent of this function from the model behind the scenes, so both routes run the same computation on the same subsample.
+Using the same seed selects the same observations, and the custom and model-based routes give the same estimate.
 
 ## Subsampled PSIS-LOO-CV with the LPD surrogate
 
-When the posterior mass is diffuse or strongly correlated, evaluating the full posterior predictive density can improve the approximation. We can use the log predictive density (LPD) surrogate given by
+The log predictive density (LPD) offers another surrogate. Instead of evaluating the likelihood only at the posterior mean, it averages over the posterior draws.
 
 $$
 \tilde\pi_i^{\text{lpd}} = \log \left( \frac{1}{S} \sum_{s=1}^S p(y_i \mid X_i, \beta_s) \right),
 $$
 
-where $\beta_s$ are the draws stored in `data.posterior`. The additional sum over draws raises the cost and often reduces the approximation error. The same subsample size and random seed ensure that the estimator reuses the indices chosen for the PLPD computation, which makes comparisons straightforward.
+Here $\beta_s$ are posterior draws. Using all draws costs more than PLPD but can provide a better surrogate for some models. We use the same subsample size and random seed so both calculations select the same observations.
+
+::: {.callout-note}
+ArviZ can use the fitted model to build the PLPD surrogate. The LPD surrogate can be calculated directly from the posterior log likelihood values stored in `data`, so the fitted model is not needed in the call below.
+:::
 
 ```{python}
 loo_lpd = az.loo_subsample(
@@ -283,13 +288,11 @@ loo_lpd = az.loo_subsample(
 loo_lpd
 ```
 
-From the output, we can see that the estimated ELPD closely matches the PLPD result, both about $-1968.5$ with $\text{SE}\approx15.6$, and the subsampling SEs are very similar (PLPD $\approx0.3$ vs. LPD $\approx0.4$). 
-
-For well‑identified models with tight posteriors, PLPD can match or even slightly outperform LPD. For more complex models, LPD often gains ground. Taken together, the parallel outputs validate the theoretical trade-off. PLPD minimises computation, whereas LPD expends extra work to tighten the estimator. For larger $m$ the difference between the two surrogates typically diminishes, and the choice becomes a balance between runtime and stability.
+The LPD estimate is about $-1968.5$, close to the PLPD estimate of about $-1968.4$. Both have $\text{SE}\approx15.6$. In this example, PLPD has a slightly smaller subsampling SE than LPD. The choice of surrogate depends on the model, so it is useful to compare the reported subsampling uncertainty when both are available.
 
 ## Incremental sampling updates
 
-@magnusson_2020 recommend increasing $m$ until the subsampling uncertainty is negligible for the task at hand. The `update_subsample()` routine efficiently extends an existing subsample without discarding work already done. Here we add 200 additional observations (from 100 to 300 total in the subsample) by using the previous subsample as a starting point.
+@magnusson_2020 recommend increasing $m$ until the subsampling uncertainty is small enough for the task at hand. `update_subsample()` extends an existing subsample without discarding its selected observations. Here we add $200$ observations, taking the subsample from $100$ to $300$.
 
 ```{python}
 loo_update = az.update_subsample(
@@ -305,13 +308,13 @@ loo_update = az.update_subsample(
 loo_update
 ```
 
-The updated result shows how the estimator stabilises as more observations are included. In our run, the subsampling SE decreased from about $0.3$ to $0.2$, while the estimated ELPD and $p_{\text{loo}}$ remained essentially unchanged.
+The subsampling SE decreases from about $0.3$ to $0.2$, while the estimated ELPD changes very little.
 
-## Approximate LOO-CV using PSIS-LOO with posterior approximations
+## PSIS-LOO-CV with an approximate posterior
 
-Using posterior approximations such as variational inference or Laplace approximations can further accelerate LOO-CV for large data. These methods avoid the computational cost of full MCMC while maintaining reasonable approximation quality for well-behaved models.
+PSIS-LOO-CV can also be used with an approximate posterior. This can reduce the time spent fitting the model before LOO-CV, though the result still depends on the quality of the posterior approximation.
 
-We will use the Laplace approximation which fits a multivariate normal distribution centered at the posterior mode $\hat{\theta}$ with covariance equal to the inverse Hessian of the negative log posterior. For a model with likelihood $p(y \mid \theta)$ and prior $p(\theta)$, the Laplace approximation is
+We use a Laplace approximation, which represents the posterior with a multivariate normal distribution centered at the posterior mode $\hat{\theta}$. Its covariance is the inverse Hessian of the negative log posterior evaluated at the mode. For a model with likelihood $p(y \mid \theta)$ and prior $p(\theta)$, the approximation is
 
 $$
 q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
@@ -320,15 +323,12 @@ $$
 where 
 
 $$
-\hat{\theta} = \arg\max_\theta \log p(\theta \mid y) \quad \text{ and } \quad \Sigma = [-\nabla^2 \log p(\theta \mid y)]^{-1}.
+\hat{\theta} = \arg\max_\theta \log p(\theta \mid y) \quad \text{ and } \quad \Sigma = \left[-\nabla_\theta^2 \log p(\theta \mid y)\big|_{\theta=\hat{\theta}}\right]^{-1}.
 $$
 
 Draws from $q(\theta \mid y)$ can be obtained efficiently by sampling from the fitted normal distribution.
 
-The following fits the wells model using a Laplace approximation via `pymc_extras.fit_laplace`, which returns draws from the approximate posterior along with the mode and covariance estimates.
-
-::: {.panel-tabset group="ppl"}
-## PyMC
+The following uses `pymc_extras.fit_laplace` to fit the wells model. It returns draws from the approximate posterior together with estimates of its mode and covariance.
 
 ```{python}
 #| eval: false
@@ -347,13 +347,6 @@ with pm.Model() as model_laplace:
     )
 ```
 
-## CmdStanPy
-
-``` {.python}
-# CmdStanPy implementation will be added in future
-```
-:::
-
 ```{python}
 #| echo: false
 data_laplace = az.convert_to_datatree("../models/prerun/model_comparison_large_data_01.nc")
@@ -364,8 +357,8 @@ The `fit_laplace` function stores the posterior mode in the `fit` group as `mean
 ```{python}
 #| eval: false
 data_laplace["observed_data"] = xr.Dataset({
-    "y": (["obs_id"], y, {"obs_id": range(len(y))})
-})
+    "y": ("obs_id", y)
+}, coords={"obs_id": np.arange(len(y))})
 data_laplace["constant_data"] = xr.Dataset({"X": (["obs_id", "coef"], X)})
 ```
 
@@ -381,13 +374,13 @@ data_laplace = az.convert_to_datatree("../models/prerun/model_comparison_large_d
 
 ### Computing log density corrections
 
-To use `loo_approximate_posterior()`, we must supply `log_p` and `log_q`, which represent the log density of the true posterior and the approximate posterior, respectively. The importance ratios are then adjusted to account for the approximation quality with
+To use `loo_approximate_posterior()`, we supply `log_p` and `log_q`. These are the target and approximate posterior log densities evaluated at draws from the approximate posterior. The target density only needs to be known up to an additive constant. The importance ratios are
 
 $$
-r(\theta_s) \propto \frac{1}{p(y_i \mid \theta_s)} \frac{p(\theta_s \mid y)}{q(\theta_s \mid y)}.
+r_{is} \propto \frac{p(\theta_s \mid y)}{q(\theta_s \mid y)\,p(y_i \mid \theta_s)}.
 $$
 
-For the Laplace approximation, $\log q(\theta_s \mid y)$ is the log density of the fitted normal distribution, while $\log p(\theta_s \mid y)$ is the log prior plus the log likelihood. We require both of these quantities to be able to compute the importance ratios.
+For the Laplace approximation, `log_q` is the log density of the fitted normal distribution. We compute `log_p` as the log prior plus the log likelihood, which gives the target log density up to an additive constant.
 
 ```{python}
 from scipy.stats import multivariate_normal
@@ -418,11 +411,11 @@ log_prior = -0.5 * (beta_renamed ** 2).sum("coef") - 1.5 * np.log(2 * np.pi)
 log_p_da = log_prior + log_lik_laplace.sum("obs_id")
 ```
 
-The log prior uses the standard normal density $\mathcal{N}(0, I_3)$ specified in the model. The log likelihood sums over all observations to obtain the joint log density. These quantities are then passed to `loo_approximate_posterior()` to compute corrected LOO estimates.
+The log prior uses the standard normal density $\mathcal{N}(0, I_3)$ specified in the model, and the log likelihood is summed over all observations. We then pass `log_p_da` and `log_q_da` to `loo_approximate_posterior()`.
 
-### Running LOO-CV with approximate posterior
+### Running LOO-CV with an approximate posterior
 
-With `log_p` and `log_q` in hand, we can compute LOO-CV using the approximate posterior. The `loo_approximate_posterior()` function adjusts the importance ratios to account for the discrepancy between the true posterior and the Laplace approximation.
+We can now compute LOO-CV from the approximate posterior. `loo_approximate_posterior()` adjusts the importance ratios using the difference between the target posterior and the Laplace approximation.
 
 ```{python}
 loo_ap = az.loo_approximate_posterior(
@@ -436,13 +429,11 @@ loo_ap = az.loo_approximate_posterior(
 loo_ap
 ```
 
-The output shows how the approximate posterior performs relative to MCMC. The Pareto-$k$ diagnostics remain available and indicate whether the importance sampling correction is reliable. You can also see in the output the line *"Posterior approximation correction used"*, which indicates that the approximate posterior correction was used.
+The Pareto-$k$ diagnostics remain available and help us assess the importance sampling correction. The output also records that the posterior approximation correction was used.
 
 ## Combining approximate posterior with subsampling
 
-The approximate posterior correction can be combined with subsampling to further reduce computational cost.
-
-When using `loo_subsample()` with an approximate posterior, we simply pass `log_p` and `log_q` along with the subsample specification. The difference estimator then corrects for both the approximation error and the subsampling uncertainty.
+We can combine the approximate posterior correction with subsampling by passing `log_p` and `log_q` to `loo_subsample()`. The importance weights account for draws from the approximate posterior, while the difference estimator uses the corrected LOO values for the sampled observations to adjust the PLPD surrogate. The reported `subsampling_se` measures the remaining uncertainty from sampling observations.
 
 ```{python}
 loo_ap_ss = az.loo_subsample(
@@ -460,13 +451,13 @@ loo_ap_ss = az.loo_subsample(
 loo_ap_ss
 ```
 
-The combined approach leverages the strengths of both methods. The Laplace approximation avoids expensive MCMC sampling, while subsampling reduces the cost of evaluating the full dataset. The correction terms ensure the estimates remain unbiased despite the double approximation.
+The Laplace approximation reduces the fitting cost, while subsampling reduces the number of observations that require PSIS-LOO calculations. The Pareto-$k$ and subsampling diagnostics remain important checks.
 
-In our wells example, the subsampled approximate posterior LOO produces estimates very close to both the full MCMC and the full approximate posterior results, with negligible subsampling SE. This demonstrates that for well-behaved models, aggressive approximation can yield accurate predictive performance estimates at minimal computational cost.
+In this example, the subsampled result is close to the full approximate posterior result and has a small subsampling SE.
 
 ## Comparing models with subsampled LOO
 
-We can compare models that are estimated via subsampling just like we would for regular LOO using the `compare()` function. We will fit a second model using `log(arsenic)` instead of `arsenic` as a predictor and compare the two models.
+We can compare subsampled LOO estimates with `compare()` just as we compare regular LOO estimates. We will fit a second model using `log(arsenic)` instead of `arsenic` as a predictor and compare the two models.
 
 ::: {.panel-tabset group="ppl"}
 ## PyMC
@@ -503,6 +494,7 @@ model2 = bmb.Model(
     'y ~ dist100 + log_arsenic',
     data=wells,
     family='bernoulli',
+    center_predictors=False,
     priors={
         'Intercept': bmb.Prior('Normal', mu=0, sigma=1),
         'dist100': bmb.Prior('Normal', mu=0, sigma=1),
@@ -514,9 +506,9 @@ data2 = model2.fit(
     draws=1000,
     tune=1000,
     chains=4,
-    random_seed=SEED,
-    idata_kwargs={'log_likelihood': True}
+    random_seed=SEED
 )
+model2.compute_log_likelihood(data2)
 ```
 
 ## CmdStanPy
@@ -576,13 +568,17 @@ loo_ss_2_diff = az.loo_subsample(
 loo_ss_2_diff
 ```
 
-Now we compare the models using different subsamples.
+Stacking needs pointwise LOO values for every observation, so we use `method="pseudo-bma"` for the subsampled results.
 
 ```{python}
-comparison_diff = az.compare({
-    "model1_arsenic": loo_plpd,
-    "model2_log_arsenic": loo_ss_2_diff,
-}).round(1)
+comparison_diff = az.compare(
+    {
+        "model1_arsenic": loo_plpd,
+        "model2_log_arsenic": loo_ss_2_diff,
+    },
+    method="pseudo-bma",
+    round_to=1,
+)
 
 comparison_diff
 ```
@@ -590,14 +586,14 @@ comparison_diff
 ::: {.callout-note}
 ## Note on `dse` and `subsampling_dse`
 
-The output is very similar to regular `compare()` output with an additional column for subsampling uncertainty, `subsampling_dse`. Note that `dse` already accounts for the subsampling uncertainty, so we cannot add `subsampling_dse` to it. We report `subsampling_dse` to show the exact amount of subsampling uncertainty.
+`dse` measures the usual uncertainty in the ELPD difference across possible datasets. `subsampling_dse` measures the additional uncertainty from estimating that difference with a subsample. We inspect `subsampling_dse` separately to decide whether more observations are needed.
 :::
 
-When using different subsamples, notice we get a warning message indicating that the subsamples are different. This warning indicates that the comparison cannot account for the correlation between models' predictions. In this case, the standard error of the difference `dse` is computed naively by treating the two models as independent, which substantially inflates the uncertainty because we are losing the benefit of the covariance term $\operatorname{Cov}(\operatorname{elpd}_A, \operatorname{elpd}_B)$ discussed earlier.
+Because the subsamples differ, ArviZ warns that it cannot use the correlation between the models' predictions. The resulting `dse` treats the two estimates as independent and is much larger.
 
 ### Comparison with the same subsample
 
-To properly compare models, we reuse the exact same observations by passing the first LOO subsample object to the second `loo_subsample()` call. This ensures both models are evaluated on the same subset of observations, which is critical for accurate model comparison.
+We now reuse the same observations by passing the indices stored in `loo_plpd.loo_subsample_observations` to the second `loo_subsample()` call.
 
 ```{python}
 loo_ss_2 = az.loo_subsample(
@@ -612,47 +608,49 @@ loo_ss_2 = az.loo_subsample(
 loo_ss_2
 ```
 
-Now we compare the models using the same subsample.
-
 ```{python}
-comparison_same = az.compare({
-    "model1_arsenic": loo_plpd,
-    "model2_log_arsenic": loo_ss_2,
-}).round(1)
+comparison_same = az.compare(
+    {
+        "model1_arsenic": loo_plpd,
+        "model2_log_arsenic": loo_ss_2,
+    },
+    method="pseudo-bma",
+    round_to=1,
+)
 
 comparison_same
 ```
 
-When using the same subsample, we can see that the standard error of the difference is dramatically reduced compared to the previous comparison. This is because the correlation between models' predictions on the common subsample is properly accounted for in the variance calculation. The SE reduction is substantial, making it much easier to detect meaningful performance differences.
-
-In this example, the second model (with log-transformed arsenic) has higher ELPD than the first model, indicating better predictive performance. The subsampling SE is very small relative to the difference in ELPD, indicating that the subsample size of 100 is sufficient for accurate comparison. If the subsampling SE were large, we could increase the subsample size using `update_subsample()` as demonstrated earlier.
+With shared observations, `dse` falls from about $22$ to $4.4$ because ArviZ can account for the correlation between the models. The second model, which uses log-transformed arsenic, has the higher ELPD. The small `subsampling_dse` suggests that $100$ observations are enough for this comparison. If it were larger, we could use `update_subsample()` to add the same observations to both models.
 
 ## Comparing full LOO to subsampled LOO
 
-We can also compare a subsampled LOO object to a full LOO object that was computed on all $N = 3020$ observations.
-
-The following computes full PSIS-LOO-CV for the first model using the `loo()` function.
+We can compare a subsampled LOO result with a full result computed over all $N = 3020$ observations. Here we compute full PSIS-LOO-CV for the first model using `loo()`.
 
 ```{python}
 loo_full = az.loo(data, var_name="y", pointwise=True)
 loo_full
 ```
 
-When comparing a full LOO calculation to a subsampled calculation, the `compare()` function automatically uses only the observations included in both calculations.
+ArviZ can also estimate the model difference when only one of the LOO results uses subsampling.
 
 ```{python}
-comparison_mixed = az.compare({
-    "model1_full_loo": loo_full,
-    "model2_subsampled_loo": loo_ss_2
-}).round(1)
+comparison_mixed = az.compare(
+    {
+        "model1_full_loo": loo_full,
+        "model2_subsampled_loo": loo_ss_2,
+    },
+    method="pseudo-bma",
+    round_to=1,
+)
 
 comparison_mixed
 ```
 
-Notice that this comparison triggers a warning message indicating that only observations included in both LOO calculations are used for the difference estimate. Since the subsampled LOO only evaluated 100 observations, the comparison is based on those 100 observations rather than the full dataset. We can also see an increase in `subsampling_dse` compared to the previous comparison which is due to a technical detail that we omit from this example.
+ArviZ uses the $100$ shared observations for the paired correction, while the surrogate values still cover all $3020$ observations. The reported `elpd_diff` therefore estimates the difference across the full dataset. The warning tells us that the paired correction is limited to the shared observations.
 
 ## Practical considerations
 
-For moderately sized models, the PLPD surrogate typically suffices because the posterior mean encapsulates most of the predictive information. When the model has hierarchical components or weakly identified parameters, @magnusson_2020 recommend richer surrogates such as the LPD or diagnostics-driven truncation of importance weights to reduce the approximation error $e_j$ and therefore the subsampling variance. Truncated importance sampling plays a similar role by clipping large $r_{is}$ values before applying the Pareto smoothing step.  Regardless of the surrogate, increasing $m$ under the difference estimator guarantees convergence because the finite population correction shrinks the variance as $m$ approaches $N$.
+Start with a modest number of observations and inspect `subsampling_se` together with the Pareto-$k$ diagnostics. If the subsampling uncertainty is too large for the question, add observations with `update_subsample()`. PLPD is quick to compute, while LPD can be useful when the posterior mean is not a good summary of the predictive distribution.
 
-When comparing multiple models via subsampling, it is recommended to reuse a single subsample across all fits. In this case, the difference estimator produces $\widehat{\operatorname{ELPD}}_{\text{diff}}$ for each model and the estimated difference $\widehat{\operatorname{ELPD}}_{A} - \widehat{\operatorname{ELPD}}_{B}$ inherits the same subsampling indices. Consistency results in @magnusson_2020 ensure that even with fixed $m$ and a finite number of posterior draws, the estimator converges as the quality of the surrogate improves.
+When comparing models, reuse the same subsample. This lets ArviZ account for the relationship between the models' predictions and usually gives a more useful estimate of the uncertainty in their ELPD difference.
