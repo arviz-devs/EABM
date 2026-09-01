@@ -393,7 +393,7 @@ Additionally, if needed, we can specify the thinning factor manually by passing 
 
 Due to its internal workings, algorithms like NUTS offer some specific tests that are not available to other methods. These tests are generally very sensitive.
 
-To exemplify this we are going to load two InferenceData from pre-calculated models. The details of how these data were generated are not relevant at the moment. We will only say that they are two models that are mathematically equivalent but parameterized in different ways. In this case, the parameterization affects the efficiency of the sampler. The `centered` model is sampled more efficiently than the `non_centered` model.
+To exemplify this we are going to load two InferenceData from pre-calculated models. The details of how these data were generated are not relevant at the moment. We will only say that they are two models that are mathematically equivalent but parameterized in different ways. In this case, the parameterization affects the efficiency of the sampler. The `non_centered` model is sampled more efficiently than the `centered` model.
 
 ```{python}
 idata_cm = az.load_arviz_data("centered_eight")
