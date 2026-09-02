@@ -28,7 +28,7 @@ decompress("../models/prerun/model_comparison_large_data_00.nc")
 decompress("../models/prerun/model_comparison_large_data_03.nc")
 ```
 
-When full PSIS-LOO-CV is costly, subsampling lets us estimate predictive accuracy from a smaller set of observations. We will use the wells data to see how this works in ArviZ, first for one model and then for a model comparison. We also show how the same workflow can be combined with a Laplace approximation. The theory behind the method is discussed in @sec-subsampledloo-theory.
+When full PSIS-LOO-CV is costly, subsampling lets us estimate predictive accuracy from a smaller set of observations [@vehtari_2017; @magnusson_2020]. We will use the wells data to see how this works in ArviZ, first for one model and then for a model comparison. We also show how the same workflow can be combined with a Laplace approximation. The theory behind the method is discussed in @sec-subsampledloo-theory. This example is adapted from a vignette in the loo package documentation [https://mc-stan.org/loo/articles/loo2-large-data.html].
 
 ## Workflow for model comparison
 
@@ -41,11 +41,11 @@ Subsampled model comparison follows six steps.
 5. Estimate $\operatorname{elpd}_A$, $\operatorname{elpd}_B$, and their difference
 6. If the subsampling uncertainty in the ELPD difference is too large, use `update_subsample()` to add the same observations to both models
 
-Using the same observations for each model is especially important. It lets ArviZ account for the correlation between the models' predictions when estimating $\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B$. Separate subsamples lose this benefit and can make the difference look much more uncertain.
+Using the same observations for each model is especially important. It lets ArviZ account for the correlation between the models' predictions when estimating $\operatorname{elpd}_D = \operatorname{elpd}_A - \operatorname{elpd}_B$. Separate subsamples lose this benefit and can make the difference look much more uncertain [@magnusson_2020].
 
 ## Wells data and logistic model
 
-To demonstrate the PSIS-LOO-CV subsampling method, we use data from a household survey in a region of Bangladesh where drinking water was contaminated with arsenic. Households with unsafe arsenic levels in their wells were asked whether they would switch to using a neighbor's safe well. The goal is to predict this binary switching decision using household characteristics.
+To demonstrate the PSIS-LOO-CV subsampling method, we use data from a household survey in a region of Bangladesh where drinking water was contaminated with arsenic. Households with unsafe arsenic levels in their wells were asked whether they would switch to using a neighbors' safe well. The goal is to predict this binary switching decision using household characteristics [@gelman_hill_2007].
 
 We focus on a simple logistic regression with two predictors, the arsenic concentration in the household's well and the distance to the nearest safe well. The dataset contains $n = 3020$ observations. It is small enough to compute full PSIS-LOO for comparison while still providing a useful example of the subsampling workflow.
 
@@ -314,7 +314,7 @@ The subsampling SE decreases from about $0.3$ to $0.2$, while the estimated ELPD
 
 PSIS-LOO-CV can also be used with an approximate posterior. This can reduce the time spent fitting the model before LOO-CV, though the result still depends on the quality of the posterior approximation.
 
-We use a Laplace approximation, which represents the posterior with a multivariate normal distribution centered at the posterior mode $\hat{\theta}$. Its covariance is the inverse Hessian of the negative log posterior evaluated at the mode. For a model with likelihood $p(y \mid \theta)$ and prior $p(\theta)$, the approximation is
+We use a Laplace approximation, which represents the posterior with a multivariate normal distribution centered at the posterior mode $\hat{\theta}$. Its covariance is the inverse Hessian of the negative log posterior evaluated at the mode [@tierney_1986]. For a model with likelihood $p(y \mid \theta)$ and prior $p(\theta)$, the approximation is
 
 $$
 q(\theta \mid y) = \mathcal{N}(\theta \mid \hat{\theta}, \Sigma),
