@@ -65,11 +65,11 @@ X = bikes
 Now we define the BART model using PyMC-BART, for details on how to define BART models, please check the [PyMC-BART documentation](https://www.pymc.io/projects/bart/en/latest/)
 
 ```{python}
-with pm.Model() as model:
+with pm.Model() as bart_model:
     α = pm.HalfNormal("α", 2)
     μ_ = pmb.BART("μ_", X, np.log(Y))
     μ = pm.Deterministic("μ", np.exp(μ_))
-    y = pm.NegativeBinomial("y", mu=μ, alpha=α, observed=Y)
+    pm.NegativeBinomial("count", mu=μ, alpha=α, observed=Y)
     idata_bart = pm.sample(random_seed=seed,
                       compute_convergence_checks=False)
 ```
@@ -133,8 +133,8 @@ idata = model.fit(idata_kwargs={'log_likelihood': True}, random_seed=seed)
 #| echo: false
 import os
 import arviz as az
-model = bmb.Model("count ~" +  " + ".join([c for c in bikes.columns if c!="count"]), data=bikes, family="negativebinomial")
-model.build()
+bambi_model0 = bmb.Model("count ~" +  " + ".join([c for c in bikes.columns if c!="count"]), data=bikes, family="negativebinomial")
+bambi_model0.build()
 
 if not os.path.exists("../models/prerun/variable_sel_01.nc"):
     idata.to_netcdf("../models/prerun/variable_sel_01.nc")
@@ -145,7 +145,7 @@ idata = az.from_netcdf("../models/prerun/variable_sel_01.nc")
 To use Kulprit we first instantiate the `ProjectionPredictive` class and then call the `project` method, which is the one doing all the hard work.
 
 ```{python}
-ppi = kpt.ProjectionPredictive(model, idata)
+ppi = kpt.ProjectionPredictive(bambi_model0, idata)
 ppi.project()
 ```
 
@@ -173,8 +173,8 @@ Now we can repeat the process, first we fit the model with the transformed varia
 
 ```{python}
 #| eval: false
-model = bmb.Model("count ~" +  " + ".join([c for c in bikes.columns if c!="count"]), data=bikes, family="negativebinomial")
-idata = model.fit(idata_kwargs={'log_likelihood': True}, random_seed=seed)
+bambi_model1 = bmb.Model("count ~" +  " + ".join([c for c in bikes.columns if c!="count"]), data=bikes, family="negativebinomial")
+idata = bambi_model1.fit(idata_kwargs={'log_likelihood': True}, random_seed=seed)
 ```
 
 
@@ -182,8 +182,8 @@ idata = model.fit(idata_kwargs={'log_likelihood': True}, random_seed=seed)
 #| echo: false
 import os
 import arviz as az
-model = bmb.Model("count ~" +  " + ".join([c for c in bikes.columns if c!="count"]), data=bikes, family="negativebinomial")
-model.build()
+bambi_model1 = bmb.Model("count ~" +  " + ".join([c for c in bikes.columns if c!="count"]), data=bikes, family="negativebinomial")
+bambi_model1.build()
 
 if not os.path.exists("../models/prerun/variable_sel_02.nc"):
     idata.to_netcdf("../models/prerun/variable_sel_02.nc")
@@ -193,7 +193,7 @@ idata = az.from_netcdf("../models/prerun/variable_sel_02.nc")
 and then we use Kulprit to perform variable selection.
 
 ```{python}
-ppi = kpt.ProjectionPredictive(model, idata)
+ppi = kpt.ProjectionPredictive(bambi_model1, idata)
 ppi.project()
 kpt.plot_compare(ppi.compare(min_model_size=1));
 ```
@@ -203,7 +203,15 @@ And voilà! If we consider `hour_cos` and `hour_sin` as a single variable, then 
 
 ## Combining PyMC-BART and Kulprit
 
-Both methods are not necessarily competitors and there is room for collaboration. When this is useful is still open to research but we can think of some scenarios where this could be useful. For instance, we could use PyMC-BART to find the most relevant variables, according to the variable inclusion metric, and then use Kulprit to perform the projection and evaluation of those selected submodels. We could also use the posterior predictive samples from PyMC-BART instead of a GLM. The second option is not currently supported in Kulprit, but the first one is straightforward as the method project has a `user_terms` argument that allows us to specify the submodels that we want to project. Notice that if we provide the `user_terms` there is no search done, Kulprit will project and evaluate just the submodels we specify.
+Both methods are not necessarily competitors and there is room for interaction. For instance, we could use PyMC-BART to find the most relevant variables, according to the variable inclusion metric, and then use Kulprit to perform the projection and evaluation of those selected submodels. 
+
+```{python}
+terms = pmb.vi_to_kulprit(vi_results)
+ppi.project(user_terms=terms)
+```
+In this case, we are using the `vi_to_kulprit` function to convert the variable importance results from PyMC-BART into a list of submodels that Kulprit can use. And then we call the `project` method with the `user_terms` argument to specify the submodels we want to project and evaluate. Notice that if we provide the `user_terms` there is no search done, Kulprit will project and evaluate only the specified submodels.
+
+Of course, we can also specify the submodels manually. For instance, we could use the following list of submodels:
 
 ```{python}
 #| eval: false
@@ -217,9 +225,12 @@ terms = [["hour_cos", "hour_sin"],
 ppi.project(user_terms=terms)
 ```
 
-In the previous code block we have manually specfified the terms, but we can also ask PyMC-BART to return a list for us. 
-
+Another option is to use the results from the BART model as the reference model for Kulprit. One restriction is that the name used for the response variable in the BART model must be the same as the one used in the Bambi model.
 ```{python}
-pmb.vi_to_kulprit(vi_results)
-```
+#| eval: false
+with bart_model:
+    pm.sample_posterior_predictive(idata_bart, extend_inferencedata=True)
 
+ppi = kpt.ProjectionPredictive(model, idata_bart)
+ppi.project()
+```
