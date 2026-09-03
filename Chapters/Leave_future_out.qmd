@@ -1,0 +1,598 @@
+---
+image: ../social-card.png
+---
+
+# Approximate leave-future-out cross-validation for Bayesian time series models {#sec-lfo-cv}
+
+```{python}
+#| echo: false
+#| warning: false
+import numpy as np
+import matplotlib.pyplot as plt
+
+import arviz as az
+az.style.use("arviz-variat")
+
+plt.rcParams["figure.dpi"] = 75
+SEED = 5838296
+```
+
+Cross-validation asks a model to predict data that were not used to fit it. For a time series, however, which data are held out matters. If we remove an observation from the middle of a series while keeping later observations in the training data, information from the future can influence a prediction of the past. That setup can be useful for some missing-data problems, but it does not represent forecasting.
+
+Leave-future-out cross-validation (LFO-CV) preserves the ordering of the series. At each forecast origin, the model is conditioned only on observations available up to that point and is scored on observations that come next. Repeating this exercise over the observed history gives us a way to estimate how the model would have performed if we had used it prospectively.
+
+The main obstacle is computation. Exact LFO-CV requires fitting the model repeatedly as the training window grows. In this chapter, we demonstrate how to use the Pareto smoothed importance sampling (PSIS) approximation from @burkner_2020 to avoid most of those refits, building on the PSIS leave-one-out cross-validation (PSIS-LOO-CV) ideas from @sec-model-comparison. We walk through ArviZ's `lfo_cv()` function on the Lake Huron series, comparing exact and approximate LFO-CV for one-step and four-step forecasts and showing how a `SamplingWrapper` supplies the refitting logic. For theoretical background and details of the method, we recommend you read @burkner_2020 and references therein.
+
+## $M$-step-ahead predictions
+
+Suppose we have observed a series through time $i$ and want to predict what comes next. If we score only $y_{i+1}$, we have a one-step-ahead prediction. If we score the next $M$ observations, $y_{i+1}, \ldots, y_{i+M}$, we have an $M$-step-ahead prediction ($M$-SAP). We call $i$ the forecast origin. LFO-CV moves this origin through the observed series and repeatedly asks how well the model predicts the next $M$ observations given only the data that would have been available at that point in time.
+
+Early in a series there may not be enough information to fit the model well enough for a meaningful forecast. We therefore choose a minimum training size $L$. With $L = 10$, the first forecast origin is $i = 10$, and the first quantity we score begins at $y_{11}$. More generally, for a series $y = (y_1, y_2, \ldots, y_N)$, the predictive quantity at origin $i$ is
+
+$$
+p(y_{i+1:M} \mid y_{1:i}) = p(y_{i+1}, \ldots, y_{i+M} \mid y_1, \ldots, y_i)
+$$
+
+for every forecast origin $i \in \{L, \ldots, N - M\}$. The key restriction is that only $y_1, \ldots, y_i$ are available when the future block is scored. If $\theta$ denotes the model parameters, this predictive density averages over the posterior based on that truncated history,
+
+$$
+p(y_{i+1:M} \mid y_{1:i}) = \int p(y_{i+1:M} \mid y_{1:i}, \theta) \, p(\theta \mid y_{1:i}) \, d\theta.
+$$
+
+With posterior draws $(\theta_{1:i}^{(1)}, \ldots, \theta_{1:i}^{(S)})$, the integral is approximated by the usual Monte Carlo average,
+
+$$
+p(y_{i+1:M} \mid y_{1:i}) \approx \frac{1}{S} \sum_{s=1}^S p(y_{i+1:M} \mid y_{1:i}, \theta_{1:i}^{(s)}).
+$$
+
+Each forecast origin contributes one log predictive density, and summing those contributions gives the LFO-CV estimate of expected log predictive density (ELPD). Computing it exactly is conceptually simple. We fit the model to $y_{1:i}$, score the next $M$ observations, move the origin forward, and repeat. The expensive part is that every new origin requires a new posterior fit. For Bayesian time series models, that cost can quickly dominate the analysis.
+
+## Approximate $M$-step-ahead predictions with PSIS
+
+The approximation in @burkner_2020, which we refer to as PSIS-LFO-CV, avoids fitting a new posterior at every origin by reusing draws from the most recent refit. We begin with an exact fit to the first $L$ observations and call its endpoint $i^\star = L$. That posterior gives an exact prediction at the first forecast origin. As the origin advances beyond $i^\star$, we keep the same posterior draws and reweight them so that they approximate the posterior we would have obtained after including the newly observed data. The resulting predictive density is
+
+$$
+p(y_{i+1:M} \mid y_{1:i}) \approx \frac{\sum_{s=1}^S w_i^{(s)} \, p(y_{i+1:M} \mid y_{1:i}, \theta^{(s)})}{\sum_{s=1}^S w_i^{(s)}}.
+$$
+
+Here $\theta^{(s)} = \theta^{(s)}_{1:i^\star}$ are draws from the posterior at the last refit and $w_i^{(s)}$ are their PSIS weights. Before smoothing, the corresponding raw importance ratios compare the posterior implied by the first $i$ observations with the posterior from the last refit,
+
+$$
+r_i^{(s)} = \frac{f_{1:i}(\theta^{(s)})}{f_{1:i^\star}(\theta^{(s)})} \propto \prod_{j \in (i^\star + 1):i} p(y_j \mid y_{1:(j-1)}, \theta^{(s)}),
+$$
+
+where $f_{1:i} = p(\theta \mid y_{1:i})$. Only the observations added after $i^\star$ enter the product because they are exactly what distinguishes the target posterior from the posterior we actually sampled. The normalizing constants of the two posteriors are unknown, so the ratios are only known up to a constant and the calculation uses self-normalized importance sampling. PSIS then regularizes the largest ratios before they are used as weights.
+
+Reusing a posterior works only while it remains a reasonable proposal for the later posteriors. As the training window grows, the two distributions drift apart and the importance ratios become more variable, and the Pareto-$k$ diagnostic tells us when the approximation is becoming unreliable [@vehtari_2024], just as it does for PSIS-LOO-CV in @sec-efficient-loo-cv. Once $k$ crosses the threshold $\tau$, we refit the model through the current origin, set that point as the new $i^\star$, and continue from the fresh posterior. We use the same $\tau = 0.7$ that ArviZ applies to PSIS-LOO-CV, since @burkner_2020 showed in simulations that PSIS-LFO-CV is accurate for any threshold between $0.5$ and $0.7$ and does not need a stricter value. The computational gain comes from how long each refit remains useful before another one is needed.
+
+## Autoregressive models
+
+Our example uses an autoregressive (AR) model, so it helps to briefly fix the notation. In an AR($p$) model, the current observation depends on the previous $p$ values of the series,
+
+$$
+y_t = \eta_t + \sum_{k=1}^p \varphi_k y_{t-k} + \varepsilon_t,
+$$
+
+where $\eta_t$ collects any non-autoregressive part of the mean, $\varphi_k$ controls the contribution of lag $k$, and $\varepsilon_t$ is an innovation term. With Gaussian innovations, conditioning on the previous $p$ observations turns the model into an ordinary normal likelihood whose mean is determined by those lags. That conditional form is useful below because it lets us evaluate the log density for any forecast origin directly.
+
+## Lake Huron data and AR(4) model
+
+We now put the method into a concrete workflow using the Lake Huron series. It contains 98 annual water-level measurements, in feet, spanning 1875 through 1972.
+
+### Loading and preparing the data
+
+We first load the observations and inspect the series itself.
+
+```{python}
+import pandas as pd
+
+lake_huron = pd.read_csv("../data/lake_huron.csv")
+y = lake_huron["value"].to_numpy()
+years = lake_huron["time"].to_numpy()
+N = len(y)
+```
+
+```{python}
+#| label: fig-lake-huron
+#| fig-cap: "Annual water level of Lake Huron from 1875 to 1972"
+_, ax = plt.subplots(figsize=(8, 3.5))
+ax.plot(years, y, "o", ms=3)
+ax.set(xlabel="Year", ylabel="Water level (ft)")
+```
+
+The year-to-year changes in @fig-lake-huron are clearly persistent, and the later part of the series tends to sit below the earlier part. We model that local dependence with four autoregressive lags and write the process as fluctuations around a mean level $\mu$,
+
+$$
+y_t \sim \mathcal{N}\Big(\mu + \sum_{k=1}^{4} \rho_k (y_{t-k} - \mu), \, \sigma^2\Big).
+$$
+
+We use $\rho_k \sim \mathcal{N}(0, 0.5^2)$, $\mu \sim t_3(\text{median}(y), 2.5)$, and $\sigma \sim t_3^{+}(2.5)$. Centering the lagged observations around $\mu$ makes $\mu$ the long-run level when the autoregressive dynamics are stable. The first four measurements provide the initial lag values rather than likelihood contributions, so the modeled responses begin at $y_5$. We construct the lag matrix once, with one column per lag, and reuse it for the full fit and every later refit.
+
+```{python}
+P = 4
+lags = np.column_stack([y[P - k:N - k] for k in range(1, P + 1)])
+coords = {"lag": np.arange(1, P + 1), "time": np.arange(P, N)}
+```
+
+### Model specification and fitting
+
+We can fit the model with PyMC, Bambi, or CmdStanPy. In PyMC, we place the lags and response in data containers so that a refit can shorten the observed window by updating those containers instead of rebuilding the model. Bambi has no autoregressive term, but conditional on the lags the model is a linear regression on lagged values, so we fit it with the lags as predictors and Bambi's default priors for the intercept and $\sigma$, then express the posterior in terms of $\mu$, $\rho$, and $\sigma$. Every tab ends with the same posterior variables and log-likelihood layout.
+
+::: {.panel-tabset group="ppl"}
+## PyMC
+
+```{python}
+#| eval: false
+import pymc as pm
+
+with pm.Model(coords=coords) as ar_model:
+    lag_data = pm.Data("lags", lags, dims=("time", "lag"))
+    y_data = pm.Data("y_obs", y[P:], dims="time")
+    mu = pm.StudentT("mu", nu=3, mu=np.median(y), sigma=2.5)
+    rho = pm.Normal("rho", mu=0, sigma=0.5, dims="lag")
+    sigma = pm.HalfStudentT("sigma", nu=3, sigma=2.5)
+    mean = mu + pm.math.dot(lag_data - mu, rho)
+    pm.Normal("y", mu=mean, sigma=sigma, observed=y_data, dims="time")
+
+    idata = pm.sample(
+        draws=1000,
+        tune=1000,
+        chains=4,
+        target_accept=0.99,
+        random_seed=SEED + N
+    )
+    pm.compute_log_likelihood(idata)
+```
+
+## Bambi
+
+```{python}
+#| eval: false
+import bambi as bmb
+import xarray as xr
+
+lag_df = pd.DataFrame(lags, columns=[f"lag{k}" for k in range(1, P + 1)])
+lag_df["y"] = y[P:]
+priors = {f"lag{k}": bmb.Prior("Normal", mu=0, sigma=0.5) for k in range(1, P + 1)}
+
+
+def to_ar_params(idata):
+    """Express the regression posterior in terms of mu, rho, and sigma."""
+    post = idata.posterior
+    rho = xr.concat([post[f"lag{k}"] for k in range(1, P + 1)], dim="lag")
+    post["rho"] = rho.assign_coords(lag=np.arange(1, P + 1)).transpose("chain", "draw", "lag")
+    post["mu"] = post["Intercept"] / (1 - post["rho"].sum("lag"))
+    return idata
+
+
+model = bmb.Model("y ~ lag1 + lag2 + lag3 + lag4", data=lag_df, priors=priors)
+
+idata = model.fit(
+    draws=1000,
+    tune=1000,
+    chains=4,
+    target_accept=0.99,
+    random_seed=SEED + N
+)
+model.compute_log_likelihood(idata)
+idata = to_ar_params(idata)
+log_lik = idata.log_likelihood.ds.rename({"__obs__": "time"})
+idata["log_likelihood"] = log_lik.assign_coords(time=np.arange(P, N))
+```
+
+## CmdStanPy
+
+```{.python}
+from cmdstanpy import CmdStanModel
+
+stan_code = """
+data {
+  int<lower=0> N;
+  int<lower=1> P;
+  vector[N] y;
+  matrix[N, P] lags;
+  real y_median;
+}
+parameters {
+  real mu;
+  vector[P] rho;
+  real<lower=0> sigma;
+}
+model {
+  mu ~ student_t(3, y_median, 2.5);
+  rho ~ normal(0, 0.5);
+  sigma ~ student_t(3, 0, 2.5);
+  y ~ normal(mu + (lags - mu) * rho, sigma);
+}
+generated quantities {
+  vector[N] log_lik;
+  {
+    vector[N] mean = mu + (lags - mu) * rho;
+    for (n in 1:N)
+      log_lik[n] = normal_lpdf(y[n] | mean[n], sigma);
+  }
+}
+"""
+
+with open("lake_huron_ar4.stan", "w") as f:
+    f.write(stan_code)
+
+stan_model = CmdStanModel(stan_file="lake_huron_ar4.stan")
+y_median = float(np.median(y))
+inits = {"mu": y_median, "rho": [0.0] * P, "sigma": float(np.std(y))}
+stan_data = {"N": N - P, "P": P, "y": y[P:], "lags": lags, "y_median": y_median}
+
+fit = stan_model.sample(
+    data=stan_data,
+    chains=4,
+    iter_warmup=1000,
+    iter_sampling=1000,
+    adapt_delta=0.99,
+    seed=SEED + N,
+    inits=inits,
+    show_progress=False,
+)
+
+idata = az.from_cmdstanpy(
+    posterior=fit,
+    log_likelihood={"y": "log_lik"},
+    observed_data={"y": y[P:]},
+    coords=coords,
+    dims={"rho": ["lag"], "y": ["time"]},
+)
+```
+:::
+
+```{python}
+#| echo: false
+import pymc as pm
+
+with pm.Model(coords=coords) as ar_model:
+    lag_data = pm.Data("lags", lags, dims=("time", "lag"))
+    y_data = pm.Data("y_obs", y[P:], dims="time")
+    mu = pm.StudentT("mu", nu=3, mu=np.median(y), sigma=2.5)
+    rho = pm.Normal("rho", mu=0, sigma=0.5, dims="lag")
+    sigma = pm.HalfStudentT("sigma", nu=3, sigma=2.5)
+    mean = mu + pm.math.dot(lag_data - mu, rho)
+    pm.Normal("y", mu=mean, sigma=sigma, observed=y_data, dims="time")
+
+idata = az.convert_to_datatree("../models/prerun/lfo_cv_00.nc")
+```
+
+```{python}
+az.summary(idata.posterior.ds, var_names=["mu", "rho", "sigma"])
+```
+
+The posterior summary suggests that most of the serial dependence is concentrated in the first two lags, while the third and fourth coefficients are much smaller. Before turning to cross-validation, we make a simple in-sample check by drawing the one-step conditional predictive distribution for each modeled observation using its observed lags.
+
+```{python}
+#| label: fig-lake-huron-fit
+#| fig-cap: "Posterior mean (line) and 90% predictive intervals (band) of the AR(4) model against the observed water levels (points)"
+import xarray as xr
+
+y_da = xr.DataArray(y, dims=["time"], coords={"time": np.arange(N)})
+lags_da = xr.DataArray(lags, dims=["time", "lag"], coords=coords)
+
+post = idata.posterior
+mean = post["mu"] + xr.dot(lags_da - post["mu"], post["rho"], dim="lag")
+rng = np.random.default_rng(SEED)
+noise = xr.DataArray(rng.standard_normal(mean.shape), dims=mean.dims)
+pred = mean + post["sigma"] * noise
+q05, q95 = pred.quantile([0.05, 0.95], dim=["chain", "draw"])
+
+_, ax = plt.subplots(figsize=(8, 3.5))
+ax.fill_between(years[P:], q05, q95, alpha=0.3)
+ax.plot(years[P:], mean.mean(["chain", "draw"]))
+ax.plot(years, y, "o", ms=3, color="black")
+ax.set(xlabel="Year", ylabel="Water level (ft)")
+```
+
+The conditional predictions in @fig-lake-huron-fit broadly track the observed series and cover most of the measurements. This is useful as a basic model check, but it is not yet a forecasting assessment because every prediction uses a posterior that has already seen the whole series. LFO-CV asks the harder question of how the model performs when it is repeatedly fit using only the history available at each forecast origin.
+
+### Preparing the data for LFO-CV
+
+Before calling `lfo_cv()`, we align the groups of the `DataTree` with the original time index. The fitted likelihood begins at the fifth measurement because the first four values are used only as lags, whereas LFO-CV works along the time axis of the full series. We therefore reindex the log-likelihood to all 98 time points and fill the first four positions with zeros. These placeholder values never contribute to the LFO-CV score because our first forecast origin will occur much later. We also store the complete response series in `observed_data`, where the sampling wrapper reads it.
+
+```{python}
+idata["log_likelihood"] = idata.log_likelihood.ds.reindex(time=np.arange(N), fill_value=0.0)
+idata["observed_data"] = y_da.to_dataset(name="y")
+```
+
+### PSIS-LOO-CV for comparison
+
+We set $L = 20$, so every forecast is based on at least 20 years of history. Before computing LFO-CV, we also calculate PSIS-LOO-CV over the same set of scored observations, $y_{21}, \ldots, y_{98}$. This baseline is not a genuine forecasting estimate because PSIS-LOO-CV can use observations that occur after the held-out year, but comparing the two makes the effect of respecting temporal order visible.
+
+```{python}
+L = 20
+
+loo_result = az.loo(idata.sel(time=slice(L, N - 1)), var_name="y")
+loo_result
+```
+
+## The sampling wrapper
+
+`lfo_cv()` is intentionally agnostic about how a probabilistic programming library fits a model. What it needs from us are two model-specific operations, refitting the model using the history through a requested cutoff and evaluating future observations under the resulting posterior. ArviZ obtains those operations through a `SamplingWrapper`, the same abstraction used elsewhere for refit-based cross-validation. We will define the two pieces first and then connect them in the wrapper.
+
+A refit only requires fitting the same model to the first `cutoff` observations. With PyMC that means replacing the data containers with the appropriate prefix of the series and sampling again, while Bambi and CmdStanPy fit the model to the shortened data directly.
+
+::: {.panel-tabset group="ppl"}
+## PyMC
+
+```{python}
+#| eval: false
+def fit_ar(cutoff):
+    """Fit the AR(4) model to the first cutoff observations."""
+    with ar_model:
+        pm.set_data(
+            {"lags": lags[:cutoff - P], "y_obs": y[P:cutoff]},
+            coords={"time": np.arange(P, cutoff)},
+        )
+        return pm.sample(
+            draws=1000,
+            tune=1000,
+            chains=4,
+            target_accept=0.99,
+            random_seed=SEED + cutoff,
+            progressbar=False
+        )
+```
+
+## Bambi
+
+```{python}
+#| eval: false
+def fit_ar(cutoff):
+    """Fit the AR(4) model to the first cutoff observations."""
+    model = bmb.Model("y ~ lag1 + lag2 + lag3 + lag4", data=lag_df.iloc[:cutoff - P], priors=priors)
+    idata = model.fit(
+        draws=1000,
+        tune=1000,
+        chains=4,
+        target_accept=0.99,
+        random_seed=SEED + cutoff,
+        progressbar=False
+    )
+    return to_ar_params(idata)
+```
+
+## CmdStanPy
+
+```{.python}
+def fit_ar(cutoff):
+    """Fit the AR(4) model to the first cutoff observations."""
+    stan_data = {"N": cutoff - P, "P": P, "y": y[P:cutoff], "lags": lags[:cutoff - P], "y_median": y_median}
+    fit = stan_model.sample(
+        data=stan_data,
+        chains=4,
+        iter_warmup=1000,
+        iter_sampling=1000,
+        adapt_delta=0.99,
+        seed=SEED + cutoff,
+        inits=inits,
+        show_progress=False,
+    )
+    return az.from_cmdstanpy(posterior=fit, coords={"lag": np.arange(1, P + 1)}, dims={"rho": ["lag"]})
+```
+:::
+
+```{python}
+#| echo: false
+refits = xr.open_dataset("../models/prerun/lfo_cv_01.nc")
+
+def fit_ar(cutoff):
+    draws = refits.sel(cutoff=cutoff)
+    return az.from_dict(
+        {"posterior": {var: draws[var].values for var in ["mu", "rho", "sigma"]}},
+        dims={"rho": ["lag"]},
+        coords={"lag": np.arange(1, P + 1)},
+    )
+```
+
+The second ingredient is the pointwise log density. Because the AR(4) likelihood is Gaussian conditional on the four observed lags, we can evaluate it directly from posterior draws of $\mu$, $\rho$, and $\sigma$ for any requested set of time points.
+
+```{python}
+def ar_log_lik(idata, times):
+    """Log density of y_t given its four lags for every posterior draw."""
+    post = idata.posterior
+    mean = post["mu"] + xr.dot(lags_da.sel(time=times) - post["mu"], post["rho"], dim="lag")
+    resid = (y_da.sel(time=times) - mean) / post["sigma"]
+    return -0.5 * np.log(2 * np.pi) - np.log(post["sigma"]) - 0.5 * resid ** 2
+```
+
+The wrapper now connects these pieces to the interface expected by `lfo_cv()`. `sel_observations()` separates the historical training window from observations at and after the forecast origin. `sample()` performs the refit, `get_inference_data()` exposes its posterior, and `log_likelihood__i()` evaluates the excluded observations under that posterior. 
+
+`log_likelihood__i()` must return one value for every observation from the forecast origin to the end of the series, not only the next $M$ forecasted values, because PSIS-LFO-CV constructs the importance ratios from all observations accumulated since the most recent refit. `lfo_cv()` enforces this for both `method="exact"` and `method="approx"` and raises an error if the returned block is shorter.
+
+```{python}
+class LakeHuronWrapper(az.SamplingWrapper):
+    def __init__(self, idata):
+        super().__init__(model=None, idata_orig=idata)
+        self.y = idata.observed_data["y"]
+
+    def sel_observations(self, idx):
+        cutoff = idx[0]
+        return self.y.isel(time=slice(0, cutoff)), self.y.isel(time=idx)
+
+    def sample(self, train_data):
+        return fit_ar(len(train_data))
+
+    def get_inference_data(self, fitted_model):
+        return fitted_model
+
+    def log_likelihood__i(self, excluded_obs, idata__i):
+        return ar_log_lik(idata__i, excluded_obs["time"].values)
+```
+
+## One-step-ahead predictions
+
+We begin with a forecast horizon of one, the 1-SAP case. At each origin the model is asked to score only the next observation, so each pointwise contribution corresponds to a single year rather than a block of future years. This is also the cleanest setting in which to compare the PSIS approximation with exact refitting.
+
+### Exact LFO-CV
+
+We first run the exact calculation to establish a benchmark for the approximation. With `method="exact"`, `lfo_cv()` fits a new posterior at every forecast origin from $L$ through $N - 1$. For this series, that means 78 separate fits.
+
+```{python}
+#| warning: false
+lfo_exact_1sap = az.lfo_cv(
+    idata,
+    LakeHuronWrapper(idata),
+    min_observations=L,
+    forecast_horizon=1,
+    var_name="y",
+    method="exact",
+    pointwise=True,
+)
+
+lfo_exact_1sap
+```
+
+Here the reported number of observations is the number of forecast origins, not the length of the original series. The one-step LFO-CV ELPD is about -92.0, compared with about -88.3 for PSIS-LOO-CV. PSIS-LOO-CV is allowed to condition on nearly the entire series, including years that occur after the held-out observation, whereas LFO-CV only has access to the past. We should therefore expect PSIS-LOO-CV to look somewhat more optimistic for this forecasting task.
+
+### Approximate LFO-CV with PSIS
+
+We can now ask how many of those 78 fits PSIS allows us to avoid. Setting `method="approx"` reuses the latest posterior until its Pareto-$k$ estimate exceeds the chosen threshold, here $0.7$.
+
+```{python}
+#| warning: false
+k_thres = 0.7
+
+lfo_approx_1sap = az.lfo_cv(
+    idata,
+    LakeHuronWrapper(idata),
+    min_observations=L,
+    forecast_horizon=1,
+    var_name="y",
+    method="approx",
+    k_threshold=k_thres,
+    pointwise=True,
+)
+
+lfo_approx_1sap
+```
+
+The `refits` attribute records the forecast origins where a fresh posterior was required.
+
+```{python}
+lfo_approx_1sap.refits
+```
+
+PSIS-LFO-CV needs only two additional refits, at observations 42 and 60, after the initial fit at $L = 20$, so three posterior fits replace the 78 used by exact LFO-CV. Forecasts at the refit origins are exact because a new posterior is already being sampled there. At every other origin, the final Pareto-$k$ value stays below $0.7$, and @fig-lfo-khat-1sap shows that only a handful approach the 0.5 to 0.6 range.
+
+```{python}
+#| label: fig-lfo-khat-1sap
+#| fig-cap: "Pareto-$k$ estimates for the approximate one-step-ahead predictions, with no estimate at the initial fit or the two refit origins because a fresh posterior is sampled there"
+az.plot_khat(lfo_approx_1sap, threshold=k_thres);
+```
+
+The aggregate PSIS-LFO-CV ELPD, about -92.3, is very close to the exact result despite using only three fits. The pointwise comparison in @fig-lfo-1sap tells the same story, with the approximate contributions staying close to the diagonal rather than hiding a few large errors behind a similar total.
+
+```{python}
+#| label: fig-lfo-1sap
+#| fig-cap: "Exact versus approximate pointwise ELPD values for one-step-ahead predictions"
+_, ax = plt.subplots(figsize=(5, 5))
+lims = [lfo_exact_1sap.elpd_i.min() - 0.3, lfo_exact_1sap.elpd_i.max() + 0.3]
+ax.plot(lims, lims, color="gray")
+ax.plot(lfo_approx_1sap.elpd_i, lfo_exact_1sap.elpd_i, "o", ms=4)
+ax.set(xlabel="Approximate ELPD", ylabel="Exact ELPD")
+```
+
+The maximum and mean absolute pointwise differences give a numerical summary of the same comparison.
+
+```{python}
+diff_1sap = np.abs(lfo_approx_1sap.elpd_i - lfo_exact_1sap.elpd_i)
+print(f"Max diff:  {diff_1sap.max().item():.2f}")
+print(f"Mean diff: {diff_1sap.mean().item():.3f}")
+```
+
+## Four-step-ahead predictions
+
+We now increase the forecast horizon to four years, the 4-SAP case. The mechanics of `lfo_cv()` do not change, but each forecast origin now contributes the joint log predictive density of four consecutive observations. The PSIS weights are determined by how far the current training posterior has moved from the most recent refit, not by the forecast horizon. For the same sequence of origins, we therefore expect the refit schedule to remain unchanged even though the quantity being scored is different.
+
+```{python}
+#| warning: false
+M = 4
+
+lfo_exact_4sap = az.lfo_cv(
+    idata,
+    LakeHuronWrapper(idata),
+    min_observations=L,
+    forecast_horizon=M,
+    var_name="y",
+    method="exact",
+    pointwise=True,
+)
+
+lfo_exact_4sap
+```
+
+The approximate computation uses the same threshold as before.
+
+```{python}
+#| warning: false
+lfo_approx_4sap = az.lfo_cv(
+    idata,
+    LakeHuronWrapper(idata),
+    min_observations=L,
+    forecast_horizon=M,
+    var_name="y",
+    method="approx",
+    k_threshold=k_thres,
+    pointwise=True,
+)
+
+lfo_approx_4sap
+```
+
+Because four future observations must remain after each origin, the final usable origin is observation 94. This leaves 75 forecast origins in total. As expected, the approximate calculation requests new fits at the same origins as in the one-step case.
+
+```{python}
+lfo_approx_4sap.refits
+```
+
+The four-step PSIS-LFO-CV ELPD remains close to the exact value, but the pointwise agreement is visibly looser in @fig-lfo-4sap than it was for one-step prediction. A longer block gives more opportunity for small differences in predictive density to accumulate. This is especially relevant for autoregressive models, where predictions later in a block depend on the treatment of earlier values, and @burkner_2020 discuss this behavior in more detail.
+
+```{python}
+#| label: fig-lfo-4sap
+#| fig-cap: "Exact versus approximate pointwise ELPD values for four-step-ahead predictions"
+_, ax = plt.subplots(figsize=(5, 5))
+lims = [lfo_exact_4sap.elpd_i.min() - 0.3, lfo_exact_4sap.elpd_i.max() + 0.3]
+ax.plot(lims, lims, color="gray")
+ax.plot(lfo_approx_4sap.elpd_i, lfo_exact_4sap.elpd_i, "o", ms=4)
+ax.set(xlabel="Approximate ELPD", ylabel="Exact ELPD")
+```
+
+```{python}
+diff_4sap = np.abs(lfo_approx_4sap.elpd_i - lfo_exact_4sap.elpd_i)
+print(f"Max diff:  {diff_4sap.max().item():.2f}")
+print(f"Mean diff: {diff_4sap.mean().item():.3f}")
+```
+
+## Two ways to score a block of predictions
+
+There is a modeling choice hidden inside every $M$-step score for $M > 1$. The chain rule factorizes the joint predictive density of a block into one term per observation,
+
+$$
+p(y_{i+1:M} \mid y_{1:i}, \theta) = \prod_{m=1}^{M} p(y_{i+m} \mid y_{1:i+m-1}, \theta),
+$$
+
+and for our AR(4) model each factor is the normal density with mean $\mu + \sum_{k} \rho_k (y_{i+m-k} - \mu)$. Every lag in that mean is an observed value, including the lags that fall inside the block once $m > 1$. This is what `lfo_cv()` computes. For each posterior draw it sums the four conditional log densities of the observed block, and the pointwise ELPD is the log average over draws, or the weighted average when PSIS weights are in play. We refer to this as the conditional convention, since the block is scored exactly as the model's joint density of what was actually observed.
+
+Other software scores the block differently. `brms`, for example, treats the held-out responses as missing when computing `log_lik(fit, newdata, oos = oos)` and imputes them with posterior predictive draws inside the AR recursion. Writing $\tilde{y}^{(s)}_{i+1:i+m-1}$ for the values simulated from draw $\theta^{(s)}$ up to step $m$, the block is scored as
+
+$$
+p(y_{i+1:M} \mid y_{1:i}) \approx \frac{1}{S} \sum_{s=1}^S \prod_{m=1}^{M} p\big(y_{i+m} \mid y_{1:i}, \tilde{y}^{(s)}_{i+1:i+m-1}, \theta^{(s)}\big).
+$$
+
+Later observations in the block are evaluated against means built from simulated rather than observed lags, so the predictive uncertainty compounds along the forecast path in the same way it would for a genuine forecast issued at the origin. We refer to this as the forecasting convention. For this series it produces much lower ELPD values, roughly -405 for exact 4-SAP and -409 for PSIS-LFO-CV, compared with -349.6 and -350.9 under the conditional convention.
+
+The two conventions agree whenever $M = 1$, since there are no simulated lags, and for any model whose likelihood does not depend on lagged responses. For $M > 1$ in autoregressive models they answer different questions. The conditional convention asks how well the model explains the joint outcome of the block, while the forecasting convention asks how well a forecast issued at the origin would have fared. Both are legitimate, but their ELPD values should not be compared with each other. The forecasting convention can be reproduced with `lfo_cv()` for exact LFO-CV by simulating the block inside `log_likelihood__i()`, but it cannot be combined with the PSIS approximation, because the importance ratios need the conditional densities of the observed series.
+
+## Practical considerations
+
+The minimum training size $L$ is part of the predictive question, not just a computational setting. It should be large enough that a forecast is scientifically meaningful, but every observation used to build that initial history is excluded from the LFO-CV score. Increasing $L$ therefore trades a more mature initial fit for fewer forecast origins and greater uncertainty in the overall ELPD estimate.
+
+The Pareto threshold controls a different tradeoff. The default value of $0.7$ is supported by the simulations in @burkner_2020 and usually avoids unnecessary refits. Lowering it to a value such as $0.6$ is more conservative and costs a few extra refits, although @burkner_2020 found no accuracy gain from thresholds below $0.7$ in their simulations. If PSIS-LFO-CV needs a new fit at more than half of the forecast origins, `lfo_cv()` warns that the approximation is providing little computational advantage. In that situation, exact LFO-CV may be the simpler choice.
+
+The forecast horizon also determines the unit being scored. Each element of `elpd_i` is the joint log predictive density for one $M$-observation block identified by its forecast origin. Changing $M$ changes that quantity, and changing $L$ changes which origins are included. Results with different values of $M$ or $L$ are therefore not on the same footing. For the same reason, `compare()` does not combine LFO-CV results with ordinary PSIS-LOO-CV results. When comparing several time series models, use the same $L$, forecast horizon, and scoring convention for all of them.
+
+LFO-CV is useful when the prediction task itself is ordered in time, and PSIS makes that validation strategy practical when successive training posteriors are similar enough to reuse. The Pareto-$k$ values are what let us take advantage of that similarity without assuming it blindly. We reuse the current fit while the approximation is reliable and refit when it is not.
