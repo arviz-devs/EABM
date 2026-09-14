@@ -21,7 +21,7 @@ Cross-validation asks a model to predict data that were not used to fit it. For 
 
 Leave-future-out cross-validation (LFO-CV) preserves the ordering of the series. At each forecast origin, the model is conditioned only on observations available up to that point and is scored on observations that come next. Repeating this exercise over the observed history gives us a way to estimate how the model would have performed if we had used it prospectively.
 
-The main obstacle is computation. Exact LFO-CV requires fitting the model repeatedly as the training window grows. In this chapter, we demonstrate how to use the Pareto smoothed importance sampling (PSIS) approximation from @burkner_2020 to avoid most of those refits, building on the PSIS leave-one-out cross-validation (PSIS-LOO-CV) ideas from @sec-model-comparison. We walk through ArviZ's `lfo_cv()` function on the Lake Huron series, comparing exact and approximate LFO-CV for one-step and four-step forecasts and showing how a `SamplingWrapper` supplies the refitting logic. For theoretical background and details of the method, we recommend you read @burkner_2020 and references therein.
+The main obstacle is computation. Exact LFO-CV requires fitting the model repeatedly as the training window grows. In this chapter, we demonstrate how to use the Pareto smoothed importance sampling (PSIS) approximation from @burkner_2020 to avoid most of those refits, building on the PSIS leave-one-out cross-validation (PSIS-LOO-CV) ideas from @sec-model-comparison. We walk through ArviZ's `lfo_cv()` function on the Lake Huron series, comparing exact and approximate LFO-CV for one-step and four-step forecasts and showing how a `SamplingWrapper` supplies the refitting logic. For theoretical background and details of the method, we recommend you read @burkner_2020 and references therein. This example is adapted from the [leave-future-out vignette](https://mc-stan.org/loo/articles/loo2-lfo.html) in the loo package documentation.
 
 ## $M$-step-ahead predictions
 
@@ -116,7 +116,7 @@ coords = {"lag": np.arange(1, P + 1), "time": np.arange(P, N)}
 
 ### Model specification and fitting
 
-We can fit the model with PyMC, Bambi, or CmdStanPy. In PyMC, we place the lags and response in data containers so that a refit can shorten the observed window by updating those containers instead of rebuilding the model. Bambi has no autoregressive term, but conditional on the lags the model is a linear regression on lagged values, so we fit it with the lags as predictors and Bambi's default priors for the intercept and $\sigma$, then express the posterior in terms of $\mu$, $\rho$, and $\sigma$. Every tab ends with the same posterior variables and log-likelihood layout.
+We can fit the model with PyMC, Bambi, or CmdStanPy. In PyMC, we place the lags and response in data containers so that a refit can shorten the observed window by updating those containers instead of rebuilding the model. Bambi has no autoregressive term, but conditional on the lags the model is a linear regression on lagged values, so we fit it with the lags as predictors and Bambi's default priors for the intercept and $\sigma$, then express the posterior in terms of $\mu$, $\rho$, and $\sigma$.
 
 ::: {.panel-tabset group="ppl"}
 ## PyMC
@@ -399,7 +399,7 @@ def ar_log_lik(idata, times):
     return -0.5 * np.log(2 * np.pi) - np.log(post["sigma"]) - 0.5 * resid ** 2
 ```
 
-The wrapper now connects these pieces to the interface expected by `lfo_cv()`. `sel_observations()` separates the historical training window from observations at and after the forecast origin. `sample()` performs the refit, `get_inference_data()` exposes its posterior, and `log_likelihood__i()` evaluates the excluded observations under that posterior. 
+The wrapper now connects these pieces to the interface expected by `lfo_cv()`. `sel_observations()` separates the historical training window from observations at and after the forecast origin. `sample()` performs the refit, `get_inference_data()` exposes its posterior, and `log_likelihood__i()` evaluates the excluded observations under that posterior.
 
 `log_likelihood__i()` must return one value for every observation from the forecast origin to the end of the series, not only the next $M$ forecasted values, because PSIS-LFO-CV constructs the importance ratios from all observations accumulated since the most recent refit. `lfo_cv()` enforces this for both `method="exact"` and `method="approx"` and raises an error if the returned block is shorter.
 
@@ -476,7 +476,7 @@ The `refits` attribute records the forecast origins where a fresh posterior was 
 lfo_approx_1sap.refits
 ```
 
-PSIS-LFO-CV needs only two additional refits, at observations 42 and 60, after the initial fit at $L = 20$, so three posterior fits replace the 78 used by exact LFO-CV. Forecasts at the refit origins are exact because a new posterior is already being sampled there. At every other origin, the final Pareto-$k$ value stays below $0.7$, and @fig-lfo-khat-1sap shows that only a handful approach the 0.5 to 0.6 range.
+PSIS-LFO-CV needs only two additional refits, at forecast origins 42 and 60, after the initial fit at $L = 20$, so three posterior fits replace the 78 used by exact LFO-CV. Forecasts at the refit origins are exact because a new posterior is already being sampled there. At every other origin, the final Pareto-$k$ value stays below $0.7$, and @fig-lfo-khat-1sap shows that only a handful approach the 0.5 to 0.6 range.
 
 ```{python}
 #| label: fig-lfo-khat-1sap
