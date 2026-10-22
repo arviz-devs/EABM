@@ -6,6 +6,15 @@ project:
 
 book:
   title: "Exploratory Analysis of Bayesian Models"
+  subtitle: "Visualization, diagnostics, model checking and comparison with ArviZ"
+  description: >
+    An online book about exploratory analysis of Bayesian models
+    and Bayesian workflow, from prior elicitation and predictive
+    checks to MCMC diagnostics, sensitivity analysis, PSIS-LOO-CV model
+    comparison, variable selection and communicating results. Examples
+    use ArviZ with PyMC, Stan, and other probabilistic programming
+    languages.
+  repo-url: https://github.com/arviz-devs/EABM
   author:
     - name: Osvaldo A. Martin 
       url: https://aloctavodia.github.io/
@@ -21,7 +30,7 @@ book:
       url: https://oriolabrilpla.cat/en/index.html
       affiliation: ArviZ
       affiliation-url: https://github.com/arviz-devs
-      orcid: https://orcid.org/0000-0002-1847-9481
+      orcid: 0000-0002-1847-9481
       city: Barcelona
       country: Spain
     - name: Jordan Deklerk
@@ -83,7 +92,8 @@ format:
     code-line-numbers: true
     number-sections: true
     number-offset: -1
-
+    google-scholar: true
+    twitter-card: true
 
 theme:
   light: cosmo
@@ -94,4 +104,3 @@ bibliography: references.bib
 citation:
   doi: "10.5281/zenodo.15127548"
   url: https://arviz-devs.github.io/EABM/
-google-scholar: true
