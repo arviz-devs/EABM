@@ -22,7 +22,7 @@ plt.rcParams["figure.dpi"] = 75
 seed = 793
 ```
 
-Variable selection refers to the process of identifying the most relevant variables in a model from a larger set of predictors. When performing this process we usually assume that variables contribute unevenly to the outcome and we want to identify the most important ones. Sometimes we also care about the order in which variables are included in the model [@piironen_2020; @tadesse_2022].
+Variable selection refers to the process of identifying the most relevant variables in a model from a larger set of predictors. When performing this process, we usually assume that variables contribute unevenly to the outcome, and we want to identify the most important ones. Sometimes we also care about the order in which variables are included in the model [@piironen_2020; @tadesse_2022].
 
 One might argue that "the most Bayesian thing to do" is to always include all conceivable variables in a model and then use the posterior distribution to make predictions or understand variable relationships. This approach is considered "most Bayesian" because it leverages the maximum amount of data and incorporates uncertainty about variable importance into the posterior distribution. However, being *more Bayesian than Bayes* is not always the best idea.
 
@@ -39,21 +39,21 @@ Variable selection becomes particularly useful when:
 
 ## Methods for variable selection
 
-There are many methods for variable selection we will restrict the discussion to two methods for variable selection. Even more, we are going to restrict the discussion to two particular implementations of these methods.
+There are many methods for variable selection; we will restrict the discussion to two methods for variable selection. Even more, we are going to restrict the discussion to two particular implementations of these methods.
 
 * The first one it's available in [PyMC-BART](https://www.pymc.io/projects/bart/en/latest/) [@quiroga_2022] and works for Bayesian Additive Regression Models.
-* The second method is implemented in [Kulprit](https://kulprit.readthedocs.io/en/latest/) and is currently compatible with a subset of models supported by Bambi. However, the aim is to extend compatibility to all models that can be handled by Bambi. A very accesible paper discussing this method in general and not the particular implementation in Kulprit is @mclatchie_2023.
+* The second method is implemented in [Kulprit](https://kulprit.readthedocs.io/en/latest/) and is currently compatible with a subset of models supported by Bambi. However, the aim is to extend compatibility to all models that can be handled by Bambi. A very accessible paper discussing this method in general, and not the particular implementation in Kulprit, is @mclatchie_2023.
 
 For both methods is of central importance to understand the concept of "reference model" as they work by comparing the reference model with a series of submodels. The reference model is the model that has all the variables we consider relevant _a priori_ and is the only model that we will fit using standard inference methods, like MCMC. In both methods, the submodels are created by selecting a subset of the covariates in the reference model. As the number of possible submodels grows very fast with the number of covariates, both methods can use different heuristics to select the most promising submodels to fit. The main difference between these two methods is how they approximate the posterior distribution of the submodels and how they use this approximation to select the most promising submodels. 
 
 
 ## Variable selection with BART
 
-BART is a non-parametric regression method based on a sum of trees, this is all we need to understand at the moment for details you can read the original paper [@chipman_2010] and the paper introducing PyMC-BART [@quiroga_2022]. 
+BART is a non-parametric regression method based on a sum of trees; this is all we need to understand at the moment. For details, you can read the original paper [@chipman_2010] and the paper introducing PyMC-BART [@quiroga_2022]. 
 
-Once we fit a BART model we can count the number of times each covariate is used in the posterior distribution of trees. This count can be used as a measure of the importance of the covariate. We will call this the "variable inclusion" measure, or VI for short, and is normalized to sum to 1. One heuristic is to start with a model with a single covariate and then add covariates in decreasing order of VI. This is fast as we only need to evaluate as many models as covariates we have. This is the default heuristic in PyMC-BART. Then to evaluate the quality of each submodel we compute the predictions from it and compare the predictions with those from the reference model. Currently, PyMC-BART uses the R², but other metrics could be used. For the submodels the predictions are computed by _pruning_ the trees in the posterior distribution of the reference model. That is we remove the trees the branches that do not use the covariates in the submodel. In this way, we approximate the posterior distribution of the submodel and we can compute the predictions without the need to refit each submodel. 
+Once we fit a BART model, we can count the number of times each covariate is used in the posterior distribution of trees. This count can be used as a measure of the importance of the covariate. We will call this the "variable inclusion" measure, or VI for short, and it is normalized to sum to 1. One heuristic is to start with a model with a single covariate and then add covariates in decreasing order of VI. This is fast as we only need to evaluate as many models as covariates we have. This is the default heuristic in PyMC-BART. Then, to evaluate the quality of each submodel, we compute the predictions from it and compare the predictions with those from the reference model. Currently, PyMC-BART uses the R², but other metrics could be used. For the submodels, the predictions are computed by _pruning_ the trees in the posterior distribution of the reference model. That is, we remove the trees and the branches that do not use the covariates in the submodel. In this way, we approximate the posterior distribution of the submodel, and we can compute the predictions without the need to refit each submodel. 
 
-Let's see one example. We have a [record](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset) of the number of rented bikes in a city and other variables like temperature, hour of the day etc. We want to model the relationship between temperature and the number of rented bikes. 
+Let's see one example. We have a [record](https://archive.ics.uci.edu/ml/datasets/bike+sharing+dataset) of the number of rented bikes in a city and other variables like temperature, hour of the day, etc. We want to model the relationship between temperature and the number of rented bikes. 
 
 Let's first load the data and define the variables.
 
@@ -64,7 +64,7 @@ Y = bikes.pop("count")
 X = bikes
 ```
 
-Now we define the BART model using PyMC-BART, for details on how to define BART models, please check the [PyMC-BART documentation](https://www.pymc.io/projects/bart/en/latest/)
+Now we define the BART model using PyMC-BART. For details on how to define BART models, please check the [PyMC-BART documentation](https://www.pymc.io/projects/bart/en/latest/)
 
 ```{python}
 with pm.Model() as bart_model:
@@ -76,7 +76,7 @@ with pm.Model() as bart_model:
                       compute_convergence_checks=False)
 ```
 
-We can now compute the variable importance and plot the results. The dashed lines represent the mean R² for the predictions from the reference model against themselves, the band captures the uncertainty. Then from left to right, we add covariates in decreasing order of VI. The first submodel is the one with only `hour`, the second is `hour + temperature`, the third is `hour + temperature + month` and so on.
+We can now compute the variable importance and plot the results. The dashed lines represent the mean R² for the predictions from the reference model against themselves; the band captures the uncertainty. Then from left to right, we add covariates in decreasing order of VI. The first submodel is the one with only `hour`, the second is `hour + temperature`, the third is `hour + temperature + month` and so on.
 
 ```{python}
 vi_results = pmb.compute_variable_importance(idata_bart, μ_, X);
@@ -84,13 +84,13 @@ ax = pmb.plot_variable_importance(vi_results, plot_kwargs={"rotation": 45}, figs
 ax.set_ylim(0.5, 1)
 ```
 
-We can see that the most relevant variable is `hour`, followed by `temperature` after that it is difficult to see any improvement and all differences appear to be noise.
+We can see that the most relevant variable is `hour`, followed by `temperature`; after that, it is difficult to see any improvement, and all differences appear to be noise.
 
 PyMC-BART offers two other heuristics. `"Backward"` and `VI-Backward`, the first one ignores the variable inclusion information and instead begins by computing all models with one variable less than the total, it removes the one with the lowest R² and then repeats the process until only one variable is left. This method is more expensive as it needs to compute a lot of models and it will not scale well with the number of covariates. It is only recommended when the result of the default `VI` method looks suspicious. For instance, we should always expect that the R² increases monotonically with the number of covariates, if this is not the case we should use the `Backward` method. The `VI-Backward` method is a blend of both heuristics. It performs a backward search but the variables with the highest variable inclusion are fixed during this search. How many variables we consider fixed is a user choice. This method is more expensive than the default `VI` method but less than the `Backward` method.
 
 ### Partial dependence plot
 
-Strictly speaking when we say we _prune_ the trees we are actually computing the partial dependence, that is, we are computing the expected value of the outcome for a subset of the covariates while averaging over the complement of that subset. With PyMC-BART we can visually inspect the partial dependence when excluding all but one covariate. As in the following figure:
+Strictly speaking, when we say we _prune_ the trees we are actually computing the partial dependence, that is, we are computing the expected value of the outcome for a subset of the covariates while averaging over the complement of that subset. With PyMC-BART we can visually inspect the partial dependence when excluding all but one covariate. As in the following figure:
 
 
 ```{python}
@@ -103,9 +103,9 @@ The dashed lines represent the null model, the more a variable deviates from the
 
 Kulprit is an implementation of a method known as projective inference. The main idea is that we can "project" the reference model's posterior into the submodels. Conceptually, it is easier to understand this projection as a procedure to find a posterior distribution for the submodel that will induce a posterior predictive distribution that is as close as possible to the posterior predictive distribution of the reference model. Intuitively, this makes sense in the context of variable selection, as we want to find a model that is smaller than the reference model but makes predictions that are as close as possible to it.  
 
-It turns out, that this can be achieved as an optimization problem. Let's see. 
+It turns out that this can be achieved as an optimization problem. Let's see. 
 
-Denote $\theta$ as the parameter of the posterior from the reference model, and $\theta_\perp$ those of the posterior for a particular submodel. Denote $\tilde{y}$ the samples from the posterior predictive distribution of the reference model $p(\tilde{y} \mid \theta)$. Then we want to find a posterior that induces the posterior predictive distribution $q(\tilde{y} \mid \theta_\perp)$. We want $p$ and $q$ to be as close as possible. As we already discussed in @sec-kl-divergence we can use the Kullback-Leibler divergence to measure how close two distributions are. Then we can write:
+Denote $\theta$ as the parameter of the posterior from the reference model, and $\theta_\perp$ as those of the posterior for a particular submodel. Denote $\tilde{y}$ as samples from the posterior predictive distribution of the reference model $p(\tilde{y} \mid \theta)$. Then we want to find a posterior that induces the posterior predictive distribution $q(\tilde{y} \mid \theta_\perp)$. We want $p$ and $q$ to be as close as possible. As we already discussed in @sec-kl-divergence we can use the Kullback-Leibler divergence to measure how close two distributions are. Then we can write:
 
 \begin{align}
 \mathbb{KL}\{p(\tilde{y}\mid\theta) \lVert q(\tilde{y})\} &= \mathbb{E}_{\tilde{y}\sim p(\tilde{y}\mid\theta)} \left[ \log \frac{p(\tilde{y}\mid\theta)}{q(\tilde{y}\mid\theta_\perp)} \right] \\
@@ -113,7 +113,7 @@ Denote $\theta$ as the parameter of the posterior from the reference model, and 
 &\propto - \mathbb{E}_{\tilde{y}\sim p(\tilde{y}\mid\theta)} \left[ \log q(\tilde{y}\mid\theta_\perp)\right]
 \end{align}
 
-In the proposed approach $\log q(\tilde{y} \mid \theta_\perp)$ is the log-likelihood of our model evaluated with respect to samples from the posterior predictive distribution $\tilde{y}\sim p(\tilde{y}\mid\theta)$. Thus to minimize the KL divergence we can maximize the model's log-likelihood with respect to the posterior predictive samples from the reference model. This is the optimization problem we need to solve to find the posterior distribution of the submodel.
+In the proposed approach, $\log q(\tilde{y} \mid \theta_\perp)$ is the log-likelihood of our model evaluated with respect to samples from the posterior predictive distribution $\tilde{y}\sim p(\tilde{y}\mid\theta)$. Thus, to minimize the KL divergence, we can maximize the model's log-likelihood with respect to the posterior predictive samples from the reference model. This is the optimization problem we need to solve to find the posterior distribution of the submodel.
 
 Let's use Kulprit to perform variable selection on the same dataset we used for PyMC-BART.
 
@@ -144,14 +144,14 @@ idata = az.from_netcdf("../models/prerun/variable_sel_01.nc")
 ```
 
 
-To use Kulprit we first instantiate the `ProjectionPredictive` class and then call the `project` method, which is the one doing all the hard work.
+To use Kulprit, we first instantiate the `ProjectionPredictive` class and then call the `project` method, which is the one doing all the hard work.
 
 ```{python}
 ppi = kpt.ProjectionPredictive(bambi_model0, idata)
 ppi.project()
 ```
 
-Once this is finished we can inspect the `ppi` object manually, but a figure is usually a better idea. By default, the `compare` function plots all the models, including the intercept-only model, i.e. a model without any covariate. In the following block of code, we are asking to omit this model. 
+Once this is finished, we can inspect the `ppi` object manually, but a figure is usually a better idea. By default, the `compare` function plots all the models, including the intercept-only model, i.e., a model without any covariate. In the following block of code, we are asking to omit this model. 
 
 ```{python}
 kpt.plot_compare(ppi.compare(min_model_size=1));
@@ -205,13 +205,14 @@ And voilà! If we consider `hour_cos` and `hour_sin` as a single variable, then 
 
 ## Combining PyMC-BART and Kulprit
 
-Both methods are not necessarily competitors and there is room for interaction. For instance, we could use PyMC-BART to find the most relevant variables, according to the variable inclusion metric, and then use Kulprit to perform the projection and evaluation of those selected submodels. 
+Both methods are not necessarily competitors, and there is room for interaction. For instance, we could use PyMC-BART to find the most relevant variables, according to the variable inclusion metric, and then use Kulprit to perform the projection and evaluation of those selected submodels. 
 
 ```{python}
+#| eval: false
 terms = pmb.vi_to_kulprit(vi_results)
 ppi.project(user_terms=terms)
 ```
-In this case, we are using the `vi_to_kulprit` function to convert the variable importance results from PyMC-BART into a list of submodels that Kulprit can use. And then we call the `project` method with the `user_terms` argument to specify the submodels we want to project and evaluate. Notice that if we provide the `user_terms` there is no search done, Kulprit will project and evaluate only the specified submodels.
+In this case, we are using the `vi_to_kulprit` function to convert the variable importance results from PyMC-BART into a list of submodels that Kulprit can use. Then we call the `project` method with the `user_terms` argument to specify the submodels we want to project and evaluate. Notice that if we provide the `user_terms`, no search is done; Kulprit will project and evaluate only the specified submodels.
 
 Of course, we can also specify the submodels manually. For instance, we could use the following list of submodels:
 
