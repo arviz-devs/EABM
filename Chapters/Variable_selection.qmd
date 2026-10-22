@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "Select variables in Bayesian regression models using projection predictive inference."
+pagetitle: "Bayesian Variable Selection | EABM"
 ---
 
 # Variable Selection {#sec-variable-selection}

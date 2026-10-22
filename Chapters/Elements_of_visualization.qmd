@@ -1,5 +1,8 @@
 ---
 image: ../social-card.png
+description: "Core principles of data visualization for Bayesian analysis"
+pagetitle: "Elements of Data Visualization for Bayesian analysis | EABM"
+
 ---
 
 # Elements of Visualization  {#sec-elements-visualization}

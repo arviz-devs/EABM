@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "Compare Bayesian models with PSIS-LOO-CV and ELPD: how to compute, interpret and visualize the results with ArviZ."
+pagetitle: "Bayesian Model Comparison with LOO-CV | EABM"
 ---
 
 # Model Comparison {#sec-model-comparison}

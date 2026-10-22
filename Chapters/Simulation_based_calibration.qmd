@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "Check that your inference algorithm and model are consistent with simulation-based calibration (SBC)."
+pagetitle: "Simulation-Based Calibration (SBC) Checking | EABM"
 ---
 
 # Simulation-based calibration checking {#sec-sbc}

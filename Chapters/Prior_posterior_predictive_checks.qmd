@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "Use prior and posterior predictive checks to test whether a Bayesian model's assumptions and predictions match your data."
+pagetitle: "Prior and Posterior Predictive Checks in Bayesian Models | EABM"
 ---
 
 # Prior and Posterior predictive checks {#sec-ppc}

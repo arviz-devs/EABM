@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "How the pieces of Bayesian analysis fit together: model building, checking, comparison and iteration."
+pagetitle: "Bayesian Workflow Guide with ArviZ | EABM"
 ---
 
 # Bayesian Workflow  {#sec-bayesian-workflow}

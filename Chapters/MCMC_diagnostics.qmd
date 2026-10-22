@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "How to check that MCMC sampling worked: R-hat, effective sample size, divergences, trace and rank plots, with ArviZ examples."
+pagetitle: "MCMC Diagnostics: R-hat, ESS, trace and rank plots | EABM"
 ---
 
 # MCMC Diagnostics {#sec-mcmc-diagnostics}

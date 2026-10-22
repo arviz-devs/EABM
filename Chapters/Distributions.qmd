@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "Introduction to random variables, probability distributions, and uncertainty in Bayesian analysis."
+pagetitle: "Random Variables and Distributions | EABM"
 ---
 
 # Random Variables, Distributions, and Uncertainty  {#sec-distributions}

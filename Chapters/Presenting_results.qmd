@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "Communicate Bayesian results clearly: summarizing posteriors, credible intervals and uncertainty for different audiences."
+pagetitle: "Presenting Bayesian Results | EABM"
 ---
 
 # Presentation of Results  {#sec-presentation-results}
