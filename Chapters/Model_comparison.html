@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="dcterms.date" content="2025-04-02">
+<meta name="description" content="Compare Bayesian models with PSIS-LOO-CV and ELPD: how to compute, interpret and visualize the results with ArviZ.">
 
-<title>7&nbsp; Model Comparison – Exploratory Analysis of Bayesian Models</title>
+<title>Bayesian Model Comparison with LOO-CV | EABM – Exploratory Analysis of Bayesian Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -101,9 +102,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-c984aea98f003de5cf02e9ed13918618.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-711326a7e5698fe5160753b8730d40b3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-c984aea98f003de5cf02e9ed13918618.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-91a35249052cbdb3d4da9c6d98534e78.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-0c612064e93ccca3ce10b5e021cd535e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-91a35249052cbdb3d4da9c6d98534e78.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -165,12 +166,18 @@ window.Quarto = {
 };
 </script>
 
-<meta property="og:title" content="7&nbsp; Model Comparison – Exploratory Analysis of Bayesian Models">
-<meta property="og:description" content="">
+<meta property="og:title" content="Bayesian Model Comparison with LOO-CV | EABM">
+<meta property="og:description" content="An online book about exploratory analysis of Bayesian models and Bayesian workflow, from prior elicitation and predictive checks to MCMC diagnostics, sensitivity analysis, PSIS-LOO-CV model comparison, variable selection and communicating results. Examples use ArviZ with PyMC, Stan, and other probabilistic programming languages.">
 <meta property="og:image" content="https://arviz-devs.github.io/EABM/social-card.png">
 <meta property="og:site_name" content="Exploratory Analysis of Bayesian Models">
 <meta property="og:image:height" content="630">
 <meta property="og:image:width" content="1200">
+<meta name="twitter:title" content="Bayesian Model Comparison with LOO-CV | EABM">
+<meta name="twitter:description" content="An online book about exploratory analysis of Bayesian models and Bayesian workflow, from prior elicitation and predictive checks to MCMC diagnostics, sensitivity analysis, PSIS-LOO-CV model comparison, variable selection and communicating results. Examples use ArviZ with PyMC, Stan, and other probabilistic programming languages.">
+<meta name="twitter:image" content="https://arviz-devs.github.io/EABM/social-card.png">
+<meta name="twitter:image-height" content="630">
+<meta name="twitter:image-width" content="1200">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="citation_title" content="[[7]{.chapter-number}&nbsp; [Model Comparison]{.chapter-title}]{#sec-model-comparison .quarto-section-identifier}">
 <meta name="citation_publication_date" content="2025-04-02">
 <meta name="citation_cover_date" content="2025-04-02">
@@ -218,12 +225,12 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Projective inference in high-dimensional problems: Prediction and feature selection;,citation_author=Juho Piironen;,citation_author=Markus Paasiniemi;,citation_author=Aki Vehtari;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://doi.org/10.1214/20-EJS1711;,citation_issue=1;,citation_doi=10.1214/20-EJS1711;,citation_volume=14;,citation_journal_title=Electronic Journal of Statistics;,citation_publisher=Institute of Mathematical Statistics; Bernoulli Society;">
 <meta name="citation_reference" content="citation_title=Bayesian additive regression trees for probabilistic programming;,citation_author=Miriana Quiroga;,citation_author=Pablo G Garay;,citation_author=Juan M. Alonso;,citation_author=Juan Martin Loyola;,citation_author=Osvaldo A Martin;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;,citation_fulltext_html_url=https://arxiv.org/abs/2206.03619;,citation_doi=10.48550/ARXIV.2206.03619;,citation_publisher=arXiv;">
 <meta name="citation_reference" content="citation_title=Robust and efficient projection predictive inference;,citation_author=Yann McLatchie;,citation_author=Sölvi Rögnvaldsson;,citation_author=Frank Weber;,citation_author=Aki Vehtari;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_fulltext_html_url=https://arxiv.org/abs/2306.15581;">
-<meta name="citation_reference" content="citation_title=Implicitly adaptive importance sampling;,citation_author=Topi Paananen;,citation_author=Juho Piironen;,citation_author=Paul-Christian Bürkner;,citation_author=Aki Vehtari;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://arxiv.org/abs/1906.08850;">
+<meta name="citation_reference" content="citation_title=Implicitly adaptive importance sampling;,citation_author=Topi Paananen;,citation_author=Juho Piironen;,citation_author=Paul-Christian Bürkner;,citation_author=Aki Vehtari;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_fulltext_html_url=https://doi.org/10.1007/s11222-020-09982-2;,citation_doi=10.1007/s11222-020-09982-2;,citation_volume=31;,citation_journal_title=Statistics and Computing;">
 <meta name="citation_reference" content="citation_title=Fitting percentage of body fat to simple body measurements;,citation_author=Roger W. Johnson;,citation_publication_date=1996;,citation_cover_date=1996;,citation_year=1996;,citation_fulltext_html_url=https://doi.org/10.1080/10691898.1996.11910505;,citation_issue=1;,citation_doi=10.1080/10691898.1996.11910505;,citation_volume=4;,citation_journal_title=Journal of Statistics Education;,citation_publisher=Taylor &amp;amp;amp; Francis;">
 <meta name="citation_reference" content="citation_title=Non-parametric jensen-shannon divergence;,citation_author=Hoang-Vu Nguyen;,citation_author=Jilles Vreeken;,citation_editor=Annalisa Appice;,citation_editor=Pedro Pereira Rodrigues;,citation_editor=Vítor Santos Costa;,citation_editor=João Gama;,citation_editor=Alípio Jorge;,citation_editor=Carlos Soares;,citation_publication_date=2015;,citation_cover_date=2015;,citation_year=2015;,citation_fulltext_html_url=https://doi.org/10.1007/978-3-319-23525-7_11;,citation_doi=10.1007/978-3-319-23525-7_11;,citation_conference_title=Machine learning and knowledge discovery in databases;,citation_conference=Springer International Publishing;">
 <meta name="citation_reference" content="citation_title=Modern Applied Statistics with S;,citation_author=W. N. Venables;,citation_author=B. D. Ripley;,citation_publication_date=2002-08;,citation_cover_date=2002-08;,citation_year=2002;,citation_fulltext_html_url=https://doi.org/10.1007/978-0-387-21706-2;,citation_doi=10.1007/978-0-387-21706-2;,citation_isbn=978-0-387-95457-8;">
 <meta name="citation_reference" content="citation_title=Satellite male groups in horseshoe crabs, limulus polyphemus;,citation_author=H. Jane Brockmann;,citation_publication_date=1996;,citation_cover_date=1996;,citation_year=1996;,citation_fulltext_html_url=https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1439-0310.1996.tb01099.x;,citation_issue=1;,citation_doi=10.1111/j.1439-0310.1996.tb01099.x;,citation_volume=102;,citation_journal_title=Ethology;">
-<meta name="citation_reference" content="citation_title=Recommendations for visual predictive checks in bayesian workflow;,citation_author=Teemu Säilynoja;,citation_author=Andrew R. Johnson;,citation_author=Osvaldo A. Martin;,citation_author=Aki Vehtari;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://arxiv.org/abs/2503.01509;">
+<meta name="citation_reference" content="citation_title=Recommendations for visual predictive checks in bayesian workflow;,citation_author=Teemu Säilynoja;,citation_author=Andrew R Johnson;,citation_author=Osvaldo A Martin;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://journals.aau.dk/index.php/jovi/article/view/11478;,citation_doi=10.54337/jovi.v1i1.11478;,citation_volume=1;,citation_journal_title=Journal of Visualization and Interaction;">
 <meta name="citation_reference" content="citation_title=Visualization in bayesian workflow;,citation_author=Jonah Gabry;,citation_author=Daniel Simpson;,citation_author=Aki Vehtari;,citation_author=Michael Betancourt;,citation_author=Andrew Gelman;,citation_publication_date=2019-01;,citation_cover_date=2019-01;,citation_year=2019;,citation_fulltext_html_url=https://doi.org/10.1111/rssa.12378;,citation_issue=2;,citation_doi=10.1111/rssa.12378;,citation_issn=0964-1998;,citation_volume=182;,citation_journal_title=Journal of the Royal Statistical Society Series A: Statistics in Society;">
 <meta name="citation_reference" content="citation_title=Posterior Predictive $p$-Values;,citation_author=Xiao-Li Meng;,citation_publication_date=1994;,citation_cover_date=1994;,citation_year=1994;,citation_fulltext_html_url=https://doi.org/10.1214/aos/1176325622;,citation_issue=3;,citation_doi=10.1214/aos/1176325622;,citation_volume=22;,citation_journal_title=The Annals of Statistics;,citation_publisher=Institute of Mathematical Statistics;">
 <meta name="citation_reference" content="citation_title=Bayesian Data Analysis;,citation_author=Andrew Gelman;,citation_author=John B. Carlin;,citation_author=Hal S. Stern;,citation_author=David B. Dunson;,citation_author=Aki Vehtari;,citation_author=Donald B. Rubin;,citation_publication_date=2013-11;,citation_cover_date=2013-11;,citation_year=2013;,citation_fulltext_html_url=https://doi.org/10.1201/b16018;,citation_isbn=978-1-4398-4095-5;">
@@ -251,6 +258,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Statistical Rethinking: A Bayesian Course with Examples in R and STAN;,citation_author=Richard McElreath;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_fulltext_html_url=https://doi.org/10.1201/9780429029608;,citation_isbn=978-0-367-13991-9;">
 <meta name="citation_reference" content="citation_title=LOO-PIT predictive model checking;,citation_author=Herman Tesso;,citation_author=Aki Vehtari;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_fulltext_html_url=https://arxiv.org/abs/2603.02928;">
 <meta name="citation_reference" content="citation_title=Bayesian Workflow;,citation_author=Andrew Gelman;,citation_author=Aki Vehtari;,citation_author=Richard McElreath;,citation_author=Daniel Simpson;,citation_author=Charles C. Margossian;,citation_author=Yuling Yao;,citation_author=Lauren Kennedy;,citation_author=Jonah Gabry;,citation_author=Paul-Christian Bürkner;,citation_author=Martin Modrák;,citation_author=Vianey Leos Barajas;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_isbn=978-0-367-49014-0;">
+<meta name="citation_reference" content="citation_title=Accurate approximations for posterior moments and marginal densities;,citation_author=Luke Tierney;,citation_author=Joseph B. Kadane;,citation_publication_date=1986;,citation_cover_date=1986;,citation_year=1986;,citation_issue=393;,citation_doi=10.2307/2287970;,citation_volume=81;,citation_journal_title=Journal of the American Statistical Association;">
 </head>
 
 <body class="nav-sidebar docked quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -457,6 +465,7 @@ window.Quarto = {
       </ul>
     </div>
     <a href="https://numfocus.org/donate-to-arviz" title="donations" class="quarto-navigation-tool px-1" aria-label="donations"><i class="bi bi-coin"></i></a>
+    <a href="https://github.com/arviz-devs/EABM" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -667,7 +676,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">September 1, 2026</p>
+      <p class="date-modified">October 22, 2026</p>
     </div>
   </div>
     
@@ -855,7 +864,7 @@ w_i = \frac{f(x_i)}{g(x_i)}
 </ul>
 <p>Once the weights <span class="math inline">\(w_i\)</span> are obtained, we can use them to estimate properties of <span class="math inline">\(f\)</span>, its density, moments, quantiles, etc.</p>
 <p>In the code-block below <span class="math inline">\(g\)</span> is a Normal distribution and <span class="math inline">\(f\)</span> is a Gamma and we use importance sampling to estimate the PDF of <span class="math inline">\(f\)</span>. This is just a pedagogic example, since we actually have a very direct way to calculate the PDF of a Gamma. But in practice <span class="math inline">\(f\)</span> can be a much more complex object.</p>
-<div id="57cbd743" class="cell" data-execution_count="3">
+<div id="87e8b41a" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>g <span class="op">=</span> pz.Normal(<span class="dv">0</span>, <span class="dv">10</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a>samples <span class="op">=</span> g.rvs(<span class="dv">1000</span>, random_state<span class="op">=</span>SEED)</span>
 <span id="cb2-3"><a href="#cb2-3"></a>f <span class="op">=</span> pz.Gamma(mu<span class="op">=</span><span class="dv">4</span>, sigma<span class="op">=</span><span class="fl">1.5</span>)</span>
@@ -898,19 +907,19 @@ w_i^j \propto \frac{p(\theta^j \mid y_{-i} )}{p(\theta^j \mid y)} \propto \frac{
 <section id="psis-loo-cv-in-arviz" class="level2" data-number="7.6">
 <h2 data-number="7.6" class="anchored" data-anchor-id="psis-loo-cv-in-arviz"><span class="header-section-number">7.6</span> PSIS-LOO-CV in Arviz</h2>
 <p>Since the name and even acronym are too long and not that easy to pronounce, in ArviZ, we usually refer to this and related methods as LOO. For instance, to compute the ELPD using the PSIS-LOO-CV method, we call the <code>loo</code> function. This function’s first argument needs to be a DataTree object with a <code>log-likelihood</code> group.</p>
-<div id="94992c62" class="cell" data-execution_count="4">
+<div id="8df6552d" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>dt_rugby <span class="op">=</span> az.load_arviz_data(<span class="st">'rugby'</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a>elpd <span class="op">=</span> az.loo(dt_rugby, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span>
 <span id="cb3-3"><a href="#cb3-3"></a>elpd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.15/x64/lib/python3.13/site-packages/arviz_stats/loo/loo_helper.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/arviz_stats/loo/loo_helper.py:1169: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>Computed from 2000 posterior samples and 60 observations log-likelihood matrix.
 
          Estimate       SE
-elpd_loo  -282.09    26.49
+elpd_loo  -282.09    26.71
 p_loo       25.16        -
 
 There has been a warning during the calculation. Please check the results.
@@ -927,7 +936,7 @@ Pareto k diagnostic values:
 <section id="a-simple-example" class="level3" data-number="7.6.1">
 <h3 data-number="7.6.1" class="anchored" data-anchor-id="a-simple-example"><span class="header-section-number">7.6.1</span> A simple example</h3>
 <p>Let’s see how to use ArviZ to compare two models. We start by simulating some data from a Student’s T distribution (df=<span class="math inline">\(\nu\)</span>=4), which has heavier tails than a Normal distribution.</p>
-<div id="09aea1e1" class="cell" data-execution_count="5">
+<div id="0754cd6e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>target <span class="op">=</span> pz.StudentT(nu<span class="op">=</span><span class="dv">4</span>, mu<span class="op">=</span><span class="dv">0</span>, sigma<span class="op">=</span><span class="dv">1</span>).rvs(<span class="dv">200</span>, random_state<span class="op">=</span>SEED)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We then fit two models, one with a Normal likelihood and another with a Student’s T likelihood.</p>
@@ -935,7 +944,7 @@ Pareto k diagnostic values:
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="204d86b2" class="cell" data-execution_count="6">
+<div id="a1bc88bf" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_n:</span>
 <span id="cb7-2"><a href="#cb7-2"></a>    μ <span class="op">=</span> pm.Normal(<span class="st">"μ"</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
 <span id="cb7-3"><a href="#cb7-3"></a>    σ <span class="op">=</span> pm.HalfNormal(<span class="st">"σ"</span>, <span class="dv">1</span>)</span>
@@ -1047,7 +1056,7 @@ Pareto k diagnostic values:
 </div>
 </div>
 <p>To compare two or more models, we can use the <code>compare</code> function, which accepts a dictionary where the keys are the names of the models and the values are <code>DataTree</code> objects.</p>
-<div id="60f128bb" class="cell" data-execution_count="8">
+<div id="9a9027a9" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>cmp_df <span class="op">=</span> az.compare({<span class="st">'model_n'</span>:idata_n, <span class="st">'model_t'</span>:idata_t})</span>
 <span id="cb9-2"><a href="#cb9-2"></a>cmp_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
@@ -1116,7 +1125,7 @@ Pareto k diagnostic values:
 <li>scale: the scale on which the ELPD is calculated</li>
 </ul>
 <p>We can obtain similar information, but graphically, using the <code>az.plot_compare</code> function</p>
-<div id="b80b20e3" class="cell" data-execution_count="9">
+<div id="56970018" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>az.plot_compare(cmp_df)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1144,7 +1153,7 @@ Pareto k diagnostic values:
 <p>As a general rule, if <span class="math inline">\(\hat{k}\)</span> is less than 0.7 there are no problems; if it is between 0.7 and 1 it is very likely that we are in trouble; and if it is greater than 1, we are doomed. The cut-off value 0.7 is not really fixed, it is computed as <span class="math inline">\(\min\left(1 - \frac{1}{\log_{10}(S)}, 0.7\right))\)</span>, where <span class="math inline">\(S\)</span> is the number of posterior draws. When the number of draws is about 2000 (like in our example), the recommended threshold is very close to 0.7. ArviZ can compute the threshold automatically.</p>
 <p>The number of samples not only affect the threshold,it can actually help to reduce the value of <span class="math inline">\(\hat{k}\)</span> and thus remove some of these warnings. This is specially true for values close to the threshold, and when the number of samples is not yet “too large” (given our budget). Otherwise, the number needed will be too large to be practically useful.</p>
 <p>It is possible to visualize the values ​​of <span class="math inline">\(k\)</span>, using <code>plot_khat</code></p>
-<div id="ff54e8f0" class="cell" data-execution_count="10">
+<div id="099de591" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>az.plot_khat(elpd)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1191,7 +1200,7 @@ Pareto k diagnostic values:
 <h2 data-number="7.8" class="anchored" data-anchor-id="sec-IWMM-theory"><span class="header-section-number">7.8</span> When Pareto k values are too high</h2>
 <p>The efficiency of PSIS-LOO-CV depends critically on stable importance sampling, which breaks down when the Pareto-<span class="math inline">\(k\)</span> diagnostic exceeds a threshold (typically around 0.7 for standard MCMC sample sizes), leading to unreliable estimates.</p>
 <p>When observations produce high Pareto-<span class="math inline">\(k\)</span> values, we can use standard LOO-CV for those observations, i.e.&nbsp;refit the model while removing those problematic observations one at a time. This could be useful if the number of observations with high <span class="math inline">\(\hat k\)</span> is small, otherwise it can easily become too expensive for routine use. K-fold CV is another option but it can also be too expensive.</p>
-<p>But those are not the only two solutions when PSIS-LOO-CV produces high <span class="math inline">\(\hat k\)</span> values. Instead of expensive model refitting, the method <strong>importance weighted moment matching (IWMM)</strong>, presented by <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span>, works by improving the proposal distribution by iteratively transforming existing posterior draws to better match the moments of the target distribution.</p>
+<p>But those are not the only two solutions when PSIS-LOO-CV produces high <span class="math inline">\(\hat k\)</span> values. Instead of expensive model refitting, the method <strong>importance weighted moment matching (IWMM)</strong>, presented by <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2021</a>)</span>, works by improving the proposal distribution by iteratively transforming existing posterior draws to better match the moments of the target distribution.</p>
 <p>To understand how moment matching improves these importance weights, we first need to understand which Monte Carlo estimator we are using.</p>
 <section id="monte-carlo-estimators" class="level3" data-number="7.8.1">
 <h3 data-number="7.8.1" class="anchored" data-anchor-id="monte-carlo-estimators"><span class="header-section-number">7.8.1</span> Monte Carlo estimators</h3>
@@ -1228,7 +1237,7 @@ Pareto k diagnostic values:
 </section>
 <section id="importance-weighted-moment-matching" class="level3" data-number="7.8.3">
 <h3 data-number="7.8.3" class="anchored" data-anchor-id="importance-weighted-moment-matching"><span class="header-section-number">7.8.3</span> Importance weighted moment matching</h3>
-<p>Moment matching extends the idea of PSIS-LOO-CV in a clever way. It <em>implicitly</em> updates the proposal without needing auxiliary parameters or resampling. Traditional adaptive importance sampling alternates between drawing samples, computing weights, and updating parameters. The key insight from <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span> is simpler: skip generating fresh draws and instead repeatedly transform the existing draws from <span class="math inline">\(p(\theta \mid y)\)</span> in the unconstrained parameter space. These transformations align the low-order moments of the draws with the moments implied by the leave-one-out weights.</p>
+<p>Moment matching extends the idea of PSIS-LOO-CV in a clever way. It <em>implicitly</em> updates the proposal without needing auxiliary parameters or resampling. Traditional adaptive importance sampling alternates between drawing samples, computing weights, and updating parameters. The key insight from <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2021</a>)</span> is simpler: skip generating fresh draws and instead repeatedly transform the existing draws from <span class="math inline">\(p(\theta \mid y)\)</span> in the unconstrained parameter space. These transformations align the low-order moments of the draws with the moments implied by the leave-one-out weights.</p>
 <p>This implicit adaptation is fully automated and requires only operations on already available posterior draws. It’s designed to plug into PSIS-LOO-CV pipelines that flag problematic cases using the Pareto-<span class="math inline">\(k\)</span> diagnostic from <span class="citation" data-cites="vehtari_2017">Vehtari, Gelman, and Gabry (<a href="References.html#ref-vehtari_2017" role="doc-biblioref">2017</a>)</span>. Because we reuse the same Monte Carlo sample throughout, the computational cost stays close to that of a single PSIS-LOO-CV evaluation, even when several adaptation rounds are attempted. Importantly, this approach preserves the effective sample size accrued during the original posterior simulation and avoids delicate tuning choices.</p>
 <p>The approach involves several key components:</p>
 <ul>
@@ -1283,7 +1292,7 @@ g_{\mathrm{SNIS}}^{\mathrm{opt}}(\theta) \propto p(\theta)\left|h(\theta)-\mathb
 </section>
 <section id="the-split-proposal-approximation" class="level4" data-number="7.8.3.4">
 <h4 data-number="7.8.3.4" class="anchored" data-anchor-id="the-split-proposal-approximation"><span class="header-section-number">7.8.3.4</span> The split proposal approximation</h4>
-<p>To combine the two adaptation strategies into an efficient proposal distribution, <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span> develop a practical approximation called the <em>split proposal density</em> given by</p>
+<p>To combine the two adaptation strategies into an efficient proposal distribution, <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2021</a>)</span> develop a practical approximation called the <em>split proposal density</em> given by</p>
 <p><span class="math display">\[
 g_{\mathrm{SNIS}}^{\mathrm{split}}(\theta) \propto |h(\theta)|p(\theta) + \mathbb{E}_{p}[h(\theta)]p(\theta).
 \]</span></p>
@@ -1293,12 +1302,12 @@ g_{\mathrm{SNIS}}^{\mathrm{split}}(\theta) \propto |h(\theta)|p(\theta) + \mathb
 <section id="double-adaptation-strategy" class="level4" data-number="7.8.3.5">
 <h4 data-number="7.8.3.5" class="anchored" data-anchor-id="double-adaptation-strategy"><span class="header-section-number">7.8.3.5</span> Double adaptation strategy</h4>
 <p>The split proposal naturally suggests a double adaptation strategy. We run two separate moment matching procedures in parallel: one uses the absolute expectation-specific weights <span class="math inline">\(\{|v^{(s)}|\}\)</span> to approximate the first component, and the other uses the common weights <span class="math inline">\(\{w^{(s)}\}\)</span> to approximate the second. These two adapted proposal distributions are then combined using multiple importance sampling with the balance heuristic.</p>
-<p>When <span class="math inline">\(h(\theta) \geq 0\)</span>, both components integrate to <span class="math inline">\(\mathbb{E}_p[h(\theta)]\)</span>. <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span> show that equal allocation (50-50 split) is provably optimal in this case and more generally is a conservative choice that guarantees the asymptotic variance is never more than twice that of using the better component alone.</p>
+<p>When <span class="math inline">\(h(\theta) \geq 0\)</span>, both components integrate to <span class="math inline">\(\mathbb{E}_p[h(\theta)]\)</span>. <span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2021</a>)</span> show that equal allocation (50-50 split) is provably optimal in this case and more generally is a conservative choice that guarantees the asymptotic variance is never more than twice that of using the better component alone.</p>
 </section>
 <section id="three-moment-matching-transformations" class="level4" data-number="7.8.3.6">
 <h4 data-number="7.8.3.6" class="anchored" data-anchor-id="three-moment-matching-transformations"><span class="header-section-number">7.8.3.6</span> Three moment matching transformations</h4>
 <p>Our overall goal is to transform the existing posterior draws to match the optimal proposals. To do this, we match progressively more moments of the distribution to importance-weighted moments.</p>
-<p><span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2020</a>)</span> recommend a sequence of three affine transformations with increasing complexity. The transformations use importance weights to identify where the target distribution places its mass relative to the proposal. We start with the simplest transformation and progress to more complex ones only when simpler ones no longer improve the Pareto-<span class="math inline">\(k\)</span> diagnostic.</p>
+<p><span class="citation" data-cites="paananen_2020">Paananen et al. (<a href="References.html#ref-paananen_2020" role="doc-biblioref">2021</a>)</span> recommend a sequence of three affine transformations with increasing complexity. The transformations use importance weights to identify where the target distribution places its mass relative to the proposal. We start with the simplest transformation and progress to more complex ones only when simpler ones no longer improve the Pareto-<span class="math inline">\(k\)</span> diagnostic.</p>
 <p><strong>Transformation <span class="math inline">\(T_1\)</span> (matching the mean).</strong> The simplest transformation shifts the sample mean to match the importance-weighted mean</p>
 <p><span class="math display">\[
 \theta^{*(s)} = T_1(\theta^{(s)}) = \theta^{(s)} - \bar{\theta} + \bar{\theta}_w,
@@ -1455,10 +1464,10 @@ V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
 <section id="loo-expectations-and-metrics" class="level3" data-number="7.10.1">
 <h3 data-number="7.10.1" class="anchored" data-anchor-id="loo-expectations-and-metrics"><span class="header-section-number">7.10.1</span> LOO expectations and metrics</h3>
 <p>From the PSIS procedure, we obtain a set of weights. The <code>loo</code> function utilizes these weights to estimate the ELPD we should have obtained if we have performed leave-one-out cross-validation. Furthermore, these weights can be used to estimate other quantities, such as the mean, standard deviation, and quantiles, as if we had performed leave-one-out cross-validation. For example, to compute the 25th and 75th percentiles we use:</p>
-<div id="50c0e498" class="cell" data-execution_count="11">
+<div id="e05a763c" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>az.loo_expectations(dt_rugby, kind<span class="op">=</span><span class="st">"quantile"</span>, probs<span class="op">=</span>[<span class="fl">0.25</span>, <span class="fl">0.75</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.15/x64/lib/python3.13/site-packages/arviz_stats/loo/loo_helper.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/arviz_stats/loo/loo_helper.py:1169: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="10">
@@ -1484,21 +1493,21 @@ V\bigl(\widehat{\operatorname{elpd}}_{\text{diff, loo}}\bigr)
 </div>
 </div>
 <p>Similarly we may be interested in computing estimates of leave-one-out predictive metrics given a set of predictions and observations. For instance to compute the root mean square error we can do:</p>
-<div id="7d6d5c32" class="cell" data-execution_count="12">
+<div id="4e964159" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>az.loo_metrics(dt_rugby, kind<span class="op">=</span><span class="st">"rmse"</span>, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.15/x64/lib/python3.13/site-packages/arviz_stats/loo/loo_helper.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/arviz_stats/loo/loo_helper.py:1169: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>rmse(mean=11.0, se=1.2)</code></pre>
+<pre><code>rmse(mean=11.0, se=1.3)</code></pre>
 </div>
 </div>
 <p>Anoth</p>
-<div id="fd99d423" class="cell" data-execution_count="13">
+<div id="5019835e" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>az.loo_r2(dt_rugby, var_name<span class="op">=</span><span class="st">"home_points"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>/opt/hostedtoolcache/Python/3.13.15/x64/lib/python3.13/site-packages/arviz_stats/loo/loo_helper.py:1146: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
+<pre><code>/opt/hostedtoolcache/Python/3.13.16/x64/lib/python3.13/site-packages/arviz_stats/loo/loo_helper.py:1169: UserWarning: Estimated shape parameter of Pareto distribution is greater than 0.70 for one or more samples. You should consider using a more robust model, this is because importance sampling is less likely to work well if the marginal posterior and LOO posterior are very different. This is more likely to happen with a non-robust model and highly influential observations.
   warnings.warn(</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="12">
@@ -1625,7 +1634,7 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div id="b7758971" class="cell" data-execution_count="15">
+<div id="308157da" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>y <span class="op">=</span> np.repeat([<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">50</span>, <span class="dv">50</span>])  <span class="co"># 50 heads, 50 tails</span></span>
 <span id="cb22-2"><a href="#cb22-2"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_uni:</span>
 <span id="cb22-3"><a href="#cb22-3"></a>    a <span class="op">=</span> pm.Beta(<span class="st">"a"</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
@@ -1676,7 +1685,7 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 </div>
 </div>
 <p>And now we call <code>az.plot_bf</code></p>
-<div id="0f270b32" class="cell" data-execution_count="17">
+<div id="dbfe5195" class="cell" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>az.plot_bf(idata_uni, var_names<span class="op">=</span><span class="st">"a"</span>, ref_val<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1693,7 +1702,7 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">PyMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">CmdStanPy</a></li></ul>
 <div class="tab-content" data-group="ppl">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div id="ddc8d255" class="cell" data-execution_count="18">
+<div id="a1dfa4a9" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model_conc:</span>
 <span id="cb25-2"><a href="#cb25-2"></a>    a <span class="op">=</span> pm.Beta(<span class="st">"a"</span>, <span class="dv">30</span>, <span class="dv">30</span>)</span>
 <span id="cb25-3"><a href="#cb25-3"></a>    yl <span class="op">=</span> pm.Bernoulli(<span class="st">"yl"</span>, a, observed<span class="op">=</span>y)</span>
@@ -1741,7 +1750,7 @@ BF_{01} = \frac{p(y \mid H_0)}{p(y \mid H_1)} \frac{p(\theta=0.5 \mid y, H_1)}{p
 </div>
 </div>
 </div>
-<div id="a8fcac49" class="cell" data-execution_count="20">
+<div id="81727a02" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>az.plot_bf(idata_conc, var_names<span class="op">=</span>[<span class="st">"a"</span>], ref_val<span class="op">=</span><span class="fl">0.5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1773,7 +1782,7 @@ Hansen, Morris H., and William N. Hurwitz. 1943. <span>“On the Theory of Sampl
 Magnusson, Måns, Michael Riis Andersen, Johan Jonasson, and Aki Vehtari. 2020. <span>“Leave-One-Out Cross-Validation for Model Comparison in Large Data.”</span> In <em>Proceedings of the 23rd International Conference on Artificial Intelligence and Statistics</em>. Vol. 108. Proceedings of Machine Learning Research. PMLR. <a href="https://arxiv.org/abs/2001.00980">https://arxiv.org/abs/2001.00980</a>.
 </div>
 <div id="ref-paananen_2020" class="csl-entry" role="listitem">
-Paananen, Topi, Juho Piironen, Paul-Christian Bürkner, and Aki Vehtari. 2020. <span>“Implicitly Adaptive Importance Sampling.”</span> <a href="https://arxiv.org/abs/1906.08850">https://arxiv.org/abs/1906.08850</a>.
+Paananen, Topi, Juho Piironen, Paul-Christian Bürkner, and Aki Vehtari. 2021. <span>“Implicitly Adaptive Importance Sampling.”</span> <em>Statistics and Computing</em>. <a href="https://doi.org/10.1007/s11222-020-09982-2">https://doi.org/10.1007/s11222-020-09982-2</a>.
 </div>
 <div id="ref-soch_2024" class="csl-entry" role="listitem">
 Soch, Joram, Thomas J Faulkenberry, Kenneth Petrykowski, and Carsten Allefeld. 2024. <span>“The Book of Statistical Proofs.”</span> <a href="https://doi.org/10.5281/ZENODO.4305949">https://doi.org/10.5281/ZENODO.4305949</a>.
