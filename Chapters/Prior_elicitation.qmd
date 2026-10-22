@@ -1,5 +1,9 @@
 ---
 image: ../social-card.png
+description: "Turn domain knowledge into prior distributions for Bayesian models, with practical tools and examples."
+pagetitle: "Prior Elicitation for Bayesian Models | EABM"
+
+
 ---
 
 # Prior Elicitation  {#sec-prior-elicitation}

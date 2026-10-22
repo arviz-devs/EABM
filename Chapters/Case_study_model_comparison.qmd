@@ -1,5 +1,8 @@
 ---
 image: ../social-card.png
+description: "A worked example of comparing several Bayesian models end to end, from fitting to LOO-CV and interpretation."
+pagetitle: "Bayesian Model Comparison: A Case Study | EABM"
+
 ---
 
 # Model Comparison (case study) {#sec-model-comparison-case-study}

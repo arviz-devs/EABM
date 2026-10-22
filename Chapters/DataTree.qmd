@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "Learn how to work with DataTree objects for organizing Bayesian analysis data."
+pagetitle: "Working with DataTrees | EABM"
 ---
 
 # Working with DataTree  {#sec-working-datatree}

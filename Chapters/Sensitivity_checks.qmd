@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "Measure how much your posterior depends on the prior and the likelihood using power-scaling sensitivity analysis."
+pagetitle: "Prior and Likelihood Sensitivity Checks | EABM"
 ---
 
 ```{python}

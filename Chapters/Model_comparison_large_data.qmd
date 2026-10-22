@@ -1,5 +1,7 @@
 ---
 image: ../social-card.png
+description: "Speed up Bayesian model comparison on large datasets with subsampling and approximations to leave-one-out cross-validation."
+pagetitle: "Model Comparison for Large Data (LOO subsampling) | EABM"
 ---
 
 # Model Comparison for Large Data {#sec-model-comparison-large-data}

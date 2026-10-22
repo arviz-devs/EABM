@@ -1,5 +1,8 @@
 ---
 image: ../social-card.png
+description: "Improve PSIS-LOO-CV when Pareto k diagnostics are high, using moment matching instead of refitting the model."
+pagetitle: "Moment Matching for PSIS-LOO-CV | EABM"
+
 ---
 
 # Moment matching for improved PSIS-LOO-CV {#sec-moment-matching}
