@@ -1,6 +1,5 @@
 ---
 image: social-card.png
-description: "Online book on exploratory analysis of Bayesian models and Bayesian workflow: priors, predictive checks, MCMC diagnostics, model comparison and more, with ArviZ."
 ---
 
 #  ‎ {.unnumbered .unlisted}
