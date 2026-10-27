@@ -3,6 +3,7 @@ project:
   output-dir: docs
   resources:
     - social-card.png
+    - llms.txt
 
 book:
   title: "Exploratory Analysis of Bayesian Models"

@@ -1,0 +1,51 @@
+# Exploratory Analysis of Bayesian Models
+
+> An online book on exploratory analysis of Bayesian models and the Bayesian workflow: data visualization, prior elicitation, predictive checks, MCMC diagnostics, sensitivity analysis, PSIS-LOO-CV model comparison, variable selection, and communicating results. Examples are runnable Python using ArviZ with PyMC, Stan, Bambi, PreliZ, and other probabilistic programming tools.
+
+Fitting a model is only one step. Practitioners also need to diagnose the quality of the inference, criticize the model against data and domain knowledge, compare competing models, and present results to a specific audience. This book covers those activities with numerical summaries, visualizations, and worked case studies.
+
+Where to start: if you already have a fitted model, begin with MCMC Diagnostics, then Predictive Checks. If you are choosing between models, go to Model Comparison. For how the pieces fit together, read Bayesian Workflow.
+
+Authors: Osvaldo A. Martin, Oriol Abril-Pla, Jordan Deklerk, and ArviZ-devs.
+
+## Foundations
+
+- [Working with DataTree](https://arviz-devs.github.io/EABM/Chapters/DataTree.html): Organizing posterior draws, predictions, and other outputs of a Bayesian analysis using DataTree structures in ArviZ.
+- [Random Variables, Distributions, and Uncertainty](https://arviz-devs.github.io/EABM/Chapters/Distributions.html): Random variables, probability distributions, and how uncertainty is represented in Bayesian analysis.
+
+## Checking Inference and Model Assumptions
+
+- [MCMC Diagnostics](https://arviz-devs.github.io/EABM/Chapters/MCMC_diagnostics.html): Checking that sampling worked, using R-hat, effective sample size, divergences, trace plots, and rank plots.
+- [Prior and Posterior Predictive Checks](https://arviz-devs.github.io/EABM/Chapters/Prior_posterior_predictive_checks.html): Testing whether model assumptions and predictions are consistent with the data and domain knowledge.
+- [Prior and Likelihood Sensitivity Checks](https://arviz-devs.github.io/EABM/Chapters/Sensitivity_checks.html): Power-scaling sensitivity analysis to measure how strongly the posterior depends on the prior and on the likelihood.
+- [Simulation-Based Calibration](https://arviz-devs.github.io/EABM/Chapters/Simulation_based_calibration.html): Verifying that the model and inference algorithm are consistent with each other using simulation-based calibration (SBC).
+
+## Model Comparison
+
+- [Model Comparison](https://arviz-devs.github.io/EABM/Chapters/Model_comparison.html): Comparing Bayesian models with PSIS-LOO-CV and ELPD.
+- [Model Comparison (Case Study)](https://arviz-devs.github.io/EABM/Chapters/Case_study_model_comparison.html): A worked end-to-end example comparing several models, from fitting through LOO-CV to interpretation.
+- [Moment Matching for PSIS-LOO-CV](https://arviz-devs.github.io/EABM/Chapters/Moment_Matching.html): What to do when Pareto-k values are high, including moment matching.
+- [Model Comparison for Large Data](https://arviz-devs.github.io/EABM/Chapters/Model_comparison_large_data.html): Speeding up comparison on large datasets with subsampling and approximations to leave-one-out cross-validation.
+
+## Building Models
+
+- [Prior Elicitation](https://arviz-devs.github.io/EABM/Chapters/Prior_elicitation.html): Turning domain knowledge into prior distributions, with practical tools and examples.
+- [Variable Selection](https://arviz-devs.github.io/EABM/Chapters/Variable_selection.html): Selecting variables in Bayesian regression models with projection predictive inference or BART.
+
+## Workflow and Communication
+
+- [Bayesian Workflow](https://arviz-devs.github.io/EABM/Chapters/Bayesian_workflow.html): How model building, checking, comparison, and iteration fit together into one coherent workflow.
+- [Presentation of Results](https://arviz-devs.github.io/EABM/Chapters/Presenting_results.html): What to report and how to summarize posteriors and uncertainty for a given audience.
+
+## Source and Citation
+
+- [Repository](https://github.com/arviz-devs/EABM): Source notebooks and text for the book.
+- [Website](https://arviz-devs.github.io/EABM/): The rendered book.
+- Citation: Martin et al. (2025). *Exploratory Analysis of Bayesian Models*. Zenodo. https://doi.org/10.5281/zenodo.15127548
+- License: CC-BY-NC 4.0. Attribution is required and commercial use is not permitted without separate permission.
+
+## Optional
+
+- [Introduction](https://arviz-devs.github.io/EABM/index.html): Motivation for exploratory analysis of Bayesian models and how the book is organized.
+- [Elements of Visualization](https://arviz-devs.github.io/EABM/Chapters/Elements_of_visualization.html): Core principles of data visualization that underlie the plots used throughout the book.
+- [References](https://arviz-devs.github.io/EABM/Chapters/References.html): Bibliography for the book.
