@@ -4,6 +4,7 @@ project:
   resources:
     - social-card.png
     - llms.txt
+    - llms-full.txt
 
 book:
   title: "Exploratory Analysis of Bayesian Models"
