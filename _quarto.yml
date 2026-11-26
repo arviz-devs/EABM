@@ -48,6 +48,8 @@ book:
   favicon: favicon.ico
   site-url: https://arviz-devs.github.io/EABM/
   image: social-card.png
+  cover-image: cover.svg
+  cover-image-alt: "Cover of Exploratory Analysis of Bayesian Models"
   open-graph: true
 
   chapters:
