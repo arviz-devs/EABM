@@ -47,27 +47,35 @@ We are going to see that many diagnostics need multiple chains. Each chain is an
 To keep the focus on the diagnostics and not on any particular Bayesian model. We are going to first create 3 synthetic samples, we will use them to emulate samples from a posterior distribution. 
 
 * `good_sample`: A random sample from a `Gamma(2, 5)`. This is an example of a good sample because we are generating independent and identically distributed (iid) draws. This is the ideal scenario. 
-* `bad_sample_0`: We sorted good_sample, split it into four chains, and then added a small Gaussian error. This is a representation of a bad sample because values are not independent (we sorted the values!) and they do not come from the same distribution. This represents a scenario where the sampler has very poor mixing. 
+* `bad_sample_0`: We generated each chain as a stationary AR(1) process and then shifted the first and second chains by 0.5 and -0.4, respectively. This is a representation of a bad sample because values within a chain are not independent and one chain does not come from the same distribution as the others. This represents a scenario where the sampler mixes slowly and chains have settled in a different region.
 * `bad_sample_1`: we start from `good_chains`, and turn into a poor sample by randomly introducing portions where consecutive samples are highly correlated to each other. This represents a common scenario, a sampler can resolve a region of the parameter space very well, but get stuck into one or more regions.
 
 
 ```{python}
 #| code-fold: true
 #| code-summary: "Show the code for more details"
+from scipy.signal import lfilter
 
 good_sample = pz.Gamma(2, 5).rvs((4, 1000), random_state=rng)
-bad_sample0 = pz.Normal(np.sort(good_sample, axis=None),
-                        0.05).rvs(4000, random_state=rng).reshape(4, -1)
+phi = 0.4
+noise = pz.Normal(0, 1).rvs((4, 1000), random_state=rng)
+bad_sample0 = lfilter([np.sqrt(1 - phi**2)], [1, -phi], noise, axis=1)
+bad_sample0[0] += 0.5
+bad_sample0[1] -= 0.4
+
 
 bad_sample1 = good_sample.copy()
 stuck = []
 for i in pz.DiscreteUniform(0, 900).rvs(4, random_state=rng):
-    stuck.append((i, i+50))
-    bad_sample1[0,i:i+50] = pz.Beta(i, 150).rvs(50, random_state=rng)
+    stuck.append((i, i + 50))
+    bad_sample1[0, i:i + 50] = pz.Beta(i, 150).rvs(50, random_state=rng)
 
-sample = az.convert_to_dataset({"good_sample":good_sample,
-          "bad_sample_0":bad_sample0,
-          "bad_sample_1":bad_sample1})
+sample = az.convert_to_dataset({"good_sample": good_sample,
+                                "bad_sample_0": bad_sample0,
+                                "bad_sample_1": bad_sample1})
+
+az.plot_rank_dist(sample)
+az.ess(sample)
 ```
 
 
@@ -106,8 +114,7 @@ Alternatively, if we just want the trace without the density representation we c
 az.plot_trace(sample, var_names="good_sample");
 ```
 
-Now let's see an example of a bad sample. @fig-traceplot_bad_sample_0 shows two problems. On the one hand, each chain is visiting a different region of the parameter space. We can see this from the trace plot itself and the KDE. On the other hand, even within each region, the sampler is having trouble properly exploring the space, notice how it keeps _moving up_, instead of being **stationary**.
-
+Now let's see an example of a bad sample. @fig-traceplot_bad_sample_0 shows that the chains are visiting different regions of the parameter space. We can see this from the KDE, but is not immediately obvious from the trace itself, as the chains traces overlap.
 ```{python}
 #| label: fig-traceplot_bad_sample_0
 #| code-fold: true
@@ -125,24 +132,45 @@ pc.coords = {"column": "trace"}
 az.add_bands(pc, stuck)
 ```
 
-
-Trace plots are very popular in the Bayesian literature, they can be useful to spot some problems, but they have some limitations as we saw in the previous example. For example, it is difficult to spot problems when the chains overlap. In the next section we will see a modern alternative to trace plots, the rank plot.
+Trace plots are very popular in the Bayesian literature, they can be useful to spot some problems, but they have some limitations as we saw in the previous example. The main issue with trace plots is that it is difficult to spot problems when the chains overlap. In the next section we will see a modern alternative to trace plots, the rank plot.
 
 ## Rank plots {#sec-rank-plots}
 
 Rank plots provide an alternative way to diagnose MCMC samples [@vehtari_2021]. Unlike trace plots, which display sample values ordered by iteration, rank plots transform the sampled values into ranks before visualization.  
 
-Let see how it works: For each parameter, we pool all chains together and sort the draws from lowest to highest. The smallest value is assigned rank 1, the next rank 2, and so on, up to the total number of samples (equal to the number of chains multiplied by the number of draws per chain). This process converts parameter values into ranks. Next, we separate the ranks back into their original chains, collecting all ranks from the first chain, the second chain, and so on. If the MCMC sampling has no issues, the chains should be indistinguishable, and the ranks within each chain should follow a uniform distribution. In a well-mixed sampler, ranks should be evenly distributed among chains, with no chain favouring a specific range.
+Let see how it works: For each parameter, we pool all chains together and sort the draws from lowest to highest. The smallest value is assigned rank 1, the next rank 2, and so on, up to the total number of samples (equal to the number of chains multiplied by the number of draws per chain). This process converts parameter values into ranks. Next, we separate the ranks back into their original chains, collecting all ranks from the first chain, the second chain, and so on. If the MCMC sampling has no issues, there is no reasons for one chain to systematically have higher or lower ranks than the others, hence the ranks should be uniformly distributed within each chain. @fig-rank_plot_steps shows an example for two chains.
 
-To assess uniformity, one simple approach is to plot a histogram of the ranks. However, histogram results can be sensitive to bin choices. An alternative is to plot the empirical cumulative distribution function (CDF) of the ranks. This method avoids binning and does not requires any complex processing. Instead of using raw ranks (ranging from 1 to the total number of samples), we can use fractional ranks, which values range from 0 to 1. In the ideal case, the empirical CDF follows the standard uniform distribution—a diagonal line from (0,0) to (1,1), as shown in @fig-post_pred_uniform_cdf. Deviations from this line may indicate sampling issues.
+![Steps to create a rank plot](/home/osvaldo/proyectos/06_Tutoriales/BDA_packet/figs/rank_plot_steps.pdf){#fig-rank_plot_steps}
+
+
+To assess uniformity, one simple approach is to plot a histogram of the ranks. However, histogram results can be sensitive to bin choices. An alternative is to plot the empirical cumulative distribution function (CDF) of the ranks. This method avoids binning and does not requires any complex processing. Instead of using raw ranks (ranging from 1 to the total number of samples), we can use fractional ranks, which values range from 0 to 1. In the ideal case, the empirical CDF follows the standard uniform distribution, a diagonal line from (0,0) to (1,1), as shown in  the top panel of @fig-post_pred_uniform_cdf. Large deviations from this line indicate sampling issues.
 
 ```{python}
+#| code-fold: true
 #| label: fig-post_pred_uniform_cdf
-#| fig-cap: "The CDF of the standard Uniform distribution."
-pz.Uniform(0, 1).plot_cdf(figsize=(6, 4));
+#| fig-cap: "The CDF, ECDF and delta ECDF of the standard Uniform distribution."
+_, axes = plt.subplots(2, 1)
+dist = pz.Uniform(0, 1)
+dist.plot_cdf(ax=axes[0], figsize=(6, 4), legend=False, color='k', linestyle='--');
+u_sample =dist.rvs((2, 2000), random_state=rng)
+# we use numpy to compute the ECDF
+import numpy as np
+ecdf_x = np.sort(u_sample, axis=1)
+ecdf_y = np.arange(1, u_sample.shape[1]+1) / u_sample.shape[1]
+
+for i in range(ecdf_x.shape[0]):
+    axes[0].plot(ecdf_x[i], ecdf_y, color=f'C{i}');
+axes[0].set(xlabel='x', ylabel='CDF')
+
+# now plot the delta ecdf
+delta_ecdf = ecdf_y - dist.cdf(ecdf_x)
+for i in range(delta_ecdf.shape[0]):
+    axes[1].plot(ecdf_x[i], delta_ecdf[i], color=f'C{i}')
+axes[1].set(xlabel='x', ylabel=r'$\Delta$ CDF')
+axes[1].axhline(0, color='k', linestyle='--')
 ```
 
-The disadvantage of such visualization is that all the "action" is close to the diagonal line and most of the figure is just blank space, specially as the MCMC sample size increase. A simple trick to improve the *data-ink* ratio is to plot the $\Delta$-ECDF, i.e. (observed ECDF - expected ECDF). Then a uniform distribution is a flat line that goes from (0,0) to (1, 0). 
+The disadvantage of such visualization is that all the "action" is close to the diagonal line and most of the figure is just blank space, specially as the MCMC sample size increase. A simple trick to improve the *data-ink* ratio is to plot the $\Delta$-ECDF, i.e. (observed ECDF - expected ECDF). Then a uniform distribution is a flat line that goes from (0,0) to (1, 0) as show in the bottom panel of @fig-post_pred_uniform_cdf.
 
 The following figures shows fractional rank plots for `good_sample`, `bad_sample_0` and `bad_sample_1`. 
 
@@ -154,17 +182,16 @@ The following figures shows fractional rank plots for `good_sample`, `bad_sample
 az.plot_rank(sample, var_names=["good_sample"]);
 ```
 
-For `good_sample` we can see that ranks looks relative flat and deviations are within the envelope. In sharp contrast `bad_sample_0` looks awful, deviations are very large as chains belong to different distributions. The envelopes computation does not take into account autocorrelation, so it is recommend to thin the draws as discussed in @sec-thinning. `plot_rank` does this automatically. To disable thinning we can do `az.plot_rank(., thin=False)`, as we did for @fig-rank_plot_bad_sample_0. 
+For `good_sample` we can see that ranks looks relative flat, the p-value helps to confirm uniformity it is higher than the 0.01 threshold. In sharp contrast `bad_sample_0` does not look uniform at all, two chains show large deviations, addtionally we now see that the p-value is very small (rounded to 0 in the plot) and the are some black dots indicates regions of the ECDF that deviate significantly from the expected uniform distribution.
 
 ```{python}
 #| label: fig-rank_plot_bad_sample_0
 #| code-fold: true
 #| fig-cap: "Rank plot for `bad_sample_0`"
-az.plot_rank(sample, var_names=["bad_sample_0"], thin=False);
+az.plot_rank(sample, var_names=["bad_sample_0"]);
 ```
 
-Finally, `bad_sample_1` also shows problems, see how chain 0 (blue) get out of the envelope. Notice also how the envelope and lines looks very "squared-shaped" compared with those from @fig-rank_plot_good. This is indicating a relatively low ESS (high thinning). This is a consequence of the chain 0 (blue) being stuck in some regions as shown in @fig-traceplot_bad_sample_1.
-
+Finally, `bad_sample_1` also shows problems, see how chain 0 (blue)  deviates from the expected uniform distribution, we also get black dots indicating problematic regions and a low p-value.
 
 ```{python}
 #| label: fig-rank_plot_bad_sample_1
@@ -176,7 +203,7 @@ az.plot_rank(sample, var_names=["bad_sample_1"]);
 
 Rank plots provide a more reliable way to diagnose MCMC sampling issues compared to trace plots. While trace plots can reveal mixing problems, they often become cluttered, making it difficult to identify subtle issues like chains exploring different regions unevenly. In contrast, rank plots summarize sampling behaviour more effectively by checking for uniformity across chains, helping to detect biases, poor mixing, or convergence issues in a more interpretable way. This makes them a powerful method for visually assessing MCMC performance.
 
-Finally, we want to mention that we can use $\Delta$-ECDF plots to visually inspect any quantity that is expected to be uniformly distributed, not just the ranks. For example, in @sec-ppc we use them to compare the posterior predictive distribution to the observed data (see @fig-post_ppc_pit_ecdf_alt_0 and @fig-post_ppc_pit_ecdf_alt_1).
+Finally, we want to mention that we can use $\Delta$-ECDF plots to visually inspect any quantity that is expected to be uniformly distributed, not just the ranks. For example, in @sec-ppc we use them to compare the posterior predictive distribution to the observed data (see @fig-post_ppc_pit_ecdf_alt_0 and @fig-post_ppc_pit_coverage).
 
 ## $\hat R$ (R-hat)
 
@@ -338,7 +365,7 @@ We see that `az.summary(⋅)` returns two ESS values, `ess_bulk` and `ess_tail`.
 az.summary(sample, kind="diagnostics")
 ```
 
-If we are going to use the MCMC samples to calculate central values such as means or medians then we have to make sure that the `ess_bulk` is sufficiently large, however, if we want to calculate intervals such as an HDI 94% we have to make sure that `ess_tail` be appropriate.
+If we are going to use the MCMC samples to calculate central values such as means or medians then we have to make sure that the `ess_bulk` is sufficiently large, however, if we want to calculate intervals such as an HDI 89% we have to make sure that `ess_tail` be appropriate.
 
 ArviZ offers several functions linked to the ESS. For example, if we want to evaluate the performance of the sampler for several regions at the same time we can use `az.plot_ess`.
 
@@ -351,7 +378,7 @@ az.plot_ess(
 
 A simple way to increase the ESS is to increase the number of samples, but it could be the case that the ESS grows very slowly with the number of samples, so even if we increased the number of samples 10 times we could still be very far from our target value. One way to estimate "how many more samples do we need" is to use `az.plot_ess_evolution(.)`. This graph shows us how the ESS changed with each iteration, which allows us to make predictions. 
 
-From @fig-ess_evolution we can see that the ESS grows linearly with the number of samples for `good_sample`, and it does not grow at all for `bad_sample_0`. In the latter case, this is an indication that there is virtually no hope of improving the ESS simply by increasing the number of draws.
+From @fig-ess_evolution we can see that the ESS grows linearly with the number of samples for `good_sample`. This indicates that increasing the number of samples will effectively improve the ESS for this parameter. In contrast, it does not grow for `bad_sample_0`. This means that there is virtually no hope of improving the ESS simply by increasing the number of draws.
 
 ```{python}
 #| label: fig-ess_evolution
@@ -376,10 +403,7 @@ az.mcse(sample)
 
 ### Thinning  {#sec-thinning}
 
-One way to reduce autocorrelation in an MCMC chain is through thinning, where we retain only every $n$-th sample. While this method is straightforward, it has the drawback of discarding useful information. Research generally suggests that it's better to keep all the samples when calculating estimates [@maceachern_1994; @link_2011]. Provided the variance is finite, the central limit theorem applies even to correlated samples. Then if higher accuracy is needed, it's more effective to increase the number of draws rather than to perform thinning. Still, there are situations where thinning might be useful, such as:
-
-* Reducing the size of stored data, which is especially important when dealing with a large number of models or when the postprocessing of the samples is expensive, for instance when we need to run expensive computations on every draw.
-* Addressing bias in extreme ordered statistics, which may affect diagnostics like rank-plots (see @sec-rank-plots) and uniformity tests typically done for posterior predictive checks, as shown in @fig-post_pred and @fig-loo_pit or as part of [Simulation Based Calibration](https://github.com/arviz-devs/simulation_based_calibration) [@talts_2020].
+One way to reduce autocorrelation in an MCMC chain is through thinning, where we retain only every $n$-th sample. While this method is straightforward, it has the drawback of discarding useful information. Research generally suggests that it's better to keep all the samples when calculating estimates [@maceachern_1994; @link_2011]. Provided the variance is finite, the central limit theorem applies even to correlated samples. Then if higher accuracy is needed, it's more effective to increase the number of draws rather than to perform thinning. Still, there are situations where thinning might be useful, such as reducing the size of stored data, which is especially important when dealing with a large number of models or when the postprocessing of the samples is expensive, for instance when we need to run expensive computations on every draw.
 
 To determine an appropriate thinning factor, we can use the effective sample size (ESS). For instance, if you have 2,000 samples and an ESS of 1,000, you would thin by a factor of 2, keeping every other sample. The higher the ESS, the lower the thinning factor required. A more refined approach is to calculate both ESS-tail and ESS-bulk, then use the smaller value, which better accounts for differences in sampling efficiency between the central 90% quantile and the 5% tail quantiles [@sailynoja_2022].
 
@@ -464,14 +488,11 @@ az.plot_parallel(
 ```
 
 
-
 ## What to do when the diagnoses are wrong?
 
-* More samples or more tuning steps. This is usually only useful when the problems are minor
+* More samples or more tuning steps. This is usually only useful when the problems are minor. For example, if the effective sample size is slightly lower than desired, or $ \hat{R} $ is slightly above 1.01, increasing the number of draws can help improve the estimates.
 
-* Burn-in. Modern software like PyMC uses several samples to tune the hyper-parameters of the sampling methods. By default, these samples are eliminated, so in general, it is not necessary to do Burn-in manually.
-
-* Change sampling method!
+* Burn-in. Modern software like PyMC uses several draws to tune the hyper-parameters of the sampling methods. These draws are automatically eliminated, in general this makes it unnecessary to perform burn-in manually.
 
 * Reparameterize the model
 
